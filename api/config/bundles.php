@@ -18,7 +18,5 @@ return [
     Knp\Bundle\MarkdownBundle\KnpMarkdownBundle::class => ['all' => true],
     Endroid\QrCodeBundle\EndroidQrCodeBundle::class => ['all' => true],
     Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
-    Conduction\LandKitBundle\LandKitBundle::class => ['all' => true],
-    Conduction\NLDesignBundle\NLDesignBundle::class => ['all' => true],
-    Conduction\RocketBundle\RocketBundle::class => ['all' => true],
+    Conduction\LandkitBundle\LandkitBundle::class => ['all' => true],
 ];

@@ -1,0 +1,3 @@
+conduction_nldesign:
+  resource: "@NLDesignBundle/Resources/config/routes.yaml"
+  prefix: /

@@ -4,18 +4,18 @@
 
 settings:
   registryBase: docker.io/conduction
-  projectName: pan
-  name: pan
-  title: Proto Applicatie NL Design
+  projectName: id-vault
+  name: id-vault
+  title: ID Vault
   version: V1.0
   majorVersion: v1
   id: 31a2ad29-ee03-4aa9-be81-abf1fda7bbcc
   description: 'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'
   type: application
-  repro: https://github.com/ConductionNL/pan
-  demo: www.zuid-drecht.nl
-  container: https://hub.docker.com/repository/docker/conduction/pc-php
-  domain: zuid-drecht.nl
+  repro: https://github.com/ConductionNL/id-vault
+  demo: dev.id-vault.com
+  container: https://hub.docker.com/repository/docker/conduction/id-vault-php
+  domain: id-vault.com
   subdomain: false
   subpath: 
   subpathRouting: true
@@ -153,6 +153,6 @@ resources: {}
 
 commonground:
     eherkenning:
-        location: https://zuid-drecht.nl/eherkenning
+        location: https://id-vault.com/eherkenning
     digispoof:
-        location: https://zuid-drecht.nl/digispoof
+        location: https://id-vault.com/digispoof
