@@ -6,7 +6,7 @@ url: "https://github.com/ConductionNL/id-vault"
 landingURL: "dev.id-vault.com" 
 isBasedOn: "https://github.com/ConductionNL/Proto-component-commonground.git" 
 softwareVersion: "V1.0"
-releaseDate: "2020-21-10"
+releaseDate: "2020-22-10"
 logo: www.id-vault.com 
 monochromeLogo: img/logo-mono.svg
 
