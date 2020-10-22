@@ -54,6 +54,7 @@ class DashboardController extends AbstractController
     public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+        $variables['claims'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/claims')['hydra:member']; //['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
 
         return $variables;
     }
@@ -65,6 +66,7 @@ class DashboardController extends AbstractController
     public function contractsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+        $variables['contracts'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/contracts')['hydra:member']; //['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
 
         return $variables;
     }

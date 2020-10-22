@@ -12,6 +12,44 @@
 
             <div class="col-12 col-md-9">
 
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+
+                        <!-- Heading -->
+                        <h4 class="mb-0">
+                            {{ 'claims'|trans|capitalize }}
+                        </h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        {% if claims is defined and claims is not empty %}
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">{{ 'property'|trans|capitalize }}</th>
+                                    <th scope="col">{{ 'value'|trans|capitalize }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for claim in claims %}
+                                    <tr>
+                                        <td>{{ claim.property }}</td>
+                                        <td>{% for dataItem in claim.data %}{{ dataItem }}<br>{% endfor %}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <aside class="hint">
+                                <h4 class="hint__title">{{ 'no claims available'|trans|capitalize }}</h4>
+                            </aside>
+                        {% endif %}
+
+                    </div>
+                </div>
+
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->

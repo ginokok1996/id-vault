@@ -12,6 +12,46 @@
 
             <div class="col-12 col-md-9">
 
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+
+                        <!-- Heading -->
+                        <h4 class="mb-0">
+                            {{ 'contracts'|trans|capitalize }}
+                        </h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        {% if contracts is defined and contracts is not empty %}
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">{{ 'application'|trans|capitalize }}</th>
+                                    <th scope="col">{{ 'goal'|trans|capitalize }}</th>
+                                    <th scope="col">{{ 'scope'|trans|capitalize }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for contract in contracts %}
+                                    <tr>
+                                        <td>{{ contract.application }}</td>
+                                        <td>{{ contract.goal }}</td>
+                                        <td>{% for scopeItem in contract.scope %}{{ scopeItem }}<br>{% endfor %}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <aside class="hint">
+                                <h4 class="hint__title">no contracts available (niet vertaald)</h4>
+                            </aside>
+                        {% endif %}
+
+                    </div>
+                </div>
+
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
