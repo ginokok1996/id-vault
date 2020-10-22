@@ -15,7 +15,7 @@ settings:
   repro: https://github.com/ConductionNL/id-vault
   demo: dev.id-vault.com
   container: https://hub.docker.com/repository/docker/conduction/id-vault-php
-  domain: id-vault.com
+  domain: zuid-drecht.nl
   subdomain: false
   subpath: 
   subpathRouting: true
@@ -153,6 +153,6 @@ resources: {}
 
 commonground:
     eherkenning:
-        location: https://id-vault.com/eherkenning
+        location: https://zuid-drecht.nl/eherkenning
     digispoof:
-        location: https://id-vault.com/digispoof
+        location: https://zuid-drecht.nl/digispoof

@@ -1501,6 +1501,50 @@
         <source>Get in charge of your online data</source>
         <target>word de baas over je online data</target>
       </trans-unit>
+      <trans-unit id="JFbYZu6" resname="sign in">
+        <source>sign in</source>
+        <target>log in</target>
+      </trans-unit>
+      <trans-unit id="yzkpAXk" resname="store your data in minutes">
+        <source>store your data in minutes</source>
+        <target>sla je gegevens op in een paar minuten</target>
+      </trans-unit>
+      <trans-unit id="T_6ag8M" resname="email address">
+        <source>email address</source>
+        <target>email adres</target>
+      </trans-unit>
+      <trans-unit id="aPv5nYz" resname="don't have an account yet">
+        <source>don't have an account yet</source>
+        <target>heeft u nog geen account</target>
+      </trans-unit>
+      <trans-unit id="uKE5f6c" resname="sign up">
+        <source>sign up</source>
+        <target>registreren</target>
+      </trans-unit>
+      <trans-unit id="wVNb4nR" resname="name@address.com">
+        <source>name@address.com</source>
+        <target>naam@adres.com</target>
+      </trans-unit>
+      <trans-unit id="AnhZLPH" resname="enter your password">
+        <source>enter your password</source>
+        <target>voer uw wachtwoord in</target>
+      </trans-unit>
+      <trans-unit id="BWLxRaf" resname="already have an account">
+        <source>already have an account</source>
+        <target>heeft u al een account</target>
+      </trans-unit>
+      <trans-unit id="mvIRMps" resname="account">
+        <source>account</source>
+        <target>account</target>
+      </trans-unit>
+      <trans-unit id=".xKcc4Q" resname="we ran into an issue, but don’t worry, we’ll take care of it for sure.">
+        <source>we ran into an issue, but don’t worry, we’ll take care of it for sure.</source>
+        <target>er is helaas een fout opgetreden, maar maak je niet zorgen we zullen dit zo snel mogelijk oplossen.</target>
+      </trans-unit>
+      <trans-unit id="DGbtHOq" resname="back to safety">
+        <source>back to safety</source>
+        <target>back to safety</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
