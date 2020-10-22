@@ -3,14 +3,14 @@ entries:
   id-vault:
   - apiVersion: v1
     appVersion: V1.0
-    created: "2020-10-22T07:53:37.278139Z"
+    created: "2020-10-22T13:17:59.9926366Z"
     description: Naast deze JSON rest API is er ook een [graphql](/graphql) interface
       beschikbaar.
-    digest: f5c0d6df80ba454ce7155543675b48248a44a38123dcc9fb3ff58ad37e80fb55
+    digest: 5bb1598948dab1828d4e3ded2425fa54dcfc305f8080f91b42b332e304b3434c
     home: www.id-vault.com
     icon: www.id-vault.com
     name: id-vault
     urls:
     - id-vault-0.1.0.tgz
     version: 0.1.0
-generated: "2020-10-22T07:53:37.2554771Z"
+generated: "2020-10-22T13:17:59.9782147Z"
