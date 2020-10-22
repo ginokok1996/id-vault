@@ -15,7 +15,7 @@
 
                     <!-- Text -->
                     <p class="font-size-lg text-white-75 mb-0">
-                        Settings for <a class="text-reset" href="mailto:dhgamache@gmail.com">dhgamache@gmail.com</a>
+                        Settings for 'Wallet voornaam'
                     </p>
 
                 </div>
@@ -34,73 +34,8 @@
     <!-- MAIN
     ================================================== -->
     <main class="pb-8 pb-md-11 mt-md-n6">
-        <div class="container-md">
-            <div class="row">
-                <div class="col-12 col-md-3">
+        {% block pageContent %}
 
-                    <!-- Card -->
-                    <div class="card card-bleed border-bottom border-bottom-md-0 shadow-light-lg">
-
-                        <!-- Collapse -->
-                        <div class="collapse d-md-block" id="sidenavCollapse">
-                            <div class="card-body">
-
-                                <!-- Heading -->
-                                <h6 class="font-weight-bold text-uppercase mb-3">
-                                    Account
-                                </h6>
-
-                                <!-- List -->
-                                <ul class="card-list list text-gray-700 mb-6">
-                                    <li class="list-item active">
-                                        <a class="list-link text-reset" href="{{ path('app_dashboard_general') }}">
-                                            General
-                                        </a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a class="list-link text-reset" href="{{ path('app_dashboard_security') }}">
-                                            Security
-                                        </a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a class="list-link text-reset" href="{{ path('app_default_index') }}">
-                                            Notifications
-                                        </a>
-                                    </li>
-                                </ul>
-
-                                <!-- Heading -->
-                                <h6 class="font-weight-bold text-uppercase mb-3">
-                                    Billing
-                                </h6>
-
-                                <!-- List -->
-                                <ul class="card-list list text-gray-700 mb-0">
-                                    <li class="list-item">
-                                        <a class="list-link text-reset" href="{{ path('app_default_index') }}">
-                                            Plans &amp; Payment
-                                        </a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a class="list-link text-reset" href="{{ path('app_default_index') }}">
-                                            Users
-                                        </a>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-12 col-md-9">
-
-                    {% block pageContent %}
-
-                    {% endblock %}
-
-                </div>
-            </div> <!-- / .row -->
-        </div> <!-- / .container -->
+        {% endblock %}
     </main>
 {% endblock %}

@@ -46,4 +46,26 @@ class DashboardController extends AbstractController
 
         return $variables;
     }
+
+    /**
+     * @Route("/claims")
+     * @Template
+     */
+    public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/contracts")
+     * @Template
+     */
+    public function contractsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
 }

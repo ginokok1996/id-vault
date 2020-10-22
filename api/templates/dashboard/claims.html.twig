@@ -1,0 +1,18 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                {% set activeItem = 'claims' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
+
+            </div>
+
+            <div class="col-12 col-md-9">
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+{% endblock %}
