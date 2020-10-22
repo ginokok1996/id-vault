@@ -2391,12 +2391,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-22 10:56:54'
+        example: '2020-10-22 13:18:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-22 10:56:54'
+        example: '2020-10-22 13:18:44'
     required: []
   AuditTrail-write:
     properties:
@@ -2444,12 +2444,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-22 10:56:54'
+        example: '2020-10-22 13:18:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-22 10:56:54'
+        example: '2020-10-22 13:18:44'
     required: []
   ChangeLog-write:
     properties:
@@ -2490,8 +2490,8 @@ securityDefinitions:
 host: irc.zaakonline.nl
 servers:
   -
-    name: id-vault.com
-    url: id-vault.dev.id-vault.com
+    name: zuid-drecht.nl
+    url: id-vault.dev.zuid-drecht.nl
 externalDocs:
   -
     description: 'OAS Documentatie'

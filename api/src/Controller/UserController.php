@@ -18,6 +18,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class UserController.
+ *
+* @Route("/user")
  */
 class UserController extends AbstractController
 {
@@ -58,18 +60,15 @@ class UserController extends AbstractController
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
         } else {
-            $backUrl = '/login';
+            $backUrl = '/';
         }
         $session->set('backUrl', $backUrl);
 
         if ($this->getUser()) {
-            if (isset($application['defaultConfiguration']['configuration']['userPage'])) {
-                return $this->redirect($application['defaultConfiguration']['configuration']['userPage']);
-            } else {
-                return $this->redirect($this->generateUrl('app_default_index'));
-            }
+            return $this->redirect($this->generateUrl('app_default_index'));
         } else {
-            return $this->render('login/index.html.twig', ['backUrl' => $backUrl]);
+            return $this->redirect($this->generateUrl('app_default_index'));
+
         }
     }
 
