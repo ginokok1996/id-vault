@@ -805,7 +805,7 @@
         <source>download qr-code</source>
         <target>download qr-code</target>
       </trans-unit>
-      <trans-unit id="nHZiZrP" resname="It is not possible to check in on this QR code!">
+      <trans-unit id="3FG3vza" resname="It is not possible to check in on this QR code!">
         <source>It is not possible to check in on this QR code!</source>
         <target>Op deze QR-code kan niet worden ingechecked!</target>
       </trans-unit>
@@ -1416,6 +1416,90 @@
       <trans-unit id="6ZAKjEC" resname="you are now subscribed to the mailing list">
         <source>you are now subscribed to the mailing list</source>
         <target>u staat nu ingeschreven voor deze mail lijst</target>
+      </trans-unit>
+      <trans-unit id="lFniS0w" resname="checkins">
+        <source>checkins</source>
+        <target>__checkins</target>
+      </trans-unit>
+      <trans-unit id="pMxrwBq" resname="privacy">
+        <source>privacy</source>
+        <target>privacy</target>
+      </trans-unit>
+      <trans-unit id="7EKoCG5" resname="for users">
+        <source>for users</source>
+        <target>voor gebruikers</target>
+      </trans-unit>
+      <trans-unit id="kW_eiA_" resname="for developers">
+        <source>for developers</source>
+        <target>voor developers</target>
+      </trans-unit>
+      <trans-unit id="BMDZpna" resname="welcome to">
+        <source>welcome to</source>
+        <target>welkom bij</target>
+      </trans-unit>
+      <trans-unit id="9bJjvia" resname="the best place to">
+        <source>the best place to</source>
+        <target>de beste plek om</target>
+      </trans-unit>
+      <trans-unit id="p.xQ51s" resname="store your data">
+        <source>store your data</source>
+        <target>je data op te slaan</target>
+      </trans-unit>
+      <trans-unit id="_w.Calp" resname="manage your data">
+        <source>manage your data</source>
+        <target>je data te beheren</target>
+      </trans-unit>
+      <trans-unit id="i0mNTYB" resname="stay in control of your data">
+        <source>stay in control of your data</source>
+        <target>in controle te blijven</target>
+      </trans-unit>
+      <trans-unit id="apNLRRR" resname="secure">
+        <source>secure</source>
+        <target>secure</target>
+      </trans-unit>
+      <trans-unit id="EuwfWyW" resname="control your own data">
+        <source>control your own data</source>
+        <target>beheer je eigen gegevens</target>
+      </trans-unit>
+      <trans-unit id="m9RbbYl" resname="Tech support">
+        <source>Tech support</source>
+        <target>technische ondersteuning</target>
+      </trans-unit>
+      <trans-unit id="sCwpobH" resname="Easy to use">
+        <source>Easy to use</source>
+        <target>makkelijk in gebruik</target>
+      </trans-unit>
+      <trans-unit id="hPFlAP9" resname="Checking is an platform that allows you to check in at accommodations and have your data securely stored for a certain amount of time">
+        <source>Checking is an platform that allows you to check in at accommodations and have your data securely stored for a certain amount of time</source>
+        <target>Checking is een platform dat je in staat brengt om bij gelegenheden in te checken en je data tijdelijk secuur op te slaan</target>
+      </trans-unit>
+      <trans-unit id="xf56rd7" resname="This project has been set up to help students find internships that they can do from the comforts of their home">
+        <source>This project has been set up to help students find internships that they can do from the comforts of their home</source>
+        <target>Dit project is opgezet zodat studenten in staat zijn om online stage plaatsen te vinden</target>
+      </trans-unit>
+      <trans-unit id="tD.eYIw" resname="we store your data">
+        <source>we store your data</source>
+        <target>wij slaan je data op</target>
+      </trans-unit>
+      <trans-unit id="S_oMJAv" resname="but you stay the boss of your data">
+        <source>but you stay the boss of your data</source>
+        <target>maar jij blijf de baas over jouw gegevens</target>
+      </trans-unit>
+      <trans-unit id="vOKWbAs" resname="satisfaction">
+        <source>satisfaction</source>
+        <target>tevredenheid</target>
+      </trans-unit>
+      <trans-unit id="oYYDCG5" resname="support">
+        <source>support</source>
+        <target>ondersteuning</target>
+      </trans-unit>
+      <trans-unit id="fftM9nd" resname="users">
+        <source>users</source>
+        <target>gebruikers</target>
+      </trans-unit>
+      <trans-unit id="JSIgDB." resname="Get in charge of your online data">
+        <source>Get in charge of your online data</source>
+        <target>word de baas over je online data</target>
       </trans-unit>
     </body>
   </file>
