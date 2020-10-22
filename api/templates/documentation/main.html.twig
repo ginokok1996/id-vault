@@ -1,0 +1,107 @@
+{% extends 'base.html.twig'%}
+
+{% set noFooter = true %}
+
+{% block content %}
+
+<nav class="d-lg-none bg-gray-800">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Breadcrumb -->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                <span class="text-white">
+                  Docs
+                </span>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                <span class="text-white">
+                    {% if currentPage is defined %}
+                        {{ currentPage|capitalize }}
+                    {% endif %}
+                </span>
+                    </li>
+                </ol>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Toggler -->
+                <div class="navbar-dark">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenavCollapse" aria-controls="sidenavCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</nav>
+
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-3 col-xl-2 px-lg-0 border-bottom border-bottom-lg-0 border-right-lg border-gray-300 sidenav sidenav-left">
+
+                    <div class="collapse d-lg-block" id="sidenavCollapse">
+                        <div class="py-7 py-lg-9 px-lg-7">
+
+                            <!-- Heading -->
+                            <h6 class="text-uppercase font-weight-bold">
+                                Getting started
+                            </h6>
+
+                            <!-- Links -->
+                            <ul class="list mb-6">
+                                <li class="list-item">
+                                    <a class="list-link" href="{{ path('app_documentation_index') }}">Introduction</a>
+                                </li>
+                            </ul>
+
+                            <!-- Heading -->
+                            <h6 class="text-uppercase font-weight-bold">
+                                Section
+                            </h6>
+
+                            <!-- Links -->
+                            <ul class="list mb-6">
+                                <li class="list-item">
+                                    <a class="list-link" href="{{ path('app_documentation_example') }}">Example item</a>
+                                </li>
+                            </ul>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-12 col-lg-6 col-xl-8 offset-lg-3 offset-xl-2 py-7 py-lg-9 px-lg-7">
+
+                   {% block documentation %}
+
+                   {% endblock %}
+
+                </div>
+                <div class="col-12 col-lg-3 col-xl-2 d-none d-lg-block px-lg-0 sidenav sidenav-right">
+                    <div class="my-7 my-lg-9 px-lg-7 border-left-lg border-gray-300">
+
+                        <!-- Heading -->
+                        <h6 class="text-uppercase font-weight-bold">
+                            Jump to
+                        </h6>
+
+                        <!-- Links -->
+                        <ul class="list mb-0">
+                        {% block jumpto %}
+
+                        {% endblock %}
+                        </ul>
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </section>
+{% endblock %}

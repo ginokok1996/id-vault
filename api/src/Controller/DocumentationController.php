@@ -21,9 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * Class ProcessController
  *
- * @Route("/")
+ * @Route("/docs")
  */
-class DefaultController extends AbstractController
+class DocumentationController extends AbstractController
 {
     /**
      * @Route("/")
@@ -37,37 +37,14 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/register")
+     * @Route("/example")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function exampleAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
         return $variables;
     }
-
-    /**
-     * @Route("/login")
-     * @Template
-     */
-    public function loginAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
-    {
-        $variables = [];
-
-        return $variables;
-    }
-
-    /**
-     * @Route("/error")
-     * @Template
-     */
-    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
-    {
-        $variables = [];
-
-        return $variables;
-    }
-
 
 }
