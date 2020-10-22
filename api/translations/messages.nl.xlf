@@ -113,9 +113,65 @@
         <source>place of birth</source>
         <target>geboorteplaats</target>
       </trans-unit>
-      <trans-unit id="SH_Drn9" resname="account settings">
+      <trans-unit id="i3d2VKI" resname="wallet">
+        <source>wallet</source>
+        <target>wallet</target>
+      </trans-unit>
+      <trans-unit id="3hvpwNl" resname="account settings">
         <source>account settings</source>
         <target>account gegevens</target>
+      </trans-unit>
+      <trans-unit id="SH_Drn9" resname="settings for">
+        <source>settings for</source>
+        <target>gegevens van</target>
+      </trans-unit>
+      <trans-unit id="y82qeOE" resname="claims">
+        <source>claims</source>
+        <target>claims</target>
+      </trans-unit>
+      <trans-unit id="9FjPhPy" resname="contracts">
+        <source>contracts</source>
+        <target>contracten</target>
+      </trans-unit>
+      <trans-unit id="zQrJVzP" resname="general">
+        <source>general</source>
+        <target>algemeen</target>
+      </trans-unit>
+      <trans-unit id="QMkEv8E" resname="security">
+        <source>security</source>
+        <target>beveiliging</target>
+      </trans-unit>
+      <trans-unit id="8hoV5OU" resname="notifications">
+        <source>notifications</source>
+        <target>meldingen</target>
+      </trans-unit>
+      <trans-unit id="g2N2o9J" resname="property">
+        <source>property</source>
+        <target>eigenschap</target>
+      </trans-unit>
+      <trans-unit id="H2ykeNr" resname="value">
+        <source>value</source>
+        <target>waarde</target>
+      </trans-unit>
+      <trans-unit id="LqljmRF" resname="application">
+        <source>application</source>
+        <target>applicatie</target>
+      </trans-unit>
+      <trans-unit id="wpHJASK" resname="goal">
+        <source>goal</source>
+        <target>doel</target>
+      </trans-unit>
+      <trans-unit id="PN5wEPa" resname="scope">
+        <source>scope</source>
+        <target>omvang</target>
+      </trans-unit>
+      <trans-unit id="FGoSMXE" resname="basic information">
+        <source>basic information</source>
+        <target>basis informatie</target>
+      </trans-unit>
+      <trans-unit id="Xnff1qp" resname="become a developer">
+        <source>become a developer</source>
+        <target>word een ontwikkelaar</target>
       </trans-unit>
       <trans-unit id="LZRrwur" resname="internships">
         <source>internships</source>
@@ -144,6 +200,10 @@
       <trans-unit id="dUkL17k" resname="submit">
         <source>submit</source>
         <target>indienen</target>
+      </trans-unit>
+      <trans-unit id="cWNckVO" resname="save changes">
+        <source>save changes</source>
+        <target>wijzigingen opslaan</target>
       </trans-unit>
       <trans-unit id="l6XSncR" resname="properties of the request">
         <source>properties of the request</source>
@@ -344,6 +404,10 @@
       <trans-unit id="W4feAqp" resname="last name">
         <source>last name</source>
         <target>achternaam</target>
+      </trans-unit>
+      <trans-unit id="QrLCrPL" resname="full name">
+        <source>full name</source>
+        <target>voor-en achternaam</target>
       </trans-unit>
       <trans-unit id="KOYEmu." resname="What product do you want to subscribe to:">
         <source>What product do you want to subscribe to:</source>

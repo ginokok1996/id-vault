@@ -17,9 +17,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * The Procces test handles any calls that have not been picked up by another test, and wel try to handle the slug based against the wrc.
+ * Description.
  *
- * Class ProcessController
+ * Class DashboardController
  *
  * @Route("/dashboard")
  */
@@ -36,6 +36,38 @@ class DashboardController extends AbstractController
         return $variables;
     }
 
+    /**
+     * @Route("/security")
+     * @Template
+     */
+    public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
 
+        return $variables;
+    }
 
+    /**
+     * @Route("/claims")
+     * @Template
+     */
+    public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $variables['claims'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/claims')['hydra:member']; //['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/contracts")
+     * @Template
+     */
+    public function contractsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $variables['contracts'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/contracts')['hydra:member']; //['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
+
+        return $variables;
+    }
 }

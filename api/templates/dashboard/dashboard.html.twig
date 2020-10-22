@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <!-- HEADER
+    ================================================== -->
+    <header class="bg-dark pt-9 pb-11 d-none d-md-block">
+        <div class="container-md">
+            <div class="row align-items-center">
+                <div class="col">
+
+                    <!-- Heading -->
+                    <h1 class="font-weight-bold text-white mb-2">
+                        {{ 'account settings'|trans|capitalize }}
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-white-75 mb-0">
+                        {{ 'settings for'|trans|capitalize }} Wilco Louwerse
+                    </p>
+
+                </div>
+                <div class="col-auto">
+
+                    <!-- Button -->
+                    <button class="btn btn-sm btn-gray-300-20">
+                        {{ 'logout'|trans|capitalize }}
+                    </button>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </header>
+
+    <!-- MAIN
+    ================================================== -->
+    <main class="pb-8 pb-md-11 mt-md-n6">
+        {% block pageContent %}
+
+        {% endblock %}
+    </main>
+{% endblock %}

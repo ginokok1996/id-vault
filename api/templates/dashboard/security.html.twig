@@ -1,0 +1,352 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                {% set activeItem = 'security' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
+
+            </div>
+
+            <div class="col-12 col-md-9">
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    Two Factor
+                                </h4>
+
+                            </div>
+                            <div class="col-auto mr-n5">
+
+                                <!-- Text -->
+                                <small class="text-gray-700">
+                                    Requred?
+                                </small>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Switch -->
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="twoFactorSwitch" checked="">
+                                    <label class="custom-control-label" for="twoFactorSwitch"></label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- List group -->
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Authenticator App
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Google auth or 1Password
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Setup
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            SMS Recovery <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Standard messaging rates apply
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-danger">
+                                            Disable
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Recovery Codes <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            One time use safety codes
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Reveal
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    Password
+                                </h4>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Link -->
+                                <a class="small text-gray-700" href="#!">
+                                    Forgot your password?
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Current password -->
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input class="form-control" id="currentPassword" type="password">
+                        </div>
+
+                        <!-- New password -->
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input class="form-control" id="newPassword" type="password">
+                        </div>
+
+                        <!-- Confirm password -->
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input class="form-control" id="confirmPassword" type="password">
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-12 col-md-auto">
+
+                                <!-- Button -->
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    Update Password
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    Device History
+                                </h4>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Link -->
+                                <a class="small text-gray-700" href="#!">
+                                    Log out all
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- List group -->
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+
+                                        <!-- Icon -->
+                                        <div class="icon icon-sm text-gray-400">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"></path><path d="M8 2.5c-.69 0-1.25.56-1.25 1.25v16.5c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25V3.75c0-.69-.56-1.25-1.25-1.25H8z" fill="#335EEA" opacity=".3"></path><path d="M8 2.5c-.69 0-1.25.56-1.25 1.25v16.5c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25V3.75c0-.69-.56-1.25-1.25-1.25H8zM8 1h8a2.75 2.75 0 012.75 2.75v16.5A2.75 2.75 0 0116 23H8a2.75 2.75 0 01-2.75-2.75V3.75A2.75 2.75 0 018 1zm1.5.75h5a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-5a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5z" fill="#335EEA"></path></g></svg>
+                                        </div>
+
+                                    </div>
+                                    <div class="col ml-n5">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            iPhone 11
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Los Angeles, CA · April 20 at 4:16PM
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Log out
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+
+                                        <!-- Icon -->
+                                        <div class="icon icon-sm text-gray-400">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"></path><path d="M5 5v11h14V5H5zm0-2h14c1.42 0 2 .716 2 1.6v12.8c0 .884-.58 1.6-2 1.6H5c-1.42 0-2-.716-2-1.6V4.6C3 3.716 3.58 3 5 3zm7 15a.5.5 0 100-1 .5.5 0 000 1z" fill="#335EEA"></path><path fill="#335EEA" opacity=".3" d="M5 5v11h14V5z"></path><rect fill="#335EEA" opacity=".3" x="10" y="20" width="4" height="1" rx=".5"></rect></g></svg>
+                                        </div>
+
+                                    </div>
+                                    <div class="col ml-n5">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            iMac OSX · Chrome v80.02
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Los Angeles, CA · April 20 at 4:16PM
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Log out
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+
+                                        <!-- Icon -->
+                                        <div class="icon icon-sm text-gray-400">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"></path><path d="M8 2.5c-.69 0-1.25.56-1.25 1.25v16.5c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25V3.75c0-.69-.56-1.25-1.25-1.25H8z" fill="#335EEA" opacity=".3"></path><path d="M8 2.5c-.69 0-1.25.56-1.25 1.25v16.5c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25V3.75c0-.69-.56-1.25-1.25-1.25H8zM8 1h8a2.75 2.75 0 012.75 2.75v16.5A2.75 2.75 0 0116 23H8a2.75 2.75 0 01-2.75-2.75V3.75A2.75 2.75 0 018 1zm1.5.75h5a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-5a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5z" fill="#335EEA"></path></g></svg>
+                                        </div>
+
+                                    </div>
+                                    <div class="col ml-n5">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            iPhone 11
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Los Angeles, CA · April 20 at 4:16PM
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Log out
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+
+                                        <!-- Icon -->
+                                        <div class="icon icon-sm text-gray-400">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"></path><path d="M5 5v11h14V5H5zm0-2h14c1.42 0 2 .716 2 1.6v12.8c0 .884-.58 1.6-2 1.6H5c-1.42 0-2-.716-2-1.6V4.6C3 3.716 3.58 3 5 3zm7 15a.5.5 0 100-1 .5.5 0 000 1z" fill="#335EEA"></path><path fill="#335EEA" opacity=".3" d="M5 5v11h14V5z"></path><rect fill="#335EEA" opacity=".3" x="10" y="20" width="4" height="1" rx=".5"></rect></g></svg>
+                                        </div>
+
+                                    </div>
+                                    <div class="col ml-n5">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            iMac OSX · Chrome v80.02
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Los Angeles, CA · April 20 at 4:16PM
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <button class="btn btn-xs btn-outline-white">
+                                            Log out
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+{% endblock %}
