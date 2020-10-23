@@ -817,6 +817,14 @@
         <source>organizations</source>
         <target>organisaties</target>
       </trans-unit>
+      <trans-unit id="rdEelFO" resname="applications">
+        <source>applications</source>
+        <target>applicaties</target>
+      </trans-unit>
+      <trans-unit id="JBcFHV7" resname="documentation">
+        <source>documentation</source>
+        <target>documentatie</target>
+      </trans-unit>
       <trans-unit id="EVB6Di9" resname="new">
         <source>new</source>
         <target>nieuw</target>
@@ -824,6 +832,10 @@
       <trans-unit id="rLIFg9y" resname="no organizations available">
         <source>no organizations available</source>
         <target>geen organisaties beschikbaar</target>
+      </trans-unit>
+      <trans-unit id="krBI52J" resname="no applications available">
+        <source>no applications available</source>
+        <target>geen applicaties beschikbaar</target>
       </trans-unit>
       <trans-unit id="_ohHsMM" resname="create">
         <source>create</source>
