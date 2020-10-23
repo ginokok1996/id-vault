@@ -32,7 +32,8 @@
                                     <!-- Name -->
                                     <div class="form-group">
                                         <label for="name">{{ 'name'|trans|capitalize }}</label>
-                                        <input class="form-control" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}">
+                                        <input class="form-control" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
+                                        {% if app.user.name is defined and app.user.name is not empty %}value="{{ app.user.name }}"{% endif %}>
                                     </div>
 
                                 </div>
@@ -41,7 +42,13 @@
                                     <!-- Email -->
                                     <div class="form-group">
                                         <label for="email">{{ 'email'|trans|capitalize }}</label>
-                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}">
+                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}"
+                                        {% if app.user.person is defined and app.user.person is not empty and commonground_is_resource(app.user.person) %}
+                                            {% set person = commonground_resource(app.user.person) %}
+                                            {% if person.emails is defined and person.emails|length > 0 %}
+                                                value="{{ person.emails[0].email }}"
+                                            {% endif %}
+                                        {% endif %}>
                                     </div>
 
                                 </div>
@@ -65,7 +72,7 @@
 
                         <!-- Heading -->
                         <h4 class="mb-0">
-                            {{ 'become a developer'|trans|capitalize }}
+                            {{ 'become a developer!'|trans|capitalize }}
                         </h4>
 
                     </div>
@@ -77,18 +84,16 @@
                             <div class="row">
                                 <div class="col-12 col-md-12">
 
-                                    <!-- Name -->
-                                    <div class="form-group">
-                                        <label for="name">input1</label>
-                                        <input class="form-control" id="name" type="text" placeholder="Some input">
-                                    </div>
+                                    <p>
+                                        {{ 'Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.'|trans }}
+                                    </p>
 
                                 </div>
                                 <div class="col-12 col-md-auto">
 
                                     <!-- Button -->
                                     <button class="btn btn-block btn-primary" type="submit">
-                                        {{ 'submit'|trans|capitalize }}
+                                        {{ 'become a developer!'|trans|capitalize }}
                                     </button>
 
                                 </div>

@@ -22,9 +22,14 @@
                         {{ 'security'|trans|capitalize }}
                     </a>
                 </li>
-                <li class="list-item">
-                    <a class="list-link text-reset" href="{{ path('app_default_index') }}">
+                <li class="list-item {% if activeItem == 'notifications' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_notifications') }}">
                         {{ 'notifications'|trans|capitalize }}
+                    </a>
+                </li>
+                <li class="list-item {% if activeItem == 'organizations' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_organizations') }}">
+                        {{ 'organizations'|trans|capitalize }}
                     </a>
                 </li>
             </ul>

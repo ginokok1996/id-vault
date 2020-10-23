@@ -22,29 +22,98 @@
                         </h4>
 
                     </div>
-                    <div class="card-body" style="padding-top: 0px">
-
+                    <div class="card-body">
                         {% if claims is defined and claims is not empty %}
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th scope="col">{{ 'property'|trans|capitalize }}</th>
-                                    <th scope="col">{{ 'value'|trans|capitalize }}</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for claim in claims %}
-                                    <tr>
-                                        <td>{{ claim.property }}</td>
-                                        <td>{% for dataItem in claim.data %}{{ dataItem }}<br>{% endfor %}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                            {% for claim in claims %}
+                                <!-- Header -->
+                                <div class="row mb-5">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <h4 class="mb-0">
+                                            {% if claim.data is defined and claim.data is not empty %}
+                                                {% for dataItem in claim.data %}
+                                                    {% if loop.last %}
+                                                        {{ dataItem }}
+                                                    {% else %}
+                                                        {{ dataItem }},
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </h4>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            {% if claim.property is defined and claim.property is not empty %}
+                                                {{ claim.property }}
+                                            {% endif %}
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Button -->
+                                        <a class="btn btn-xs btn-primary" href="pricing.html">
+                                            {{ 'edit'|trans|capitalize }}
+                                        </a>
+
+                                    </div>
+                                </div>
+
+                                {% if claim.proofs is defined and claim.proofs is not empty %}
+                                    {% for proof in claim.proofs %}
+                                        <!-- Item -->
+                                        <div class="d-flex">
+
+                                            <!-- Check -->
+                                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                                <i class="fe fe-check"></i>
+                                            </div>
+
+                                            <!-- Text -->
+                                            <p>
+                                                {% if proof.type is defined and proof.type is not empty %}{{ proof.type }}{% endif %}
+                                            </p>
+
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {# todo:REMOVE the next 2 items, these are temp. placeholders #}
+
+                                <!-- Item -->
+                                <div class="d-flex">
+
+                                    <!-- Check -->
+                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                        <i class="fe fe-check"></i>
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p>
+                                        gmail
+                                    </p>
+
+                                </div>
+
+                                <!-- Item -->
+                                <div class="d-flex">
+
+                                    <!-- Check -->
+                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                        <i class="fe fe-check"></i>
+                                    </div>
+
+                                    <!-- Text -->
+                                    <p>
+                                        facebook
+                                    </p>
+
+                                </div>
+
+                            {% endfor %}
                         {% else %}
-                            <aside class="hint">
-                                <h4 class="hint__title">{{ 'no claims available'|trans|capitalize }}</h4>
-                            </aside>
+                            <p class="hint__title">{{ 'no claims available'|trans|capitalize }}</p>
                         {% endif %}
 
                     </div>
