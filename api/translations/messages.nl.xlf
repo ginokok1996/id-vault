@@ -129,9 +129,17 @@
         <source>claims</source>
         <target>claims</target>
       </trans-unit>
+      <trans-unit id="2yIQEqv" resname="no claims available">
+        <source>no claims available</source>
+        <target>geen claims beschikbaar</target>
+      </trans-unit>
       <trans-unit id="9FjPhPy" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
+      </trans-unit>
+      <trans-unit id="WCt473o" resname="no contracts available">
+        <source>no contracts available</source>
+        <target>geen contracten beschikbaar</target>
       </trans-unit>
       <trans-unit id="zQrJVzP" resname="general">
         <source>general</source>
@@ -801,8 +809,8 @@
         <source>new</source>
         <target>nieuw</target>
       </trans-unit>
-      <trans-unit id="rLIFg9y" resname="no organizations">
-        <source>no organizations</source>
+      <trans-unit id="rLIFg9y" resname="no organizations available">
+        <source>no organizations available</source>
         <target>geen organisaties beschikbaar</target>
       </trans-unit>
       <trans-unit id="_ohHsMM" resname="create">
@@ -1208,6 +1216,10 @@
       <trans-unit id="6opoRrV" resname="to change your password">
         <source>to change your password</source>
         <target>om uw wachtwoord te wijzigen</target>
+      </trans-unit>
+      <trans-unit id="6FehZBm" resname="to login">
+        <source>to login</source>
+        <target>om in te loggen</target>
       </trans-unit>
       <trans-unit id="Ap.eNAy" resname="invalid password">
         <source>invalid password</source>

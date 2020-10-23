@@ -48,6 +48,17 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/notifications")
+     * @Template
+     */
+    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
      * @Route("/claims")
      * @Template
      */
@@ -67,6 +78,17 @@ class DashboardController extends AbstractController
     {
         $variables = [];
         $variables['contracts'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/contracts')['hydra:member']; //['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/organizations")
+     * @Template
+     */
+    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
 
         return $variables;
     }

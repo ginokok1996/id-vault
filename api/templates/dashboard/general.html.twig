@@ -32,7 +32,8 @@
                                     <!-- Name -->
                                     <div class="form-group">
                                         <label for="name">{{ 'name'|trans|capitalize }}</label>
-                                        <input class="form-control" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}">
+                                        <input class="form-control" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
+                                        {% if app.user.name is defined and app.user.name is not empty %}value="{{ app.user.name }}"{% endif %}>
                                     </div>
 
                                 </div>
@@ -41,7 +42,13 @@
                                     <!-- Email -->
                                     <div class="form-group">
                                         <label for="email">{{ 'email'|trans|capitalize }}</label>
-                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}">
+                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}"
+                                        {% if app.user.person is defined and app.user.person is not empty and commonground_is_resource(app.user.person) %}
+                                            {% set person = commonground_resource(app.user.person) %}
+                                            {% if person.emails is defined and person.emails|length > 0 %}
+                                                value="{{ person.emails[0].email }}"
+                                            {% endif %}
+                                        {% endif %}>
                                     </div>
 
                                 </div>
