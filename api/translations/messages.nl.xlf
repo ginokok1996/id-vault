@@ -837,6 +837,10 @@
         <source>no applications available</source>
         <target>geen applicaties beschikbaar</target>
       </trans-unit>
+      <trans-unit id="dRTIT9E" resname="developer view">
+        <source>developer view</source>
+        <target>ontwikkelaars weergave</target>
+      </trans-unit>
       <trans-unit id="_ohHsMM" resname="create">
         <source>create</source>
         <target>aanmaken</target>
