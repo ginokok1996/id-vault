@@ -65,6 +65,7 @@ class UserController extends AbstractController
         $session->set('backUrl', $backUrl);
 
         if ($this->getUser()) {
+            $this->flash->add('success', 'Welcome '.$this->getUser()->getName());
             return $this->redirect($this->generateUrl('app_default_index'));
         } else {
             return $this->redirect($this->generateUrl('app_default_index'));

@@ -772,12 +772,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/LandkitBundle.git",
-                "reference": "a858dd8584d17c3becb69284c00d6fab9df384e3"
+                "reference": "158cc1c449fa65fd65207e176f4fe5f3a681626b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/LandkitBundle/zipball/a858dd8584d17c3becb69284c00d6fab9df384e3",
-                "reference": "a858dd8584d17c3becb69284c00d6fab9df384e3",
+                "url": "https://api.github.com/repos/ConductionNL/LandkitBundle/zipball/158cc1c449fa65fd65207e176f4fe5f3a681626b",
+                "reference": "158cc1c449fa65fd65207e176f4fe5f3a681626b",
                 "shasum": ""
             },
             "require": {
@@ -815,7 +815,7 @@
                 "symfony",
                 "theme"
             ],
-            "time": "2020-10-21T17:25:34+00:00"
+            "time": "2020-10-23T12:14:06+00:00"
         },
         {
             "name": "dasprid/enum",

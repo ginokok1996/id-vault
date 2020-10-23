@@ -17,11 +17,23 @@
     <link rel="stylesheet" href="/bundles/landkit/libs/jarallax/dist/jarallax.css">
     <link rel="stylesheet" href="/bundles/landkit/libs/quill/dist/quill.core.css" />
 
+    <style>
+        @font-face {
+            font-family: "HKGroteskPro";
+            font-weight: 400;
+            src: url("/bundles/landkit/fonts/HKGroteskPro/HKGroteskPro-Regular.woff2") format("woff2"), url("/bundles/landkit/fonts/HKGroteskPro/HKGroteskPro-Regular.woff") format("woff"); }
+
+        @font-face {
+            font-family: "HKGroteskPro";
+            font-weight: 600;
+            src: url("/bundles/landkit/fonts/HKGroteskPro/HKGroteskPro-Medium.woff2") format("woff2"), url("/bundles/landkit/fonts/HKGroteskPro/HKGroteskPro-Medium.woff") format("woff"); }
+    </style>
+
     <!-- Map -->
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
 
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="/bundles/landkit/css/theme.min.css">
+    <link rel="stylesheet" href="/bundles/landkit/css/theme.css">
 
     <title>id-vault</title>
 
@@ -30,15 +42,35 @@
 <!-- MENU -->
 {% include 'landkit/menu.html.twig' %}
 
+{% set flashes = [] %}
+{% for label, messages in app.flashes() %}
+    {% for message in messages %}
+        {% if message not in flashes %}
+        {% set flashes = flashes|merge([message]) %}
+        <div class="alert alert-{{ label }} rounded-0 mb-0">
+            <div class="container-md">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Text -->
+                        <p class="text-center mb-0">
+                            {{ message|trans|capitalize }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
 <!-- Content -->
 {% block content %}
 
 {% endblock %}
 
 <!-- FOOTER -->
-
-{% include 'landkit/footer.html.twig' %}
-
+{% if noFooter is not defined %}
+    {% include 'landkit/footer.html.twig' %}
+{% endif %}
 
 <!-- JAVASCRIPT -->
 <!-- Libs JS -->
