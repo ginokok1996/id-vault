@@ -69,5 +69,27 @@ class DefaultController extends AbstractController
         return $variables;
     }
 
+    /**
+     * @Route("/users")
+     * @Template
+     */
+    public function usersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/developers")
+     * @Template
+     */
+    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
 
 }
