@@ -113,69 +113,69 @@
         <source>place of birth</source>
         <target>geboorteplaats</target>
       </trans-unit>
-      <trans-unit id="i3d2VKI" resname="wallet">
-        <source>wallet</source>
-        <target>wallet</target>
-      </trans-unit>
-      <trans-unit id="3hvpwNl" resname="account settings">
+      <trans-unit id="SH_Drn9" resname="account settings">
         <source>account settings</source>
         <target>account gegevens</target>
-      </trans-unit>
-      <trans-unit id="SH_Drn9" resname="settings for">
-        <source>settings for</source>
-        <target>gegevens van</target>
-      </trans-unit>
-      <trans-unit id="y82qeOE" resname="claims">
-        <source>claims</source>
-        <target>claims</target>
-      </trans-unit>
-      <trans-unit id="9FjPhPy" resname="contracts">
-        <source>contracts</source>
-        <target>contracten</target>
-      </trans-unit>
-      <trans-unit id="zQrJVzP" resname="general">
-        <source>general</source>
-        <target>algemeen</target>
-      </trans-unit>
-      <trans-unit id="QMkEv8E" resname="security">
-        <source>security</source>
-        <target>beveiliging</target>
-      </trans-unit>
-      <trans-unit id="8hoV5OU" resname="notifications">
-        <source>notifications</source>
-        <target>meldingen</target>
-      </trans-unit>
-      <trans-unit id="g2N2o9J" resname="property">
-        <source>property</source>
-        <target>eigenschap</target>
-      </trans-unit>
-      <trans-unit id="H2ykeNr" resname="value">
-        <source>value</source>
-        <target>waarde</target>
-      </trans-unit>
-      <trans-unit id="LqljmRF" resname="application">
-        <source>application</source>
-        <target>applicatie</target>
-      </trans-unit>
-      <trans-unit id="wpHJASK" resname="goal">
-        <source>goal</source>
-        <target>doel</target>
-      </trans-unit>
-      <trans-unit id="PN5wEPa" resname="scope">
-        <source>scope</source>
-        <target>omvang</target>
-      </trans-unit>
-      <trans-unit id="FGoSMXE" resname="basic information">
-        <source>basic information</source>
-        <target>basis informatie</target>
-      </trans-unit>
-      <trans-unit id="Xnff1qp" resname="become a developer">
-        <source>become a developer</source>
-        <target>word een ontwikkelaar</target>
       </trans-unit>
       <trans-unit id="LZRrwur" resname="internships">
         <source>internships</source>
         <target>stages</target>
+      </trans-unit>
+      <trans-unit id="6NRAUIc" resname="wallet">
+        <source>wallet</source>
+        <target>wallet</target>
+      </trans-unit>
+      <trans-unit id="ASAweot" resname="settings for">
+        <source>settings for</source>
+        <target>gegevens van</target>
+      </trans-unit>
+      <trans-unit id="phgI.kD" resname="claims">
+        <source>claims</source>
+        <target>claims</target>
+      </trans-unit>
+      <trans-unit id="sJTbfOL" resname="contracts">
+        <source>contracts</source>
+        <target>contracten</target>
+      </trans-unit>
+      <trans-unit id="D_rhbVU" resname="general">
+        <source>general</source>
+        <target>algemeen</target>
+      </trans-unit>
+      <trans-unit id="XS0863q" resname="security">
+        <source>security</source>
+        <target>beveiliging</target>
+      </trans-unit>
+      <trans-unit id="i7aSJ1i" resname="notifications">
+        <source>notifications</source>
+        <target>meldingen</target>
+      </trans-unit>
+      <trans-unit id=".JGEE0r" resname="property">
+        <source>property</source>
+        <target>eigenschap</target>
+      </trans-unit>
+      <trans-unit id="zUJATVK" resname="value">
+        <source>value</source>
+        <target>waarde</target>
+      </trans-unit>
+      <trans-unit id="H_KJIFk" resname="application">
+        <source>application</source>
+        <target>applicatie</target>
+      </trans-unit>
+      <trans-unit id="AwRSPv." resname="goal">
+        <source>goal</source>
+        <target>doel</target>
+      </trans-unit>
+      <trans-unit id="XxYckUm" resname="scope">
+        <source>scope</source>
+        <target>omvang</target>
+      </trans-unit>
+      <trans-unit id="0krNd.R" resname="basic information">
+        <source>basic information</source>
+        <target>basis informatie</target>
+      </trans-unit>
+      <trans-unit id="908Q_ff" resname="become a developer">
+        <source>become a developer</source>
+        <target>word een ontwikkelaar</target>
       </trans-unit>
       <trans-unit id="qDoxMg2" resname="resume">
         <source>resume</source>
@@ -201,7 +201,7 @@
         <source>submit</source>
         <target>indienen</target>
       </trans-unit>
-      <trans-unit id="cWNckVO" resname="save changes">
+      <trans-unit id="yFzOCGk" resname="save changes">
         <source>save changes</source>
         <target>wijzigingen opslaan</target>
       </trans-unit>
@@ -405,7 +405,7 @@
         <source>last name</source>
         <target>achternaam</target>
       </trans-unit>
-      <trans-unit id="QrLCrPL" resname="full name">
+      <trans-unit id="NAnvSYE" resname="full name">
         <source>full name</source>
         <target>voor-en achternaam</target>
       </trans-unit>
@@ -1507,11 +1507,23 @@
       </trans-unit>
       <trans-unit id="p.xQ51s" resname="store your data">
         <source>store your data</source>
-        <target>je data op te slaan</target>
+        <target>je gegevens op te slaan</target>
       </trans-unit>
       <trans-unit id="_w.Calp" resname="manage your data">
         <source>manage your data</source>
-        <target>je data te beheren</target>
+        <target>je gegevens te beheren</target>
+      </trans-unit>
+      <trans-unit id="yKY90gM" resname="own your data">
+        <source>own your data</source>
+        <target>je gegevens te beheersen</target>
+      </trans-unit>
+      <trans-unit id="w76L6Hq" resname="control your data">
+        <source>control your data</source>
+        <target>je gegevens te controleren</target>
+      </trans-unit>
+      <trans-unit id="IjtBz.W" resname="share your data">
+        <source>share your data</source>
+        <target>je gegevens te delen</target>
       </trans-unit>
       <trans-unit id="i0mNTYB" resname="stay in control of your data">
         <source>stay in control of your data</source>
@@ -1608,6 +1620,10 @@
       <trans-unit id="DGbtHOq" resname="back to safety">
         <source>back to safety</source>
         <target>back to safety</target>
+      </trans-unit>
+      <trans-unit id="ckvw2St" resname="no claims available">
+        <source>no claims available</source>
+        <target>__no claims available</target>
       </trans-unit>
     </body>
   </file>
