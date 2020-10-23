@@ -33,6 +33,14 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+//        if ($request->isMethod('POST')) {
+//            $user = $this->getUser();
+//            $user['userGroups'] = [
+//                '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c',
+//            ];
+//            $commonGroundService->updateResource();
+//        }
+
         return $variables;
     }
 
@@ -41,6 +49,17 @@ class DashboardController extends AbstractController
      * @Template
      */
     public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/notifications")
+     * @Template
+     */
+    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -67,6 +86,39 @@ class DashboardController extends AbstractController
     {
         $variables = [];
         $variables['contracts'] = $commonGroundService->getResourceList('https://dev.zuid-drecht.nl/api/v1/wac/contracts')['hydra:member']; //['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc']
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/applications")
+     * @Template
+     */
+    public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/organizations")
+     * @Template
+     */
+    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/documentation")
+     * @Template
+     */
+    public function documentationAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
 
         return $variables;
     }

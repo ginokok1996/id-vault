@@ -13,18 +13,22 @@
                         {{ 'account settings'|trans|capitalize }}
                     </h1>
 
-                    <!-- Text -->
-                    <p class="font-size-lg text-white-75 mb-0">
-                        {{ 'settings for'|trans|capitalize }} Wilco Louwerse
-                    </p>
+                    {% if app.user.name is defined and app.user.name is not empty %}
+                        <!-- Text -->
+                        <p class="font-size-lg text-white-75 mb-0">
+                            {{ 'settings for'|trans|capitalize }} {{ app.user.name }}
+                        </p>
+                    {% endif %}
 
                 </div>
                 <div class="col-auto">
 
-                    <!-- Button -->
-                    <button class="btn btn-sm btn-gray-300-20">
-                        {{ 'logout'|trans|capitalize }}
-                    </button>
+                    {% if app.user is defined and app.user is not empty %}
+                        <!-- Button -->
+                        <button class="btn btn-sm btn-gray-300-20" href="{{ path('app_user_logout') }}">
+                            {{ 'logout'|trans|capitalize }}
+                        </button>
+                    {% endif %}
 
                 </div>
             </div> <!-- / .row -->
@@ -34,8 +38,34 @@
     <!-- MAIN
     ================================================== -->
     <main class="pb-8 pb-md-11 mt-md-n6">
-        {% block pageContent %}
+        {% if app.user is defined and app.user is not empty %}
+            {% block pageContent %}
 
-        {% endblock %}
+            {% endblock %}
+        {% else %}
+            <div class="container-md">
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <!-- Card -->
+                        <div class="card card-bleed shadow-light-lg mb-6">
+                            <div class="card-header">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    {{ 'login required'|trans|capitalize }}
+                                </h4>
+
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    {{ 'you need to login before you can view this page'|trans|capitalize }}<br>
+                                    {{ 'click'|trans|capitalize }} <a href="{{ path('app_default_login') }}">{{ 'here'|trans }}</a> {{ 'to login'|trans }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </main>
 {% endblock %}

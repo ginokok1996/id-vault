@@ -1,0 +1,53 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                {% set activeItem = 'organizations' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
+
+            </div>
+
+            <div class="col-12 col-md-9">
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+
+                        <!-- Heading -->
+                        <h4 class="mb-0">
+                            {{ 'organizations'|trans|capitalize }}
+                        </h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        {% if groups is defined and groups is not empty %}
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">{{ 'name'|trans|capitalize }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for group in groups %}
+                                    <tr>
+                                        <td>{{ group.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div style="padding-top: 2rem"></div>
+                            <p class="hint__title">{{ 'no organizations available'|trans|capitalize }}</p>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+{% endblock %}
