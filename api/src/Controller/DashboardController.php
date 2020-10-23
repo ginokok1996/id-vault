@@ -33,6 +33,14 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+//        if ($request->isMethod('POST')) {
+//            $user = $this->getUser();
+//            $user['userGroups'] = [
+//                '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c',
+//            ];
+//            $commonGroundService->updateResource();
+//        }
+
         return $variables;
     }
 
