@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white">
+<!-- NAVBAR
+================================================== -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white">
     <div class="container">
 
         <!-- Brand -->
@@ -26,97 +28,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./users">{{ 'for users'|trans|capitalize }}</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDevelopers" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">{{ 'for developers'|trans|capitalize }}</a>
-                    <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDevelopers">
-                        <div class="list-group list-group-flush">
-                            <a class="list-group-item" href="./docs">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Tools/Tools.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'technics'|trans|capitalize }}
-                                    </h6>
-
-                                    <!-- Text -->
-                                    <p class="font-size-sm text-gray-700 mb-0">
-                                        {{ 'how does it work'|trans|capitalize }}?
-                                    </p>
-
-                                </div>
-
-                            </a>
-                            <a class="list-group-item" href="./api">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Text/Align-auto.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'terminology'|trans|capitalize }}
-                                    </h6>
-
-                                    <!-- Text -->
-                                    <p class="font-size-sm text-gray-700 mb-0">
-                                        {{ 'terminology for id-vault'|trans|capitalize }}
-                                    </p>
-
-
-                                </div>
-
-                            </a>
-                            <a class="list-group-item" href="/terms">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Home/Book.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'terms of service'|trans|capitalize }}
-                                    </h6>
-                                </div>
-
-                            </a>
-                            <a class="list-group-item" href="/privacy">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Home/Book.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'privacy'|capitalize }}
-                                    </h6>
-                                </div>
-
-                            </a>
-                        </div>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="./developers">{{ 'for developers'|trans|capitalize }}</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDocumentation" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
-                        {{ 'documentation'|trans|capitalize }}
+                        Documentation
                     </a>
                     <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDocumentation">
                         <div class="list-group list-group-flush">
@@ -132,12 +49,12 @@
 
                                     <!-- Heading -->
                                     <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'documentation'|trans|capitalize }}
+                                        Documentation
                                     </h6>
 
                                     <!-- Text -->
                                     <p class="font-size-sm text-gray-700 mb-0">
-                                        {{ 'how does it work'|trans|capitalize }}?
+                                        How does it work?
                                     </p>
 
                                 </div>
