@@ -42,7 +42,7 @@
                                     <div class="list-group-item">
                                         <!-- Header -->
                                         <div class="row mb-5">
-                                            <div class="col">
+                                            <div class="col ml-n5">
 
                                                 <!-- Heading -->
                                                 <h4 class="mb-0">
@@ -65,12 +65,29 @@
                                                 </small>
 
                                             </div>
-                                            <div class="col-auto">
+                                            <div class="col-auto mr-n5">
 
                                                 <!-- Button -->
                                                 <a class="btn btn-xs btn-primary" href="pricing.html">
                                                     {{ 'edit'|trans|capitalize }}
                                                 </a>
+
+                                            </div>
+
+                                            <div class="col-auto">
+
+                                                <!-- Dropdown -->
+                                                <div class="dropdown">
+                                                    <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#" aria-expanded="false">
+                                                        <i class="fe fe-more-vertical"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu" style="">
+                                                        <a class="dropdown-item" href="#">{{ 'view contracts'|trans|capitalize }}</a>
+                                                        <a class="dropdown-item" href="#">{{ 'view dossier'|trans|capitalize }}</a>
+                                                        <a class="dropdown-item" href="#">{{ 'view usage2'|trans|capitalize }}</a>
+                                                        <a class="dropdown-item" href="#" style="color: red">{{ 'delete data'|trans|capitalize }}</a>
+                                                    </div>
+                                                </div>
 
                                             </div>
                                         </div>

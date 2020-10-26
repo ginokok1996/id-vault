@@ -47,11 +47,14 @@
                         <option value="phoneNumber">{{ 'phone number'|trans|capitalize }}</option>
                     </select>
 
+                    <!-- Hidden input for property -->
+                    <input type="hidden" value="X" name="property" id="property">
+
                     <!-- Input -->
                     <div class="form-group">
-                        <input required disabled class="form-control" name="email" id="email" type="hidden" placeholder="{{ 'email'|trans|capitalize }}">
-                        <input required disabled class="form-control" name="name" id="name" type="hidden" placeholder="{{ 'name'|trans|capitalize }}">
-                        <input required disabled class="form-control" name="phoneNumber" id="phoneNumber" type="hidden" placeholder="{{ 'phone number'|trans|capitalize }}">
+                        <input required disabled class="form-control" name="data[email]" id="email" type="hidden" placeholder="{{ 'email'|trans|capitalize }}">
+                        <input required disabled class="form-control" name="data[name]" id="name" type="hidden" placeholder="{{ 'name'|trans|capitalize }}">
+                        <input required disabled class="form-control" name="data[phoneNumber]" id="phoneNumber" type="hidden" placeholder="{{ 'phone number'|trans|capitalize }}">
                     </div>
                     <!-- Submit -->
                     <button class="btn btn-block btn-primary mt-3 lift">
@@ -65,30 +68,33 @@
 
 <script>
     function handleSelect() {
-        let email_element = document.getElementById("email");
-        let name_element = document.getElementById("name");
-        let phoneNumber_element = document.getElementById("phoneNumber");
+        let property_input = document.getElementById("property");
+        let select_element = document.getElementById("addManuallySelect");
+        let email_input = document.getElementById("email");
+        let name_input = document.getElementById("name");
+        let phoneNumber_input = document.getElementById("phoneNumber");
 
-        email_element.type = 'hidden';
-        email_element.disabled = true;
-        name_element.type = 'hidden';
-        name_element.disabled = true;
-        phoneNumber_element.type = 'hidden';
-        phoneNumber_element.disabled = true;
+        email_input.type = 'hidden';
+        email_input.disabled = true;
+        name_input.type = 'hidden';
+        name_input.disabled = true;
+        phoneNumber_input.type = 'hidden';
+        phoneNumber_input.disabled = true;
 
-        let selected_value = document.getElementById("addManuallySelect").value;
+        property_input.value = select_element.innerText;
+        let selected_value = select_element.value;
         switch (selected_value) {
             case 'email':
-                email_element.type = 'email';
-                email_element.disabled = false;
+                email_input.type = 'email';
+                email_input.disabled = false;
                 break;
             case 'name':
-                name_element.type = 'text';
-                name_element.disabled = false;
+                name_input.type = 'text';
+                name_input.disabled = false;
                 break;
             case 'phoneNumber':
-                phoneNumber_element.type = 'tel';
-                phoneNumber_element.disabled = false;
+                phoneNumber_input.type = 'tel';
+                phoneNumber_input.disabled = false;
                 break;
         }
     }

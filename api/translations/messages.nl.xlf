@@ -149,6 +149,10 @@
         <source>retrieve data</source>
         <target>gegevens ophalen</target>
       </trans-unit>
+      <trans-unit id="157YQhT" resname="delete data">
+        <source>delete data</source>
+        <target>gegevens verwijderen</target>
+      </trans-unit>
       <trans-unit id="Vnyb4vp" resname="Where do you want to retrieve your data from?">
         <source>Where do you want to retrieve your data from?</source>
         <target>Waar wilt u uw gegevens van ophalen?</target>
@@ -168,6 +172,14 @@
       <trans-unit id="9FjPhPy" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
+      </trans-unit>
+      <trans-unit id="KaZuFG1" resname="view contracts">
+        <source>view contracts</source>
+        <target>contracten bekijken</target>
+      </trans-unit>
+      <trans-unit id="_DH4cHH" resname="view dossier">
+        <source>view dossier</source>
+        <target>dossier bekijken</target>
       </trans-unit>
       <trans-unit id="WCt473o" resname="no contracts available">
         <source>no contracts available</source>
@@ -220,6 +232,10 @@
       <trans-unit id="zhdiace" resname="view usage">
         <source>view usage</source>
         <target>gebruik inzien</target>
+      </trans-unit>
+      <trans-unit id="bhyArLN" resname="view usage2">
+        <source>view usage</source>
+        <target>gebruik bekijken</target>
       </trans-unit>
       <trans-unit id="mTPq2tC" resname="end contract">
         <source>end contract</source>
