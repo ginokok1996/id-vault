@@ -133,19 +133,19 @@
         <source>claims</source>
         <target>claims</target>
       </trans-unit>
-      <trans-unit id="2yIQEqv" resname="no claims available">
+      <trans-unit id="ckvw2St" resname="no claims available">
         <source>no claims available</source>
-        <target>geen claims beschikbaar</target>
+        <target>__no claims available</target>
       </trans-unit>
-      <trans-unit id="9FjPhPy" resname="contracts">
+      <trans-unit id="sJTbfOL" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
       </trans-unit>
-      <trans-unit id="WCt473o" resname="no contracts available">
+      <trans-unit id="00d6zUr" resname="no contracts available">
         <source>no contracts available</source>
         <target>geen contracten beschikbaar</target>
       </trans-unit>
-      <trans-unit id="zQrJVzP" resname="general">
+      <trans-unit id="D_rhbVU" resname="general">
         <source>general</source>
         <target>algemeen</target>
       </trans-unit>
@@ -181,19 +181,19 @@
         <source>basic information</source>
         <target>basis informatie</target>
       </trans-unit>
-      <trans-unit id="Xnff1qp" resname="become a developer!">
+      <trans-unit id="Pnh8r_r" resname="become a developer!">
         <source>become a developer!</source>
         <target>word ontwikkelaar!</target>
       </trans-unit>
-      <trans-unit id="b92VYGa" resname="Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.">
+      <trans-unit id="TQopDBP" resname="Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.">
         <source>Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.</source>
         <target>Ben je een ontwikkelaar van applicaties? En jeuken je handen om aan de slag te gaan met id-vault? Dan is het enige wat je hoeft te doen de ontwikkelaars weergave aanzetten, dat kan je doen moet het schuifje in je persoonlijke instellingen of door op deze knop te drukken.</target>
       </trans-unit>
-      <trans-unit id="zhdiace" resname="view usage">
+      <trans-unit id="K4KgXGQ" resname="view usage">
         <source>view usage</source>
         <target>gebruik inzien</target>
       </trans-unit>
-      <trans-unit id="mTPq2tC" resname="end contract">
+      <trans-unit id="dnWT04R" resname="end contract">
         <source>end contract</source>
         <target>contract beëindigen</target>
       </trans-unit>
@@ -817,11 +817,11 @@
         <source>organizations</source>
         <target>organisaties</target>
       </trans-unit>
-      <trans-unit id="rdEelFO" resname="applications">
+      <trans-unit id=".VTlqC4" resname="applications">
         <source>applications</source>
         <target>applicaties</target>
       </trans-unit>
-      <trans-unit id="JBcFHV7" resname="documentation">
+      <trans-unit id="yvn5BrF" resname="documentation">
         <source>documentation</source>
         <target>documentatie</target>
       </trans-unit>
@@ -829,15 +829,15 @@
         <source>new</source>
         <target>nieuw</target>
       </trans-unit>
-      <trans-unit id="rLIFg9y" resname="no organizations available">
+      <trans-unit id="XZU7vso" resname="no organizations available">
         <source>no organizations available</source>
         <target>geen organisaties beschikbaar</target>
       </trans-unit>
-      <trans-unit id="krBI52J" resname="no applications available">
+      <trans-unit id="NUxmLWT" resname="no applications available">
         <source>no applications available</source>
         <target>geen applicaties beschikbaar</target>
       </trans-unit>
-      <trans-unit id="dRTIT9E" resname="developer view">
+      <trans-unit id="j1SayIl" resname="developer view">
         <source>developer view</source>
         <target>ontwikkelaars weergave</target>
       </trans-unit>
@@ -1245,7 +1245,7 @@
         <source>to change your password</source>
         <target>om uw wachtwoord te wijzigen</target>
       </trans-unit>
-      <trans-unit id="6FehZBm" resname="to login">
+      <trans-unit id="Afpzh5U" resname="to login">
         <source>to login</source>
         <target>om in te loggen</target>
       </trans-unit>
@@ -1661,9 +1661,89 @@
         <source>back to safety</source>
         <target>back to safety</target>
       </trans-unit>
-      <trans-unit id="ckvw2St" resname="no claims available">
-        <source>no claims available</source>
-        <target>__no claims available</target>
+      <trans-unit id="rLIFg9y" resname="no organizations">
+        <source>no organizations</source>
+        <target>__no organizations</target>
+      </trans-unit>
+      <trans-unit id="h1uTgIZ" resname="development">
+        <source>development</source>
+        <target>__development</target>
+      </trans-unit>
+      <trans-unit id="rZXV_mU" resname="free">
+        <source>free</source>
+        <target>gratis</target>
+      </trans-unit>
+      <trans-unit id="46yqBsy" resname="email us">
+        <source>email us</source>
+        <target>mail ons</target>
+      </trans-unit>
+      <trans-unit id="Y9wL1uo" resname="take control">
+        <source>take control</source>
+        <target>take control</target>
+      </trans-unit>
+      <trans-unit id="iMUF5FS" resname="take your data">
+        <source>take your data</source>
+        <target>take your data</target>
+      </trans-unit>
+      <trans-unit id="hJbA0qI" resname="authenticate users via oauth">
+        <source>authenticate users via oauth</source>
+        <target>gebruikers authenticeren via oauth</target>
+      </trans-unit>
+      <trans-unit id="7ZfaMBm" resname="basic data">
+        <source>basic data</source>
+        <target>basis gegevens</target>
+      </trans-unit>
+      <trans-unit id="lEC_gte" resname="access to the basic user data">
+        <source>access to the basic user data</source>
+        <target>toegang to basis gebruikers gegevens</target>
+      </trans-unit>
+      <trans-unit id="25354Dy" resname="SAML / Active Directory">
+        <source>SAML / Active Directory</source>
+        <target>SAML / Active Directory</target>
+      </trans-unit>
+      <trans-unit id="IlSdG6f" resname="short text">
+        <source>short text</source>
+        <target>short text</target>
+      </trans-unit>
+      <trans-unit id="KvaKJqc" resname="certain claims for data">
+        <source>certain claims for data</source>
+        <target>bepaalde claims voor gegevens</target>
+      </trans-unit>
+      <trans-unit id="_GG5w.K" resname="for example: IDIN, IDeal or phone number">
+        <source>for example: IDIN, IDeal or phone number</source>
+        <target>bijvoorbeeld: IDIN, IDeal of telefoonnummer</target>
+      </trans-unit>
+      <trans-unit id="h61KHva" resname="how does it work">
+        <source>how does it work</source>
+        <target>hoe werkt het</target>
+      </trans-unit>
+      <trans-unit id="4S3IzMF" resname="technics">
+        <source>technics</source>
+        <target>techniek</target>
+      </trans-unit>
+      <trans-unit id="NJt7gGk" resname="terminology">
+        <source>terminology</source>
+        <target>terminologie</target>
+      </trans-unit>
+      <trans-unit id="kAjnxY_" resname="terminology for id-vault">
+        <source>terminology for id-vault</source>
+        <target>terminologie voor id-vault</target>
+      </trans-unit>
+      <trans-unit id="Up8OX0d" resname="terms of service">
+        <source>terms of service</source>
+        <target>algemene voorwaarden</target>
+      </trans-unit>
+      <trans-unit id="6P1yk37" resname="add new">
+        <source>add new</source>
+        <target>toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Rt_JKGd" resname="add organization">
+        <source>add organization</source>
+        <target>organisatie toevoegen</target>
+      </trans-unit>
+      <trans-unit id="_Q7ud4u" resname="choose logo">
+        <source>choose logo</source>
+        <target>kies logo</target>
       </trans-unit>
     </body>
   </file>

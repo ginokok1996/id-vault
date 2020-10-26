@@ -7,7 +7,6 @@ namespace App\Controller;
 use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use function GuzzleHttp\Promise\all;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,13 +32,26 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-//        if ($request->isMethod('POST')) {
-//            $user = $this->getUser();
-//            $user['userGroups'] = [
-//                '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c',
-//            ];
-//            $commonGroundService->updateResource();
-//        }
+        // Set current user to userGroup developer
+        if ($request->isMethod('POST')) {
+            $person = $this->getUser()->getPerson();
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+
+                $userGroups = [];
+                foreach ($user['userGroups'] as $userGroup) {
+                    if ($userGroup['id'] != 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c') {
+                        array_push($userGroups, '/groups/'.$userGroup['id']);
+                    }
+                }
+
+                $user['userGroups'] = $userGroups;
+                $user['userGroups'][] = '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c';
+
+                $commonGroundService->updateResource($user);
+            }
+        }
 
         return $variables;
     }
@@ -108,6 +120,92 @@ class DashboardController extends AbstractController
     public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->isMethod('POST')) {
+            $name = $request->get('name');
+            $email = $request->get('email');
+            $description = $request->get('description');
+
+            $cc = [];
+            $cc['name'] = $name;
+            $cc['description'] = $description;
+            $cc['emails'][0]['email'] = $email;
+
+            $cc = $commonGroundService->createResource($cc, ['component' => 'cc', 'type' => 'organizations']);
+
+            $wrc = [];
+            $wrc['rsin'] = ' ';
+            $wrc['chamberOfComerce'] = ' ';
+            $wrc['name'] = $name;
+            $wrc['description'] = $description;
+            $wrc['contact'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organizations', 'id' => $cc['id']]);
+            if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
+                $path = $_FILES['logo']['tmp_name'];
+                $type = filetype($_FILES['logo']['tmp_name']);
+                $data = file_get_contents($path);
+                $wrc['style']['name'] = 'style for '.$name;
+                $wrc['style']['description'] = 'style for '.$name;
+                $wrc['style']['css'] = ' ';
+                $wrc['style']['favicon']['name'] = 'logo for '.$name;
+                $wrc['style']['favicon']['description'] = 'logo for '.$name;
+                $wrc['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+            }
+
+            $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
+
+            $userGroup = [];
+            $userGroup['name'] = $name;
+            $userGroup['title'] = $name;
+            $userGroup['description'] = 'group for '.$name;
+            $userGroup['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrc['id']]);
+
+            $group = $commonGroundService->createResource($userGroup, ['component' => 'uc', 'type' => 'groups']);
+
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+
+                $userGroups = [];
+                foreach ($user['userGroups'] as $userGroup) {
+                    array_push($userGroups, '/groups/'.$userGroup['id']);
+                }
+
+                $user['userGroups'] = $userGroups;
+                $user['userGroups'][] = '/groups/'.$group['id'];
+
+                $commonGroundService->updateResource($user);
+            }
+        }
+
+        if ($this->getUser()) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group) {
+                    $organization = $commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations)) {
+                        $organizations[] = $organization;
+                    }
+                }
+                $variables['resources'] = $organizations;
+            }
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/organizations/{id}")
+     * @Template
+     */
+    public function organizationAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        if ($request->isMethod('POST')) {
+        }
 
         return $variables;
     }
