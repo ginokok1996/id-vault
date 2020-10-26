@@ -135,13 +135,53 @@
       </trans-unit>
       <trans-unit id="ckvw2St" resname="no claims available">
         <source>no claims available</source>
-        <target>__no claims available</target>
+        <target>geen claims beschikbaar</target>
       </trans-unit>
-      <trans-unit id="sJTbfOL" resname="contracts">
+      <trans-unit id="kQhOIIO" resname="add data">
+        <source>add data</source>
+        <target>gegevens toevoegen</target>
+      </trans-unit>
+      <trans-unit id="y4X9zxh" resname="load data">
+        <source>load data</source>
+        <target>gegevens inladen</target>
+      </trans-unit>
+      <trans-unit id="N1Rob-5" resname="retrieve data">
+        <source>retrieve data</source>
+        <target>gegevens ophalen</target>
+      </trans-unit>
+      <trans-unit id="157YQhT" resname="delete data">
+        <source>delete data</source>
+        <target>gegevens verwijderen</target>
+      </trans-unit>
+      <trans-unit id="Vnyb4vp" resname="Where do you want to retrieve your data from?">
+        <source>Where do you want to retrieve your data from?</source>
+        <target>Waar wilt u uw gegevens van ophalen?</target>
+      </trans-unit>
+      <trans-unit id="Duaa9Kh" resname="add data">
+        <source>add data</source>
+        <target>gegevens toevoegen</target>
+      </trans-unit>
+      <trans-unit id="pJeH-8r" resname="What data do you want to add manually?">
+        <source>What data do you want to add manually?</source>
+        <target>Welke gegevens wilt u handmatig toevoegen?</target>
+      </trans-unit>
+      <trans-unit id="IDtLYtj" resname="add manually">
+        <source>add manually</source>
+        <target>handmatig toevoegen</target>
+      </trans-unit>
+      <trans-unit id="9FjPhPy" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
       </trans-unit>
-      <trans-unit id="00d6zUr" resname="no contracts available">
+      <trans-unit id="KaZuFG1" resname="view contracts">
+        <source>view contracts</source>
+        <target>contracten bekijken</target>
+      </trans-unit>
+      <trans-unit id="_DH4cHH" resname="view dossier">
+        <source>view dossier</source>
+        <target>dossier bekijken</target>
+      </trans-unit>
+      <trans-unit id="WCt473o" resname="no contracts available">
         <source>no contracts available</source>
         <target>geen contracten beschikbaar</target>
       </trans-unit>
@@ -193,7 +233,11 @@
         <source>view usage</source>
         <target>gebruik inzien</target>
       </trans-unit>
-      <trans-unit id="dnWT04R" resname="end contract">
+      <trans-unit id="bhyArLN" resname="view usage2">
+        <source>view usage</source>
+        <target>gebruik bekijken</target>
+      </trans-unit>
+      <trans-unit id="mTPq2tC" resname="end contract">
         <source>end contract</source>
         <target>contract beëindigen</target>
       </trans-unit>
@@ -1523,7 +1567,7 @@
       </trans-unit>
       <trans-unit id="lFniS0w" resname="checkins">
         <source>checkins</source>
-        <target>__checkins</target>
+        <target>checkins</target>
       </trans-unit>
       <trans-unit id="pMxrwBq" resname="privacy">
         <source>privacy</source>
@@ -1667,7 +1711,7 @@
       </trans-unit>
       <trans-unit id="h1uTgIZ" resname="development">
         <source>development</source>
-        <target>development</target>
+        <target>ontwikkeling</target>
       </trans-unit>
       <trans-unit id="rZXV_mU" resname="free">
         <source>free</source>
