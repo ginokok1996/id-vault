@@ -189,7 +189,7 @@ class DashboardController extends AbstractController
         }
 
         if ($this->getUser()) {
-            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id') ]);
+            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             if (count($users) > 0) {
                 $organizations = [];
@@ -219,14 +219,13 @@ class DashboardController extends AbstractController
         $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'applications'], ['organization' => '/organizations/'.$variables['organization']['id']])['hydra:member'];
 
-        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'],['title' => 'developers'.$variables['organization']['name'], 'organization' => $organization])['hydra:member'];
-        if (count($groups) > 0){
+        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['title' => 'developers'.$variables['organization']['name'], 'organization' => $organization])['hydra:member'];
+        if (count($groups) > 0) {
             $group = $groups[0];
             $variables['users'] = $group['users'];
         }
 
         if ($request->isMethod('POST') && $request->get('newDeveloper')) {
-
         } elseif ($request->isMethod('POST') && $request->get('updateInfo')) {
             if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
                 $icon = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'images', 'id' => $variables['organization']['style']['favicon']['id']]);
@@ -235,7 +234,6 @@ class DashboardController extends AbstractController
                 $data = file_get_contents($path);
                 $icon['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
                 $commonGroundService->updateResource($icon);
-
             }
 
             $organization = $variables['organization'];
