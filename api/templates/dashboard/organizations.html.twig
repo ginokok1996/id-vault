@@ -65,57 +65,6 @@
     </div> <!-- / .container -->
 
     <!-- modals -->
-    <div class="modal fade" id="modalOrganization" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
+    {% include '/dashboard/modals/add-organization-modal.html.twig' %}
 
-                    <!-- Close -->
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-
-                    <!-- Heading -->
-                    <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
-                        {{ 'add organization'|trans|capitalize }}
-                    </h2>
-
-                    <!-- Form -->
-                    <form method="post" action="{{ path('app_dashboard_organizations') }}">
-
-                        <!-- Name -->
-                        <div class="form-group">
-                            <label for="name">{{ 'name'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                            <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'name'|trans|capitalize }}">
-                        </div>
-
-                        <!-- Name -->
-                        <div class="form-group">
-                            <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                            <input required class="form-control" name="email" id="email" type="text" placeholder="{{ 'email'|trans|capitalize }}">
-                        </div>
-
-                        <!-- Name -->
-                        <div class="form-group">
-                            <label for="description">{{ 'description'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                            <textarea required name="description" class="form-control" id="description" rows="3"></textarea>
-                        </div>
-
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="logo">
-                            <label class="custom-file-label" for="customFile">{{ 'choose logo' }}</label>
-                        </div>
-
-
-                        <!-- Submit -->
-                        <button class="btn btn-block btn-primary mt-3 lift">
-                            {{ 'add organization' }}
-                        </button>
-
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

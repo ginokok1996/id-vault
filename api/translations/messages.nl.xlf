@@ -1741,6 +1741,10 @@
         <source>add organization</source>
         <target>organisatie toevoegen</target>
       </trans-unit>
+      <trans-unit id="_Q7ud4u" resname="choose logo">
+        <source>choose logo</source>
+        <target>kies logo</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

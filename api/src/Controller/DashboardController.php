@@ -109,10 +109,55 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        $variables['resources'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'organizations'])['hydra:member'];
-
+        if ($this->getUser()){
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0 ) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group){
+                    $organization =$commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations)){
+                        $organizations[] = $organization;
+                    }
+                }
+                $variables['resources'] = $organizations;
+            }
+        }
 
         if ($request->isMethod('POST')) {
+
+            $name = $request->get('name');
+            $email = $request->get('email');
+            $description = $request->get('description');
+
+            $cc = [];
+            $cc['name'] = $name;
+            $cc['description'] = $description;
+            $cc['emails'][0]['email'] = $email;
+
+            $cc = $commonGroundService->createResource($cc, ['component' => 'cc', 'type' => 'organizations']);
+
+            $wrc = [];
+            $wrc['rsin'] = ' ';
+            $wrc['chamberOfComerce'] = ' ';
+            $wrc['name'] = $name;
+            $wrc['description'] = $description;
+            $wrc['contact'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organizations', 'id' => $cc['id']]);
+            if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
+                $path = $_FILES['logo']['tmp_name'];
+                $type = filetype($_FILES['logo']['tmp_name']);
+                $data = file_get_contents($path);
+                $wrc['style']['name'] = 'style for '.$name;
+                $wrc['style']['description'] = 'style for '.$name;
+                $wrc['style']['css'] = ' ';
+                $wrc['style']['favicon']['name'] = 'logo for '.$name;
+                $wrc['style']['favicon']['description'] = 'logo for '.$name;
+                $wrc['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+            }
+
+            $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
+
+            $variables['resources'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'organizations'])['hydra:member'];
 
         }
 
