@@ -109,6 +109,28 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables['resources'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'organizations'])['hydra:member'];
+
+
+        if ($request->isMethod('POST')) {
+
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/organizations/{id}")
+     * @Template
+     */
+    public function organizationAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        if ($request->isMethod('POST')) {
+
+        }
+
         return $variables;
     }
 
