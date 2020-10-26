@@ -137,6 +137,22 @@
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
       </trans-unit>
+      <trans-unit id="kQhOIIO" resname="add data">
+        <source>add data</source>
+        <target>gegevens toevoegen</target>
+      </trans-unit>
+      <trans-unit id="y4X9zxh" resname="load data">
+        <source>load data</source>
+        <target>gegevens inladen</target>
+      </trans-unit>
+      <trans-unit id="N1Rob-5" resname="retrieve data">
+        <source>retrieve data</source>
+        <target>gegevens ophalen</target>
+      </trans-unit>
+      <trans-unit id="IDtLYtj" resname="add manually">
+        <source>add manually</source>
+        <target>handmatig toevoegen</target>
+      </trans-unit>
       <trans-unit id="9FjPhPy" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
@@ -1660,10 +1676,6 @@
       <trans-unit id="DGbtHOq" resname="back to safety">
         <source>back to safety</source>
         <target>back to safety</target>
-      </trans-unit>
-      <trans-unit id="ckvw2St" resname="no claims available">
-        <source>no claims available</source>
-        <target>__no claims available</target>
       </trans-unit>
     </body>
   </file>
