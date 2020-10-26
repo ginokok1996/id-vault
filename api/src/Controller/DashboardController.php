@@ -162,6 +162,30 @@ class DashboardController extends AbstractController
             }
 
             $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
+
+            $userGroup = [];
+            $userGroup['name'] = $name;
+            $userGroup['title'] = $name;
+            $userGroup['description'] = 'group for '.$name;
+            $userGroup['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrc['id']]);
+
+            $group = $commonGroundService->createResource($userGroup, ['component' => 'uc', 'type' => 'groups']);
+
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+
+                $userGroups = [];
+                foreach ($user['userGroups'] as $userGroup) {
+                    array_push($userGroups, '/groups/'.$userGroup['id']);
+                }
+
+                $user['userGroups'] = $userGroups;
+                $user['userGroups'][] = '/groups/'.$group['id'];
+
+                $commonGroundService->updateResource($user);
+            }
         }
 
         if ($this->getUser()) {
