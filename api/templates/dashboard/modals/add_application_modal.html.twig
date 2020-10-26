@@ -22,10 +22,10 @@
                         <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'name'|trans|capitalize }}">
                     </div>
 
-                    <!-- Name -->
+                    <!-- Email -->
                     <div class="form-group">
                         <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                        <input required class="form-control" name="email" id="email" type="text" placeholder="{{ 'email'|trans|capitalize }}">
+                        <input required class="form-control" name="email" id="email" type="email" placeholder="{{ 'email'|trans|capitalize }}">
                     </div>
 
                     <!-- Name -->
@@ -41,6 +41,11 @@
 
                     <div id="logoHolder" style="text-align: center" class="align-items-center mt-3 bg-gray-200" >
 
+                    </div>
+
+                    <div class="form-check">
+                        <input required type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">{{ 'i agree to the'|trans|capitalize }} <a target="_blank" href="/terms">{{ 'terms and services'|trans }}</a>.</label>
                     </div>
 
                     <!-- Submit -->
