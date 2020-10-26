@@ -1,0 +1,54 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'applications'|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalOrganization">
+                    {{ 'add new'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            {% if applications is defined and applications is not empty %}
+                {% for application in applications %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                            {% if application.style.favicon.base64 is defined %}
+                                    <!-- Avatar -->
+                                    <div class="avatar avatar-xl">
+                                        <img class="avatar-img" src="{{ application.style.favicon.base64 }}" alt="...">
+                                    </div>
+                            {% endif %}
+                            </div>
+                            <div class="col ml-n5">
+                                <!-- Heading -->
+                                <p class="mb-0">
+                                    {{ application.name }}
+                                </p>
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <a class="btn btn-xs btn-primary btn-block mt-5 mt-md-0" href="#">Open</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

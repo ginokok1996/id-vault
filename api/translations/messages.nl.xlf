@@ -1663,11 +1663,11 @@
       </trans-unit>
       <trans-unit id="rLIFg9y" resname="no organizations">
         <source>no organizations</source>
-        <target>__no organizations</target>
+        <target>geen organisaties</target>
       </trans-unit>
       <trans-unit id="h1uTgIZ" resname="development">
         <source>development</source>
-        <target>__development</target>
+        <target>development</target>
       </trans-unit>
       <trans-unit id="rZXV_mU" resname="free">
         <source>free</source>
@@ -1744,6 +1744,46 @@
       <trans-unit id="_Q7ud4u" resname="choose logo">
         <source>choose logo</source>
         <target>kies logo</target>
+      </trans-unit>
+      <trans-unit id="JaYFiUq" resname="add data">
+        <source>add data</source>
+        <target>__add data</target>
+      </trans-unit>
+      <trans-unit id="MzUTmF9" resname="add developer">
+        <source>add developer</source>
+        <target>developer toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Agb34dE" resname="load data">
+        <source>load data</source>
+        <target>__load data</target>
+      </trans-unit>
+      <trans-unit id="jEjQVne" resname="retrieve data">
+        <source>retrieve data</source>
+        <target>__retrieve data</target>
+      </trans-unit>
+      <trans-unit id="q.74DtX" resname="add manually">
+        <source>add manually</source>
+        <target>handmatig toevoegen</target>
+      </trans-unit>
+      <trans-unit id="zXn19Gz" resname="i agree to the">
+        <source>i agree to the</source>
+        <target>ik ga akkoord met de</target>
+      </trans-unit>
+      <trans-unit id="Tt5IBaB" resname="terms and services">
+        <source>terms and services</source>
+        <target>algemene voorwaarden</target>
+      </trans-unit>
+      <trans-unit id="CuZtPJt" resname="add payment method">
+        <source>add payment method</source>
+        <target>betaal methode toevoegen</target>
+      </trans-unit>
+      <trans-unit id="WNpsN.o" resname="card number">
+        <source>card number</source>
+        <target>kaartnummer</target>
+      </trans-unit>
+      <trans-unit id="2a_h9qz" resname="payment methods">
+        <source>payment methods</source>
+        <target>betaal methodes</target>
       </trans-unit>
     </body>
   </file>
