@@ -40,17 +40,18 @@ class DashboardController extends AbstractController
             if (count($users) > 0) {
                 $user = $users[0];
 
+
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
                     if ($userGroup['id'] != 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c') {
                         array_push($userGroups, '/groups/'.$userGroup['id']);
                     }
                 }
-                array_push($userGroups, '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c');
 
                 $user['userGroups'] = $userGroups;
+                $user['userGroups'][] = '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c';
 
-                $commonGroundService->saveResource($user, ['component' => 'uc', 'type' => 'users']);
+                $commonGroundService->updateResource($user);
             }
         }
 
@@ -122,21 +123,6 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($this->getUser()){
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0 ) {
-                $organizations = [];
-                $user = $users[0];
-                foreach ($user['userGroups'] as $group){
-                    $organization =$commonGroundService->getResource($group['organization']);
-                    if (!in_array($organization, $organizations)){
-                        $organizations[] = $organization;
-                    }
-                }
-                $variables['resources'] = $organizations;
-            }
-        }
-
         if ($request->isMethod('POST')) {
 
             $name = $request->get('name');
@@ -170,8 +156,21 @@ class DashboardController extends AbstractController
 
             $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
 
-            $variables['resources'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'organizations'])['hydra:member'];
+        }
 
+        if ($this->getUser()){
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0 ) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group){
+                    $organization =$commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations)){
+                        $organizations[] = $organization;
+                    }
+                }
+                $variables['resources'] = $organizations;
+            }
         }
 
         return $variables;
