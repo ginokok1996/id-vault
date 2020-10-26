@@ -37,6 +37,17 @@ class DocumentationController extends AbstractController
     }
 
     /**
+     * @Route("/glossary")
+     * @Template
+     */
+    public function glossaryAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
      * @Route("/example")
      * @Template
      */
