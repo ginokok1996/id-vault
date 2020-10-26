@@ -149,6 +149,18 @@
         <source>retrieve data</source>
         <target>gegevens ophalen</target>
       </trans-unit>
+      <trans-unit id="Vnyb4vp" resname="Where do you want to retrieve your data from?">
+        <source>Where do you want to retrieve your data from?</source>
+        <target>Waar wilt u uw gegevens van ophalen?</target>
+      </trans-unit>
+      <trans-unit id="Duaa9Kh" resname="add data">
+        <source>add data</source>
+        <target>gegevens toevoegen</target>
+      </trans-unit>
+      <trans-unit id="pJeH-8r" resname="What data do you want to add manually?">
+        <source>What data do you want to add manually?</source>
+        <target>Welke gegevens wilt u handmatig toevoegen?</target>
+      </trans-unit>
       <trans-unit id="IDtLYtj" resname="add manually">
         <source>add manually</source>
         <target>handmatig toevoegen</target>
