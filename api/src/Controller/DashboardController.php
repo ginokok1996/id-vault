@@ -7,7 +7,6 @@ namespace App\Controller;
 use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use function GuzzleHttp\Promise\all;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +38,6 @@ class DashboardController extends AbstractController
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
             if (count($users) > 0) {
                 $user = $users[0];
-
 
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
@@ -124,7 +122,6 @@ class DashboardController extends AbstractController
         $variables = [];
 
         if ($request->isMethod('POST')) {
-
             $name = $request->get('name');
             $email = $request->get('email');
             $description = $request->get('description');
@@ -164,33 +161,31 @@ class DashboardController extends AbstractController
 
             $group = $commonGroundService->createResource($userGroup, ['component' => 'uc', 'type' => 'groups']);
 
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0 ) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
                 $organizations = [];
                 $user = $users[0];
 
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
-                        array_push($userGroups, '/groups/'.$userGroup['id']);
+                    array_push($userGroups, '/groups/'.$userGroup['id']);
                 }
 
                 $user['userGroups'] = $userGroups;
                 $user['userGroups'][] = '/groups/'.$group['id'];
 
                 $commonGroundService->updateResource($user);
-
             }
-
         }
 
-        if ($this->getUser()){
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0 ) {
+        if ($this->getUser()) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
                 $organizations = [];
                 $user = $users[0];
-                foreach ($user['userGroups'] as $group){
-                    $organization =$commonGroundService->getResource($group['organization']);
-                    if (!in_array($organization, $organizations)){
+                foreach ($user['userGroups'] as $group) {
+                    $organization = $commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations)) {
                         $organizations[] = $organization;
                     }
                 }
@@ -210,7 +205,6 @@ class DashboardController extends AbstractController
         $variables = [];
 
         if ($request->isMethod('POST')) {
-
         }
 
         return $variables;

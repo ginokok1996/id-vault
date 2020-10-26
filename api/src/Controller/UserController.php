@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Class UserController.
  *
-* @Route("/user")
+ * @Route("/user")
  */
 class UserController extends AbstractController
 {
@@ -66,10 +66,10 @@ class UserController extends AbstractController
 
         if ($this->getUser()) {
             $this->flash->add('success', 'Welcome '.$this->getUser()->getName());
+
             return $this->redirect($this->generateUrl('app_default_index'));
         } else {
             return $this->redirect($this->generateUrl('app_default_index'));
-
         }
     }
 
