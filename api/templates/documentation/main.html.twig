@@ -1,38 +1,9 @@
+{% extends 'base.html.twig'%}
 
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% set noFooter = true %}
 
-    <!-- Libs CSS -->
-    <link rel="stylesheet" href="/bundles/landkit/fonts/Feather/feather.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/aos/dist/aos.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/choices.js/public/assets/styles/choices.min.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/flickity-fade/flickity-fade.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/flickity/dist/flickity.min.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/highlightjs/styles/vs2015.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/jarallax/dist/jarallax.css">
-    <link rel="stylesheet" href="/bundles/landkit/libs/quill/dist/quill.core.css" />
+{% block content %}
 
-    <!-- Map -->
-    <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
-
-    <!-- Theme CSS -->
-    <link rel="stylesheet" href="/bundles/landkit/css/theme.css">
-
-    <title>Landkit</title>
-</head>
-
-<body class="bg-light" style="padding-top: 84px;">
-
-{% include 'documentation/menu.html.twig' %}
-
-
-<!-- BREADCRUMB
-================================================== -->
 <nav class="d-lg-none bg-gray-800">
     <div class="container-fluid">
         <div class="row align-items-center">
@@ -47,7 +18,9 @@
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                 <span class="text-white">
-                  Introduction
+                    {% if currentPage is defined %}
+                        {{ currentPage|capitalize }}
+                    {% endif %}
                 </span>
                     </li>
                 </ol>
@@ -67,67 +40,68 @@
     </div> <!-- / .container -->
 </nav>
 
-<!-- CONTENT
-================================================== -->
-<section>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 col-lg-3 col-xl-2 px-lg-0 border-bottom border-bottom-lg-0 border-right-lg border-gray-300 sidenav sidenav-left">
+    <section>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-3 col-xl-2 px-lg-0 border-bottom border-bottom-lg-0 border-right-lg border-gray-300 sidenav sidenav-left">
 
-                <div class="collapse d-lg-block" id="sidenavCollapse">
-                    <div class="py-7 py-lg-9 px-lg-7">
-                        {% include 'documentation/sidenav.html.twig' %}
+                    <div class="collapse d-lg-block" id="sidenavCollapse">
+                        <div class="py-7 py-lg-9 px-lg-7">
+
+                            <!-- Heading -->
+                            <h6 class="text-uppercase font-weight-bold">
+                                Getting started
+                            </h6>
+
+                            <!-- Links -->
+                            <ul class="list mb-6">
+                                <li class="list-item">
+                                    <a class="list-link" href="{{ path('app_documentation_index') }}">Introduction</a>
+                                </li>
+                            </ul>
+
+                            <!-- Heading -->
+                            <h6 class="text-uppercase font-weight-bold">
+                                Section
+                            </h6>
+
+                            <!-- Links -->
+                            <ul class="list mb-6">
+                                <li class="list-item">
+                                    <a class="list-link" href="{{ path('app_documentation_example') }}">Example item</a>
+                                </li>
+                            </ul>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-12 col-lg-6 col-xl-8 offset-lg-3 offset-xl-2 py-7 py-lg-9 px-lg-7">
+
+                   {% block documentation %}
+
+                   {% endblock %}
+
+                </div>
+                <div class="col-12 col-lg-3 col-xl-2 d-none d-lg-block px-lg-0 sidenav sidenav-right">
+                    <div class="my-7 my-lg-9 px-lg-7 border-left-lg border-gray-300">
+
+                        <!-- Heading -->
+                        <h6 class="text-uppercase font-weight-bold">
+                            Jump to
+                        </h6>
+
+                        <!-- Links -->
+                        <ul class="list mb-0">
+                        {% block jumpto %}
+
+                        {% endblock %}
+                        </ul>
                     </div>
                 </div>
-
-
-            </div>
-            <div class="col-12 col-lg-6 col-xl-8 offset-lg-3 offset-xl-2 py-7 py-lg-9 px-lg-7">
-
-                <!-- Content -->
-                {% block documentation %}
-
-                {% endblock %}
-
-            </div>
-            <div class="col-12 col-lg-3 col-xl-2 d-none d-lg-block px-lg-0 sidenav sidenav-right">
-                <!-- Content -->
-                {% block jumpto %}
-
-                {% endblock %}
-            </div>
-        </div> <!-- / .row -->
-    </div>
-</section>
-
-<!-- JAVASCRIPT
-================================================== -->
-<!-- Libs JS -->
-<script src="/bundles/landkit/libs/jquery/dist/jquery.min.js"></script>
-<script src="/bundles/landkit/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/bundles/landkit/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
-<script src="/bundles/landkit/libs/aos/dist/aos.js"></script>
-<script src="/bundles/landkit/libs/choices.js/public/assets/scripts/choices.min.js"></script>
-<script src="/bundles/landkit/libs/countup.js/dist/countUp.min.js"></script>
-<script src="/bundles/landkit/libs/dropzone/dist/min/dropzone.min.js"></script>
-<script src="/bundles/landkit/libs/flickity/dist/flickity.pkgd.min.js"></script>
-<script src="/bundles/landkit/libs/flickity-fade/flickity-fade.js"></script>
-<script src="/bundles/landkit/libs/highlightjs/highlight.pack.min.js"></script>
-<script src="/bundles/landkit/libs/imagesloaded/imagesloaded.pkgd.min.js"></script>
-<script src="/bundles/landkit/libs/isotope-layout/dist/isotope.pkgd.min.js"></script>
-<script src="/bundles/landkit/libs/jarallax/dist/jarallax.min.js"></script>
-<script src="/bundles/landkit/libs/jarallax/dist/jarallax-video.min.js"></script>
-<script src="/bundles/landkit/jarallax/dist/jarallax-element.min.js"></script>
-<script src="/bundles/landkit/quill/dist/quill.min.js"></script>
-<script src="/bundles/landkit/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
-<script src="/bundles/landkit/libs/typed.js/lib/typed.min.js"></script>
-
-<!-- Map -->
-<script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
-
-<!-- Theme JS -->
-<script src="/bundles/landkit/js/theme.min.js"></script>
-
-
-</body>
-</html>
+            </div> <!-- / .row -->
+        </div>
+    </section>
+{% endblock %}
