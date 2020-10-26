@@ -33,13 +33,26 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-//        if ($request->isMethod('POST')) {
-//            $user = $this->getUser();
-//            $user['userGroups'] = [
-//                '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c',
-//            ];
-//            $commonGroundService->updateResource();
-//        }
+        // Set current user to userGroup developer
+        if ($request->isMethod('POST')) {
+            $person = $this->getUser()->getPerson();
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+
+                $userGroups = [];
+                foreach ($user['userGroups'] as $userGroup) {
+                    if ($userGroup['id'] != 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c') {
+                        array_push($userGroups, '/groups/'.$userGroup['id']);
+                    }
+                }
+                array_push($userGroups, '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c');
+
+                $user['userGroups'] = $userGroups;
+
+                $commonGroundService->saveResource($user, ['component' => 'uc', 'type' => 'users']);
+            }
+        }
 
         return $variables;
     }

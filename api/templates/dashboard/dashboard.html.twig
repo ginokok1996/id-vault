@@ -25,9 +25,9 @@
 
                     {% if app.user is defined and app.user is not empty %}
                         <!-- Button -->
-                        <button class="btn btn-sm btn-gray-300-20" href="{{ path('app_user_logout') }}">
+                        <a class="btn btn-sm btn-gray-300-20" href="{{ path('app_user_logout') }}">
                             {{ 'logout'|trans|capitalize }}
-                        </button>
+                        </a>
                     {% endif %}
 
                 </div>
