@@ -1,0 +1,54 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'developers'|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalOrganization">
+                    {{ 'add new'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            {% if users is defined and users is not empty %}
+                {% for user in users %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <!-- Avatar -->
+                                <div class="avatar avatar-xl">
+                                    <img class="avatar-img rounded-circle" src="https://eu.ui-avatars.com/api/?name={{ commonground_resource(user.person).givenName }}{% if commonground_resource(user.person).familyName is defined %}+{{ commonground_resource(user.person).familyName }}{% endif %}&background=335EEA&rounded=true&color=fff&bold=true" alt="...">
+                                </div>
+
+                            </div>
+                            <div class="col-6 ml-n5">
+                                <!-- Heading -->
+                                <p class="mb-0">
+                                    {{ commonground_resource(user.person).name }}
+                                </p>
+                                <!-- Text -->
+                                <a class="d-block small text-truncate text-gray-700" href="mailto:{{ user.username }}">
+                                    {{ user.username }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

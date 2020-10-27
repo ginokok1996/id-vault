@@ -1,0 +1,103 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <!-- Heading -->
+        <div class="list-group-item" style="border: none; padding: 0;">
+            <div class="row align-items-center">
+                {% if organization.style.favicon.base64 is defined %}
+                    <div class="col-auto">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xl">
+                            <img class="avatar-img" src="{{ organization.style.favicon.base64 }}" alt="...">
+                        </div>
+
+                    </div>
+                {% endif %}
+                <div class="col-6">
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        {{ organization.name|capitalize }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <!-- Form -->
+        <form method="post" action="{{ path('app_dashboard_organization', {id: organization.id})  }}" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 col-md-6">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">{{ 'name'|trans|capitalize }}</label>
+                        <input class="form-control" name="name" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
+                               value="{{ organization.name }}">
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-6">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">{{ 'email'|trans|capitalize }}</label>
+                        <input class="form-control" name="email" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}"
+                            {% if cc.emails[0].email is defined and cc.emails[0].email is not empty %}
+                                value="{{ cc.emails[0].email }}"
+                            {% endif %}>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="custom-file">
+                        <input onchange="showLogo()" type="file" name="logo" class="custom-file-input" id="logo">
+                        <label class="custom-file-label" for="customFile">{{ 'choose logo'|trans|capitalize }}</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div id="logoHolder" style="text-align: center" class="align-items-center mt-4 mb-4 bg-gray-200" >
+                    {% if organization.style.favicon.base64 is defined %}
+                        <img style="height: 100px;" src="{{ organization.style.favicon.base64 }}" alt="...">
+                    {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-auto">
+                    <!-- Button -->
+                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
+                        {{ 'save changes'|trans|capitalize }}
+                    </button>
+
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+    function showLogo(){
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function Main() {
+            let file = document.querySelector('#logo').files[0];
+            let logoHolder = document.querySelector('#logoHolder');
+            logoHolder.innerHTML = '';
+            let logo = document.createElement('img');
+            let base64 = await toBase64(file);
+            logo.setAttribute('style', 'height: 100px;');
+            logo.setAttribute('src', base64);
+            logoHolder.appendChild(logo);
+        }
+
+        Main();
+
+    }
+
+</script>
