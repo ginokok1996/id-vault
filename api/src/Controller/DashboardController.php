@@ -109,6 +109,22 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['contracts'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
+        // Set endDate of every contract by adding the contract.purposeLimitation.expiryPeriod to the contract.startingDate
+        foreach ($variables['contracts'] as &$contract) {
+            if (key_exists('purposeLimitation', $contract) and !empty($contract['purposeLimitation']) and
+                key_exists('expiryPeriod', $contract['purposeLimitation']) and !empty($contract['purposeLimitation']['expiryPeriod'])) {
+                if (key_exists('startingDate', $contract) and !empty($contract['startingDate'])) {
+                    $date = new \DateTime($contract['startingDate']);
+                    $date->add(new \DateInterval($contract['purposeLimitation']['expiryPeriod']));
+                    $contract['endDate'] = $date;
+                } else {
+                    $date = new \DateTime($contract['dateCreated']);
+                    $date->add(new \DateInterval($contract['purposeLimitation']['expiryPeriod']));
+                    $contract['endDate'] = $date;
+                }
+            }
+        }
+
         return $variables;
     }
 
