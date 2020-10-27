@@ -50,27 +50,31 @@
                                                     <p class="mb-0">
                                                         {% if application.organization.name is defined and application.organization.name is not empty %}
                                                             {{ application.organization.name }} | {{ application.name }}
+                                                        {% else %}
+                                                            {{ application.name }}
                                                         {% endif %}
                                                     </p>
 
-                                                    <!-- Text -->
-                                                    <small class="text-gray-700">
-                                                        {% for scopeItem in contract.scope %}
-                                                            {% if loop.last %}
-                                                                {{ scopeItem }}
-                                                            {% else %}
-                                                                {{ scopeItem }},
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </small>
+                                                    {% if contract.scope is defined and contract.scope is not empty %}
+                                                        <!-- Text -->
+                                                        <small class="text-gray-700">
+                                                            {% for scopeItem in contract.scope %}
+                                                                {% if loop.last %}
+                                                                    {{ scopeItem }}
+                                                                {% else %}
+                                                                    {{ scopeItem }},
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </small>
+                                                    {% endif %}
 
                                                 </div>
                                                 <div class="col-auto mr-n5">
 
-                                                    <!-- Badge -->
-                                                    <span class="badge badge-pill badge-secondary-soft">
-                                                        <button class="btn btn-sm" href="{{ path('app_dashboard_contracts') }}"><span class="h6 text-uppercase font-weight-bold">{{ 'view usage'|trans|capitalize }}</span></button>
-                                                    </span>
+                                                    <!-- Button -->
+                                                    <a class="btn btn-xs btn-primary" href="{{ path('app_dashboard_contracts') }}">
+                                                        {{ 'view usage'|trans|capitalize }}
+                                                    </a>
 
                                                 </div>
                                                 <div class="col-auto">
