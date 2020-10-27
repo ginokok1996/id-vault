@@ -130,7 +130,7 @@ class DefaultController extends AbstractController
     {
         $variables = [];
 
-        if (!$id){
+        if (!$id) {
             $this->addFlash('error', 'no application id provided');
         }
 
