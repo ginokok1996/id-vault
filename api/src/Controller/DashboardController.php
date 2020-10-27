@@ -219,7 +219,7 @@ class DashboardController extends AbstractController
         $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'applications'], ['organization' => '/organizations/'.$variables['organization']['id']])['hydra:member'];
 
-        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['title' => 'developers'.$variables['organization']['name'], 'organization' => $organization])['hydra:member'];
+        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organization])['hydra:member'];
         if (count($groups) > 0) {
             $group = $groups[0];
             $variables['users'] = $group['users'];

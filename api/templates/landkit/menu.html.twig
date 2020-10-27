@@ -202,13 +202,13 @@
             <!-- Button -->
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_dashboard_general') }}">
-                    {{ 'account'|trans|capitalize }}
+                    {{ 'dashboard'|trans|capitalize }}
                 </a>
             {% else %}
                 <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_default_register') }}">
                     {{ 'register'|trans|capitalize }}
                 </a>
-                <a style="margin-left: 20px !important;" class="navbar-btn btn btn-sm btn-success lift ml-auto" href="{{ path('app_default_login') }}">
+                <a style="" class="navbar-btn btn btn-sm btn-success ml-lg-2 mt-4 mt-lg-0 lift ml-auto" href="{{ path('app_default_login') }}">
                     {{ 'login'|trans|capitalize }}
                 </a>
             {% endif %}

@@ -23,7 +23,7 @@
                 </p>
 
                 <!-- Form -->
-                <form method="post" action="{{ path('app_user_login') }}" name="thisForm" class="mb-6">
+                <form method="post" action="{{ path('app_user_login') }}?backUrl={{ path('app_dashboard_general') }}" name="thisForm" class="mb-6">
 
                     <!-- Email -->
                     <div class="form-group">
