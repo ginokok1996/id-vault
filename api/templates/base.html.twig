@@ -40,7 +40,9 @@
 </head>
 <body>
 <!-- MENU -->
-{% include 'landkit/menu.html.twig' %}
+{% if noMenu is not defined %}
+    {% include 'landkit/menu.html.twig' %}
+{% endif %}
 
 {% set flashes = [] %}
 {% for label, messages in app.flashes() %}

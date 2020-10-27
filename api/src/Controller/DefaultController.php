@@ -121,4 +121,27 @@ class DefaultController extends AbstractController
 
         return $variables;
     }
+
+    /**
+     * @Route("/oauth/{id}")
+     * @Template
+     */
+    public function oauthAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        if (!$id) {
+            $this->addFlash('error', 'no application id provided');
+        }
+
+        try {
+            $variables['application'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $id]);
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'invalid application id');
+        }
+
+        $session->set('backUrl', $request->getUri());
+
+        return $variables;
+    }
 }

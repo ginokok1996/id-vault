@@ -60,14 +60,14 @@ class UserController extends AbstractController
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
         } else {
-            $backUrl = '/';
+            $backUrl = '/dashboard';
         }
         $session->set('backUrl', $backUrl);
 
         if ($this->getUser()) {
             $this->flash->add('success', 'Welcome '.$this->getUser()->getName());
 
-            return $this->redirect($this->generateUrl('app_default_index'));
+            return $this->redirect($this->generateUrl('app_dashboard_general'));
         } else {
             return $this->redirect($this->generateUrl('app_default_index'));
         }

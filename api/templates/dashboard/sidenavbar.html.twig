@@ -22,11 +22,12 @@
                         {{ 'security'|trans|capitalize }}
                     </a>
                 </li>
-                <li class="list-item {% if activeItem == 'notifications' %}active{% endif %}">
-                    <a class="list-link text-reset" href="{{ path('app_dashboard_notifications') }}">
-                        {{ 'notifications'|trans|capitalize }}
-                    </a>
-                </li>
+                {# @todo hier moeten we later nog naar kijken tijdelijk disabled #}
+{#                <li class="list-item {% if activeItem == 'notifications' %}active{% endif %}">#}
+{#                    <a class="list-link text-reset" href="{{ path('app_dashboard_notifications') }}">#}
+{#                        {{ 'notifications'|trans|capitalize }}#}
+{#                    </a>#}
+{#                </li>#}
             </ul>
 
             <!-- Heading -->

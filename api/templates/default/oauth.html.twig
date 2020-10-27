@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% set noMenu = true %}
+{% set noFooter = true %}
+
+{% block content %}
+<section class="section border-primary">
+    <div class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+            <div class="col-12 col-md-6 col-lg-7 offset-md-1 order-md-2 mt-auto mt-md-0 pt-8 pb-4 py-md-11">
+
+                <div class="p-5 bg-white" style="border-radius: 25px">
+                    <!-- Heading -->
+                    {% if application.style.favicon.base64 is defined %}
+                        <div class="text-center">
+                            <img class="" style="width: 100px;" src="{{ application.style.favicon.base64 }}" alt="...">
+                        </div>
+                    {% endif %}
+
+                    <h1 class="mb-0 font-weight-bold text-center">
+                        {{ application.name|capitalize }}
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="mb-6 text-center text-muted">
+                        {% if application.description is defined and application.description is not empty %}
+                            {{ application.description }}
+                        {% endif %}
+                    </p>
+
+                   <p class="mb-6 text-center">
+                       {{ "Id-vault is a place to savely store your online data, where you stay the owner and
+                   decide who can or can't access and use your data"|trans|capitalize }}.
+                   </p>
+
+                    <p class="mb-2 text-center">
+                        {{ 'the application is requesting the following scopes from you' }}:
+                    </p>
+
+                    <ul class="text-center list-group list-group-flush mb-6">
+                        <li style="list-style: none;" class=" text-muted">
+                            user.profile
+                        </li>
+                        <li style="list-style: none;" class=" text-muted">
+                            user.profile
+                        </li>
+                    </ul>
+
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <!-- Text -->
+                    <h2 class="mb-0 text-center font-weight-bold text-danger">
+                        {{ "log in to continue"|trans|capitalize }}
+                    </h2>
+                    {% else %}
+
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="col-12 col-md-5 col-lg-4 order-md-1 mb-auto mb-md-0 pb-8 py-md-11">
+                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="p-5 bg-white" style="border-radius: 25px">
+                        <!-- Heading -->
+                        <h1 class="mb-0 font-weight-bold text-center">
+                            {{ 'sign in'|trans|capitalize }}
+                        </h1>
+
+                        <!-- Text -->
+                        <p class="mb-6 text-center text-muted">
+                            {{ 'store your data in minutes'|trans|capitalize }}.
+                        </p>
+
+                        <!-- Form -->
+                        <form method="post" action="{{ path('app_user_login') }}?backUrl={{ path('app_dashboard_general') }}"
+                              name="thisForm" class="mb-6">
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email">
+                                    {{ 'email address'|trans|capitalize }}
+                                </label>
+                                <input required type="email" name="username" class="form-control" id="email"
+                                       placeholder="{{ 'name@address.com'|trans }}">
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group mb-5">
+                                <label for="password">
+                                    {{ 'password'|trans|capitalize }}
+                                </label>
+                                <input required type="password" name="password" class="form-control" id="password"
+                                       placeholder="{{ 'enter your password'|trans|capitalize }}">
+                            </div>
+
+                            <!-- Submit -->
+                            <button class="btn btn-block btn-primary" type="submit">
+                                {{ 'sign in'|trans|capitalize }}
+                            </button>
+
+                        </form>
+
+                        <!-- Text -->
+                        <p class="mb-0 font-size-sm text-center text-muted">
+                            {{ "don't have an account yet"|trans|capitalize }}?
+                            <a href="{{ path('app_default_register') }}">{{ 'sign up'|trans|capitalize }}</a>.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>
+{% endblock %}
