@@ -137,51 +137,47 @@
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
       </trans-unit>
-      <trans-unit id="kQhOIIO" resname="add data">
+      <trans-unit id="JaYFiUq" resname="add data">
         <source>add data</source>
-        <target>gegevens toevoegen</target>
+        <target>__add data</target>
       </trans-unit>
-      <trans-unit id="y4X9zxh" resname="load data">
+      <trans-unit id="Agb34dE" resname="load data">
         <source>load data</source>
-        <target>gegevens inladen</target>
+        <target>__load data</target>
       </trans-unit>
-      <trans-unit id="N1Rob-5" resname="retrieve data">
+      <trans-unit id="jEjQVne" resname="retrieve data">
         <source>retrieve data</source>
-        <target>gegevens ophalen</target>
+        <target>__retrieve data</target>
       </trans-unit>
-      <trans-unit id="157YQhT" resname="delete data">
+      <trans-unit id="iCjvdkP" resname="delete data">
         <source>delete data</source>
         <target>gegevens verwijderen</target>
       </trans-unit>
-      <trans-unit id="Vnyb4vp" resname="Where do you want to retrieve your data from?">
+      <trans-unit id="ffA_V3I" resname="Where do you want to retrieve your data from?">
         <source>Where do you want to retrieve your data from?</source>
         <target>Waar wilt u uw gegevens van ophalen?</target>
       </trans-unit>
-      <trans-unit id="Duaa9Kh" resname="add data">
-        <source>add data</source>
-        <target>gegevens toevoegen</target>
-      </trans-unit>
-      <trans-unit id="pJeH-8r" resname="What data do you want to add manually?">
+      <trans-unit id="XONZXtq" resname="What data do you want to add manually?">
         <source>What data do you want to add manually?</source>
         <target>Welke gegevens wilt u handmatig toevoegen?</target>
       </trans-unit>
-      <trans-unit id="IDtLYtj" resname="add manually">
+      <trans-unit id="q.74DtX" resname="add manually">
         <source>add manually</source>
         <target>handmatig toevoegen</target>
       </trans-unit>
-      <trans-unit id="9FjPhPy" resname="contracts">
+      <trans-unit id="sJTbfOL" resname="contracts">
         <source>contracts</source>
         <target>contracten</target>
       </trans-unit>
-      <trans-unit id="KaZuFG1" resname="view contracts">
+      <trans-unit id="1x.W2A." resname="view contracts">
         <source>view contracts</source>
         <target>contracten bekijken</target>
       </trans-unit>
-      <trans-unit id="_DH4cHH" resname="view dossier">
+      <trans-unit id="pauBzKJ" resname="view dossier">
         <source>view dossier</source>
         <target>dossier bekijken</target>
       </trans-unit>
-      <trans-unit id="WCt473o" resname="no contracts available">
+      <trans-unit id="00d6zUr" resname="no contracts available">
         <source>no contracts available</source>
         <target>geen contracten beschikbaar</target>
       </trans-unit>
@@ -233,11 +229,11 @@
         <source>view usage</source>
         <target>gebruik inzien</target>
       </trans-unit>
-      <trans-unit id="bhyArLN" resname="view usage2">
-        <source>view usage</source>
+      <trans-unit id="xilaOlj" resname="view usage2">
+        <source>view usage2</source>
         <target>gebruik bekijken</target>
       </trans-unit>
-      <trans-unit id="mTPq2tC" resname="end contract">
+      <trans-unit id="dnWT04R" resname="end contract">
         <source>end contract</source>
         <target>contract beëindigen</target>
       </trans-unit>
@@ -491,7 +487,7 @@
       </trans-unit>
       <trans-unit id="h3gPpd5" resname="register">
         <source>register</source>
-        <target>aanmelden</target>
+        <target>registreren</target>
       </trans-unit>
       <trans-unit id="CxGYhAj" resname="for citizen">
         <source>for citizen</source>
@@ -1789,25 +1785,9 @@
         <source>choose logo</source>
         <target>kies logo</target>
       </trans-unit>
-      <trans-unit id="JaYFiUq" resname="add data">
-        <source>add data</source>
-        <target>__add data</target>
-      </trans-unit>
       <trans-unit id="MzUTmF9" resname="add developer">
         <source>add developer</source>
         <target>developer toevoegen</target>
-      </trans-unit>
-      <trans-unit id="Agb34dE" resname="load data">
-        <source>load data</source>
-        <target>__load data</target>
-      </trans-unit>
-      <trans-unit id="jEjQVne" resname="retrieve data">
-        <source>retrieve data</source>
-        <target>__retrieve data</target>
-      </trans-unit>
-      <trans-unit id="q.74DtX" resname="add manually">
-        <source>add manually</source>
-        <target>handmatig toevoegen</target>
       </trans-unit>
       <trans-unit id="zXn19Gz" resname="i agree to the">
         <source>i agree to the</source>
@@ -1828,6 +1808,18 @@
       <trans-unit id="2a_h9qz" resname="payment methods">
         <source>payment methods</source>
         <target>betaal methodes</target>
+      </trans-unit>
+      <trans-unit id="XcjaL9_" resname="This project has been set up to help students find internships, challenge and tutorials that they can do from the comforts of their home">
+        <source>This project has been set up to help students find internships, challenge and tutorials that they can do from the comforts of their home</source>
+        <target>Dit project is opgezet zodat studenten in staat zijn om online stage plaatsen, challenges en tutorials te vinden</target>
+      </trans-unit>
+      <trans-unit id="ZfjpwS5" resname="add claim">
+        <source>add claim</source>
+        <target>claim toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Zs2WiKK" resname="dashboard">
+        <source>dashboard</source>
+        <target>dashboard</target>
       </trans-unit>
     </body>
   </file>
