@@ -113,6 +113,18 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/dossiers")
+     * @Template
+     */
+    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'])['hydra:member']; // , ['contract.person' => $this->getUser()->getPerson(), 'order[contract.dateCreated]' => 'desc']
+
+        return $variables;
+    }
+
+    /**
      * @Route("/applications")
      * @Template
      */
