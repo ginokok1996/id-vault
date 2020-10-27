@@ -102,10 +102,12 @@
                                                         <i class="fe fe-check"></i>
                                                     </div>
 
-                                                    <!-- Text -->
-                                                    <p>
-                                                        {% if proof.type is defined and proof.type is not empty %}{{ proof.type }}{% endif %}
-                                                    </p>
+                                                    {% if proof.type is defined and proof.type is not empty %}
+                                                        <!-- Text -->
+                                                        <p>
+                                                            {{ proof.type }}
+                                                        </p>
+                                                    {% endif %}
 
                                                 </div>
                                             {% endfor %}
