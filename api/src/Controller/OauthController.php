@@ -23,7 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OauthController extends AbstractController
 {
-
     /**
      * @Route("/authorize")
      * @Template
@@ -33,11 +32,9 @@ class OauthController extends AbstractController
         $variables = [];
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
-
             $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('application')]);
 
-            if ($request->get('grantAccess') == 'true'){
-
+            if ($request->get('grantAccess') == 'true') {
                 $person = $commonGroundService->getResource($this->getUser()->getPerson());
                 $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
                 $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
@@ -54,11 +51,9 @@ class OauthController extends AbstractController
                 $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
 
                 return $this->redirect($application['authorizationUrl']."?code={$authorization['id']}&state={$state}");
-
             } else {
                 return $this->redirect($application['authorizationUrl'].'?errorMessage=Authorization+denied+by+user');
             }
-
         }
 
         if (!$request->query->get('client_id')) {
@@ -71,8 +66,7 @@ class OauthController extends AbstractController
             }
         }
 
-
-        if ($request->query->get('state')){
+        if ($request->query->get('state')) {
             $variables['state'] = $request->query->get('state');
         }
 
@@ -81,19 +75,19 @@ class OauthController extends AbstractController
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
 
-            $authorizations = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'],['userUrl' => $user, 'application' => '/applications/'.$variables['application']['id']])['hydra:member'];
+            $authorizations = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $user, 'application' => '/applications/'.$variables['application']['id']])['hydra:member'];
             if (count($authorizations) > 0) {
                 $authorization = $authorizations['0'];
+
                 return $this->redirect($variables['application']['authorizationUrl']."?code={$authorization['id']}&state={$variables['state']}");
             }
-
         }
 
-        if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code'){
+        if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
             return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=invalid+response+type');
         }
 
-        if (!$request->query->get('scopes')){
+        if (!$request->query->get('scopes')) {
             return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=no+scopes+provided');
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
@@ -102,7 +96,6 @@ class OauthController extends AbstractController
         $session->set('backUrl', $request->getUri());
 
         $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
-
 
         return $variables;
     }
