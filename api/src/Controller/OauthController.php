@@ -71,6 +71,26 @@ class OauthController extends AbstractController
             }
         }
 
+
+        if ($request->query->get('state')){
+            $variables['state'] = $request->query->get('state');
+        }
+
+        if ($this->getUser()){
+
+            $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+            $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+
+            $authorizations = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'],['userUrl' => $user, 'application' => '/applications/'.$variables['application']['id']])['hydra:member'];
+            if (count($authorizations) > 0) {
+                $authorization = $authorizations['0'];
+                return $this->redirect($variables['application']['authorizationUrl']."?code={$authorization['id']}&state={$variables['state']}");
+            }
+
+        }
+
         if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code'){
             return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=invalid+response+type');
         }
@@ -79,11 +99,6 @@ class OauthController extends AbstractController
             return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=no+scopes+provided');
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
-        }
-
-
-        if ($request->query->get('state')){
-            $variables['state'] = $request->query->get('state');
         }
 
         $session->set('backUrl', $request->getUri());

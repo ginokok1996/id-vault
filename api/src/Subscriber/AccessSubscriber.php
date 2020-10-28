@@ -51,11 +51,6 @@ class AccessSubscriber implements EventSubscriberInterface
 
             $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $token->getClientSecret()])['hydra:member'];
             if (count($applications) < 1) {
-                echo $token->getClientSecret();
-                echo $token->getCode();
-                echo $token->getClientId();
-                echo 'error';
-                die;
                 //@todo error
             } else {
                 $application = $applications[0];

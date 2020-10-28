@@ -43,9 +43,11 @@ class AccessTokenGeneratorService
 
         $array['sub'] = $application['id'];
         $array['iss'] = $application['id'];
-        $array['aud'] = $application['authorization_url'];
+        $array['aud'] = $application['authorizationUrl'];
         $array['exp'] = '3600';
         $array['jti'] = $authorization['id'];
+        $array['alg'] = 'HS256';
+        $array['iat'] = strtotime('now');
 
         // Create token header as a JSON string
         $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);

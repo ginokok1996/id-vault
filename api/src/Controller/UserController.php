@@ -60,7 +60,7 @@ class UserController extends AbstractController
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
         } else {
-            $backUrl = '/dashboard';
+            $backUrl = '/dashboard/general';
         }
         $session->set('backUrl', $backUrl);
 
