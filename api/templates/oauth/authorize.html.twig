@@ -4,6 +4,11 @@
 {% set noFooter = true %}
 
 {% block content %}
+    {% if wrcApplication.style.css is defined %}
+        <style>
+            {{ wrcApplication.style.css|raw }}
+        </style>
+    {% endif %}
 <section class="section border-primary">
     <div class="container d-flex flex-column">
         <div class="row align-items-center justify-content-center no-gutters min-vh-100">

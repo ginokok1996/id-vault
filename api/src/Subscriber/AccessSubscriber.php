@@ -40,38 +40,38 @@ class AccessSubscriber implements EventSubscriberInterface
 
     public function grantAccess(ViewEvent $event)
     {
-//        $token = $event->getControllerResult();
-//        $method = $event->getRequest()->getMethod();
-//        $route = $event->getRequest()->attributes->get('_route');
-//
-//        if ($method != 'POST') {
-//            return;
-//        }
-//        if ($token instanceof AccessToken) {
-//
-//            $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $token->getClientSecret()])['hydra:member'];
-//            if (count($applications) < 1) {
-//                echo $token->getClientSecret();
-//                echo $token->getCode();
-//                echo $token->getClientId();
-//                echo 'error';
-//                die;
-//                //@todo error
-//            } else {
-//                $application = $applications[0];
-//
-//                $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
-//                $authorization['code'] = null;
-//                $authorization['application'] = '/applications/'.$application['id'];
-//                $authorization = $this->commonGroundService->updateResource($authorization);
-//
-//                $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization));
-//                $token->setTokenType('bearer');
-//                $token->setExpiresIn('3600');
-//                $token->setScope(implode(".",$authorization['scopes']));
-//            }
-//        }
-//
-//        return $token;
+        $token = $event->getControllerResult();
+        $method = $event->getRequest()->getMethod();
+        $route = $event->getRequest()->attributes->get('_route');
+
+        if ($method != 'POST') {
+            return;
+        }
+        if ($token instanceof AccessToken) {
+
+            $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $token->getClientSecret()])['hydra:member'];
+            if (count($applications) < 1) {
+                echo $token->getClientSecret();
+                echo $token->getCode();
+                echo $token->getClientId();
+                echo 'error';
+                die;
+                //@todo error
+            } else {
+                $application = $applications[0];
+
+                $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
+                $authorization['code'] = null;
+                $authorization['application'] = '/applications/'.$application['id'];
+                $authorization = $this->commonGroundService->updateResource($authorization);
+
+                $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization));
+                $token->setTokenType('bearer');
+                $token->setExpiresIn('3600');
+                $token->setScope(implode("+",$authorization['scopes']));
+            }
+        }
+
+        return $token;
     }
 }

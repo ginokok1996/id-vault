@@ -28,10 +28,13 @@ class AccessTokenGeneratorService
             switch ($scope) {
                 case 'schema.person.email':
                     $authorization['email'] = $person['emails'][0]['email'];
+                    break;
                 case 'schema.person.given_name':
                     $authorization['given_name'] = $person['givenName'];
-                case 'schema.person.family_Name':
+                    break;
+                case 'schema.person.family_name':
                     $authorization['family_name'] = $person['familyName'];
+                    break;
             }
         }
 
@@ -53,10 +56,7 @@ class AccessTokenGeneratorService
         // Encode Signature to Base64Url String
         $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
 
-        // Create JWT
-        $jwt = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
-
-        return $jwt;
+        return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
     }
 
 }
