@@ -54,9 +54,9 @@ class AccessSubscriber implements EventSubscriberInterface
                 $application = $applications[0];
 
                 $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
-                $authorization['code'] = null;
-                $authorization['application'] = '/applications/'.$application['id'];
-                $authorization = $this->commonGroundService->updateResource($authorization);
+//                $authorization['code'] = null;
+//                $authorization['application'] = '/applications/'.$application['id'];
+//                $authorization = $this->commonGroundService->updateResource($authorization);
 
                 $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
                 $token->setTokenType('bearer');
