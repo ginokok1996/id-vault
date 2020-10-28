@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class WacController extends AbstractController
 {
     /**
-     * @Route("/claims"/{id})
+     * @Route("/claims/{id}")
      * @Template
      */
     public function claimAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
@@ -53,7 +53,7 @@ class WacController extends AbstractController
     }
 
     /**
-     * @Route("/contracts"/{id})
+     * @Route("/contracts/{id}")
      * @Template
      */
     public function contractAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
@@ -82,7 +82,7 @@ class WacController extends AbstractController
     }
 
     /**
-     * @Route("/dossiers"/{id})
+     * @Route("/dossiers/{id}")
      * @Template
      */
     public function dossierAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
