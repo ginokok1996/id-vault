@@ -92,9 +92,9 @@ class DashboardController extends AbstractController
 
             $resource['person'] = $this->getUser()->getPerson();
 
-            $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
+            $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
-            return $this->redirect($this->generateUrl('app_dashboard_claims'));
+            return $this->redirect($this->generateUrl('app_wac_claim', ['id'=>$resource['id']]));
         }
 
         return $variables;
