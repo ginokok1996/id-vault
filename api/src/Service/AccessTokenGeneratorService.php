@@ -20,29 +20,38 @@ class AccessTokenGeneratorService
         $this->params = $params;
     }
 
-    public function generateAccessToken($authorization)
+    public function generateAccessToken($authorization, $application)
     {
-        $person = $this->commonGroundService->getResource($authorization['person']);
+        $user = $this->commonGroundService->getResource($authorization['userUrl']);
+        $person = $this->commonGroundService->getResource($user['person']);
+
+        $array = [];
 
         foreach ($authorization['scopes'] as $scope) {
             switch ($scope) {
                 case 'schema.person.email':
-                    $authorization['email'] = $person['emails'][0]['email'];
+                    $array['email'] = $user['username'];
                     break;
                 case 'schema.person.given_name':
-                    $authorization['given_name'] = $person['givenName'];
+                    $array['given_name'] = $person['givenName'];
                     break;
                 case 'schema.person.family_name':
-                    $authorization['family_name'] = $person['familyName'];
+                    $array['family_name'] = $person['familyName'];
                     break;
             }
         }
+
+        $array['sub'] = $application['id'];
+        $array['iss'] = $application['id'];
+        $array['aud'] = $application['authorization_url'];
+        $array['exp'] = '3600';
+        $array['jti'] = $authorization['id'];
 
         // Create token header as a JSON string
         $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
 
         // Create token payload as a JSON string
-        $payload = json_encode($authorization);
+        $payload = json_encode($array);
 
         // Encode Header to Base64Url String
         $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));

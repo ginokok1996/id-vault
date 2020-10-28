@@ -65,7 +65,7 @@ class AccessSubscriber implements EventSubscriberInterface
                 $authorization['application'] = '/applications/'.$application['id'];
                 $authorization = $this->commonGroundService->updateResource($authorization);
 
-                $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization));
+                $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
                 $token->setScope(implode("+",$authorization['scopes']));

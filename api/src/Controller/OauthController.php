@@ -39,12 +39,17 @@ class OauthController extends AbstractController
             if ($request->get('grantAccess') == 'true'){
 
                 $person = $commonGroundService->getResource($this->getUser()->getPerson());
+                $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+                $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+                if (count($users) > 0) {
+                    $user = $users[0];
+                }
                 $state = $request->get('state');
                 $authorization = [];
                 $authorization['application'] = '/applications/'.$application['id'];
                 $authorization['scopes'] = $request->get('scopes');
                 $authorization['goal'] = ' ';
-                $authorization['person'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+                $authorization['userUrl'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
                 $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
 
@@ -77,7 +82,7 @@ class OauthController extends AbstractController
         }
 
 
-        if (!$request->query->get('state')){
+        if ($request->query->get('state')){
             $variables['state'] = $request->query->get('state');
         }
 
