@@ -109,6 +109,34 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['contracts'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'contracts'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
+        // Set endDate of every contract by adding the contract.purposeLimitation.expiryPeriod to the contract.startingDate
+        foreach ($variables['contracts'] as &$contract) {
+            if (key_exists('purposeLimitation', $contract) and !empty($contract['purposeLimitation']) and
+                key_exists('expiryPeriod', $contract['purposeLimitation']) and !empty($contract['purposeLimitation']['expiryPeriod'])) {
+                if (key_exists('startingDate', $contract) and !empty($contract['startingDate'])) {
+                    $date = new \DateTime($contract['startingDate']);
+                    $date->add(new \DateInterval($contract['purposeLimitation']['expiryPeriod']));
+                    $contract['endDate'] = $date;
+                } else {
+                    $date = new \DateTime($contract['dateCreated']);
+                    $date->add(new \DateInterval($contract['purposeLimitation']['expiryPeriod']));
+                    $contract['endDate'] = $date;
+                }
+            }
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/dossiers")
+     * @Template
+     */
+    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['contract.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+
         return $variables;
     }
 
@@ -250,17 +278,6 @@ class DashboardController extends AbstractController
             $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
             $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
         }
-
-        return $variables;
-    }
-
-    /**
-     * @Route("/documentation")
-     * @Template
-     */
-    public function documentationAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
-    {
-        $variables = [];
 
         return $variables;
     }

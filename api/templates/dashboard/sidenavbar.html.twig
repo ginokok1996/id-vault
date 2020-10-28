@@ -47,6 +47,11 @@
                         {{ 'contracts'|trans|capitalize }}
                     </a>
                 </li>
+                <li class="list-item {% if activeItem == 'dossiers' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_dossiers') }}">
+                        {{ 'dossiers'|trans|capitalize }}
+                    </a>
+                </li>
             </ul>
 
             <!-- Heading -->
@@ -66,8 +71,8 @@
                         {{ 'organizations'|trans|capitalize }}
                     </a>
                 </li>
-                <li class="list-item {% if activeItem == 'documentation' %}active{% endif %}">
-                    <a class="list-link text-reset" href="{{ path('app_dashboard_documentation') }}">
+                <li class="list-item">
+                    <a class="list-link text-reset" href="{{ path('app_documentation_index') }}">
                         {{ 'documentation'|trans|capitalize }}
                     </a>
                 </li>
