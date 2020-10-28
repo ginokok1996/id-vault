@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
-
 class AccessSubscriber implements EventSubscriberInterface
 {
     private $params;
@@ -48,7 +47,6 @@ class AccessSubscriber implements EventSubscriberInterface
             return;
         }
         if ($token instanceof AccessToken) {
-
             $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $token->getClientSecret()])['hydra:member'];
             if (count($applications) < 1) {
                 //@todo error
@@ -63,7 +61,7 @@ class AccessSubscriber implements EventSubscriberInterface
                 $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
-                $token->setScope(implode("+",$authorization['scopes']));
+                $token->setScope(implode('+', $authorization['scopes']));
             }
         }
 
