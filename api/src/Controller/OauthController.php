@@ -35,9 +35,7 @@ class OauthController extends AbstractController
             $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('application')]);
 
             if ($request->get('grantAccess') == 'true') {
-                $person = $commonGroundService->getResource($this->getUser()->getPerson());
-                $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-                $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+                $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
                 if (count($users) > 0) {
                     $user = $users[0];
                 }
