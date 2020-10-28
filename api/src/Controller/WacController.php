@@ -23,27 +23,29 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WacController extends AbstractController
 {
-
     /**
      * @Route("/claims"/{id})
      * @Template
      */
     public function claimAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
-        if(empty($this->getUser())) {
+        if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
+
             return $this->redirect('/login');
         }
         if (!$id) {
             $this->addFlash('error', 'No id provided');
+
             return $this->redirect('/dashboard/claims');
         }
 
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
 
-        if($variables['resource']['person'] != $this->getUser()->getPerson()) {
+        if ($variables['resource']['person'] != $this->getUser()->getPerson()) {
             $this->addFlash('error', 'You do not have access to this claim');
+
             return $this->redirect('/dashboard/claims');
         }
 
@@ -56,20 +58,23 @@ class WacController extends AbstractController
      */
     public function contractAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
-        if(empty($this->getUser())) {
+        if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
+
             return $this->redirect('/login');
         }
         if (!$id) {
             $this->addFlash('error', 'No id provided');
+
             return $this->redirect('/dashboard/contracts');
         }
 
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'contracts', 'id'=>$id]);
 
-        if($variables['resource'] != $this->getUser()->getPerson()) {
+        if ($variables['resource'] != $this->getUser()->getPerson()) {
             $this->addFlash('error', 'You do not have access to this contract');
+
             return $this->redirect('/dashboard/contracts');
         }
 
@@ -82,20 +87,23 @@ class WacController extends AbstractController
      */
     public function dossierAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
-        if(empty($this->getUser())) {
+        if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
+
             return $this->redirect('/login');
         }
         if (!$id) {
             $this->addFlash('error', 'No id provided');
+
             return $this->redirect('/dashboard/dossiers');
         }
 
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
 
-        if($variables['resource']['authorization']['person'] != $this->getUser()->getPerson()) {
+        if ($variables['resource']['authorization']['person'] != $this->getUser()->getPerson()) {
             $this->addFlash('error', 'You do not have access to this dossier');
+
             return $this->redirect('/dashboard/dossiers');
         }
 

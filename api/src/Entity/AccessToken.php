@@ -3,24 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\AccessTokenRepository;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * @ApiResource()
  */
 class AccessToken
 {
-    /**
-     *
-     *
-     *
-     */
     private $id;
 
     /**
@@ -77,7 +69,7 @@ class AccessToken
     private $tokenType;
 
     /**
-     * @var integer The time in wisch the acces token will expire
+     * @var int The time in wisch the acces token will expire
      *
      * @example 3600
      *
