@@ -20,7 +20,7 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~''~resource.property }}
+                                    {{ 'contract'|trans|capitalize~' '~resource.id }}
                                 </h4>
 
                             </div>
@@ -36,11 +36,10 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <h4>To-do</h4>
                         {% if resource|default %}
-                            <h4>To-do</h4>
-                            Property: {{ resource.property }}
-                            <br>
-                            Person: {{ resource.person }}
+
+                            {{ dump(resource) }}
 
                         {% endif %}
 

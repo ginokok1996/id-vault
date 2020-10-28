@@ -37,9 +37,10 @@
                     </div>
                     <div class="card-body">
                         <h4>To-do</h4>
+
                         {% if resource|default %}
 
-                            {{ dump(resource) }}
+                            Basis: {{ resource.basis }}
 
                         {% endif %}
 

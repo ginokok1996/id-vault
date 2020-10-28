@@ -3,12 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            <div class="col-12 col-md-3">
+            {#            <div class="col-12 col-md-3">#}
 
-                {% set activeItem = 'claims' %}
-                {% include 'dashboard/sidenavbar.html.twig' %}
+            {#                {% set activeItem = 'claims' %}#}
+            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
 
-            </div>
+            {#            </div>#}
 
             <div class="col-12 col-md-9">
 
@@ -20,103 +20,28 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    {{ 'claims'|trans|capitalize }}
+                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~''~resource.property }}
                                 </h4>
 
                             </div>
 
-                            <div class="col-auto">
+                            {#                            <div class="col-auto">#}
 
-                                <!-- Button -->
-                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">
-                                    {{ 'add claim'|trans|capitalize }}
-                                </button>
+                            {#                                <!-- Button -->#}
+                            {#                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">#}
+                            {#                                    {{ 'add claim'|trans|capitalize }}#}
+                            {#                                </button>#}
 
-                            </div>
+                            {#                            </div>#}
                         </div>
                     </div>
                     <div class="card-body">
-                        {% if claims is defined and claims is not empty %}
-                            <div class="list-group list-group-flush">
-                                {% for claim in claims %}
-                                    <div class="list-group-item">
-                                        <!-- Header -->
-                                        <div class="row mb-5">
-                                            <div class="col">
+                        <h4>To-do</h4>
+                        {% if resource|default %}
+                            Property: {{ resource.property }}
+                            <br>
+                            Person: {{ resource.person }}
 
-                                                <!-- Heading -->
-                                                <h4 class="mb-0">
-                                                    {% if claim.data is defined and claim.data is not empty %}
-                                                        {% for dataItem in claim.data %}
-                                                            {% if loop.last %}
-                                                                {{ dataItem }}
-                                                            {% else %}
-                                                                {{ dataItem }},
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </h4>
-
-                                                <!-- Text -->
-                                                <small class="text-gray-700">
-                                                    {% if claim.property is defined and claim.property is not empty %}
-                                                        {{ claim.property }}
-                                                    {% endif %}
-                                                </small>
-
-                                            </div>
-                                            <div class="col-auto mr-n5">
-
-                                                <!-- Button -->
-                                                <a class="btn btn-xs btn-primary" href="pricing.html">
-                                                    {{ 'edit'|trans|capitalize }}
-                                                </a>
-
-                                            </div>
-
-                                            <div class="col-auto">
-
-                                                <!-- Dropdown -->
-                                                <div class="dropdown">
-                                                    <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#" aria-expanded="false">
-                                                        <i class="fe fe-more-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu" style="">
-                                                        <a class="dropdown-item" href="#">{{ 'view contracts'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#">{{ 'view dossier'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#">{{ 'view usage2'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#" style="color: red">{{ 'delete data'|trans|capitalize }}</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        {% if claim.proofs is defined and claim.proofs is not empty %}
-                                            {% for proof in claim.proofs %}
-                                                <!-- Item -->
-                                                <div class="d-flex">
-
-                                                    <!-- Check -->
-                                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
-                                                        <i class="fe fe-check"></i>
-                                                    </div>
-
-                                                    {% if proof.type is defined and proof.type is not empty %}
-                                                        <!-- Text -->
-                                                        <p>
-                                                            {{ proof.type }}
-                                                        </p>
-                                                    {% endif %}
-
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="hint__title">{{ 'no claims available'|trans|capitalize }}</p>
                         {% endif %}
 
                     </div>
@@ -126,5 +51,4 @@
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 
-    {% include 'dashboard/modals/add_claim_modal.html.twig' %}
 {% endblock %}
