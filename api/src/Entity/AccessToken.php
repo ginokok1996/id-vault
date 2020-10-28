@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AccessTokenRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -11,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 
 /**
+ * @ORM\Entity(repositoryClass="App\Repository\AccessTokenRepository")
  * @ApiResource()
  */
 class AccessToken
@@ -20,46 +22,38 @@ class AccessToken
     private $id;
 
     /**
-     * @var UuidInterface The UUID identifier of this object
+     * @var string The UUID identifier of this object
      *
      * @example authorization_code
      *
      * @Groups({"write"})
-     * @Assert\NotNull
-     * @Assert\Choice({"authorization_code"})
      */
     private $grantType;
 
     /**
-     * @var UuidInterface The id of your application
+     * @var string The id of your application
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $clientId;
 
     /**
-     * @var UuidInterface The secret of your application
+     * @var string The secret of your application
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $clientSecret;
 
     /**
-     * @var UuidInterface The code given to your application on
+     * @var string The code given to your application on
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $code;
 
@@ -125,12 +119,12 @@ class AccessToken
         return $this;
     }
 
-    public function getClientId(): ?int
+    public function getClientId(): ?string
     {
         return $this->clientId;
     }
 
-    public function setClientId(int $clientId): self
+    public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
 

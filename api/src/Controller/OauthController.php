@@ -23,41 +23,55 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OauthController extends AbstractController
 {
-    /**
-     * @Route("/")
-     * @Template
-     */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
-    {
-        $variables = [];
-
-        return $variables;
-    }
 
     /**
      * @Route("/authorize")
      * @Template
      */
-    public function oauthAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->isMethod('POST') && $request->get('grantAccess')) {
+
+            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('application')]);
+
+            if ($request->get('grantAccess') == 'true'){
+
+                $person = $commonGroundService->getResource($this->getUser()->getPerson());
+                $state = $request->get('state');
+                $authorization = [];
+                $authorization['application'] = '/applications/'.$application['id'];
+                $authorization['scopes'] = $request->get('scopes');
+                $authorization['goal'] = ' ';
+                $authorization['person'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+                $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
+
+                return $this->redirect($application['authorizationUrl']."?code={$authorization['id']}&state={$state}");
+
+            } else {
+                return $this->redirect($application['authorizationUrl'].'?errorMessage=Authorization+denied+by+user');
+            }
+
+        }
 
         if (!$request->query->get('client_id')) {
             $this->addFlash('error', 'no client id provided');
         } else {
             try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
+                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
             } catch (\Throwable $e) {
                 $this->addFlash('error', 'invalid client id');
             }
         }
 
         if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code'){
-            $this->addFlash('error', 'invalid response type');
+            return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=invalid+response+type');
         }
 
         if (!$request->query->get('scopes')){
-            $this->addFlash('error', 'no scopes provided');
+            return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=no+scopes+provided');
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
         }
@@ -69,15 +83,7 @@ class OauthController extends AbstractController
 
         $session->set('backUrl', $request->getUri());
 
-        if ($request->isMethod('POST') && $request->get('grantAccess')) {
-
-            if ($request->get('grantAccess') == 'true'){
-                //@todo create token & send back to authorization url defined in application
-            } else {
-                //@todo send message back that access was denied.
-            }
-
-        }
+        $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
 
 
         return $variables;

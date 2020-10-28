@@ -12,9 +12,9 @@
 
                 <div class="p-5 bg-white" style="border-radius: 25px">
                     <!-- Heading -->
-                    {% if application.style.favicon.base64 is defined %}
+                    {% if wrcApplication.style.favicon.base64 is defined %}
                         <div class="text-center">
-                            <img class="" style="width: 100px;" src="{{ application.style.favicon.base64 }}" alt="...">
+                            <img class="" style="width: 100px;" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
                         </div>
                     {% endif %}
 
@@ -55,7 +55,7 @@
                     </h2>
                     {% else %}
                         <div class="text-center">
-                            <form method="post" action="{{ path('app_default_oauth') }}">
+                            <form method="post" action="{{ path('app_oauth_authorize') }}">
                                 {%  if scopes is defined %}
                                     {% for scope in scopes %}
                                         <input type="hidden" name="scopes[]" value="{{ scope }}">
@@ -63,6 +63,9 @@
                                 {% endif %}
                                 {% if state is defined %}
                                     <input type="hidden" name="state" value="{{ state }}">
+                                {% endif %}
+                                {% if application is defined %}
+                                    <input type="hidden" name="application" value="{{ application.id }}">
                                 {% endif %}
                                 <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
                                     {{ 'accept'|trans|capitalize }}
