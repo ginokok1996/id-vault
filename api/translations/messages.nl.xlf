@@ -1829,6 +1829,23 @@
         <source>dashboard</source>
         <target>dashboard</target>
       </trans-unit>
+      <trans-unit id="tpfHPzz" resname="Id-vault is a place to savely store your online data, where you stay the owner and&#10;                   decide who can or can't access and use your data">
+        <source>Id-vault is a place to savely store your online data, where you stay the owner and
+                   decide who can or can't access and use your data</source>
+        <target>Id-vault is een plek waar je veilig je data online op kan slaan. Jij blijft de baas over je gegevens en bepaald ten allertijden wie er bij kan</target>
+      </trans-unit>
+      <trans-unit id="1b3h_Ot" resname="log in to continue">
+        <source>log in to continue</source>
+        <target>log in om door te gaan</target>
+      </trans-unit>
+      <trans-unit id="wSXQOXt" resname="accept">
+        <source>accept</source>
+        <target>accepteren</target>
+      </trans-unit>
+      <trans-unit id=".V_MvtP" resname="decline">
+        <source>decline</source>
+        <target>afwijzen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

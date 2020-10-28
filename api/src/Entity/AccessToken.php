@@ -2,60 +2,101 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ORM\Entity(repositoryClass="App\Repository\AccessTokenRepository")
+ * @ApiResource(
+ *     attributes={"pagination_items_per_page"=30},
+ *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
+ *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
+ *     itemOperations={
+ *          "get",
+ *          "put",
+ *          "delete",
+ *          "get_change_logs"={
+ *              "path"="/access_tokens/{id}/change_log",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Changelogs",
+ *                  "description"="Gets al the change logs for this resource"
+ *              }
+ *          },
+ *          "get_audit_trail"={
+ *              "path"="/access_tokens/{id}/audit_trail",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Audittrail",
+ *                  "description"="Gets the audit trail for this resource"
+ *              }
+ *          }
+ *     }
+ * )
+ *
+ * @ApiFilter(BooleanFilter::class)
+ * @ApiFilter(OrderFilter::class)
+ * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
+ * @ApiFilter(SearchFilter::class)
  */
 class AccessToken
 {
+    /**
+     * @var UuidInterface The UUID identifier of this resource
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Assert\Uuid
+     * @Groups({"read"})
+     * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     */
     private $id;
 
     /**
-     * @var UuidInterface The UUID identifier of this object
+     * @var string The UUID identifier of this object
      *
      * @example authorization_code
      *
      * @Groups({"write"})
-     * @Assert\NotNull
-     * @Assert\Choice({"authorization_code"})
      */
     private $grantType;
 
     /**
-     * @var UuidInterface The id of your application
+     * @var string The id of your application
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $clientId;
 
     /**
-     * @var UuidInterface The secret of your application
+     * @var string The secret of your application
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $clientSecret;
 
     /**
-     * @var UuidInterface The code given to your application on
+     * @var string The code given to your application on
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"write"})
-     * @Assert\Uuid
-     * @Assert\NotNull
      */
     private $code;
 
@@ -104,9 +145,16 @@ class AccessToken
      */
     private $state;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(Uuid $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getGrantType(): ?string
@@ -121,12 +169,12 @@ class AccessToken
         return $this;
     }
 
-    public function getClientId(): ?int
+    public function getClientId(): ?string
     {
         return $this->clientId;
     }
 
-    public function setClientId(int $clientId): self
+    public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
 

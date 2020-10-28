@@ -123,24 +123,46 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/oauth/{id}")
+     * @Route("/oauth")
      * @Template
      */
-    public function oauthAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function oauthAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
-        if (!$id) {
-            $this->addFlash('error', 'no application id provided');
+        if (!$request->query->get('client_id')) {
+            $this->addFlash('error', 'no client id provided');
+        } else {
+            try {
+                $variables['application'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
+            } catch (\Throwable $e) {
+                $this->addFlash('error', 'invalid client id');
+            }
         }
 
-        try {
-            $variables['application'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $id]);
-        } catch (\Throwable $e) {
-            $this->addFlash('error', 'invalid application id');
+        if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
+            $this->addFlash('error', 'invalid response type');
+        }
+
+        if (!$request->query->get('scopes')) {
+            $this->addFlash('error', 'no scopes provided');
+        } else {
+            $variables['scopes'] = explode(' ', $request->query->get('scopes'));
+        }
+
+        if (!$request->query->get('state')) {
+            $variables['state'] = $request->query->get('state');
         }
 
         $session->set('backUrl', $request->getUri());
+
+        if ($request->isMethod('POST') && $request->get('grantAccess')) {
+            if ($request->get('grantAccess') == 'true') {
+                //@todo create token & send back to authorization url defined in application
+            } else {
+                //@todo send message back that access was denied.
+            }
+        }
 
         return $variables;
     }

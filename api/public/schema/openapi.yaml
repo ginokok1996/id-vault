@@ -29,7 +29,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/AccessToken:jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/AccessToken:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -39,7 +39,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/AccessToken:jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/AccessToken:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -49,58 +49,83 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/json+hal:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/vnd.api+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/json+vnd.api:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/health+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/json+health:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             application/x-yaml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             text/csv:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccessToken'
+                  $ref: '#/components/schemas/AccessToken-read'
       parameters:
+        -
+          name: 'order[id]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: id
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'id[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
         -
           name: page
           in: query
@@ -202,43 +227,49 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
+          links:
+            GetAccessTokenItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getAccessTokenItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/access_tokens/{id}`.'
         400:
           description: 'Invalid input'
         404:
@@ -247,43 +278,43 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/AccessToken:jsonld'
+              $ref: '#/components/schemas/AccessToken:jsonld-write'
           application/json+ld:
             schema:
-              $ref: '#/components/schemas/AccessToken:jsonld'
+              $ref: '#/components/schemas/AccessToken:jsonld-write'
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+hal:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+vnd.api:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/health+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+health:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
         description: 'The new AccessToken resource'
       parameters:
         -
@@ -405,93 +436,47 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
         404:
           description: 'Resource not found'
       produces:
         - application/health+json
-    delete:
-      tags:
-        - AccessToken
-      operationId: deleteAccessTokenItem
-      summary: 'Removes the AccessToken resource.'
-      responses:
-        204:
-          description: 'AccessToken resource deleted'
-        404:
-          description: 'Resource not found'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
     put:
       tags:
         - AccessToken
@@ -539,43 +524,43 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
         400:
           description: 'Invalid input'
         404:
@@ -584,49 +569,54 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/AccessToken:jsonld'
+              $ref: '#/components/schemas/AccessToken:jsonld-write'
           application/json+ld:
             schema:
-              $ref: '#/components/schemas/AccessToken:jsonld'
+              $ref: '#/components/schemas/AccessToken:jsonld-write'
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+hal:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+vnd.api:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/health+json:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/json+health:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/AccessToken'
+              $ref: '#/components/schemas/AccessToken-write'
         description: 'The updated AccessToken resource'
-    patch:
+    delete:
       tags:
         - AccessToken
-      operationId: patchAccessTokenItem
-      summary: 'Updates the AccessToken resource.'
+      operationId: deleteAccessTokenItem
+      summary: 'Removes the AccessToken resource.'
+      responses:
+        204:
+          description: 'AccessToken resource deleted'
+        404:
+          description: 'Resource not found'
       parameters:
         -
           name: id
@@ -663,59 +653,268 @@ paths:
           name: X-NLX-Audit-Clarification
           description: 'A clarification as to why a request has been made  (doelbinding)'
           in: header
+  '/api/access_tokens/{id}/audit_trail':
+    get:
+      tags:
+        - AccessToken
+      operationId: get_audit_trailAccessTokenItem
+      summary: 'Retrieves a AccessToken resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
       responses:
         200:
-          description: 'AccessToken resource updated'
+          description: 'AccessToken resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/AccessToken:jsonld'
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/AccessToken'
+                $ref: '#/components/schemas/AccessToken-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/AccessToken'
-        400:
-          description: 'Invalid input'
+                $ref: '#/components/schemas/AccessToken-read'
         404:
           description: 'Resource not found'
-      requestBody:
-        content:
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/AccessToken'
-        description: 'The updated AccessToken resource'
+      produces:
+        - application/health+json
+  '/api/access_tokens/{id}/change_log':
+    get:
+      tags:
+        - AccessToken
+      operationId: get_change_logsAccessTokenItem
+      summary: 'Retrieves a AccessToken resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'AccessToken resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/AccessToken:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/AccessToken-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
   /api/audit_trails:
     get:
       tags:
@@ -2597,39 +2796,17 @@ paths:
         description: 'The updated ChangeLog resource'
 components:
   schemas:
-    AccessToken:
+    AccessToken-read:
       type: object
       description: ''
       properties:
         id:
           readOnly: true
-          type: integer
-          nullable: true
-        grantType:
-          description: 'The UUID identifier of this object'
-          type: string
-          format: uuid
-        clientId:
-          description: 'The id of your application'
+          description: 'The UUID identifier of this resource'
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
-        clientSecret:
-          description: 'The secret of your application'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        code:
-          description: 'The code given to your application on'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        state:
-          description: 'A unique validator provided by your application to check the validaty of the call'
-          type: string
         tokenType:
           description: 'The transportation type of the token'
           type: string
@@ -2642,12 +2819,29 @@ components:
         accessToken:
           description: 'A JWT reprecentation of the acces token'
           type: string
-      required:
-        - grantType
-        - clientId
-        - clientSecret
-        - code
-    'AccessToken:jsonld':
+        state:
+          description: 'A unique validator provided by your application to check the validaty of the call'
+          type: string
+    AccessToken-write:
+      type: object
+      description: ''
+      properties:
+        grantType:
+          description: 'The UUID identifier of this object'
+          type: string
+        clientId:
+          description: 'The id of your application'
+          type: string
+        clientSecret:
+          description: 'The secret of your application'
+          type: string
+        code:
+          description: 'The code given to your application on'
+          type: string
+        state:
+          description: 'A unique validator provided by your application to check the validaty of the call'
+          type: string
+    'AccessToken:jsonld-read':
       type: object
       description: ''
       properties:
@@ -2662,33 +2856,11 @@ components:
           type: string
         id:
           readOnly: true
-          type: integer
-          nullable: true
-        grantType:
-          description: 'The UUID identifier of this object'
-          type: string
-          format: uuid
-        clientId:
-          description: 'The id of your application'
+          description: 'The UUID identifier of this resource'
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
-        clientSecret:
-          description: 'The secret of your application'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        code:
-          description: 'The code given to your application on'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        state:
-          description: 'A unique validator provided by your application to check the validaty of the call'
-          type: string
         tokenType:
           description: 'The transportation type of the token'
           type: string
@@ -2701,11 +2873,37 @@ components:
         accessToken:
           description: 'A JWT reprecentation of the acces token'
           type: string
-      required:
-        - grantType
-        - clientId
-        - clientSecret
-        - code
+        state:
+          description: 'A unique validator provided by your application to check the validaty of the call'
+          type: string
+    'AccessToken:jsonld-write':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        grantType:
+          description: 'The UUID identifier of this object'
+          type: string
+        clientId:
+          description: 'The id of your application'
+          type: string
+        clientSecret:
+          description: 'The secret of your application'
+          type: string
+        code:
+          description: 'The code given to your application on'
+          type: string
+        state:
+          description: 'A unique validator provided by your application to check the validaty of the call'
+          type: string
     AuditTrail-read:
       type: object
       description: 'An resource representing a log line.'
@@ -3097,6 +3295,14 @@ components:
           readOnly: true
           type: string
 definitions:
+  AccessToken-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -3201,12 +3407,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-28 15:10:58'
+        example: '2020-10-28 21:05:59'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-28 15:10:58'
+        example: '2020-10-28 21:05:59'
     required: []
   AuditTrail-write:
     properties:
@@ -3254,12 +3460,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-28 15:10:58'
+        example: '2020-10-28 21:05:59'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-28 15:10:58'
+        example: '2020-10-28 21:05:59'
     required: []
   ChangeLog-write:
     properties:
@@ -3270,6 +3476,12 @@ definitions:
         maxLength: 2555
     required: []
 tags:
+  -
+    name: AccessToken
+    description: |
+      
+      
+      
   -
     name: AuditTrail
     description: |
