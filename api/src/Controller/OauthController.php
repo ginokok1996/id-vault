@@ -70,8 +70,7 @@ class OauthController extends AbstractController
             $variables['state'] = $request->query->get('state');
         }
 
-        if ($this->getUser()){
-
+        if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
 
