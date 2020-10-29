@@ -101,10 +101,10 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/contracts")
+     * @Route("/authorizations")
      * @Template
      */
-    public function contractsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -112,7 +112,7 @@ class DashboardController extends AbstractController
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-        // Set endDate of every contract by adding the contract.purposeLimitation.expiryPeriod to the contract.startingDate
+        // Set endDate of every authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
         foreach ($variables['authorizations'] as &$authorization) {
             if (key_exists('purposeLimitation', $authorization) and !empty($authorization['purposeLimitation']) and
                 key_exists('expiryPeriod', $authorization['purposeLimitation']) and !empty($authorization['purposeLimitation']['expiryPeriod'])) {
@@ -138,7 +138,7 @@ class DashboardController extends AbstractController
     public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
-        $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['contract.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+        $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         return $variables;
     }
