@@ -79,6 +79,17 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/organizations")
+     * @Template
+     */
+    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
      * @Route("/developers")
      * @Template
      */
