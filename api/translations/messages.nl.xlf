@@ -165,21 +165,21 @@
         <source>add manually</source>
         <target>handmatig toevoegen</target>
       </trans-unit>
-      <trans-unit id="sJTbfOL" resname="contracts">
-        <source>contracts</source>
-        <target>contracten</target>
+      <trans-unit id="sJTbfOL" resname="authorizations">
+        <source>authorizations</source>
+        <target>autorisaties</target>
       </trans-unit>
-      <trans-unit id="1x.W2A." resname="view contracts">
-        <source>view contracts</source>
-        <target>contracten bekijken</target>
+      <trans-unit id="1x.W2A." resname="view authorizations">
+        <source>view authorizations</source>
+        <target>autorisaties bekijken</target>
       </trans-unit>
       <trans-unit id="pauBzKJ" resname="view dossier">
         <source>view dossier</source>
         <target>dossier bekijken</target>
       </trans-unit>
-      <trans-unit id="00d6zUr" resname="no contracts available">
-        <source>no contracts available</source>
-        <target>geen contracten beschikbaar</target>
+      <trans-unit id="00d6zUr" resname="no authorizations available">
+        <source>no authorizations available</source>
+        <target>geen autorisaties beschikbaar</target>
       </trans-unit>
       <trans-unit id="yuqqWW_" resname="no dossiers available">
         <source>no dossiers available</source>
@@ -241,9 +241,9 @@
         <source>view usage2</source>
         <target>gebruik bekijken</target>
       </trans-unit>
-      <trans-unit id="dnWT04R" resname="end contract">
-        <source>end contract</source>
-        <target>contract beëindigen</target>
+      <trans-unit id="dnWT04R" resname="end authorization">
+        <source>end authorization</source>
+        <target>autorisatie beëindigen</target>
       </trans-unit>
       <trans-unit id="qDoxMg2" resname="resume">
         <source>resume</source>
