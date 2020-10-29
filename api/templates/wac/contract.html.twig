@@ -1,0 +1,53 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            {#            <div class="col-12 col-md-3">#}
+
+            {#                {% set activeItem = 'claims' %}#}
+            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+
+            {#            </div>#}
+
+            <div class="col-12 col-md-9">
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    {{ 'contract'|trans|capitalize~' '~resource.id }}
+                                </h4>
+
+                            </div>
+
+                            {#                            <div class="col-auto">#}
+
+                            {#                                <!-- Button -->#}
+                            {#                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">#}
+                            {#                                    {{ 'add claim'|trans|capitalize }}#}
+                            {#                                </button>#}
+
+                            {#                            </div>#}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4>To-do</h4>
+                        {% if resource|default %}
+
+                            {{ dump(resource) }}
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+
+{% endblock %}

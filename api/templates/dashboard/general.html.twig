@@ -42,7 +42,7 @@
                                     <!-- Email -->
                                     <div class="form-group">
                                         <label for="email">{{ 'email'|trans|capitalize }}</label>
-                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}"
+                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@provider.com'|trans }}"
                                         {% if app.user.person is defined and app.user.person is not empty and commonground_is_resource(app.user.person) %}
                                             {% set person = commonground_resource(app.user.person) %}
                                             {% if person.emails is defined and person.emails|length > 0 %}
