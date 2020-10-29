@@ -26,9 +26,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_default_users') }}">{{ 'for users'|trans|capitalize }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=".{{ path('app_default_organizations') }}">{{ 'for organizations'|trans|capitalize }}</a>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDevelopers" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">{{ 'for developers'|trans|capitalize }}</a>
-                    <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDevelopers">
+                    <a class="nav-link dropdown-toggle" id="navbarDocumentation" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                        {{ 'documentation'|trans|capitalize }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDocumentation">
                         <div class="list-group list-group-flush">
                             <a class="list-group-item" href="{{ path('app_documentation_index') }}">
 
@@ -53,8 +58,7 @@
                                 </div>
 
                             </a>
-                            <a class="list-group-item" href="/api">
-
+                            <a class="list-group-item" href="./api">
                                 <!-- Icon -->
                                 <div class="icon icon-sm text-primary">
                                     <img src="/bundles/landkit/img/icons/duotone-icons/Text/Align-auto.svg" >
@@ -62,12 +66,10 @@
 
                                 <!-- Content -->
                                 <div class="ml-4">
-
                                     <!-- Heading -->
                                     <h6 class="font-weight-bold text-uppercase text-primary mb-0">
                                         {{ 'terminology'|trans|capitalize }}
                                     </h6>
-
                                     <!-- Text -->
                                     <p class="font-size-sm text-gray-700 mb-0">
                                         {{ 'terminology for id-vault'|trans|capitalize }}
@@ -77,50 +79,7 @@
                                 </div>
 
                             </a>
-                            <a class="list-group-item" href="{{ path('app_default_terms') }}">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Home/Book.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'terms of service'|trans|capitalize }}
-                                    </h6>
-                                </div>
-
-                            </a>
-                            <a class="list-group-item" href="{{ path('app_default_privacy') }}">
-
-                                <!-- Icon -->
-                                <div class="icon icon-sm text-primary">
-                                    <img src="/bundles/landkit/img/icons/duotone-icons/Home/Book.svg" >
-                                </div>
-
-                                <!-- Content -->
-                                <div class="ml-4">
-
-                                    <!-- Heading -->
-                                    <h6 class="font-weight-bold text-uppercase text-primary mb-0">
-                                        {{ 'privacy'|capitalize }}
-                                    </h6>
-                                </div>
-
-                            </a>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDocumentation" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
-                        {{ 'documentation'|trans|capitalize }}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDocumentation">
-                        <div class="list-group list-group-flush">
-                            <a class="list-group-item" href="{{ path('app_documentation_index') }}">
+                            <a class="list-group-item" href="./docs">
 
                                 <!-- Icon -->
                                 <div class="icon icon-sm text-primary">

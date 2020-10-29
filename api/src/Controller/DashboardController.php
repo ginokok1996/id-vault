@@ -157,6 +157,65 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/conduction")
+     * @Template
+     */
+    public function conductionAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $query = [];
+        $date = new \DateTime('today');
+        if ($request->isMethod('POST')) {
+            $type = $request->get('type');
+
+            switch ($type) {
+                case 'day':
+                    $query['dateCreated[after]'] = $date->format('Y-m-d');
+                    break;
+                case 'week':
+                    $date->modify('Monday this week');
+                    $query['dateCreated[after]'] = $date->format('Y-m-d');
+                    break;
+                case 'month':
+                    $date->modify('first day of this month');
+                    $query['dateCreated[after]'] = $date->format('Y-m-d');
+                    break;
+                case 'quarter':
+                    $offset = (date('n') % 3) - 1;
+                    $date->modify("first day of -$offset month midnight");
+                    $query['dateCreated[after]'] = $date->format('Y-m-d');
+                    break;
+                case 'year':
+                    $date->modify('first day of january');
+                    $query['dateCreated[after]'] = $date->format('Y-m-d');
+                    break;
+            }
+        }
+
+        $variables['users'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], $query)['hydra:member'];
+        $variables['organizations'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'organizations'], $query)['hydra:member'];
+        $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], $query)['hydra:member'];
+        $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], $query)['hydra:member'];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/logs")
+     * @Template
+     */
+    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $user])['hydra:member'];
+
+        return $variables;
+    }
+
+    /**
      * @Route("/organizations")
      * @Template
      */

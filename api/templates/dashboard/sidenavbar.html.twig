@@ -22,6 +22,18 @@
                         {{ 'security'|trans|capitalize }}
                     </a>
                 </li>
+                <li class="list-item {% if activeItem == 'logs' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_logs') }}">
+                        {{ 'logs'|trans|capitalize }}
+                    </a>
+                </li>
+                {% if 'group.conduction' in app.user.roles %}
+                    <li class="list-item {% if activeItem == 'conduction' %}active{% endif %}">
+                        <a class="list-link text-reset" href="{{ path('app_dashboard_conduction') }}">
+                            {{ 'conduction'|trans|capitalize }}
+                        </a>
+                    </li>
+                {% endif %}
                 {# @todo hier moeten we later nog naar kijken tijdelijk disabled #}
 {#                <li class="list-item {% if activeItem == 'notifications' %}active{% endif %}">#}
 {#                    <a class="list-link text-reset" href="{{ path('app_dashboard_notifications') }}">#}
