@@ -90,22 +90,32 @@ class DocumentationController extends AbstractController
     }
 
     /**
-     * @Route("/getting-data")
+     * @Route("/earn-money")
      * @Template
      */
-    public function getDataAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function earnMoneyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
         return $variables;
     }
 
-
     /**
-     * @Route("/giving-data")
+     * @Route("/terms")
      * @Template
      */
-    public function giveDataAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function termsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/privecy")
+     * @Template
+     */
+    public function privecyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
