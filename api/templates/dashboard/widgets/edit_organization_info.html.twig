@@ -76,7 +76,6 @@
 </div>
 
 <script>
-
     function showLogo(){
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -95,9 +94,6 @@
             logo.setAttribute('src', base64);
             logoHolder.appendChild(logo);
         }
-
         Main();
-
     }
-
 </script>
