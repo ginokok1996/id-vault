@@ -179,7 +179,7 @@ class DashboardController extends AbstractController
                     $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
                 case 'quarter':
-                    $offset = (date('n')%3)-1;
+                    $offset = (date('n') % 3) - 1;
                     $date->modify("first day of -$offset month midnight");
                     $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
