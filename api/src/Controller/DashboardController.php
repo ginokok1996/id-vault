@@ -152,6 +152,32 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/conduction")
+     * @Template
+     */
+    public function conductionAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/logs")
+     * @Template
+     */
+    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'],['authorization.userUrl' => $user])['hydra:member'];
+
+        return $variables;
+    }
+
+    /**
      * @Route("/organizations")
      * @Template
      */
