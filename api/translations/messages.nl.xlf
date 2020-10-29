@@ -1868,7 +1868,7 @@
       </trans-unit>
       <trans-unit id="UR28jOS" resname="view authorization">
         <source>view authorization</source>
-        <target>__view authorization</target>
+        <target>bekijk authorisatie</target>
       </trans-unit>
       <trans-unit id=".GdDtrG" resname="name@provider.com">
         <source>name@provider.com</source>
@@ -1880,15 +1880,15 @@
       </trans-unit>
       <trans-unit id="N7DDRa4" resname="for organizations">
         <source>for organizations</source>
-        <target>__for organizations</target>
+        <target>Voor organisaties</target>
       </trans-unit>
       <trans-unit id="3Rs8MSz" resname="claim">
         <source>claim</source>
-        <target>__claim</target>
+        <target>claim</target>
       </trans-unit>
       <trans-unit id="EMIrz0x" resname="for">
         <source>for</source>
-        <target>__for</target>
+        <target>vooor</target>
       </trans-unit>
       <trans-unit id="zIMh1jd" resname="contract">
         <source>contract</source>
