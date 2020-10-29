@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-12 col-md-3">
 
-                {% set activeItem = 'logs' %}
+                {% set activeItem = 'conduction' %}
                 {% include 'dashboard/sidenavbar.html.twig' %}
 
             </div>
@@ -21,7 +21,7 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    {{ 'logs'|trans|capitalize }}
+                                    {{ 'conduction'|trans|capitalize }}
                                 </h4>
 
                             </div>
@@ -29,48 +29,62 @@
 
                     </div>
                     <div class="card-body">
-                        <div class="list-group list-group-flush">
-                        {% if logs is defined and logs is not empty %}
-                            {% for log in logs %}
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                        {% if log.authorization.application.contact is defined %}
-                                            {% set wrcApplication = commonground_resource(log.authorization.application.contact) %}
-                                                {% if wrcApplication.style.favicon.base64 is defined %}
-                                                    <!-- Avatar -->
-                                                    <div class="avatar avatar-xl">
-                                                        <img style="object-fit: fill" class="avatar-img" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
-                                                    </div>
-                                                {% endif %}
-                                        {% endif %}
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0">
-                                                {{ log.authorization.application.name }}
-                                            </p>
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0">
-                                                {% for scope in log.authorization.scopes %}
-                                                    <span class="text-muted">{{ scope }}</span> <br>
-                                                {% endfor %}
-                                            </p>
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0 text-muted">
-                                                {{ log.authorization.dateCreated|date('H:i:s, d-m-Y', 'Europe/Paris') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                        <form method="post" action="{{ path('app_dashboard_conduction') }}">
+                            <div class="d-flex flex-row justify-content-around p-2">
+                                <button value="day" name="type" class="btn btn-primary btn-xs">{{ 'day'|trans|capitalize }}</button>
+                                <button value="week" name="type" class="btn btn-primary btn-xs">{{ 'week'|trans|capitalize }}</button>
+                                <button value="month" name="type" class="btn btn-primary btn-xs">{{ 'month'|trans|capitalize }}</button>
+                                <button value="quarter" name="type" class="btn btn-primary btn-xs">{{ 'quarter'|trans|capitalize }}</button>
+                                <button value="year" name="type" class="btn btn-primary btn-xs">{{ 'year'|trans|capitalize }}</button>
+                            </div>
+                        </form>
+                        <canvas id="myChart" width="200" height="200"></canvas>
+                        <script>
+                            let ctx = document.getElementById('myChart').getContext('2d');
+                            let myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['{{ 'users'|trans|capitalize }}', '{{ 'organizations'|trans|capitalize }}', '{{ 'applications'|trans|capitalize }}', '{{ 'claims'|trans|capitalize }}'],
+                                    datasets: [{
+                                        label: '#',
+                                        data: ['{{ users|length }}', '{{ organizations|length }}', '{{ applications|length }}', '{{ claims|length }}'],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.8)',
+                                            'rgba(54, 162, 235, 0.8)',
+                                            'rgba(255, 206, 86, 0.8)',
+                                            'rgba(75, 192, 192, 0.8)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)',
+                                            'rgba(75, 192, 192, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    },
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(tooltipItem) {
+                                                return tooltipItem.yLabel;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
                     </div>
-                </div>
                 </div>
             </div>
         </div> <!-- / .row -->
