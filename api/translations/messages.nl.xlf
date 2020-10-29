@@ -165,11 +165,11 @@
         <source>add manually</source>
         <target>handmatig toevoegen</target>
       </trans-unit>
-      <trans-unit id="sJTbfOL" resname="authorizations">
+      <trans-unit id="akl9V3K" resname="authorizations">
         <source>authorizations</source>
         <target>autorisaties</target>
       </trans-unit>
-      <trans-unit id="1x.W2A." resname="view authorizations">
+      <trans-unit id="nghg_oW" resname="view authorizations">
         <source>view authorizations</source>
         <target>autorisaties bekijken</target>
       </trans-unit>
@@ -177,15 +177,15 @@
         <source>view dossier</source>
         <target>dossier bekijken</target>
       </trans-unit>
-      <trans-unit id="00d6zUr" resname="no authorizations available">
+      <trans-unit id="PeyX35A" resname="no authorizations available">
         <source>no authorizations available</source>
         <target>geen autorisaties beschikbaar</target>
       </trans-unit>
-      <trans-unit id="yuqqWW_" resname="no dossiers available">
+      <trans-unit id="o53kFeO" resname="no dossiers available">
         <source>no dossiers available</source>
         <target>geen dossiers beschikbaar</target>
       </trans-unit>
-      <trans-unit id="dokjQGD" resname="dossiers">
+      <trans-unit id="bqIZyWo" resname="dossiers">
         <source>dossiers</source>
         <target>dossiers</target>
       </trans-unit>
@@ -241,7 +241,7 @@
         <source>view usage2</source>
         <target>gebruik bekijken</target>
       </trans-unit>
-      <trans-unit id="dnWT04R" resname="end authorization">
+      <trans-unit id="ep_pgH3" resname="end authorization">
         <source>end authorization</source>
         <target>autorisatie beëindigen</target>
       </trans-unit>
@@ -1391,7 +1391,7 @@
       </trans-unit>
       <trans-unit id="pcfRcZ4" resname="month">
         <source>month</source>
-        <target>__month</target>
+        <target>maand</target>
       </trans-unit>
       <trans-unit id="ZqQkqal" resname="every">
         <source>every</source>
@@ -1845,6 +1845,54 @@
       <trans-unit id=".V_MvtP" resname="decline">
         <source>decline</source>
         <target>afwijzen</target>
+      </trans-unit>
+      <trans-unit id="TK0XkQv" resname="conduction">
+        <source>conduction</source>
+        <target>conduction</target>
+      </trans-unit>
+      <trans-unit id="lEwn5bl" resname="day">
+        <source>day</source>
+        <target>dag</target>
+      </trans-unit>
+      <trans-unit id="bfN9qqR" resname="week">
+        <source>week</source>
+        <target>week</target>
+      </trans-unit>
+      <trans-unit id="FrYOneY" resname="quarter">
+        <source>quarter</source>
+        <target>kwartaal</target>
+      </trans-unit>
+      <trans-unit id="TLTqJVg" resname="year">
+        <source>year</source>
+        <target>jaar</target>
+      </trans-unit>
+      <trans-unit id="UR28jOS" resname="view authorization">
+        <source>view authorization</source>
+        <target>__view authorization</target>
+      </trans-unit>
+      <trans-unit id=".GdDtrG" resname="name@provider.com">
+        <source>name@provider.com</source>
+        <target>__name@provider.com</target>
+      </trans-unit>
+      <trans-unit id="mPOPEts" resname="logs">
+        <source>logs</source>
+        <target>logs</target>
+      </trans-unit>
+      <trans-unit id="N7DDRa4" resname="for organizations">
+        <source>for organizations</source>
+        <target>__for organizations</target>
+      </trans-unit>
+      <trans-unit id="3Rs8MSz" resname="claim">
+        <source>claim</source>
+        <target>__claim</target>
+      </trans-unit>
+      <trans-unit id="EMIrz0x" resname="for">
+        <source>for</source>
+        <target>__for</target>
+      </trans-unit>
+      <trans-unit id="zIMh1jd" resname="contract">
+        <source>contract</source>
+        <target>contract</target>
       </trans-unit>
     </body>
   </file>
