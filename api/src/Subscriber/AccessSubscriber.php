@@ -48,6 +48,7 @@ class AccessSubscriber implements EventSubscriberInterface
         }
         if ($token instanceof AccessToken) {
             $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $token->getClientSecret()])['hydra:member'];
+            $authorizationLog = [];
             if (count($applications) < 1) {
                 //@todo error
             } else {
@@ -62,7 +63,11 @@ class AccessSubscriber implements EventSubscriberInterface
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
                 $token->setScope(implode('+', $authorization['scopes']));
+                $authorizationLog['status'] = '200';
+                $authorizationLog['authorization'] = '/authorizations/'.$authorization['id'];
             }
+            $authorizationLog['endpoint'] = 'access_tokens';
+            $this->commonGroundService->createResource($authorizationLog, ['component' => 'wac', 'type' => 'authorization_logs']);
         }
 
         return $token;
