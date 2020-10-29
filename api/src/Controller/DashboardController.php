@@ -358,7 +358,6 @@ class DashboardController extends AbstractController
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));
-
         } elseif ($request->isMethod('POST') && $request->get('updateInfo')) {
             if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
                 $name = $request->get('name');
