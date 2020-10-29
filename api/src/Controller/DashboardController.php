@@ -108,22 +108,24 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-        $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+        if ($this->getUser()) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+            $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-        // Set endDate of every authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
-        foreach ($variables['authorizations'] as &$authorization) {
-            if (key_exists('purposeLimitation', $authorization) and !empty($authorization['purposeLimitation']) and
-                key_exists('expiryPeriod', $authorization['purposeLimitation']) and !empty($authorization['purposeLimitation']['expiryPeriod'])) {
-                if (key_exists('startingDate', $authorization) and !empty($authorization['startingDate'])) {
-                    $date = new \DateTime($authorization['startingDate']);
-                    $date->add(new \DateInterval($authorization['purposeLimitation']['expiryPeriod']));
-                    $authorization['endDate'] = $date;
-                } else {
-                    $date = new \DateTime($authorization['dateCreated']);
-                    $date->add(new \DateInterval($authorization['purposeLimitation']['expiryPeriod']));
-                    $authorization['endDate'] = $date;
+            // Set endDate of every authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
+            foreach ($variables['authorizations'] as &$authorization) {
+                if (key_exists('purposeLimitation', $authorization) and !empty($authorization['purposeLimitation']) and
+                    key_exists('expiryPeriod', $authorization['purposeLimitation']) and !empty($authorization['purposeLimitation']['expiryPeriod'])) {
+                    if (key_exists('startingDate', $authorization) and !empty($authorization['startingDate'])) {
+                        $date = new \DateTime($authorization['startingDate']);
+                        $date->add(new \DateInterval($authorization['purposeLimitation']['expiryPeriod']));
+                        $authorization['endDate'] = $date;
+                    } else {
+                        $date = new \DateTime($authorization['dateCreated']);
+                        $date->add(new \DateInterval($authorization['purposeLimitation']['expiryPeriod']));
+                        $authorization['endDate'] = $date;
+                    }
                 }
             }
         }
@@ -246,9 +248,11 @@ class DashboardController extends AbstractController
     {
         $variables = [];
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
-        $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
+        if (key_exists('contact', $variables['organization']) and !empty($variables['organization']['contact'])) {
+            $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
+        }
         $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
-        $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wrc', 'type' => 'applications'], ['organization' => '/organizations/'.$variables['organization']['id']])['hydra:member'];
+        $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['organization' => $organization])['hydra:member'];
 
         $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organization])['hydra:member'];
         if (count($groups) > 0) {
@@ -257,29 +261,79 @@ class DashboardController extends AbstractController
         }
 
         if ($request->isMethod('POST') && $request->get('newDeveloper')) {
+            // do something
+        } elseif ($request->isMethod('POST') && $request->get('newApplication')) {
+            $name = $request->get('name');
+            $application['name'] = $name;
+            $application['description'] = $request->get('description');
+
+            // Create a wRc application
+            $wrcApplication = $application;
+            $wrcApplication['organization'] = '/organizations/'.$id;
+            $wrcApplication['domain'] = $request->get('domain');
+
+            // TODO: fix saving the (style and) logo
+//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
+//                $path = $_FILES['applicationLogo']['tmp_name'];
+//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
+//                $data = file_get_contents($path);
+//
+//                // Create a wRc style (and favicon image)
+//                $style['name'] = 'style for '.$name;
+//                $style['description'] = 'style for '.$name;
+//                $style['css'] = ' ';
+//                $style['organization'] = '/organizations/'.$id;
+//                $style['favicon']['name'] = 'logo for '.$name;
+//                $style['favicon']['description'] = 'logo for '.$name;
+//                $style['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+//                $style = $commonGroundService->createResource($style, ['component' => 'wrc', 'type' => 'styles']);
+//
+//                $wrcApplication['style'] = '/styles/'.$style['id'];
+//            }
+            $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
+
+            // Create a wAc application
+            $application['organization'] = $organization;
+            $application['authorizationUrl'] = $request->get('passthroughUrl');
+            $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
+
+            return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));
+
         } elseif ($request->isMethod('POST') && $request->get('updateInfo')) {
             if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
-                $icon = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'images', 'id' => $variables['organization']['style']['favicon']['id']]);
+                $name = $request->get('name');
+                if (key_exists('style', $variables['organization']) and !empty($variables['organization']['style'])) {
+                    if (key_exists('favicon', $variables['organization']['style']) and !empty($variables['organization']['style']['favicon'])) {
+                        $icon = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'images', 'id' => $variables['organization']['style']['favicon']['id']]);
+                    }
+                }
                 $path = $_FILES['logo']['tmp_name'];
                 $type = filetype($_FILES['logo']['tmp_name']);
                 $data = file_get_contents($path);
+                $icon['name'] = 'logo for '.$name;
+                $icon['description'] = 'logo for '.$name;
                 $icon['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-                $commonGroundService->updateResource($icon);
+                $commonGroundService->saveResource($icon);
             }
 
             $organization = $variables['organization'];
             $organization['name'] = $request->get('name');
-            $organization['style'] = '/styles/'.$organization['style']['id'];
+            if (key_exists('style', $organization) and !empty($organization['style'])) {
+                $organization['style'] = '/styles/'.$organization['style']['id'];
+            }
             $commonGroundService->updateResource($organization);
 
-            $cc = $variables['cc'];
-            $cc['name'] = $request->get('name');
-            $cc['emails'][0] = [];
-            $cc['emails'][0]['email'] = $request->get('email');
-            $commonGroundService->updateResource($cc);
+            if (key_exists('cc', $variables)) {
+                $cc = $variables['cc'];
+                $cc['name'] = $request->get('name');
+                $cc['emails'][0] = [];
+                $cc['emails'][0]['email'] = $request->get('email');
+                $commonGroundService->updateResource($cc);
 
-            $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
-            $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
+                $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+                $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
+            }
         }
 
         return $variables;
