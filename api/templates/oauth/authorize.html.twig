@@ -4,16 +4,22 @@
 {% set noFooter = true %}
 
 {% block content %}
+    {% if wrcApplication.style.css is defined %}
+        <style>
+            {{ wrcApplication.style.css|raw }}
+        </style>
+    {% endif %}
 <section class="section border-primary">
     <div class="container d-flex flex-column">
         <div class="row align-items-center justify-content-center no-gutters min-vh-100">
-            <div class="col-12 col-md-6 col-lg-7 offset-md-1 order-md-2 mt-auto mt-md-0 pt-8 pb-4 py-md-11">
+            <div class="col-12 col-md-6 col-lg-7 {% if not is_granted('IS_AUTHENTICATED_FULLY') %} offset-md-1 {% endif %}
+            order-md-2 mt-auto mt-md-0 pt-8 pb-4 py-md-11">
 
-                <div class="p-5 bg-white" style="border-radius: 25px">
+                <div class="p-5" style="border-radius: 25px">
                     <!-- Heading -->
-                    {% if application.style.favicon.base64 is defined %}
+                    {% if wrcApplication.style.favicon.base64 is defined %}
                         <div class="text-center">
-                            <img class="" style="width: 100px;" src="{{ application.style.favicon.base64 }}" alt="...">
+                            <img class="" style="width: 100px;" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
                         </div>
                     {% endif %}
 
@@ -38,12 +44,13 @@
                     </p>
 
                     <ul class="text-center list-group list-group-flush mb-6">
-                        <li style="list-style: none;" class=" text-muted">
-                            user.profile
-                        </li>
-                        <li style="list-style: none;" class=" text-muted">
-                            user.profile
-                        </li>
+                        {% if scopes is defined and scopes is not empty %}
+                            {% for scope in scopes %}
+                                <li style="list-style: none;" class=" text-muted">
+                                    {{ scope }}
+                                </li>
+                            {% endfor %}
+                        {% endif %}
                     </ul>
 
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -52,13 +59,33 @@
                         {{ "log in to continue"|trans|capitalize }}
                     </h2>
                     {% else %}
-
+                        <div class="text-center">
+                            <form method="post" action="{{ path('app_oauth_authorize') }}">
+                                {%  if scopes is defined %}
+                                    {% for scope in scopes %}
+                                        <input type="hidden" name="scopes[]" value="{{ scope }}">
+                                    {% endfor %}
+                                {% endif %}
+                                {% if state is defined %}
+                                    <input type="hidden" name="state" value="{{ state }}">
+                                {% endif %}
+                                {% if application is defined %}
+                                    <input type="hidden" name="application" value="{{ application.id }}">
+                                {% endif %}
+                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
+                                    {{ 'accept'|trans|capitalize }}
+                                </button>
+                                <button name="grantAccess" value="false" class="navbar-btn btn btn-sm btn-danger ml-lg-2 mt-4 mt-lg-0 lift ml-auto">
+                                    {{ 'decline'|trans|capitalize }}
+                                </button>
+                            </form>
+                        </div>
                     {% endif %}
                 </div>
 
             </div>
-            <div class="col-12 col-md-5 col-lg-4 order-md-1 mb-auto mb-md-0 pb-8 py-md-11">
-                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div style="color: black" class="col-12 col-md-5 col-lg-4 order-md-1 mb-auto mb-md-0 pb-8 py-md-11">
                     <div class="p-5 bg-white" style="border-radius: 25px">
                         <!-- Heading -->
                         <h1 class="mb-0 font-weight-bold text-center">
@@ -105,8 +132,8 @@
                             <a href="{{ path('app_default_register') }}">{{ 'sign up'|trans|capitalize }}</a>.
                         </p>
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 </section>
