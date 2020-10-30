@@ -13,47 +13,17 @@
         <div class="container">
 
             <div class="row justify-content-center">
-                <div class="col-4 col-md-4 col-lg-8">
+                <div class="col-4 col-md-4 col-lg-6">
                     <!-- Card -->
                     <div class="card card-border border-primary shadow-light-lg" data-jarallax-element="-40" style="z-index: 0; transform: translate3d(0px, 9.62895px, 0px);">
                         <div class="card-body">
                             <div class="row justify-content-center">
                                 <div class="col-12">
 
-                                    <!-- Heading -->
-                                    <h2 class="font-weight-bold text-center mb-1">
-                                        Register your acount
-                                    </h2>
-
-                                    <!-- Text -->
-                                    <p class="font-size-lg text-center text-muted mb-6 mb-md-8">
-                                        Start your data journey.
-                                    </p>
-
                                     <!-- Form -->
-                                    <form id="register">
+                                    <form id="register" action="{{ path('app_default_register') }}">
                                         <div class="row">
-                                            <div class="col-12 col-md-6">
-
-                                                <!-- First name -->
-                                                <div class="form-label-group">
-                                                    <input type="text" class="form-control form-control-flush" id="registrationFirstName" placeholder="First name">
-                                                    <label for="registrationFirstName">First name</label>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-12 col-md-6">
-
-                                                <!-- Last name -->
-                                                <div class="form-label-group">
-                                                    <input type="text" class="form-control form-control-flush" id="registrationLastName" placeholder="Last name">
-                                                    <label for="registrationLastName">Last name</label>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12">
 
                                                 <!-- Email -->
                                                 <div class="form-label-group">
@@ -62,7 +32,9 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-12 col-md-6">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 ">
 
                                                 <!-- Password -->
                                                 <div class="form-label-group">
@@ -76,7 +48,7 @@
                                             <div class="col-12">
 
                                                 <!-- Submit -->
-                                                <button class="btn btn-block btn-primary mt-3 lift">
+                                                <button class="btn btn-block btn-primary mt-3 lift" type="submit">
                                                     Register
                                                 </button>
 
@@ -89,7 +61,7 @@
                         </div>
                         <div id="jarallax-container-1" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; overflow: hidden; z-index: -100;"><div style="pointer-events: none; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; position: absolute;"></div></div></div>
                 </div>
-                <div class="col-4 text-white">
+                <div class="col-6 text-white">
                     <!-- Heading -->
                     <h1>
                         ID-Vault for organizations
