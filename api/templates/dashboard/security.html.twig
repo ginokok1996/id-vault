@@ -10,9 +10,9 @@
 
             </div>
 
-            {# todo:add translation for all texts #}
             <div class="col-12 col-md-9">
 {# todo: We are not going to be using two factor yet so its disabled for now #}
+                {# todo:add translation for all texts in this card #}
 {#                <!-- Card -->#}
 {#                <div class="card card-bleed shadow-light-lg mb-6">#}
 {#                    <div class="card-header">#}
@@ -136,7 +136,7 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    Password
+                                    {{ 'username'|trans|capitalize }}
                                 </h4>
 
                             </div>
@@ -144,7 +144,58 @@
 
                                 <!-- Link -->
                                 <a class="small text-gray-700" href="#!">
-                                    Forgot your password?
+                                    {{ 'forgot your password?'|trans|capitalize }}
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- New username -->
+                        <div class="form-group">
+                            <label for="newUsername">{{ 'username'|trans|capitalize }}</label>
+                            <input class="form-control" id="newUsername" type="text" value="{{ app.user.username }}" placeholder="{{ app.user.username }}">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password">{{ 'password'|trans|capitalize }}</label>
+                            <input class="form-control" id="password" type="password">
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-12 col-md-auto">
+
+                                <!-- Button -->
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    {{ 'update username'|trans|capitalize }}
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    {{ 'password'|trans|capitalize }}
+                                </h4>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Link -->
+                                <a class="small text-gray-700" href="#!">
+                                    {{ 'forgot your password?'|trans|capitalize }}
                                 </a>
 
                             </div>
@@ -154,19 +205,19 @@
 
                         <!-- Current password -->
                         <div class="form-group">
-                            <label for="currentPassword">Current Password</label>
+                            <label for="currentPassword">{{ 'current password'|trans|capitalize }}</label>
                             <input class="form-control" id="currentPassword" type="password">
                         </div>
 
                         <!-- New password -->
                         <div class="form-group">
-                            <label for="newPassword">New Password</label>
+                            <label for="newPassword">{{ 'new password'|trans|capitalize }}</label>
                             <input class="form-control" id="newPassword" type="password">
                         </div>
 
                         <!-- Confirm password -->
                         <div class="form-group">
-                            <label for="confirmPassword">Confirm Password</label>
+                            <label for="confirmPassword">{{ 'confirm password'|trans|capitalize }}</label>
                             <input class="form-control" id="confirmPassword" type="password">
                         </div>
 
@@ -176,7 +227,7 @@
 
                                 <!-- Button -->
                                 <button class="btn btn-block btn-primary" type="submit">
-                                    Update Password
+                                    {{ 'update password'|trans|capitalize }}
                                 </button>
 
                             </div>
@@ -185,6 +236,7 @@
                     </div>
                 </div>
 
+                {# todo:add translation for all texts in this card #}
                 <!-- Card -->
                 <div class="card card-bleed shadow-light-lg">
                     <div class="card-header">
