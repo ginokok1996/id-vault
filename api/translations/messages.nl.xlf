@@ -969,6 +969,18 @@
         <source>www.horeca-name.nl</source>
         <target>www.horeca-naam.nl</target>
       </trans-unit>
+      <trans-unit id="idC0zH3" resname="www.application-name.nl">
+        <source>www.application-name.nl</source>
+        <target>www.applicatie-naam.nl</target>
+      </trans-unit>
+      <trans-unit id="07VuDaa" resname="www.application-name.nl/page-name">
+        <source>www.application-name.nl/page-name</source>
+        <target>www.applicatie-naam.nl/pagina-naam</target>
+      </trans-unit>
+      <trans-unit id="gmQARhV" resname="domain">
+        <source>domain</source>
+        <target>domein</target>
+      </trans-unit>
       <trans-unit id="QZbttrP" resname="This is the webpage that customers will be redirected to after a successful check-in.">
         <source>This is the webpage that customers will be redirected to after a successful check-in.</source>
         <target>Dit is de webpagina waar klanten naar doorverwezen worden na een succesvolle checkin.</target>
@@ -1796,6 +1808,10 @@
       <trans-unit id="MzUTmF9" resname="add developer">
         <source>add developer</source>
         <target>developer toevoegen</target>
+      </trans-unit>
+      <trans-unit id="6bqPhhn" resname="add application">
+        <source>add application</source>
+        <target>applicatie toevoegen</target>
       </trans-unit>
       <trans-unit id="zXn19Gz" resname="i agree to the">
         <source>i agree to the</source>

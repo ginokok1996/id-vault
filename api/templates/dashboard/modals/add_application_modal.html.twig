@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalOrganization" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
+<div class="modal fade" id="modalApplication" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -10,11 +10,11 @@
 
                 <!-- Heading -->
                 <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
-                    {{ 'add organization'|trans|capitalize }}
+                    {{ 'add application'|trans|capitalize }}
                 </h2>
 
                 <!-- Form -->
-                <form method="post" action="{{ path('app_dashboard_organizations') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ path('app_dashboard_organization', {id: organization.id})  }}" enctype="multipart/form-data">
 
                     <!-- Name -->
                     <div class="form-group">
@@ -22,35 +22,37 @@
                         <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'name'|trans|capitalize }}">
                     </div>
 
-                    <!-- Email -->
+                    <!-- Description -->
                     <div class="form-group">
-                        <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                        <input required class="form-control" name="email" id="email" type="email" placeholder="{{ 'email'|trans|capitalize }}">
+                        <label for="description">{{ 'description'|trans|capitalize }}</label>
+                        <textarea name="description" class="form-control" id="description" rows="3"></textarea>
                     </div>
 
-                    <!-- Name -->
-                    <div class="form-group">
-                        <label for="description">{{ 'description'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                        <textarea required name="description" class="form-control" id="description" rows="3"></textarea>
-                    </div>
-
+                    <!-- Logo -->
                     <div class="custom-file">
-                        <input onchange="showLogo()" type="file" name="logo" class="custom-file-input" id="logo">
+                        <input onchange="showApplicationLogo()" type="file" name="applicationLogo" class="custom-file-input" id="applicationLogo">
                         <label class="custom-file-label" for="customFile">{{ 'choose logo'|trans|capitalize }}</label>
                     </div>
 
-                    <div id="logoHolder" style="text-align: center" class="align-items-center mt-3 bg-gray-200" >
+                    <div id="applicationLogoHolder" style="text-align: center" class="align-items-center mt-3 bg-gray-200" >
 
                     </div>
 
-                    <div class="form-check">
-                        <input required type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">{{ 'i agree to the'|trans|capitalize }} <a target="_blank" href="/terms">{{ 'terms and services'|trans }}</a>.</label>
+                    <!-- Domain -->
+                    <div class="form-group">
+                        <label for="domain">{{ 'domain'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                        <input required class="form-control" name="domain" id="domain" type="text" placeholder="{{ 'www.application-name.nl'|trans }}">
+                    </div>
+
+                    <!-- passthroughUrl -->
+                    <div class="form-group">
+                        <label for="passthroughUrl">{{ 'passthrough Url'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                        <input required class="form-control" name="passthroughUrl" id="passthroughUrl" type="text" placeholder="{{ 'www.application-name.nl/page-name'|trans }}">
                     </div>
 
                     <!-- Submit -->
-                    <button class="btn btn-block btn-primary mt-3 lift">
-                        {{ 'add organization'|trans|capitalize }}
+                    <button name="newApplication" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'add application'|trans|capitalize }}
                     </button>
 
                 </form>
@@ -62,7 +64,7 @@
 
 <script>
 
-    function showLogo(){
+    function showApplicationLogo(){
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -70,9 +72,10 @@
             reader.onerror = error => reject(error);
         });
 
-        async function Main() {
-            let file = document.querySelector('#logo').files[0];
-            let logoHolder = document.querySelector('#logoHolder');
+        // Main already exists on the organization page!
+        async function Main2() {
+            let file = document.querySelector('#applicationLogo').files[0];
+            let logoHolder = document.querySelector('#applicationLogoHolder');
             logoHolder.innerHTML = '';
             let logo = document.createElement('img');
             let base64 = await toBase64(file);
@@ -80,9 +83,6 @@
             logo.setAttribute('src', base64);
             logoHolder.appendChild(logo);
         }
-
-        Main();
-
+        Main2();
     }
-
 </script>
