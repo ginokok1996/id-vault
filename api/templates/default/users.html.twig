@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<div>
     <!-- WELCOME
       ================================================== -->
     <section class="py-10 py-md-14 bg-primary" id="welcome">
@@ -27,7 +26,7 @@
                     </p>
 
                     <!-- Button -->
-                    <a href="#register" class="btn btn-white shadow lift">
+                    <a href="#register" class="btn btn-white shadow lift" data-toggle="smooth-scroll" data-offset="0">
                         Create your acount
                     </a>
 
@@ -177,6 +176,6 @@
         </div> <!-- / .container -->
     </section>
 
-
-</div>
+    <!-- registration section -->
+    {% include 'landkit/registration-section.html.twig' %}
 {% endblock %}

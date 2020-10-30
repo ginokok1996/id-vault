@@ -112,10 +112,10 @@ class DocumentationController extends AbstractController
     }
 
     /**
-     * @Route("/privecy")
+     * @Route("/privacy")
      * @Template
      */
-    public function privecyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function privacyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
