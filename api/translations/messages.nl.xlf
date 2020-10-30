@@ -133,6 +133,10 @@
         <source>claims</source>
         <target>claims</target>
       </trans-unit>
+      <trans-unit id="D85Qr23" resname="what is a claim?">
+        <source>what is a claim?</source>
+        <target>wat is een claim?</target>
+      </trans-unit>
       <trans-unit id="ckvw2St" resname="no claims available">
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
