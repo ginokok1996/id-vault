@@ -382,7 +382,8 @@ class DashboardController extends AbstractController
             }
 
             $organization = $variables['organization'];
-            $organization['name'] = $request->get('name');
+            $organization['name'] = $name;
+            $organization['description'] = $request->get('description');
             if (key_exists('style', $organization) and !empty($organization['style'])) {
                 $organization['style'] = '/styles/'.$organization['style']['id'];
             }
