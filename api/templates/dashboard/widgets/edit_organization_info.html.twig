@@ -48,6 +48,64 @@
                             {% endif %}>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <!-- Street -->
+                    <div class="form-group">
+                        <label for="street">{{ 'street'|trans|capitalize }}</label>
+                        <input class="form-control" name="street" id="street" type="text" placeholder="{{ 'street'|trans|capitalize }}"
+                            {% if cc.adresses[0].street is defined and cc.adresses[0].street is not empty %}
+                                value="{{ cc.adresses[0].street }}"
+                            {% endif %}>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <!-- House number -->
+                    <div class="form-group">
+                        <label for="houseNumber">{{ 'house number'|trans|capitalize }}</label>
+                        <input class="form-control" name="houseNumber" id="houseNumber" type="text" placeholder="{{ 'house number'|trans|capitalize }}"
+                            {% if cc.adresses[0].houseNumber is defined and cc.adresses[0].houseNumber is not empty %}
+                                value="{{ cc.adresses[0].houseNumber }}"
+                            {% endif %}>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <!-- House number suffix -->
+                    <div class="form-group">
+                        <label for="email">{{ 'suffix'|trans|capitalize }}</label>
+                        <input class="form-control" name="houseNumberSuffix" id="houseNumberSuffix" type="text" placeholder="{{ 'suffix'|trans|capitalize }}"
+                            {% if cc.adresses[0].houseNumberSuffix is defined and cc.adresses[0].houseNumberSuffix is not empty %}
+                                value="{{ cc.adresses[0].houseNumberSuffix }}"
+                            {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+
+                    <!-- Postal code -->
+                    <div class="form-group">
+                        <label for="postalCode">{{ 'postal code'|trans|capitalize }}</label>
+                        <input class="form-control" name="postalCode" id="postalCode" type="text" placeholder="{{ 'postal code'|trans|capitalize }}"
+                            {% if cc.adresses[0].postalCode is defined and cc.adresses[0].postalCode is not empty %}
+                                value="{{ cc.adresses[0].postalCode }}"
+                            {% endif %}>
+                    </div>
+
+                </div>
+                <div class="col-12 col-md-6">
+                    <!-- Locality -->
+                    <div class="form-group">
+                        <label for="locality">{{ 'locality'|trans|capitalize }}</label>
+                        <input class="form-control" name="locality" id="locality" type="text" placeholder="{{ 'locality'|trans|capitalize }}"
+                            {% if cc.adresses[0].locality is defined and cc.adresses[0].locality is not empty %}
+                                value="{{ cc.adresses[0].locality }}"
+                            {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="custom-file">
                         <input onchange="showLogo()" type="file" name="logo" class="custom-file-input" id="logo">

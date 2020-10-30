@@ -231,7 +231,9 @@ class DashboardController extends AbstractController
             $cc = [];
             $cc['name'] = $name;
             $cc['description'] = $description;
+            $cc['emails'][0]['name'] = 'email for '.$name;
             $cc['emails'][0]['email'] = $email;
+            $cc['adresses'][0]['name'] = 'address for '.$name;
 
             $cc = $commonGroundService->createResource($cc, ['component' => 'cc', 'type' => 'organizations']);
 
@@ -359,12 +361,16 @@ class DashboardController extends AbstractController
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));
         } elseif ($request->isMethod('POST') && $request->get('updateInfo')) {
+            $name = $request->get('name');
             if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
-                $name = $request->get('name');
                 if (key_exists('style', $variables['organization']) and !empty($variables['organization']['style'])) {
                     if (key_exists('favicon', $variables['organization']['style']) and !empty($variables['organization']['style']['favicon'])) {
                         $icon = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'images', 'id' => $variables['organization']['style']['favicon']['id']]);
+                    } else {
+                        // create icon for the style ?
                     }
+                } else {
+                    // create style and icon ?
                 }
                 $path = $_FILES['logo']['tmp_name'];
                 $type = filetype($_FILES['logo']['tmp_name']);
@@ -384,9 +390,18 @@ class DashboardController extends AbstractController
 
             if (key_exists('cc', $variables)) {
                 $cc = $variables['cc'];
-                $cc['name'] = $request->get('name');
+                $cc['name'] = $name;
                 $cc['emails'][0] = [];
+                $cc['emails'][0]['name'] = 'email for '.$name;
                 $cc['emails'][0]['email'] = $request->get('email');
+                $address = [];
+                $address['name'] = 'address for '.$name;
+                $address['street'] = $request->get('street');
+                $address['houseNumber'] = $request->get('houseNumber');
+                $address['houseNumberSuffix'] = $request->get('houseNumberSuffix');
+                $address['postalCode'] = $request->get('postalCode');
+                $address['locality'] = $request->get('locality');
+                $cc['adresses'][0] = $address;
                 $commonGroundService->updateResource($cc);
 
                 $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
