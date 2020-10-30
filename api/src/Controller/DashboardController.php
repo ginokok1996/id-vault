@@ -31,11 +31,36 @@ class DashboardController extends AbstractController
     public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+        $personUrl = $this->getUser()->getPerson();
+        $variables['person'] = $commonGroundService->getResource($personUrl);
 
-        // Set current user to userGroup developer
-        if ($request->isMethod('POST')) {
-            $person = $this->getUser()->getPerson();
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $person])['hydra:member'];
+        if ($request->isMethod('POST') && $request->get('updateInfo')) {
+            $name = $request->get('name');
+            $email = $request->get('email');
+
+            // Update the cc/person of this user
+            $person = $variables['person'];
+            $person['name'] = $name;
+            $person['emails'][0] = [];
+            $person['emails'][0]['name'] = 'email for '.$name;
+            $person['emails'][0]['email'] = $email;
+            $person['telephones'][0] = [];
+            $person['telephones'][0]['name'] = 'telephone for '.$name;
+            $person['telephones'][0]['telephone'] = $request->get('telephone');
+            $address = [];
+            $address['name'] = 'address for '.$name;
+            $address['street'] = $request->get('street');
+            $address['houseNumber'] = $request->get('houseNumber');
+            $address['houseNumberSuffix'] = $request->get('houseNumberSuffix');
+            $address['postalCode'] = $request->get('postalCode');
+            $address['locality'] = $request->get('locality');
+            $person['adresses'][0] = $address;
+            $commonGroundService->updateResource($person);
+
+            $variables['person'] = $commonGroundService->getResource($variables['person']);
+        } elseif ($request->isMethod('POST') && $request->get('becomeDeveloper')) {
+            // Set current user to userGroup developer
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $personUrl])['hydra:member'];
             if (count($users) > 0) {
                 $user = $users[0];
 

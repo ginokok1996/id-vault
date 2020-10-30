@@ -1888,7 +1888,7 @@
       </trans-unit>
       <trans-unit id=".GdDtrG" resname="name@provider.com">
         <source>name@provider.com</source>
-        <target>__name@provider.com</target>
+        <target>naam@provider.com</target>
       </trans-unit>
       <trans-unit id="mPOPEts" resname="logs">
         <source>logs</source>
