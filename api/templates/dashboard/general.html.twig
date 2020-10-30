@@ -150,11 +150,19 @@
                                 </div>
                                 <div class="col-auto">
 
-                                    <!-- Switch -->
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="twoFactorSwitch" checked="">
-                                        <label class="custom-control-label" for="twoFactorSwitch"></label>
-                                    </div>
+                                    <form action="{{ path('app_dashboard_general') }}" method="post">
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" name="twoFactorSwitch" id="twoFactorSwitch" onchange="this.form.submit()"
+                                            {# TODO:check if a scope is set for developer options in sidenavbar? Create a scope to set/remove with this switch!
+                                            See post in the controller! #}
+                                            {% if 'scope.somethinghere' in app.user.roles %}checked=""{% endif %}>
+                                            <label class="custom-control-label" for="twoFactorSwitch"></label>
+                                        </div>
+
+                                        <!-- Hidden input for handling multiple forms with the same action -->
+                                        <input class="btn btn-block btn-primary" name="twoFactorSwitchSubmit" value="true" type="hidden">
+                                    </form>
 
                                 </div>
                             </div>
