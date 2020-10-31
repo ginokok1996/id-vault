@@ -133,6 +133,10 @@
         <source>claims</source>
         <target>claims</target>
       </trans-unit>
+      <trans-unit id="D85Qr23" resname="what is a claim?">
+        <source>what is a claim?</source>
+        <target>wat is een claim?</target>
+      </trans-unit>
       <trans-unit id="ckvw2St" resname="no claims available">
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
@@ -1293,6 +1297,10 @@
         <source>forgot password</source>
         <target>wachtwoord vergeten</target>
       </trans-unit>
+      <trans-unit id="dXVXNb1" resname="forgot your password?">
+        <source>forgot your password?</source>
+        <target>je wachtwoord vergeten?</target>
+      </trans-unit>
       <trans-unit id="5cf.rCb" resname="click">
         <source>click</source>
         <target>klik</target>
@@ -1437,6 +1445,14 @@
         <source>new password</source>
         <target>nieuw wachtwoord</target>
       </trans-unit>
+      <trans-unit id="OhijwNN" resname="new username">
+        <source>new username</source>
+        <target>nieuwe gebruikersnaam</target>
+      </trans-unit>
+      <trans-unit id="Ik6Zz4w" resname="current username">
+        <source>current username</source>
+        <target>huidige gebruikersnaam</target>
+      </trans-unit>
       <trans-unit id="txDKmt0" resname="your password has been reset">
         <source>your password has been reset</source>
         <target>uw wachtwoord is gewijzigd</target>
@@ -1544,6 +1560,18 @@
       <trans-unit id="4FJQr4X" resname="repeat password">
         <source>repeat password</source>
         <target>herhaal wachtwoord</target>
+      </trans-unit>
+      <trans-unit id="TMvgDi-" resname="confirm password">
+        <source>confirm password</source>
+        <target>bevestig wachtwoord</target>
+      </trans-unit>
+      <trans-unit id="3GHLZYn" resname="update password">
+        <source>update password</source>
+        <target>wachtwoord wijzigen</target>
+      </trans-unit>
+      <trans-unit id="WYKDAfg" resname="update username">
+        <source>update username</source>
+        <target>gebruikersnaam wijzigen</target>
       </trans-unit>
       <trans-unit id="rmgdyVm" resname="passwords dont match">
         <source>passwords dont match</source>
@@ -1888,7 +1916,7 @@
       </trans-unit>
       <trans-unit id=".GdDtrG" resname="name@provider.com">
         <source>name@provider.com</source>
-        <target>__name@provider.com</target>
+        <target>naam@provider.com</target>
       </trans-unit>
       <trans-unit id="mPOPEts" resname="logs">
         <source>logs</source>
