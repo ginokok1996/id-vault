@@ -1,58 +1,58 @@
 
 <!-- Heading -->
 <h6 class="text-uppercase font-weight-bold">
-    Getting started
+    {{ 'getting started'|trans|capitalize }}
 </h6>
 
 <!-- Links -->
 <ul class="list mb-6">
     <li class="list-item">
-        <a class="list-link" href="{{ path('app_documentation_index') }}">Introduction</a>
+        <a class="list-link" href="{{ path('app_documentation_index') }}">{{ 'introduction'|trans|capitalize }}</a>
+    </li>
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_tutorial') }}">{{ 'tutorial'|trans|capitalize }}</a>
+    </li>
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_support') }}">{{ 'support'|trans|capitalize }}</a>
+    </li>
+</ul>
+
+<!-- Heading -->
+<h6 class="text-uppercase font-weight-bold">
+    {{ 'documentation'|trans|capitalize }}
+</h6>
+
+<!-- Links -->
+<ul class="list mb-6">
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_glossary') }}">{{ 'glossary'|trans|capitalize }}</a>
+    </li>
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_architecture') }}">{{ 'architecture'|trans|capitalize }}</a>
+    </li>
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_scopes') }}">{{ 'scopes'|trans|capitalize }}</a>
+    </li>
+    <li class="list-item">
+        <a class="list-link" href="{{ path('app_documentation_plugins') }}">{{ 'plugins'|trans|capitalize }}</a>
     </li>
     <li class="list-item d-flex">
-        <a class="list-link" href="#">Changelog</a> <span class="badge badge-pill badge-primary-soft ml-auto align-self-center">1.2.1</span>
-    </li>
-</ul>
-
-<!-- Heading -->
-<h6 class="text-uppercase font-weight-bold">
-    Documentation
-</h6>
-
-<!-- Links -->
-<ul class="list mb-6">
-    <li class="list-item">
-        <a class="list-link" href="{{ path('app_documentation_glossary') }}">Glossary</a>
-    </li>
-    <li class="list-item">
-        <a class="list-link" href="#">Architecture</a>
-    </li>
-    <li class="list-item">
-        <a class="list-link" href="#">Getting API acces</a>
-    </li>
-    <li class="list-item">
-        <a class="list-link" href="#">Setting up a Sign-In</a>
-    </li>
-    <li class="list-item">
-        <a class="list-link" href="#">Getting data</a>
-    </li>
-    <li class="list-item">
-        <a class="list-link" href="#">Providing data</a>
+        <a class="list-link" href="{{ path('app_documentation_beta') }}">{{ 'roadmap'|trans|capitalize }}</a><span class="badge badge-pill badge-danger-soft ml-auto align-self-center">{{ 'closed betá'|trans|capitalize }}</span>
     </li>
 </ul>
 
 
 <!-- Heading -->
 <h6 class="text-uppercase font-weight-bold">
-    Legal
+    {{ 'legal'|trans|capitalize }}
 </h6>
 
 <!-- Links -->
 <ul class="list mb-6">
     <li class="list-item">
-        <a class="list-link" href="#">Terms and Conditions</a>
+        <a class="list-link" href="{{ path('app_documentation_terms') }}">{{ 'Terms & Conditions'|trans|capitalize }}</a>
     </li>
     <li class="list-item">
-        <a class="list-link" href="#">Privacy</a>
+        <a class="list-link" href="{{ path('app_documentation_privacy') }}">{{ 'Privacy'|trans|capitalize }}</a>
     </li>
 </ul>
