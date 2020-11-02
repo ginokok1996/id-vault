@@ -61,14 +61,29 @@ class DashboardController extends AbstractController
 
             $variables['person'] = $commonGroundService->getResource($variables['person']);
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
-            if ($request->get('twoFactorSwitch')) {
-                //TODO:add a/the scope to the user?
-            } else {
-                //TODO:remove the scope from the user?
+            // Add current user to userGroup developer.view if switch is on, else remove it instead.
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+
+                $userGroups = [];
+                foreach ($user['userGroups'] as $userGroup) {
+                    if ($userGroup['id'] != 'ff0a0468-3b92-4222-9bca-201df1ab0f42') {
+                        array_push($userGroups, '/groups/'.$userGroup['id']);
+                    }
+                }
+
+                $user['userGroups'] = $userGroups;
+                if ($request->get('twoFactorSwitch')) {
+                    $user['userGroups'][] = '/groups/ff0a0468-3b92-4222-9bca-201df1ab0f42';
+                }
+                $commonGroundService->updateResource($user);
+
+                return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
         } elseif ($request->isMethod('POST') && $request->get('becomeDeveloper')) {
             // Add current user to userGroup developer
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['person' => $personUrl])['hydra:member'];
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             if (count($users) > 0) {
                 $user = $users[0];
 
@@ -82,6 +97,8 @@ class DashboardController extends AbstractController
                 $user['userGroups'] = $userGroups;
                 $user['userGroups'][] = '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c';
                 $commonGroundService->updateResource($user);
+
+                return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
         }
 
@@ -179,6 +196,7 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/applications")
+     * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
     public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
@@ -249,6 +267,7 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/organizations")
+     * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
     public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
@@ -335,6 +354,7 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/organizations/{id}")
+     * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
     public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
@@ -356,35 +376,47 @@ class DashboardController extends AbstractController
         if ($request->isMethod('POST') && $request->get('newDeveloper')) {
             $name = $request->get('name');
             $email = $request->get('email');
-            //TODO:check if there is a user with a contact with the given email address.
-            //TODO:check if this user is also a developer
 
-            // Create the email message
-            $message = [];
-            $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
-            $message['status'] = 'queued';
-
-            // lets use the organization contact as sender
-            if (key_exists('cc', $variables)) {
-                $sender = $variables['cc'];
-                $message['sender'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organization', 'id' => $variables['cc']]);
-            } else {
-                $sender = $variables['organization'];
+            // Check if there is a developer user with the given email address.
+            // Get all users in the developer group
+            $group = $commonGroundService->getResource(['component' => 'uc', 'type' => 'groups', 'id' => 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c']);
+            $users = $group['users'];
+            foreach ($users as $user) {
+                if (key_exists('person', $user) && !empty($user['person'])) {
+                    $person = $commonGroundService->getResource($user['person']);
+                    if (key_exists('emails', $person) && !empty($person['emails']) && count($person['emails']) > 0) {
+                        if ($person['emails'][0]['email'] == $email) {
+                            $receiver = $user['person']; // Needs to be url!
+                        }
+                    }
+                }
             }
 
-            // if we don't have that we are going to self send te message
-            //TODO:set the reciever (cc/person)
-//            $message['reciever'] = ...;
-//            if (!key_exists('sender', $message)) {
-//                $message['sender'] = $receiver;
-//            }
-            $message['data'] = ['sender'=>$sender, 'reveiver'=>$commonGroundService->getResource($message['reciever'])];
-            //TODO:create a wrc template for this:
-//            $message['content'] = $commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id'=>'2ca5b662-e941-46c9-ae87-ae0c68d0aa5d']);
+            if (isset($receiver)) {
+                // Create the email message
+                $message = [];
+                $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
+                $message['status'] = 'queued';
 
-            // Send the email to this contact
-            //TODO:send email
-//            $commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages']);
+                // lets use the organization contact as sender
+                if (key_exists('cc', $variables)) {
+                    $sender = $variables['cc'];
+                    $message['sender'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organization', 'id' => $variables['cc']]);
+                } else {
+                    $sender = $variables['organization'];
+                }
+
+                // if we don't have that we are going to self send te message
+                $message['reciever'] = $receiver; // reciever = typo in BS
+                if (!key_exists('sender', $message)) {
+                    $message['sender'] = $receiver;
+                }
+                $message['data'] = ['sender'=>$sender, 'receiver'=>$commonGroundService->getResource($receiver)];
+                $message['content'] = $commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id'=>'61162867-9811-451c-ac41-e38cb58698af']);
+
+                // Send the email to this contact
+                $commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages']);
+            }
         } elseif ($request->isMethod('POST') && $request->get('newApplication')) {
             $name = $request->get('name');
             $application['name'] = $name;
