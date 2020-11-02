@@ -154,6 +154,4 @@ class DocumentationController extends AbstractController
 
         return $variables;
     }
-
-
 }
