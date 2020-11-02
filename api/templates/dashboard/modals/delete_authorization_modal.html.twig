@@ -1,0 +1,66 @@
+<style>
+    .modal-backdrop {
+        /* bug fix - no overlay */
+        display: none;
+    }
+</style>
+
+<div class="modal fade" id="modalDeleteAuthorization{{ authorization.id }}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAuthorizationTitle{{ authorization.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalDeleteAuthorizationTitle{{ authorization.id }}">
+                        {{ 'There are still dossiers on this authorization!'|trans|capitalize }}
+                    </h2>
+                    <h3 style="text-align: center">
+                        {% if application.organization.name is defined and application.organization.name is not empty %}
+                            {{ application.organization.name }} | {{ application.name }}
+                        {% else %}
+                            {{ application.name }}
+                        {% endif %}
+                    </h3>
+                    <br>
+                    <p>Show them here with delete options?</p>
+                {% else %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalDeleteAuthorizationTitle{{ authorization.id }}">
+                        {{ 'Are you sure you want to delete this authorization?'|trans|capitalize }}
+                    </h2>
+                    <br>
+                    <h3 style="text-align: center">
+                        {% if application.organization.name is defined and application.organization.name is not empty %}
+                            {{ application.organization.name }} | {{ application.name }}
+                        {% else %}
+                            {{ application.name }}
+                        {% endif %}
+                    </h3>
+                    <br>
+
+                    <!-- Form -->
+                    <form method="post" action="{{ path('app_dashboard_authorizations') }}" enctype="multipart/form-data">
+                        <input type="hidden" name="authorizationID" value="{{ authorization.id }}">
+
+                        <!-- No -->
+                        <button type="button" class="btn btn-block btn-primary mt-3 lift" data-dismiss="modal" aria-label="Close">
+                            {{ 'no'|trans|capitalize }}
+                        </button>
+
+                        <!-- Yes -->
+                        <button name="endAuthorization" style="background-color: red" value="true" class="btn btn-block btn-primary mt-3 lift">
+                            {{ 'yes'|trans|capitalize }}
+                        </button>
+
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

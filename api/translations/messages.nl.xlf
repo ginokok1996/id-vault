@@ -177,6 +177,14 @@
         <source>view authorizations</source>
         <target>autorisaties bekijken</target>
       </trans-unit>
+      <trans-unit id="pQDY6w8" resname="There are still dossiers on this authorization!">
+        <source>There are still dossiers on this authorization!</source>
+        <target>Er zijn nog dossiers op deze autorisatie!</target>
+      </trans-unit>
+      <trans-unit id="XLz2XOU" resname="Are you sure you want to delete this authorization?">
+        <source>Are you sure you want to delete this authorization?</source>
+        <target>Weet u zeker dat u deze autorisatie wilt verwijderen?</target>
+      </trans-unit>
       <trans-unit id="pauBzKJ" resname="view dossier">
         <source>view dossier</source>
         <target>dossier bekijken</target>

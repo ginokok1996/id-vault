@@ -179,6 +179,19 @@ class DashboardController extends AbstractController
             }
         }
 
+        if ($request->isMethod('POST') && $request->get('endAuthorization')) {
+            // Delete authorization if there is no dossier connected to it
+            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
+            if (!empty($authorization['dossiers']) and count($authorization['dossiers']) > 0) {
+                // Show dossier(s) to the user so he/she can delete it
+            } else {
+                // Delete authorization
+                $commonGroundService->deleteResource($authorization);
+
+                return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
+            }
+        }
+
         return $variables;
     }
 

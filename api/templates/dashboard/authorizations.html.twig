@@ -94,14 +94,16 @@
                                                             <i class="fe fe-more-vertical"></i>
                                                         </a>
                                                         <div class="dropdown-menu" style="">
-                                                            <a class="dropdown-item" href="#" style="color: red">{{ 'end authorization'|trans|capitalize }}</a>
+                                                            <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteAuthorization{{ authorization.id }}" style="color: red">{{ 'end authorization'|trans|capitalize }}</button>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
                                     {% endif %}
+
+                                    <!-- modal -->
+                                    {% include 'dashboard/modals/delete_authorization_modal.html.twig' %}
                                 {% endfor %}
                             </div>
                         {% else %}
@@ -114,4 +116,5 @@
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
+
 {% endblock %}
