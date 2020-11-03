@@ -40,7 +40,15 @@
                                                 {% if wrcApplication.style.favicon.base64 is defined %}
                                                     <!-- Avatar -->
                                                     <div class="avatar avatar-xl">
-                                                        <img style="object-fit: fill" class="avatar-img" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
+                                                        <img
+                                                            style="object-fit: fill;
+                                                            {% if log.backgroundColor is defined and log.backgroundColor|length > 0 %}
+                                                                background-color: {{ log.backgroundColor[1] }};
+                                                            {% endif %}"
+                                                            class="avatar-img"
+                                                            src="{{ wrcApplication.style.favicon.base64 }}"
+                                                            alt="..."
+                                                        >
                                                     </div>
                                                 {% endif %}
                                         {% endif %}

@@ -1,7 +1,7 @@
 {% if claims is defined and claims is not empty %}
     <div class="list-group list-group-flush">
         {% for claim in claims %}
-            <div class="list-group-item">
+            <div class="list-group-item" style="padding-bottom: 0rem">
                 <!-- Header -->
                 <div class="row mb-5">
                     <div class="col">
@@ -55,24 +55,43 @@
                 </div>
 
                 {% if claim.proofs is defined and claim.proofs is not empty %}
-                    {% for proof in claim.proofs %}
-                        <!-- Item -->
-                        <div class="d-flex">
-
-                            <!-- Check -->
-                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
-                                <i class="fe fe-check"></i>
-                            </div>
-
-                            {% if proof.type is defined and proof.type is not empty %}
-                                <!-- Text -->
-                                <p>
-                                    {{ proof.type }}
-                                </p>
-                            {% endif %}
-
+                    <div class="row">
+                        <div class="col">
+                            <!-- Subheading -->
+                            <h5> {{ 'issuers'|trans|capitalize }} </h5>
                         </div>
-                    {% endfor %}
+
+                        <div class="col-auto mr-n5">
+                            <!-- Link -->
+                            <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#issuer">
+                                {{ 'what is an issuer?'|trans|capitalize }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        {% for proof in claim.proofs %}
+                            <div class="col-auto">
+                                <!-- Item -->
+                                <div class="d-flex">
+
+                                    {# TODO:Make this icon instead of check: #}
+                                    <!-- Check -->
+                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                        <i class="fe fe-check"></i>
+                                    </div>
+
+                                    {% if proof.type is defined and proof.type is not empty %}
+                                        <!-- Text -->
+                                        <p>
+                                            {{ proof.type }}
+                                        </p>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% endif %}
             </div>
         {% endfor %}
