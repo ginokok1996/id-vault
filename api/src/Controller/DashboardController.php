@@ -134,9 +134,13 @@ class DashboardController extends AbstractController
     public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
-        $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-        if ($request->isMethod('POST')) {
+        if ($this->getUser()) {
+            $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
+        // Add a new claim
+        if ($request->isMethod('POST') && $request->get('addClaim')) {
             $resource = $request->request->all();
 
             $resource['person'] = $this->getUser()->getPerson();
@@ -144,6 +148,14 @@ class DashboardController extends AbstractController
             $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
             return $this->redirect($this->generateUrl('app_wac_claim', ['id'=>$resource['id']]));
+        }
+        // Delete claim if there is no authorization connected to it
+        elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
+            $claim = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
+            // Delete claim
+            $commonGroundService->deleteResource($claim);
+
+            return $this->redirect($this->generateUrl('app_dashboard_claims'));
         }
 
         return $variables;
@@ -179,6 +191,20 @@ class DashboardController extends AbstractController
             }
         }
 
+        // Delete authorization if there is no dossier connected to it and redirect
+        if ($request->isMethod('POST') && ($request->get('endAuthorization') || $request->get('endClaimAuthorization'))) {
+            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
+            // Delete authorization
+            $commonGroundService->deleteResource($authorization);
+
+            // Redirect correctly
+            if ($request->get('endClaimAuthorization')) {
+                return $this->redirect($this->generateUrl('app_dashboard_claims'));
+            } else {
+                return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
+            }
+        }
+
         return $variables;
     }
 
@@ -189,7 +215,26 @@ class DashboardController extends AbstractController
     public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
-        $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+
+        if ($this->getUser()) {
+            $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
+        // Delete dossier and redirect
+        if ($request->isMethod('POST') && ($request->get('deleteDossier') || $request->get('deleteAuthorizationDossier') || $request->get('deleteClaimAuthorizationDossier'))) {
+            $dossier = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $request->get('dossierID')]);
+            // Delete dossier
+            $commonGroundService->deleteResource($dossier);
+
+            // Redirect correctly
+            if ($request->get('deleteClaimAuthorizationDossier')) {
+                return $this->redirect($this->generateUrl('app_dashboard_claims'));
+            } elseif ($request->get('deleteAuthorizationDossier')) {
+                return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
+            } else {
+                return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
+            }
+        }
 
         return $variables;
     }
@@ -258,9 +303,11 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-        $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-        $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $user])['hydra:member'];
+        if ($this->getUser()) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+            $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $user])['hydra:member'];
+        }
 
         return $variables;
     }
@@ -273,6 +320,22 @@ class DashboardController extends AbstractController
     public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($this->getUser()) {
+            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group) {
+                    $organization = $commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                        $organizations[] = $organization;
+                    }
+                }
+                $variables['resources'] = $organizations;
+            }
+        }
 
         if ($request->isMethod('POST')) {
             $name = $request->get('name');
@@ -330,22 +393,6 @@ class DashboardController extends AbstractController
                 $user['userGroups'][] = '/groups/'.$group['id'];
 
                 $commonGroundService->updateResource($user);
-            }
-        }
-
-        if ($this->getUser()) {
-            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0) {
-                $organizations = [];
-                $user = $users[0];
-                foreach ($user['userGroups'] as $group) {
-                    $organization = $commonGroundService->getResource($group['organization']);
-                    if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
-                        $organizations[] = $organization;
-                    }
-                }
-                $variables['resources'] = $organizations;
             }
         }
 
