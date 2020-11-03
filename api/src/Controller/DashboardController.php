@@ -147,13 +147,42 @@ class DashboardController extends AbstractController
 
             $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
-            return $this->redirect($this->generateUrl('app_wac_claim', ['id'=>$resource['id']]));
+            return $this->redirect($this->generateUrl('app_dashboard_claim', ['id'=>$resource['id']]));
         }
         // Delete claim if there is no authorization connected to it
         elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
             $claim = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
             // Delete claim
             $commonGroundService->deleteResource($claim);
+
+            return $this->redirect($this->generateUrl('app_dashboard_claims'));
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/claims/{id}")
+     * @Template
+     */
+    public function claimAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        if (empty($this->getUser())) {
+            $this->addFlash('error', 'This page requires you to be logged in');
+
+            return $this->redirect($this->generateUrl('app_default_login'));
+        }
+        if (!$id) {
+            $this->addFlash('error', 'No id provided');
+
+            return $this->redirect($this->generateUrl('app_dashboard_claims'));
+        }
+
+        $variables = [];
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
+
+        if ($variables['resource']['person'] != $this->getUser()->getPerson()) {
+            $this->addFlash('error', 'You do not have access to this claim');
 
             return $this->redirect($this->generateUrl('app_dashboard_claims'));
         }
@@ -209,6 +238,35 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/authorizations/{id}")
+     * @Template
+     */
+    public function authorizationAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        if (empty($this->getUser())) {
+            $this->addFlash('error', 'This page requires you to be logged in');
+
+            return $this->redirect($this->generateUrl('app_default_login'));
+        }
+        if (!$id) {
+            $this->addFlash('error', 'No id provided');
+
+            return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
+        }
+
+        $variables = [];
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
+
+        if ($variables['resource'] != $this->getUser()->getPerson()) {
+            $this->addFlash('error', 'You do not have access to this authorization');
+
+            return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
+        }
+
+        return $variables;
+    }
+
+    /**
      * @Route("/dossiers")
      * @Template
      */
@@ -234,6 +292,35 @@ class DashboardController extends AbstractController
             } else {
                 return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
             }
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/dossiers/{id}")
+     * @Template
+     */
+    public function dossierAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        if (empty($this->getUser())) {
+            $this->addFlash('error', 'This page requires you to be logged in');
+
+            return $this->redirect($this->generateUrl('app_default_login'));
+        }
+        if (!$id) {
+            $this->addFlash('error', 'No id provided');
+
+            return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
+        }
+
+        $variables = [];
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
+
+        if ($variables['resource']['authorization']['person'] != $this->getUser()->getPerson()) {
+            $this->addFlash('error', 'You do not have access to this dossier');
+
+            return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
 
         return $variables;
