@@ -35,8 +35,15 @@
                             {% if applicationContact.style.favicon.base64 is defined %}
                                     <!-- Avatar -->
                                     <div class="avatar avatar-xl">
-                                        <img class="avatar-img" src="{{ applicationContact.style.favicon.base64 }}" alt="..."
-                                             style="background-color: ghostwhite;">
+                                        <img
+                                            class="avatar-img"
+                                            src="{{ applicationContact.style.favicon.base64 }}"
+                                            alt="..."
+                                            style="object-fit: fill;
+                                            {% if application.backgroundColor is defined and application.backgroundColor|length > 0 %}
+                                                background-color: {{ application.backgroundColor[1] }};
+                                            {% endif %}"
+                                        >
                                     </div>
                             {% endif %}
                             </div>

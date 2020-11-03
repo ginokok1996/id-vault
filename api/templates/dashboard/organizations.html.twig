@@ -46,7 +46,15 @@
                                         {% if resource.style.favicon.base64 is defined %}
                                                 <!-- Avatar -->
                                                 <div class="avatar avatar-xl">
-                                                    <img class="avatar-img" src="{{ resource.style.favicon.base64 }}" alt="...">
+                                                    <img
+                                                        class="avatar-img"
+                                                        src="{{ resource.style.favicon.base64 }}"
+                                                        alt="..."
+                                                        style="object-fit: fill;
+                                                        {% if resource.backgroundColor is defined and resource.backgroundColor|length > 0 %}
+                                                            background-color: {{ resource.backgroundColor[1] }};
+                                                        {% endif %}"
+                                                    >
                                                 </div>
                                         {% endif %}
                                         </div>

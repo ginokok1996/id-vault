@@ -143,11 +143,13 @@ class DashboardController extends AbstractController
         if ($request->isMethod('POST') && $request->get('addClaim')) {
             $resource = $request->request->all();
 
-            $resource['person'] = $this->getUser()->getPerson();
+            if ($this->getUser()) {
+                $resource['person'] = $this->getUser()->getPerson();
 
-            $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
+                $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
-            return $this->redirect($this->generateUrl('app_dashboard_claim', ['id'=>$resource['id']]));
+                return $this->redirect($this->generateUrl('app_dashboard_claim', ['id'=>$resource['id']]));
+            }
         }
         // Delete claim if there is no authorization connected to it
         elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
@@ -203,8 +205,10 @@ class DashboardController extends AbstractController
             $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
             $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-            // Set endDate of every authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
+            // Set more variables to show on the authorizations page
             foreach ($variables['authorizations'] as &$authorization) {
+
+                // Set endDate of every authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
                 if (key_exists('purposeLimitation', $authorization) and !empty($authorization['purposeLimitation']) and
                     key_exists('expiryPeriod', $authorization['purposeLimitation']) and !empty($authorization['purposeLimitation']['expiryPeriod'])) {
                     if (key_exists('startingDate', $authorization) and !empty($authorization['startingDate'])) {
@@ -215,6 +219,17 @@ class DashboardController extends AbstractController
                         $date = new \DateTime($authorization['dateCreated']);
                         $date->add(new \DateInterval($authorization['purposeLimitation']['expiryPeriod']));
                         $authorization['endDate'] = $date;
+                    }
+                }
+
+                // Set the organization background-color for the icons shown with every authorization
+                if(key_exists('contact', $authorization['application']) and !empty($authorization['application']['contact'])) {
+                    $application = $commonGroundService->isResource($authorization['application']['contact']);
+                    if ($application) {
+                        if (isset($application['organization']['style']['css'])) {
+                            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                            $authorization['backgroundColor'] = $matches;
+                        }
                     }
                 }
             }
@@ -394,6 +409,19 @@ class DashboardController extends AbstractController
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
             $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $user])['hydra:member'];
+
+            // Set the organization background-color for the icons shown with every log
+            foreach ($variables['logs'] as &$log) {
+                if (key_exists('contact', $log['authorization']['application']) && !empty($log['authorization']['application']['contact'])) {
+                    $application = $commonGroundService->isResource($log['authorization']['application']['contact']);
+                    if ($application) {
+                        if (isset($application['organization']['style']['css'])) {
+                            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                            $log['backgroundColor'] = $matches;
+                        }
+                    }
+                }
+            }
         }
 
         return $variables;
@@ -421,6 +449,14 @@ class DashboardController extends AbstractController
                     }
                 }
                 $variables['resources'] = $organizations;
+
+                // Set the organization background-color for the icons shown with every organization
+                foreach ($variables['resources'] as &$organization) {
+                    if (isset($organization['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $organization['style']['css'], $matches);
+                        $organization['backgroundColor'] = $matches;
+                    }
+                }
             }
         }
 
@@ -500,6 +536,17 @@ class DashboardController extends AbstractController
         }
         $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         $variables['applications'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['organization' => $organization])['hydra:member'];
+
+        // Set the application/organization background-color for the icons shown with every application
+        foreach ($variables['applications'] as &$application) {
+            if (isset($application['style']['css'])) {
+                preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['style']['css'], $matches);
+                $application['backgroundColor'] = $matches;
+            } elseif (isset($variables['organization']['style']['css'])) {
+                preg_match('/background-color: ([#A-Za-z0-9]+)/', $variables['organization']['style']['css'], $matches);
+                $application['backgroundColor'] = $matches;
+            }
+        }
 
         $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organization])['hydra:member'];
         if (count($groups) > 0) {
