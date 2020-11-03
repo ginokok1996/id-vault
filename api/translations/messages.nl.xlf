@@ -141,6 +141,14 @@
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
       </trans-unit>
+      <trans-unit id="xaNeJ_G" resname="issuers">
+        <source>issuers</source>
+        <target>onderschrijvers</target>
+      </trans-unit>
+      <trans-unit id="hVH_5KN" resname="what is an issuer?">
+        <source>what is an issuer?</source>
+        <target>wat is een onderschrijver?</target>
+      </trans-unit>
       <trans-unit id="JaYFiUq" resname="add data">
         <source>add data</source>
         <target>gegevens toevoegen</target>
