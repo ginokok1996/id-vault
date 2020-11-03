@@ -1,10 +1,3 @@
-<style>
-    .modal-backdrop {
-        /* bug fix - no overlay */
-        display: none;
-    }
-</style>
-
 <div class="modal fade" id="modalDeleteAuthorization{{ authorization.id }}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAuthorizationTitle{{ authorization.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -20,22 +13,28 @@
                     <h2 class="font-weight-bold text-center mb-1" id="modalDeleteAuthorizationTitle{{ authorization.id }}">
                         {{ 'There are still dossiers on this authorization!'|trans|capitalize }}
                     </h2>
-                    <h3 style="text-align: center">
+                    <h3 class="text-center">
                         {% if application.organization.name is defined and application.organization.name is not empty %}
                             {{ application.organization.name }} | {{ application.name }}
                         {% else %}
                             {{ application.name }}
                         {% endif %}
                     </h3>
-                    <br>
-                    <p>Show them here with delete options?</p>
+
+                    <!-- Divider -->
+                    <hr class="border-gray-300 my-6">
+
+                    <!-- list of dossiers for this authorization -->
+                    <h3 class="text-center">{{ 'dossiers'|trans|capitalize }}</h3>
+                    {% set dossiers = authorization.dossiers %}
+                    {% include 'dashboard/widgets/dossier_list.html.twig' %}
                 {% else %}
                     <!-- Heading -->
                     <h2 class="font-weight-bold text-center mb-1" id="modalDeleteAuthorizationTitle{{ authorization.id }}">
                         {{ 'Are you sure you want to delete this authorization?'|trans|capitalize }}
                     </h2>
                     <br>
-                    <h3 style="text-align: center">
+                    <h3 class="text-center">
                         {% if application.organization.name is defined and application.organization.name is not empty %}
                             {{ application.organization.name }} | {{ application.name }}
                         {% else %}
@@ -54,7 +53,15 @@
                         </button>
 
                         <!-- Yes -->
-                        <button name="endAuthorization" style="background-color: red" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        <button
+                            {% if claim is defined %}
+                                name="endClaimAuthorization"
+                            {% else %}
+                                name="endAuthorization"
+                            {% endif %}
+                            style="background-color: red"
+                            value="true"
+                            class="btn btn-block btn-primary mt-3 lift">
                             {{ 'yes'|trans|capitalize }}
                         </button>
 
