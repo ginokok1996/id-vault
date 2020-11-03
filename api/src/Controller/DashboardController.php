@@ -223,7 +223,7 @@ class DashboardController extends AbstractController
                 }
 
                 // Set the organization background-color for the icons shown with every authorization
-                if(key_exists('contact', $authorization['application']) and !empty($authorization['application']['contact'])) {
+                if (key_exists('contact', $authorization['application']) and !empty($authorization['application']['contact'])) {
                     $application = $commonGroundService->isResource($authorization['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
