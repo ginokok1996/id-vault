@@ -140,7 +140,7 @@ class DashboardController extends AbstractController
         }
 
         // Add a new claim
-        if ($request->isMethod('POST')  && $request->get('addClaim')) {
+        if ($request->isMethod('POST') && $request->get('addClaim')) {
             $resource = $request->request->all();
 
             $resource['person'] = $this->getUser()->getPerson();
