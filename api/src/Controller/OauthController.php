@@ -31,12 +31,33 @@ class OauthController extends AbstractController
     {
         $variables = [];
 
+        if (!$request->get('client_id')) {
+            $this->addFlash('error', 'no client id provided');
+        } else {
+            try {
+                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
+            } catch (\Throwable $e) {
+                $this->addFlash('error', 'invalid client id');
+            }
+        }
+
+        $redirectUrl = $request->get('redirect_uri', false);
+
+        // Als localhost dan prima -> dit us wel unsave want ondersteund ook subdomein of path localhost
+        if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
+            // $redirectUrl is al oke dus we hoeven niks te doen
+        } elseif ($redirectUrl &&  str_replace('http://','https://', $redirectUrl) != str_replace('http://','https://', $application['authorizationUrl'])) {
+            // $redirectUrl
+        }
+        else{
+            $redirectUrl = $application['authorizationUrl'];
+        }
+
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
-            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('application')]);
 
             if (strpos($request->get('redirect_uri'), 'localhost')) {
                 $redirectUrl = $request->get('redirect_uri');
-            } elseif ($request - $this->get('redirect_uri') == $application['authorizationUrl']) {
+            } elseif ($request->$this->get('redirect_uri') == $application['authorizationUrl']) {
                 $redirectUrl = $application['authorizationUrl'];
             }
 
@@ -59,27 +80,7 @@ class OauthController extends AbstractController
                 return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
             }
         }
-
-        if (!$request->query->get('client_id')) {
-            $this->addFlash('error', 'no client id provided');
-        } else {
-            try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
-            } catch (\Throwable $e) {
-                $this->addFlash('error', 'invalid client id');
-            }
-        }
-
-        if (strpos($request->get('redirect_uri'), 'localhost')) {
-            $redirectUrl = $request->get('redirect_uri');
-        } elseif ($request->get('redirect_uri') == $variables['application']['authorizationUrl']) {
-            $redirectUrl = $variables['application']['authorizationUrl'];
-        }
-
-        if ($request->query->get('state')) {
-            $variables['state'] = $request->query->get('state');
-        }
-
+        
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
