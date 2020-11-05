@@ -51,6 +51,15 @@ class OauthController extends AbstractController
 
         $redirectUrl = $request->get('redirect_uri', false);
 
+        $clientd = $request->get('client_id');
+        $variables['clientd'] = $clientd;
+
+        $state = $request->get('state');
+        $variables['state'] = $state;
+
+        $scopes = $request->get('scopes');
+        $variables['scopes'] = $scopes;
+
         // Als localhost dan prima -> dit us wel unsave want ondersteund ook subdomein of path localhost
         if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
             // $redirectUrl is al oke dus we hoeven niks te doen
