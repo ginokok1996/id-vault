@@ -72,7 +72,7 @@ class OauthController extends AbstractController
 
         if (strpos($request->get('redirect_uri'), 'localhost')) {
             $redirectUrl = $request->get('redirect_uri');
-        } elseif ($request - $this->get('redirect_uri') == $variables['application']['authorizationUrl']) {
+        } elseif ($request->get('redirect_uri') == $variables['application']['authorizationUrl']) {
             $redirectUrl = $variables['application']['authorizationUrl'];
         }
 

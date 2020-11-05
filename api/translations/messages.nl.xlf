@@ -1925,6 +1925,12 @@
         <source>boss and owner of your own data</source>
         <target>baas én eigenaar van je eigen gegeven</target>
       </trans-unit>
+      <trans-unit id="xoGElPD" resname="Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data">
+        <source>Id-vault is a place to savely store your online data, where you stay the owner and
+                   decide who can or can't access and use your data</source>
+        <target>Id-vault is een plek waar je veilig je data online op kan slaan.
+                   Jij blijft de baas over je gegevens en bepaald ten allertijden wie er bij kan</target>
+      </trans-unit>
       <trans-unit id="Dab5RcL" resname="the application is requesting the following scopes from you">
         <source>the application is requesting the following scopes from you</source>
         <target>de applicatie vraagt de volgende scopes van u</target>
