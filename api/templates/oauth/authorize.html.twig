@@ -28,19 +28,20 @@
                     </h1>
 
                     <!-- Text -->
-                    <p class="mb-6 text-center text-muted">
+                    <p class="mb-4 text-center text-muted">
                         {% if application.description is defined and application.description is not empty %}
                             {{ application.description }}
                         {% endif %}
                     </p>
 
-                    <p class="mb-6 text-center">
-                        {{ "boss and owner of your own data"|trans|capitalize }}.<br>
-                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and
-                        decide who can or can't access and use your data"|trans|capitalize }}.
+                    <h4 class="mb-0 font-weight-bold text-center">
+                        {{ "boss and owner of your own data"|trans|capitalize }}.
+                    </h4>
+                    <p class="mb-2 text-center text-muted">
+                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data"|trans|capitalize }}.
                     </p>
 
-                    <p class="mb-1 text-center">
+                    <p class="mb-4 text-center">
                         <a target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a>
                     </p>
 
@@ -48,7 +49,7 @@
                         {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
                     </p>
 
-                    <ul class="text-center list-group list-group-flush mb-6">
+                    <ul class="text-center list-group list-group-flush mb-2">
                         {% if scopes is defined and scopes is not empty %}
                             {% for scope in scopes %}
                                 <li style="list-style: none;" class=" text-muted">
