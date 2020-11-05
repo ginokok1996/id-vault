@@ -54,11 +54,11 @@ class OauthController extends AbstractController
         // Als localhost dan prima -> dit us wel unsave want ondersteund ook subdomein of path localhost
         if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
             // $redirectUrl is al oke dus we hoeven niks te doen
-        } elseif ($redirectUrl &&  str_replace('http://','https://', $redirectUrl) != str_replace('http://','https://', $application['authorizationUrl'])) {
+        } elseif ($redirectUrl &&  str_replace('http://','https://', $redirectUrl) != str_replace('http://','https://', $variables['application']['authorizationUrl'])) {
             // $redirectUrl
         }
         else{
-            $redirectUrl = $application['authorizationUrl'];
+            $redirectUrl = $variables['application']['authorizationUrl'];
         }
 
         /*
@@ -69,8 +69,8 @@ class OauthController extends AbstractController
 
             if (strpos($request->get('redirect_uri'), 'localhost')) {
                 $redirectUrl = $request->get('redirect_uri');
-            } elseif ($request->$this->get('redirect_uri') == $application['authorizationUrl']) {
-                $redirectUrl = $application['authorizationUrl'];
+            } elseif ($request->$this->get('redirect_uri') == $variables['application']['authorizationUrl']) {
+                $redirectUrl = $variables['application']['authorizationUrl'];
             }
 
             if ($request->get('grantAccess') == 'true') {
@@ -80,7 +80,7 @@ class OauthController extends AbstractController
                 }
                 $state = $request->get('state');
                 $authorization = [];
-                $authorization['application'] = '/applications/'.$application['id'];
+                $authorization['application'] = '/applications/'.$variables['application']['id'];
                 $authorization['scopes'] = $request->get('scopes');
                 $authorization['goal'] = ' ';
                 $authorization['userUrl'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
