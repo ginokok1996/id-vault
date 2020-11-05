@@ -31,6 +31,10 @@ class OauthController extends AbstractController
     {
         $variables = [];
 
+        /*
+         *  Firts we NEED to detirmine an application by public client_id (unsave)
+         */
+
         if (!$request->get('client_id')) {
             $this->addFlash('error', 'no client id provided');
         } else {
@@ -40,6 +44,10 @@ class OauthController extends AbstractController
                 $this->addFlash('error', 'invalid client id');
             }
         }
+
+        /*
+         *  Then we NEED to get a redirect url, for this we have several options
+         */
 
         $redirectUrl = $request->get('redirect_uri', false);
 
@@ -52,6 +60,10 @@ class OauthController extends AbstractController
         else{
             $redirectUrl = $application['authorizationUrl'];
         }
+
+        /*
+         * Lastly lets handle the actual post request
+         */
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
 
@@ -80,7 +92,7 @@ class OauthController extends AbstractController
                 return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
             }
         }
-        
+
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
