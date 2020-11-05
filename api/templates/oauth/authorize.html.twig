@@ -34,13 +34,18 @@
                         {% endif %}
                     </p>
 
-                   <p class="mb-6 text-center">
-                       {{ "Id-vault is a place to savely store your online data, where you stay the owner and
-                   decide who can or can't access and use your data"|trans|capitalize }}.
-                   </p>
+                    <p class="mb-6 text-center">
+                        {{ "boss and owner of your own data"|trans|capitalize }}.<br>
+                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and
+                        decide who can or can't access and use your data"|trans|capitalize }}.
+                    </p>
+
+                    <p class="mb-1 text-center">
+                        <a target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a>
+                    </p>
 
                     <p class="mb-2 text-center">
-                        {{ 'the application is requesting the following scopes from you' }}:
+                        {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
                     </p>
 
                     <ul class="text-center list-group list-group-flush mb-6">
@@ -53,12 +58,11 @@
                         {% endif %}
                     </ul>
 
-                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <!-- Text -->
-                    <h2 class="mb-0 text-center font-weight-bold text-danger">
-                        {{ "log in to continue"|trans|capitalize }}
-                    </h2>
-                    {% else %}
+                    <p class="mb-2 text-center">
+                        <a target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a>
+                    </p>
+
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="text-center">
                             <form method="post" action="{{ path('app_oauth_authorize') }}">
                                 {%  if scopes is defined %}
@@ -89,7 +93,7 @@
                     <div class="p-5 bg-white" style="border-radius: 25px">
                         <!-- Heading -->
                         <h1 class="mb-0 font-weight-bold text-center">
-                            {{ 'sign in'|trans|capitalize }}
+                            {{ 'login'|trans|capitalize }}
                         </h1>
 
                         <!-- Text -->

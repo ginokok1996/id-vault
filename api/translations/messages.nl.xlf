@@ -213,6 +213,10 @@
         <source>view dossier</source>
         <target>dossier bekijken</target>
       </trans-unit>
+      <trans-unit id="hEKWa_g" resname="view dossiers">
+        <source>view dossiers</source>
+        <target>dossiers bekijken</target>
+      </trans-unit>
       <trans-unit id="PeyX35A" resname="no authorizations available">
         <source>no authorizations available</source>
         <target>geen autorisaties beschikbaar</target>
@@ -273,8 +277,8 @@
         <source>view usage</source>
         <target>gebruik inzien</target>
       </trans-unit>
-      <trans-unit id="xilaOlj" resname="view usage2">
-        <source>view usage2</source>
+      <trans-unit id="xilaOlj" resname="view usage_2">
+        <source>view usage</source>
         <target>gebruik bekijken</target>
       </trans-unit>
       <trans-unit id="ep_pgH3" resname="end authorization">
@@ -804,6 +808,14 @@
       <trans-unit id="owVcl50" resname="read more">
         <source>read more</source>
         <target>meer lezen</target>
+      </trans-unit>
+      <trans-unit id="j2bUZ4z" resname="read more_2">
+        <source>read more</source>
+        <target>lees meer</target>
+      </trans-unit>
+      <trans-unit id="4fWWxKd" resname="read more about scopes">
+        <source>read more about scopes</source>
+        <target>lees meer over scopes</target>
       </trans-unit>
       <trans-unit id="PEgjRvN" resname="back">
         <source>back</source>
@@ -1909,10 +1921,13 @@
         <source>dashboard</source>
         <target>dashboard</target>
       </trans-unit>
-      <trans-unit id="tpfHPzz" resname="Id-vault is a place to savely store your online data, where you stay the owner and&#10;                   decide who can or can't access and use your data">
-        <source>Id-vault is a place to savely store your online data, where you stay the owner and
-                   decide who can or can't access and use your data</source>
-        <target>Id-vault is een plek waar je veilig je data online op kan slaan. Jij blijft de baas over je gegevens en bepaald ten allertijden wie er bij kan</target>
+      <trans-unit id="tpfHPzz" resname="boss and owner of your own data">
+        <source>boss and owner of your own data</source>
+        <target>baas én eigenaar van je eigen gegeven</target>
+      </trans-unit>
+      <trans-unit id="Dab5RcL" resname="the application is requesting the following scopes from you">
+        <source>the application is requesting the following scopes from you</source>
+        <target>de applicatie vraagt de volgende scopes van u</target>
       </trans-unit>
       <trans-unit id="1b3h_Ot" resname="log in to continue">
         <source>log in to continue</source>
