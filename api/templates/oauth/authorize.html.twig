@@ -34,15 +34,10 @@
                         {% endif %}
                     </p>
 
-                    <h4 class="mb-0 font-weight-bold text-center">
-                        {{ "boss and owner of your own data"|trans|capitalize }}.
-                    </h4>
-                    <p class="mb-2 text-center text-muted">
-                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data"|trans|capitalize }}.
-                    </p>
-
                     <p class="mb-4 text-center">
-                        <a target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a>
+                        {{ "boss and owner of your own data"|trans|capitalize }}.
+                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data."|trans }}
+                        <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a></u>
                     </p>
 
                     <p class="mb-2 text-center">
@@ -60,7 +55,7 @@
                     </ul>
 
                     <p class="mb-2 text-center">
-                        <a target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a>
+                        <u><a style="color: white" target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a></u>
                     </p>
 
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -73,7 +68,7 @@
                                 {% endif %}
                                 {% if state is defined %}
                                     <input type="hidden" name="state" value="{{ state }}">
-                                {% endif %}%}
+                                {% endif %}
                                 {% if clientid is defined %}
                                     <input type="hidden" name="client_id" value="{{ clientid }}">
                                 {% endif %}
