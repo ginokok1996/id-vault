@@ -32,7 +32,7 @@ class OauthController extends AbstractController
         $variables = [];
 
         /*
-         *  Firts we NEED to detirmine an application by public client_id (unsave)
+         *  First we NEED to determine an application by public client_id (unsafe)
          */
 
         if (!$request->get('client_id')) {
@@ -60,7 +60,7 @@ class OauthController extends AbstractController
         $scopes = $request->get('scopes');
         $variables['scopes'] = $scopes;
 
-        // Als localhost dan prima -> dit us wel unsave want ondersteund ook subdomein of path localhost
+        // Als localhost dan prima -> dit us wel unsafe want ondersteund ook subdomein of path localhost
         if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
             // $redirectUrl is al oke dus we hoeven niks te doen
         } elseif ($redirectUrl &&  str_replace('http://','https://', $redirectUrl) != str_replace('http://','https://', $variables['application']['authorizationUrl'])) {
