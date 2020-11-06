@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
+// TODO: Make a service for this subscriber?
 class ListDTOSubscriber implements EventSubscriberInterface
 {
     private $params;
