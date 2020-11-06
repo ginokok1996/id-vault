@@ -4,6 +4,7 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\AccessToken;
+use App\Entity\ListDTO;
 use App\Service\AccessTokenGeneratorService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,11 +33,25 @@ class ListDTOSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return;
+        return [
+            KernelEvents::VIEW => ['listDTO', EventPriorities::PRE_VALIDATE],
+        ];
     }
 
-    public function grantAccess(ViewEvent $event)
+    public function listDTO(ViewEvent $event)
     {
-        return;
+        $listDTO = $event->getControllerResult();
+        $method = $event->getRequest()->getMethod();
+        $route = $event->getRequest()->attributes->get('_route');
+
+        if ($method != 'POST') {
+            return;
+        }
+
+        if ($listDTO instanceof ListDTO) {
+
+        }
+
+        return $listDTO;
     }
 }
