@@ -75,11 +75,25 @@
                                 <!-- Item -->
                                 <div class="d-flex">
 
-                                    {# TODO:Make this icon instead of check: #}
-                                    <!-- Check -->
-                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
-                                        <i class="fe fe-check"></i>
-                                    </div>
+                                    {% if proof.application.contact is defined and proof.application.contact is not empty and commonground_is_resource(proof.application.contact) %}
+                                        {% set application = commonground_resource(proof.application.contact) %}
+
+                                        {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
+                                            <!-- Icon -->
+                                            <div class="avatar avatar-xl">
+                                                <img class="avatar-img"
+                                                     src="{{ application.organization.style.favicon.base64 }}"
+                                                     alt="..."
+                                                     style="object-fit: fill;"
+                                                >
+                                            </div>
+                                        {% else %}
+                                            <!-- Check -->
+                                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                                <i class="fe fe-check"></i>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
 
                                     {% if proof.type is defined and proof.type is not empty %}
                                         <!-- Text -->
