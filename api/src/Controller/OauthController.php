@@ -46,19 +46,23 @@ class OauthController extends AbstractController
         }
 
         /*
-         *  Then we NEED to get a redirect url, for this we have several options
+         *  Lets transport our variables to twig
          */
 
-        $redirectUrl = $request->get('redirect_uri', false);
-
-        $clientd = $request->get('client_id');
-        $variables['clientd'] = $clientd;
+        $clientId = $request->get('client_id');
+        $variables['clientId'] = $clientId;
 
         $state = $request->get('state');
         $variables['state'] = $state;
 
         $scopes = $request->get('scopes');
         $variables['scopes'] = $scopes;
+
+        /*
+         *  Then we NEED to get a redirect url, for this we have several options
+         */
+
+        $redirectUrl = $request->get('redirect_uri', false);
 
         // Als localhost dan prima -> dit us wel unsafe want ondersteund ook subdomein of path localhost
         if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
@@ -69,6 +73,8 @@ class OauthController extends AbstractController
         else{
             $redirectUrl = $variables['application']['authorizationUrl'];
         }
+
+        $variables['redirectUrl'] = $redirectUrl;
 
         /*
          * Lastly lets handle the actual post request
