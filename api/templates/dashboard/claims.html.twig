@@ -27,8 +27,17 @@
 
                             <div class="col-auto">
 
+                                <!-- Link -->
+                                <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#claim">
+                                    {{ 'what is a claim?'|trans|capitalize }}
+                                </a>
+
+                            </div>
+
+                            <div class="col-auto">
+
                                 <!-- Button -->
-                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">
+                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalAddClaim">
                                     {{ 'add claim'|trans|capitalize }}
                                 </button>
 
@@ -36,89 +45,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        {% if claims is defined and claims is not empty %}
-                            <div class="list-group list-group-flush">
-                                {% for claim in claims %}
-                                    <div class="list-group-item">
-                                        <!-- Header -->
-                                        <div class="row mb-5">
-                                            <div class="col">
-
-                                                <!-- Heading -->
-                                                <h4 class="mb-0">
-                                                    {% if claim.data is defined and claim.data is not empty %}
-                                                        {% for dataItem in claim.data %}
-                                                            {% if loop.last %}
-                                                                {{ dataItem }}
-                                                            {% else %}
-                                                                {{ dataItem }},
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </h4>
-
-                                                <!-- Text -->
-                                                <small class="text-gray-700">
-                                                    {% if claim.property is defined and claim.property is not empty %}
-                                                        {{ claim.property }}
-                                                    {% endif %}
-                                                </small>
-
-                                            </div>
-                                            <div class="col-auto mr-n5">
-
-                                                <!-- Button -->
-                                                <a class="btn btn-xs btn-primary" href="pricing.html">
-                                                    {{ 'edit'|trans|capitalize }}
-                                                </a>
-
-                                            </div>
-
-                                            <div class="col-auto">
-
-                                                <!-- Dropdown -->
-                                                <div class="dropdown">
-                                                    <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#" aria-expanded="false">
-                                                        <i class="fe fe-more-vertical"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu" style="">
-                                                        <a class="dropdown-item" href="#">{{ 'view authorizations'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#">{{ 'view dossier'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#">{{ 'view usage2'|trans|capitalize }}</a>
-                                                        <a class="dropdown-item" href="#" style="color: red">{{ 'delete data'|trans|capitalize }}</a>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        {% if claim.proofs is defined and claim.proofs is not empty %}
-                                            {% for proof in claim.proofs %}
-                                                <!-- Item -->
-                                                <div class="d-flex">
-
-                                                    <!-- Check -->
-                                                    <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
-                                                        <i class="fe fe-check"></i>
-                                                    </div>
-
-                                                    {% if proof.type is defined and proof.type is not empty %}
-                                                        <!-- Text -->
-                                                        <p>
-                                                            {{ proof.type }}
-                                                        </p>
-                                                    {% endif %}
-
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="hint__title">{{ 'no claims available'|trans|capitalize }}</p>
-                        {% endif %}
-
+                        <!-- list of claims -->
+                        {% include 'dashboard/widgets/claim_list.html.twig' %}
                     </div>
                 </div>
 
@@ -126,5 +54,25 @@
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 
+    <!-- Modals -->
     {% include 'dashboard/modals/add_claim_modal.html.twig' %}
+    {% if claims is defined and claims is not empty %}
+        {% for claim in claims %}
+            {% include 'dashboard/modals/delete_claim_modal.html.twig' %}
+
+            {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                {% for authorization in claim.authorizations %}
+                    {% set application = commonground_resource(authorization.application.contact) %}
+                    {% include 'dashboard/modals/delete_authorization_modal.html.twig' %}
+
+                    {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                        {% for dossier in authorization.dossiers %}
+                            {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}

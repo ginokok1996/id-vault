@@ -31,8 +31,62 @@ class OauthController extends AbstractController
     {
         $variables = [];
 
+        /*
+         *  First we NEED to determine an application by public client_id (unsafe)
+         */
+
+        if (!$request->get('client_id')) {
+            $this->addFlash('error', 'no client id provided');
+        } else {
+            try {
+                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
+            } catch (\Throwable $e) {
+                $this->addFlash('error', 'invalid client id');
+            }
+        }
+
+        /*
+         *  Lets transport our variables to twig
+         */
+
+        $clientId = $request->get('client_id');
+        $variables['clientId'] = $clientId;
+
+        $state = $request->get('state');
+        $variables['state'] = $state;
+
+        $scopes = $request->get('scopes');
+        $variables['scopes'] = $scopes;
+
+        /*
+         *  Then we NEED to get a redirect url, for this we have several options
+         */
+
+        $redirectUrl = $request->get('redirect_uri', false);
+
+        // Als localhost dan prima -> dit us wel unsafe want ondersteund ook subdomein of path localhost
+        if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
+            // $redirectUrl is al oke dus we hoeven niks te doen
+        } elseif ($redirectUrl &&  str_replace('http://','https://', $redirectUrl) != str_replace('http://','https://', $variables['application']['authorizationUrl'])) {
+            // $redirectUrl
+        }
+        else{
+            $redirectUrl = $variables['application']['authorizationUrl'];
+        }
+
+        $variables['redirectUrl'] = $redirectUrl;
+
+        /*
+         * Lastly lets handle the actual post request
+         */
+
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
-            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('application')]);
+
+            if (strpos($request->get('redirect_uri'), 'localhost')) {
+                $redirectUrl = $request->get('redirect_uri');
+            } elseif ($this->get('redirect_uri') == $variables['application']['authorizationUrl']) {
+                $redirectUrl = $variables['application']['authorizationUrl'];
+            }
 
             if ($request->get('grantAccess') == 'true') {
                 $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -41,31 +95,17 @@ class OauthController extends AbstractController
                 }
                 $state = $request->get('state');
                 $authorization = [];
-                $authorization['application'] = '/applications/'.$application['id'];
+                $authorization['application'] = '/applications/'.$variables['application']['id'];
                 $authorization['scopes'] = $request->get('scopes');
                 $authorization['goal'] = ' ';
                 $authorization['userUrl'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
                 $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
 
-                return $this->redirect($application['authorizationUrl']."?code={$authorization['id']}&state={$state}");
+                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
             } else {
-                return $this->redirect($application['authorizationUrl'].'?errorMessage=Authorization+denied+by+user');
+                return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
             }
-        }
-
-        if (!$request->query->get('client_id')) {
-            $this->addFlash('error', 'no client id provided');
-        } else {
-            try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
-            } catch (\Throwable $e) {
-                $this->addFlash('error', 'invalid client id');
-            }
-        }
-
-        if ($request->query->get('state')) {
-            $variables['state'] = $request->query->get('state');
         }
 
         if ($this->getUser()) {
@@ -76,16 +116,16 @@ class OauthController extends AbstractController
             if (count($authorizations) > 0) {
                 $authorization = $authorizations['0'];
 
-                return $this->redirect($variables['application']['authorizationUrl']."?code={$authorization['id']}&state={$variables['state']}");
+                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
             }
         }
 
         if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
-            return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=invalid+response+type');
+            return $this->redirect($redirectUrl.'?errorMessage=invalid+response+type');
         }
 
         if (!$request->query->get('scopes')) {
-            return $this->redirect($variables['application']['authorizationUrl'].'?errorMessage=no+scopes+provided');
+            return $this->redirect($redirectUrl.'?errorMessage=no+scopes+provided');
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
         }

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalOrganization" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
+<div class="modal fade" id="modalDeveloper" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -14,7 +14,7 @@
                 </h2>
 
                 <!-- Form -->
-                <form method="post" action="{{ path('app_dashboard_organizations') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ path('app_dashboard_organization', {id: organization.id})  }}" enctype="multipart/form-data">
 
                     <!-- Name -->
                     <div class="form-group">

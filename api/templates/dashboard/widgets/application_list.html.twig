@@ -14,7 +14,7 @@
             <div class="col-auto">
 
                 <!-- Button -->
-                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalOrganization">
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalApplication">
                     {{ 'add new'|trans|capitalize }}
                 </button>
 
@@ -26,13 +26,24 @@
         <div class="list-group list-group-flush">
             {% if applications is defined and applications is not empty %}
                 {% for application in applications %}
+                    {% if application.contact is defined and application.contact is not empty and application.contact %}
+                        {% set applicationContact = commonground_resource(application.contact) %}
+                    {% endif %}
                     <div class="list-group-item">
                         <div class="row align-items-center">
                             <div class="col-auto">
-                            {% if application.style.favicon.base64 is defined %}
+                            {% if applicationContact.style.favicon.base64 is defined %}
                                     <!-- Avatar -->
                                     <div class="avatar avatar-xl">
-                                        <img class="avatar-img" src="{{ application.style.favicon.base64 }}" alt="...">
+                                        <img
+                                            class="avatar-img"
+                                            src="{{ applicationContact.style.favicon.base64 }}"
+                                            alt="..."
+                                            style="object-fit: fill;
+                                            {% if application.backgroundColor is defined and application.backgroundColor|length > 0 %}
+                                                background-color: {{ application.backgroundColor[1] }};
+                                            {% endif %}"
+                                        >
                                     </div>
                             {% endif %}
                             </div>

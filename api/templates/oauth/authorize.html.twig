@@ -28,22 +28,23 @@
                     </h1>
 
                     <!-- Text -->
-                    <p class="mb-6 text-center text-muted">
+                    <p class="mb-4 text-center text-muted">
                         {% if application.description is defined and application.description is not empty %}
                             {{ application.description }}
                         {% endif %}
                     </p>
 
-                   <p class="mb-6 text-center">
-                       {{ "Id-vault is a place to savely store your online data, where you stay the owner and
-                   decide who can or can't access and use your data"|trans|capitalize }}.
-                   </p>
-
-                    <p class="mb-2 text-center">
-                        {{ 'the application is requesting the following scopes from you' }}:
+                    <p class="mb-4 text-center">
+                        {{ "boss and owner of your own data"|trans|capitalize }}.
+                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data."|trans }}
+                        <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a></u>
                     </p>
 
-                    <ul class="text-center list-group list-group-flush mb-6">
+                    <p class="mb-2 text-center">
+                        {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
+                    </p>
+
+                    <ul class="text-center list-group list-group-flush mb-2">
                         {% if scopes is defined and scopes is not empty %}
                             {% for scope in scopes %}
                                 <li style="list-style: none;" class=" text-muted">
@@ -53,12 +54,11 @@
                         {% endif %}
                     </ul>
 
-                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <!-- Text -->
-                    <h2 class="mb-0 text-center font-weight-bold text-danger">
-                        {{ "log in to continue"|trans|capitalize }}
-                    </h2>
-                    {% else %}
+                    <p class="mb-2 text-center">
+                        <u><a style="color: white" target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a></u>
+                    </p>
+
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="text-center">
                             <form method="post" action="{{ path('app_oauth_authorize') }}">
                                 {%  if scopes is defined %}
@@ -69,9 +69,13 @@
                                 {% if state is defined %}
                                     <input type="hidden" name="state" value="{{ state }}">
                                 {% endif %}
-                                {% if application is defined %}
-                                    <input type="hidden" name="application" value="{{ application.id }}">
+                                {% if clientId is defined %}
+                                    <input type="hidden" name="client_id" value="{{ clientId }}">
                                 {% endif %}
+                                {% if redirectUrl is defined %}
+                                    <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
+                                {% endif %}
+
                                 <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
                                     {{ 'accept'|trans|capitalize }}
                                 </button>
@@ -89,7 +93,7 @@
                     <div class="p-5 bg-white" style="border-radius: 25px">
                         <!-- Heading -->
                         <h1 class="mb-0 font-weight-bold text-center">
-                            {{ 'sign in'|trans|capitalize }}
+                            {{ 'login'|trans|capitalize }}
                         </h1>
 
                         <!-- Text -->
