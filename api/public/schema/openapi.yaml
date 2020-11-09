@@ -2890,6 +2890,81 @@ paths:
               - asc
               - desc
         -
+          name: 'order[result]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[dateCreated]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[dateModified]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'dateCreated[before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateCreated[strictly_before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateCreated[after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateCreated[strictly_after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateModified[before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateModified[strictly_before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateModified[after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateModified[strictly_after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
           name: id
           in: query
           required: false
@@ -2905,6 +2980,46 @@ paths:
               type: string
           style: form
           explode: true
+        -
+          name: result
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'result[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: deepObject
+          explode: true
+        -
+          name: dateCreated
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateCreated[]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: dateModified
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateModified[]'
+          in: query
+          required: false
+          schema:
+            type: string
         -
           name: page
           in: query
@@ -4037,9 +4152,36 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        resource:
+          description: 'A BS/SendList resource'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
+        result:
+          description: 'The result'
+          type: array
+          items:
+            type: string
+          nullable: true
+        dateCreated:
+          description: 'The moment this claim was created'
+          type: string
+          format: date-time
+          nullable: true
+        dateModified:
+          description: 'The moment this claim was last Modified'
+          type: string
+          format: date-time
+          nullable: true
     ListDTO-write:
       type: object
       description: ''
+      properties:
+        resource:
+          description: 'A BS/SendList resource'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
     'ListDTO:jsonld-read':
       type: object
       description: ''
@@ -4060,6 +4202,27 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        resource:
+          description: 'A BS/SendList resource'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
+        result:
+          description: 'The result'
+          type: array
+          items:
+            type: string
+          nullable: true
+        dateCreated:
+          description: 'The moment this claim was created'
+          type: string
+          format: date-time
+          nullable: true
+        dateModified:
+          description: 'The moment this claim was last Modified'
+          type: string
+          format: date-time
+          nullable: true
     'ListDTO:jsonld-write':
       type: object
       description: ''
@@ -4072,6 +4235,11 @@ components:
           type: string
         '@type':
           readOnly: true
+          type: string
+        resource:
+          description: 'A BS/SendList resource'
+          externalDocs:
+            url: 'http://schema.org/url'
           type: string
 definitions:
   AccessToken-read:
@@ -4089,6 +4257,15 @@ definitions:
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
+      result:
+        description: 'The result'
+        type: array
+      dateCreated:
+        description: 'The moment this claim was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this claim was last Modified'
+        type: \Datetime
     required: []
   AuditTrail-read:
     properties:
@@ -4194,12 +4371,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-06 15:24:31'
+        example: '2020-11-09 10:26:35'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-06 15:24:31'
+        example: '2020-11-09 10:26:35'
     required: []
   AuditTrail-write:
     properties:
@@ -4247,12 +4424,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-06 15:24:31'
+        example: '2020-11-09 10:26:35'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-06 15:24:31'
+        example: '2020-11-09 10:26:35'
     required: []
   ChangeLog-write:
     properties:

@@ -44,7 +44,7 @@ class ListDTO
     private $id;
 
     /**
-     * @var string A list resource?
+     * @var string A BS/SendList resource
      *
      * @Groups({"read", "write"})
      * @Assert\Url
@@ -53,6 +53,13 @@ class ListDTO
      * )
      */
     private $resource;
+
+    /**
+     * @var array The result
+     * @Groups({"read"})
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $result = [];
 
     /**
      * @var Datetime The moment this claim was created
@@ -75,6 +82,30 @@ class ListDTO
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getResource(): ?string
+    {
+        return $this->resource;
+    }
+
+    public function setResource(string $resource): self
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    public function getResult(): ?array
+    {
+        return $this->result;
+    }
+
+    public function setResult(?array $result): self
+    {
+        $this->result = $result;
+
+        return $this;
     }
 
     public function getDateCreated(): ?\DateTimeInterface
