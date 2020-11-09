@@ -2,12 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\ListDTO;
+use App\Entity\SendList;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ListDTOService
+class SendListService
 {
     private $em;
     private $commonGroundService;
@@ -20,17 +20,17 @@ class ListDTOService
         $this->params = $params;
     }
 
-    public function handle(ListDTO $listDTO)
+    public function handle(SendList $sendList)
     {
         $results = [];
-        $resource = $this->commonGroundService->getResource($listDTO->getResource());
+        $resource = $this->commonGroundService->getResource($sendList->getResource());
 
         $results[0] = 'test';
 
-        $listDTO->setResult($results);
-        $this->em->persist($listDTO);
+        $sendList->setResult($results);
+        $this->em->persist($sendList);
         $this->em->flush();
 
-        return $listDTO;
+        return $sendList;
     }
 }

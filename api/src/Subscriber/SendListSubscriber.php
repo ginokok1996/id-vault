@@ -4,9 +4,9 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\AccessToken;
-use App\Entity\ListDTO;
+use App\Entity\SendList;
 use App\Service\AccessTokenGeneratorService;
-use App\Service\ListDTOService;
+use App\Service\SendListService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -16,19 +16,19 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
 // TODO: Make a service for this subscriber?
-class ListDTOSubscriber implements EventSubscriberInterface
+class SendListSubscriber implements EventSubscriberInterface
 {
     private $params;
     private $em;
-    private $listDTOService;
+    private $sendListService;
     private $serializer;
     private $commonGroundService;
     private $accessTokenGeneratorService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, ListDTOService $listDTOService, SerializerInterface $serializer, CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SendListService $sendListService, SerializerInterface $serializer, CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
     {
         $this->params = $params;
-        $this->listDTOService = $listDTOService;
+        $this->sendListService = $sendListService;
         $this->commonGroundService = $commonGroundService;
         $this->serializer = $serializer;
         $this->em = $em;
@@ -38,11 +38,11 @@ class ListDTOSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['listDTO', EventPriorities::PRE_VALIDATE],
+            KernelEvents::VIEW => ['sendList', EventPriorities::PRE_VALIDATE],
         ];
     }
 
-    public function listDTO(ViewEvent $event)
+    public function sendList(ViewEvent $event)
     {
         $resource = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
@@ -53,11 +53,11 @@ class ListDTOSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($resource instanceof ListDTO) {
+        if ($resource instanceof SendList) {
             $resource->getResource();
             $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
 
-            $resource = $this->listDTOService->handle($resource);
+            $resource = $this->sendListService->handle($resource);
         }
         $this->em->persist($resource);
         $this->em->flush();

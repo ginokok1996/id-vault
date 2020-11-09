@@ -2794,21 +2794,21 @@ paths:
             schema:
               $ref: '#/components/schemas/ChangeLog-write'
         description: 'The updated ChangeLog resource'
-  /api/list_d_t_os:
+  /api/send_lists:
     get:
       tags:
-        - ListDTO
-      operationId: getListDTOCollection
-      summary: 'Retrieves the collection of ListDTO resources.'
+        - SendList
+      operationId: getSendListCollection
+      summary: 'Retrieves the collection of SendList resources.'
       responses:
         200:
-          description: 'ListDTO collection response'
+          description: 'SendList collection response'
           content:
             application/ld+json:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ListDTO:jsonld-read' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SendList:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -2818,7 +2818,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ListDTO:jsonld-read' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/SendList:jsonld-read' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
@@ -2828,57 +2828,57 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/json+hal:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/vnd.api+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/json+vnd.api:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/health+json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/json+health:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/xml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             application/x-yaml:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             text/csv:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ListDTO-read'
+                  $ref: '#/components/schemas/SendList-read'
       parameters:
         -
           name: 'order[id]'
@@ -3112,58 +3112,58 @@ paths:
         - application/health+json
     post:
       tags:
-        - ListDTO
-      operationId: postListDTOCollection
-      summary: 'Creates a ListDTO resource.'
+        - SendList
+      operationId: postSendListCollection
+      summary: 'Creates a SendList resource.'
       responses:
         201:
-          description: 'ListDTO resource created'
+          description: 'SendList resource created'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
           links:
-            GetListDTOItem:
+            GetSendListItem:
               parameters:
                 id: '$response.body#/id'
-              operationId: getListDTOItem
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/list_d_t_os/{id}`.'
+              operationId: getSendListItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/send_lists/{id}`.'
         400:
           description: 'Invalid input'
         404:
@@ -3172,44 +3172,44 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/ListDTO:jsonld-write'
+              $ref: '#/components/schemas/SendList:jsonld-write'
           application/json+ld:
             schema:
-              $ref: '#/components/schemas/ListDTO:jsonld-write'
+              $ref: '#/components/schemas/SendList:jsonld-write'
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+hal:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+vnd.api:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/health+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+health:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
-        description: 'The new ListDTO resource'
+              $ref: '#/components/schemas/SendList-write'
+        description: 'The new SendList resource'
       parameters:
         -
           name: Authorization
@@ -3240,12 +3240,12 @@ paths:
           name: X-NLX-Audit-Clarification
           description: 'A clarification as to why a request has been made  (doelbinding)'
           in: header
-  '/api/list_d_t_os/{id}':
+  '/api/send_lists/{id}':
     get:
       tags:
-        - ListDTO
-      operationId: getListDTOItem
-      summary: 'Retrieves a ListDTO resource.'
+        - SendList
+      operationId: getSendListItem
+      summary: 'Retrieves a SendList resource.'
       parameters:
         -
           name: id
@@ -3326,59 +3326,59 @@ paths:
           in: query
       responses:
         200:
-          description: 'ListDTO resource response'
+          description: 'SendList resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
         404:
           description: 'Resource not found'
       produces:
         - application/health+json
     delete:
       tags:
-        - ListDTO
-      operationId: deleteListDTOItem
-      summary: 'Removes the ListDTO resource.'
+        - SendList
+      operationId: deleteSendListItem
+      summary: 'Removes the SendList resource.'
       responses:
         204:
-          description: 'ListDTO resource deleted'
+          description: 'SendList resource deleted'
         404:
           description: 'Resource not found'
       parameters:
@@ -3419,9 +3419,9 @@ paths:
           in: header
     put:
       tags:
-        - ListDTO
-      operationId: putListDTOItem
-      summary: 'Replaces the ListDTO resource.'
+        - SendList
+      operationId: putSendListItem
+      summary: 'Replaces the SendList resource.'
       parameters:
         -
           name: id
@@ -3460,47 +3460,47 @@ paths:
           in: header
       responses:
         200:
-          description: 'ListDTO resource updated'
+          description: 'SendList resource updated'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
         400:
           description: 'Invalid input'
         404:
@@ -3509,49 +3509,49 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/ListDTO:jsonld-write'
+              $ref: '#/components/schemas/SendList:jsonld-write'
           application/json+ld:
             schema:
-              $ref: '#/components/schemas/ListDTO:jsonld-write'
+              $ref: '#/components/schemas/SendList:jsonld-write'
           application/hal+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+hal:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+vnd.api:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/health+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/json+health:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           application/x-yaml:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           text/csv:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
+              $ref: '#/components/schemas/SendList-write'
           text/html:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
-        description: 'The updated ListDTO resource'
+              $ref: '#/components/schemas/SendList-write'
+        description: 'The updated SendList resource'
     patch:
       tags:
-        - ListDTO
-      operationId: patchListDTOItem
-      summary: 'Updates the ListDTO resource.'
+        - SendList
+      operationId: patchSendListItem
+      summary: 'Updates the SendList resource.'
       parameters:
         -
           name: id
@@ -3590,47 +3590,47 @@ paths:
           in: header
       responses:
         200:
-          description: 'ListDTO resource updated'
+          description: 'SendList resource updated'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/ListDTO:jsonld-read'
+                $ref: '#/components/schemas/SendList:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/ListDTO-read'
+                $ref: '#/components/schemas/SendList-read'
         400:
           description: 'Invalid input'
         404:
@@ -3639,8 +3639,8 @@ paths:
         content:
           application/vnd.api+json:
             schema:
-              $ref: '#/components/schemas/ListDTO-write'
-        description: 'The updated ListDTO resource'
+              $ref: '#/components/schemas/SendList-write'
+        description: 'The updated SendList resource'
 components:
   schemas:
     AccessToken-read:
@@ -4141,7 +4141,7 @@ components:
         '@type':
           readOnly: true
           type: string
-    ListDTO-read:
+    SendList-read:
       type: object
       description: ''
       properties:
@@ -4173,7 +4173,7 @@ components:
           type: string
           format: date-time
           nullable: true
-    ListDTO-write:
+    SendList-write:
       type: object
       description: ''
       properties:
@@ -4182,7 +4182,7 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-    'ListDTO:jsonld-read':
+    'SendList:jsonld-read':
       type: object
       description: ''
       properties:
@@ -4223,7 +4223,7 @@ components:
           type: string
           format: date-time
           nullable: true
-    'ListDTO:jsonld-write':
+    'SendList:jsonld-write':
       type: object
       description: ''
       properties:
@@ -4250,7 +4250,7 @@ definitions:
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
     required: []
-  ListDTO-read:
+  SendList-read:
     properties:
       id:
         description: 'The UUID identifier of this resource'
@@ -4371,12 +4371,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-09 10:26:35'
+        example: '2020-11-09 11:56:06'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-09 10:26:35'
+        example: '2020-11-09 11:56:06'
     required: []
   AuditTrail-write:
     properties:
@@ -4424,12 +4424,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-09 10:26:35'
+        example: '2020-11-09 11:56:06'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-09 10:26:35'
+        example: '2020-11-09 11:56:06'
     required: []
   ChangeLog-write:
     properties:
@@ -4447,7 +4447,7 @@ tags:
       
       
   -
-    name: ListDTO
+    name: SendList
     description: |
       
       
