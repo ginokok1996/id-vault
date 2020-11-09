@@ -3,7 +3,6 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\AccessToken;
 use App\Entity\ListDTO;
 use App\Service\AccessTokenGeneratorService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
@@ -49,7 +48,6 @@ class ListDTOSubscriber implements EventSubscriberInterface
         }
 
         if ($listDTO instanceof ListDTO) {
-
         }
 
         return $listDTO;
