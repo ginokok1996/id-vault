@@ -49,17 +49,19 @@ class SendListSubscriber implements EventSubscriberInterface
         $route = $event->getRequest()->attributes->get('_route');
 
         // We should also check on entity = component
-        if ($method != 'POST') {
+        if ($method == 'POST' && $route == 'api_send_lists_post_collection') {
+            $resource = $this->sendListService->createList($resource);
+        } elseif ($method == 'POST') {
+            var_dump($route); // TODO: REMOVE VAR DUMP HERE! :)
+        } else {
             return;
         }
 
         if ($resource instanceof SendList) {
-            $resource->getResource();
-            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
-
-            $resource = $this->sendListService->handle($resource);
+            if ($this->commonGroundService->isResource($resource->getResource())) {
+                $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
+                $resource = $this->sendListService->addUserToList($resource);
+            }
         }
-        $this->em->persist($resource);
-        $this->em->flush();
     }
 }

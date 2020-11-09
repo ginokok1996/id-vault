@@ -51,8 +51,56 @@ class SendList
      * @Assert\Length(
      *     max=255
      * )
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resource;
+
+    /**
+     * @var string The name of this SendList.
+     *
+     * @example News email
+     *
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string The description of this SendList.
+     *
+     * @example Mailing list for sending news
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var bool True if this is an mailing list.
+     *
+     * @example true
+     *
+     * @Groups({"read", "write"})
+     * @ORM\Column(type="boolean")
+     */
+    private $mail = false;
+
+    /**
+     * @var bool True if this is an phone list.
+     *
+     * @example true
+     *
+     * @Groups({"read", "write"})
+     * @ORM\Column(type="boolean")
+     */
+    private $phone = false;
 
     /**
      * @var array The result
@@ -92,6 +140,54 @@ class SendList
     public function setResource(string $resource): self
     {
         $this->resource = $resource;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getMail(): ?bool
+    {
+        return $this->mail;
+    }
+
+    public function setMail(bool $mail): self
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getPhone(): ?bool
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(bool $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }
