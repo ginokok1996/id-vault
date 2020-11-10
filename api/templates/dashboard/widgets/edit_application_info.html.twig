@@ -1,0 +1,52 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <!-- Heading -->
+        <div class="list-group-item" style="border: none; padding: 0;">
+            <div class="row align-items-center">
+                {% if application.style.favicon.base64 is defined %}
+                    <div class="col-auto">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xl">
+                            <img
+                                class="avatar-img"
+                                src="{{ application.style.favicon.base64 }}"
+                                alt="..."
+                                style="object-fit: fill;"
+                            >
+                        </div>
+
+                    </div>
+                {% endif %}
+                <div class="col-6">
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        {{ application.name|capitalize }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <!-- Form -->
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">app id:</p>
+                <p class="text-gray-700">{{ application.id }}</p>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">secret:</p>
+                <p class="text-gray-700">{{ application.secret }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">{{ 'authorization url'|trans|capitalize }}:</p>
+                <p><p class="text-gray-700">{{ application.authorizationUrl }}</p></p>
+            </div>
+        </div>
+
+    </div>
+</div>
