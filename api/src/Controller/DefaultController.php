@@ -57,6 +57,80 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/reset/{token}")
+     * @Template
+     */
+    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, $token = null)
+    {
+        $variables = [];
+
+        if ($token) {
+            $application = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
+            $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
+            $tokens = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['token' => $token, 'provider.name' => $providers[0]['name']])['hydra:member'];
+            if (count($tokens) > 0) {
+                $variables['token'] = $tokens[0];
+                $userUlr = $commonGroundService->cleanUrl(['component'=>'uc', 'type'=>'users', 'id'=>$tokens[0]['user']['id']]);
+                $variables['selectedUser'] = $userUlr;
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('password')) {
+            $user = $commonGroundService->getResource($request->get('selectedUser'));
+            $password = $request->get('password');
+
+            $user['password'] = $password;
+
+            $commonGroundService->updateResource($user);
+
+            $variables['reset'] = true;
+        } elseif ($request->isMethod('POST')) {
+            $variables['message'] = true;
+            $username = $request->get('email');
+            $users = $commonGroundService->getResourceList(['component'=>'uc', 'type'=>'users'], ['username'=> $username], true, false, true, false, false);
+            $users = $users['hydra:member'];
+
+            $application = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
+            $organization = $application['organization']['@id'];
+            $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
+
+            if (count($users) > 0) {
+                $user = $users[0];
+                $person = $commonGroundService->getResource($user['person']);
+
+                $validChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $code = substr(str_shuffle(str_repeat($validChars, ceil(3 / strlen($validChars)))), 1, 5);
+
+                $token = [];
+                $token['token'] = $code;
+                $token['user'] = 'users/'.$user['id'];
+                $token['provider'] = 'providers/'.$providers[0]['id'];
+                $token = $commonGroundService->createResource($token, ['component' => 'uc', 'type' => 'tokens']);
+
+                $url = $request->getUri();
+                $link = $url.'/'.$token['token'];
+
+                $message = [];
+
+                if ($params->get('app_env') == 'prod') {
+                    $message['service'] = '/services/eb7ffa01-4803-44ce-91dc-d4e3da7917da';
+                } else {
+                    $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
+                }
+                $message['status'] = 'queued';
+                $message['data'] = ['resource' => $link, 'sender'=> 'no-reply@conduction.nl'];
+                $message['content'] = $commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id'=>'e86a7cf9-9060-49f7-99dd-ec56339bd278']);
+                $message['reciever'] = $user['username'];
+                $message['sender'] = 'no-reply@conduction.nl';
+
+                $commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages']);
+            }
+        }
+
+        return $variables;
+    }
+
+    /**
      * @Route("/error")
      * @Template
      */
