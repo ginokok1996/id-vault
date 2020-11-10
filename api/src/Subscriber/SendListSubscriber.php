@@ -3,7 +3,6 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\AccessToken;
 use App\Entity\SendList;
 use App\Service\AccessTokenGeneratorService;
 use App\Service\SendListService;
