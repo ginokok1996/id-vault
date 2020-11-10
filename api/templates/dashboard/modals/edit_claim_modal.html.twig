@@ -1,0 +1,63 @@
+<!-- modals -->
+<div class="modal fade" id="modalEditClaim{{ claim.id }}" tabindex="-1" role="dialog" aria-labelledby="modalEditClaim{{ claim.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
+                    {{ 'edit data'|trans|capitalize }}
+                </h2>
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_claims') }}" enctype="multipart/form-data">
+
+                    {% if claim.property is defined and claim.property is not empty %}
+                        <!-- Claim -->
+                        <div class="form-group">
+
+                            <!-- Property -->
+                            <label for="{{ claim.property }}">{{ claim.property }} <span style="color: red; font-weight: bold">*</span></label>
+
+                            <!-- Data input -->
+                            {% for key, dataItem in claim.data %}
+                                <input
+                                    required
+                                    class="form-control"
+                                    name="data[{{ key }}]"
+                                    id="{{ claim.property }}"
+                                    type="{% if claim.property == 'email' %}email{% elseif claim.property == 'phoneNumber' %}tel{% else %}text{% endif %}"
+                                    placeholder="{{ key|trans|capitalize }}"
+                                    value="{{ dataItem }}"
+                                >
+                            {% endfor %}
+                        </div>
+
+                        <!-- Hidden input for property -->
+                        <input type="hidden" value="{{ claim.property }}" name="property" id="property">
+                    {% else %}
+                        <h3>{{ 'this claim has no property!'|trans|capitalize }}</h3>
+                    {% endif %}
+
+                    <!-- Hidden input for ID -->
+                    {% if claim['id'] is defined %}
+                        <input type="hidden" id="id" name ="id" value="{{ claim['id'] }}">
+                    {% endif %}
+
+                    <!-- Hidden input for @ID -->
+                    {% if claim['@id'] is defined %}
+                        <input type="hidden" id="@id" name ="@id" value="{{ claim['@id'] }}">
+                    {% endif %}
+
+                    <!-- Submit -->
+                    <button name="editClaim" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'edit'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\ListDTO;
+use App\Entity\SendList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ListDTO|null find($id, $lockMode = null, $lockVersion = null)
- * @method ListDTO|null findOneBy(array $criteria, array $orderBy = null)
- * @method ListDTO[]    findAll()
- * @method ListDTO[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SendList|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SendList|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SendList[]    findAll()
+ * @method SendList[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ListDTORepository extends ServiceEntityRepository
+class SendListRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ListDTO::class);
+        parent::__construct($registry, SendList::class);
     }
 
     // /**
-    //  * @return ListDTO[] Returns an array of ListDTO objects
+    //  * @return SendList[] Returns an array of SendList objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ListDTORepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?ListDTO
+    public function findOneBySomeField($value): ?SendList
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.exampleField = :val')

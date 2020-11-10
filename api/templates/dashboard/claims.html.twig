@@ -58,6 +58,7 @@
     {% include 'dashboard/modals/add_claim_modal.html.twig' %}
     {% if claims is defined and claims is not empty %}
         {% for claim in claims %}
+            {% include 'dashboard/modals/edit_claim_modal.html.twig' %}
             {% include 'dashboard/modals/delete_claim_modal.html.twig' %}
 
             {% if claim.authorizations is defined and claim.authorizations is not empty %}
