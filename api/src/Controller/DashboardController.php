@@ -318,7 +318,9 @@ class DashboardController extends AbstractController
         $variables = [];
 
         if ($this->getUser()) {
-            $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+            $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         // Delete dossier and redirect
@@ -360,7 +362,9 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
 
-        if ($variables['resource']['authorization']['person'] != $this->getUser()->getPerson()) {
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
             $this->addFlash('error', 'You do not have access to this dossier');
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
@@ -404,6 +408,20 @@ class DashboardController extends AbstractController
 
                 $variables['organizations'] = $organizations;
                 $variables['applications'] = $applications;
+
+                // Set the application/organization background-color for the icons shown with every application
+                foreach ($variables['applications'] as &$application) {
+                    if (isset($application['contact'])) {
+                        $applicationContact = $commonGroundService->getResource($application['contact']);
+                    }
+                    if (isset($applicationContact['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $applicationContact['style']['css'], $matches);
+                        $application['backgroundColor'] = $matches;
+                    } elseif (isset($applicationContact['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $applicationContact['organization']['style']['css'], $matches);
+                        $application['backgroundColor'] = $matches;
+                    }
+                }
             }
         }
 

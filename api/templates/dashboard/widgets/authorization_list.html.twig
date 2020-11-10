@@ -74,6 +74,9 @@
                                     <i class="fe fe-more-vertical"></i>
                                 </a>
                                 <div class="dropdown-menu" style="">
+                                    {% if claimDeleteModal is defined %}
+                                        <a class="dropdown-item" href="{{ path('app_dashboard_authorization', {id: authorization.id}) }}">{{ 'view usage'|trans|capitalize }}</a>
+                                    {% endif %}
                                     <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteAuthorization{{ authorization.id }}" style="color: red">{{ 'end authorization'|trans|capitalize }}</button>
                                 </div>
                             </div>

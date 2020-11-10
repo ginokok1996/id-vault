@@ -193,6 +193,10 @@
         <source>authorizations</source>
         <target>autorisaties</target>
       </trans-unit>
+      <trans-unit id="LE88zD9" resname="what is an authorization?">
+        <source>what is an authorization?</source>
+        <target>wat is een autorisatie?</target>
+      </trans-unit>
       <trans-unit id="nghg_oW" resname="view authorizations">
         <source>view authorizations</source>
         <target>autorisaties bekijken</target>
