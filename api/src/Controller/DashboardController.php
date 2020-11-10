@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Description.
@@ -365,11 +364,11 @@ class DashboardController extends AbstractController
                     }
                 }
 
-                foreach ($organizations as $organization){
+                foreach ($organizations as $organization) {
                     $cleanUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
-                    $newApplications = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'],['organization' => $cleanUrl])['hydra:member'];
-                    if (count($newApplications) > 0){
-                        foreach ($newApplications as $newApplication){
+                    $newApplications = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['organization' => $cleanUrl])['hydra:member'];
+                    if (count($newApplications) > 0) {
+                        foreach ($newApplications as $newApplication) {
                             $applications[] = $newApplication;
                         }
                     }
@@ -388,7 +387,7 @@ class DashboardController extends AbstractController
             // Create a wRc application
             $wrcApplication['name'] = $name;
             $wrcApplication['description'] = $request->get('description');
-            $wrcApplication['organization'] = '/organizations/' . $request->get('organization');
+            $wrcApplication['organization'] = '/organizations/'.$request->get('organization');
             $wrcApplication['domain'] = $request->get('domain');
 
 //            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
