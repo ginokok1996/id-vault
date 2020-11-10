@@ -19,7 +19,7 @@
                             {% endif %}
                         </h4>
 
-                        <!-- Text -->
+                        <!-- Property of this claim -->
                         <small class="text-gray-700">
                             {% if claim.property is defined and claim.property is not empty %}
                                 {{ claim.property }}
@@ -29,10 +29,10 @@
                     </div>
                     <div class="col-auto mr-n5">
 
-                        <!-- Button -->
-                        <a class="btn btn-xs btn-primary" href="pricing.html">
+                        <!-- Edit button -->
+                        <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalEditClaim{{ claim.id }}">
                             {{ 'edit'|trans|capitalize }}
-                        </a>
+                        </button>
 
                     </div>
 
@@ -44,9 +44,19 @@
                                 <i class="fe fe-more-vertical"></i>
                             </a>
                             <div class="dropdown-menu" style="">
-                                <a class="dropdown-item" href="#">{{ 'view authorizations'|trans|capitalize }}</a>
-                                <a class="dropdown-item" href="#">{{ 'view dossiers'|trans|capitalize }}</a>
-                                <a class="dropdown-item" href="#">{{ 'view usage_2'|trans|capitalize }}</a>
+                                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                                    {# TODO:add a modal or page for showing the authorizations of this claim? #}
+                                    <a class="dropdown-item" href="{{ path('app_dashboard_authorizations') }}">{{ 'view authorizations'|trans|capitalize }}</a>
+                                    {% set break = false %}
+                                    {% for authorization in claim.authorizations if not break %}
+                                        {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                                            {# TODO:add a modal or page for showing the dossiers of this claim? #}
+                                            <a class="dropdown-item" href="{{ path('app_dashboard_dossiers') }}">{{ 'view dossiers'|trans|capitalize }}</a>
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ path('app_dashboard_claim', {id: claim.id}) }}">{{ 'view usage_2'|trans|capitalize }}</a>
                                 <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteClaim{{ claim.id }}" style="color: red">{{ 'delete data'|trans|capitalize }}</button>
                             </div>
                         </div>
@@ -54,8 +64,62 @@
                     </div>
                 </div>
 
+                <!-- Authorizations of this claim -->
+                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                    <div class="row mb-0">
+                        <div class="col">
+                            <!-- Subheading -->
+                            <h5> {{ 'authorizations'|trans|capitalize }} </h5>
+                        </div>
+
+                        <div class="col-auto mr-n5">
+                            <!-- Link -->
+                            <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#contract">
+                                {{ 'what is an authorization?'|trans|capitalize }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        {% for authorization in claim.authorizations %}
+                            {% if authorization.application.contact is defined and authorization.application.contact is not empty and commonground_is_resource(authorization.application.contact) %}
+                                {% set application = commonground_resource(authorization.application.contact) %}
+                                <div class="col-auto">
+                                    <!-- Item -->
+                                    <div class="d-flex">
+
+                                        {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
+                                            <!-- Icon -->
+                                            <div class="avatar avatar-xs">
+                                                <img class="avatar-img"
+                                                     src="{{ application.organization.style.favicon.base64 }}"
+                                                     alt="..."
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if authorization.iconBackgroundColor is defined and authorization.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ authorization.iconBackgroundColor[1] }};
+                                                     {% endif %}"
+                                                >
+                                            </div>
+                                            <div style="padding-left: 1.5rem"></div>
+                                        {% endif %}
+
+                                        {% if application.organization.name is defined and application.organization.name is not empty %}
+                                            <!-- Text -->
+                                            <p>
+                                                {{ application.organization.name }}
+                                            </p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Proofs of this claim -->
                 {% if claim.proofs is defined and claim.proofs is not empty %}
-                    <div class="row">
+                    <div class="row mb-0">
                         <div class="col">
                             <!-- Subheading -->
                             <h5> {{ 'issuers'|trans|capitalize }} </h5>
@@ -69,7 +133,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-5">
                         {% for proof in claim.proofs %}
                             <div class="col-auto">
                                 <!-- Item -->
@@ -80,13 +144,17 @@
 
                                         {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
                                             <!-- Icon -->
-                                            <div class="avatar avatar-xl">
+                                            <div class="avatar avatar-xs">
                                                 <img class="avatar-img"
                                                      src="{{ application.organization.style.favicon.base64 }}"
                                                      alt="..."
-                                                     style="object-fit: fill;"
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if proof.iconBackgroundColor is defined and proof.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ proof.iconBackgroundColor[1] }};
+                                                     {% endif %}"
                                                 >
                                             </div>
+                                            <div style="padding-left: 1.5rem"></div>
                                         {% else %}
                                             <!-- Check -->
                                             <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">

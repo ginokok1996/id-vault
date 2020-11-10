@@ -149,6 +149,10 @@
         <source>what is an issuer?</source>
         <target>wat is een onderschrijver?</target>
       </trans-unit>
+      <trans-unit id="z3RWAVu" resname="data">
+        <source>data</source>
+        <target>gegevens</target>
+      </trans-unit>
       <trans-unit id="JaYFiUq" resname="add data">
         <source>add data</source>
         <target>gegevens toevoegen</target>
@@ -160,6 +164,14 @@
       <trans-unit id="jEjQVne" resname="retrieve data">
         <source>retrieve data</source>
         <target>gegevens ophalen</target>
+      </trans-unit>
+      <trans-unit id="pqkfTJH" resname="edit data">
+        <source>edit data</source>
+        <target>gegevens wijzigen</target>
+      </trans-unit>
+      <trans-unit id="OU4pSWb" resname="this claim has no property!">
+        <source>this claim has no property!</source>
+        <target>deze claim heeft geen property!</target>
       </trans-unit>
       <trans-unit id="iCjvdkP" resname="delete data">
         <source>delete data</source>
@@ -181,6 +193,10 @@
         <source>authorizations</source>
         <target>autorisaties</target>
       </trans-unit>
+      <trans-unit id="LE88zD9" resname="what is an authorization?">
+        <source>what is an authorization?</source>
+        <target>wat is een autorisatie?</target>
+      </trans-unit>
       <trans-unit id="nghg_oW" resname="view authorizations">
         <source>view authorizations</source>
         <target>autorisaties bekijken</target>
@@ -201,7 +217,11 @@
         <source>Are you sure you want to delete this authorization?</source>
         <target>Weet u zeker dat u deze autorisatie wilt verwijderen?</target>
       </trans-unit>
-      <trans-unit id="r1rI0cd" resname="You cannot delete this dossier because of legal reasons!">
+      <trans-unit id="UGG5OgW" resname="this authorization has no application!">
+        <source>this authorization has no application!</source>
+        <target>deze autorisatie heeft geen applicatie!</target>
+      </trans-unit>
+      <trans-unit id="LiWSJcv" resname="You cannot delete this dossier because of legal reasons!">
         <source>You cannot delete this dossier because of legal reasons!</source>
         <target>U kunt dit dossier om juridische redenen niet verwijderen!</target>
       </trans-unit>
@@ -1988,7 +2008,7 @@
       </trans-unit>
       <trans-unit id="EMIrz0x" resname="for">
         <source>for</source>
-        <target>vooor</target>
+        <target>voor</target>
       </trans-unit>
       <trans-unit id="zIMh1jd" resname="contract">
         <source>contract</source>

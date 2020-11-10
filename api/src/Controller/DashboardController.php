@@ -137,10 +137,43 @@ class DashboardController extends AbstractController
 
         if ($this->getUser()) {
             $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+
+            // Set icon background colors
+            foreach ($variables['claims'] as &$claim) {
+                // Set the organization background-color for the authorization icons shown with every claim
+                if (isset($claim['authorizations'])) {
+                    foreach ($claim['authorizations'] as &$authorization) {
+                        if (isset($authorization['application']['contact'])) {
+                            $application = $commonGroundService->isResource($authorization['application']['contact']);
+                            if ($application) {
+                                if (isset($application['organization']['style']['css'])) {
+                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                                    $authorization['iconBackgroundColor'] = $matches;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Set the organization background-color for the proof icons shown with every claim
+                if (isset($claim['proofs'])) {
+                    foreach ($claim['proofs'] as &$proof) {
+                        if (isset($proof['application']['contact'])) {
+                            $application = $commonGroundService->isResource($proof['application']['contact']);
+                            if ($application) {
+                                if (isset($application['organization']['style']['css'])) {
+                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                                    $proof['iconBackgroundColor'] = $matches;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Add a new claim
-        if ($request->isMethod('POST') && $request->get('addClaim')) {
+        if ($request->isMethod('POST') && ($request->get('addClaim') || $request->get('editClaim'))) {
             $resource = $request->request->all();
 
             if ($this->getUser()) {
@@ -167,7 +200,7 @@ class DashboardController extends AbstractController
      * @Route("/claims/{id}")
      * @Template
      */
-    public function claimAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -256,7 +289,7 @@ class DashboardController extends AbstractController
      * @Route("/authorizations/{id}")
      * @Template
      */
-    public function authorizationAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -272,7 +305,35 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
 
-        if ($variables['resource'] != $this->getUser()->getPerson()) {
+        // Set more variables to show on the authorizations page
+        // Set endDate of this authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
+        if (key_exists('purposeLimitation', $variables['resource']) and !empty($variables['resource']['purposeLimitation']) and
+            key_exists('expiryPeriod', $variables['resource']['purposeLimitation']) and !empty($variables['resource']['purposeLimitation']['expiryPeriod'])) {
+            if (key_exists('startingDate', $variables['resource']) and !empty($variables['resource']['startingDate'])) {
+                $date = new \DateTime($variables['resource']['startingDate']);
+                $date->add(new \DateInterval($variables['resource']['purposeLimitation']['expiryPeriod']));
+                $variables['resource']['endDate'] = $date;
+            } else {
+                $date = new \DateTime($variables['resource']['dateCreated']);
+                $date->add(new \DateInterval($variables['resource']['purposeLimitation']['expiryPeriod']));
+                $variables['resource']['endDate'] = $date;
+            }
+        }
+
+        // Set the organization background-color for the icon shown with this authorization
+        if (key_exists('contact', $variables['resource']['application']) and !empty($variables['resource']['application']['contact'])) {
+            $application = $commonGroundService->isResource($variables['resource']['application']['contact']);
+            if ($application) {
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $variables['resource']['backgroundColor'] = $matches;
+                }
+            }
+        }
+
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        if ($variables['resource']['userUrl'] != $userUrl) {
             $this->addFlash('error', 'You do not have access to this authorization');
 
             return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
@@ -290,7 +351,9 @@ class DashboardController extends AbstractController
         $variables = [];
 
         if ($this->getUser()) {
-            $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+            $variables['dossiers'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'dossiers'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         // Delete dossier and redirect
@@ -316,7 +379,7 @@ class DashboardController extends AbstractController
      * @Route("/dossiers/{id}")
      * @Template
      */
-    public function dossierAction(Session $session, Request $request, $id = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function dossierAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -332,7 +395,9 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
 
-        if ($variables['resource']['authorization']['person'] != $this->getUser()->getPerson()) {
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
             $this->addFlash('error', 'You do not have access to this dossier');
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
@@ -376,6 +441,20 @@ class DashboardController extends AbstractController
 
                 $variables['organizations'] = $organizations;
                 $variables['applications'] = $applications;
+
+                // Set the application/organization background-color for the icons shown with every application
+                foreach ($variables['applications'] as &$application) {
+                    if (isset($application['contact'])) {
+                        $applicationContact = $commonGroundService->getResource($application['contact']);
+                    }
+                    if (isset($applicationContact['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $applicationContact['style']['css'], $matches);
+                        $application['backgroundColor'] = $matches;
+                    } elseif (isset($applicationContact['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $applicationContact['organization']['style']['css'], $matches);
+                        $application['backgroundColor'] = $matches;
+                    }
+                }
             }
         }
 

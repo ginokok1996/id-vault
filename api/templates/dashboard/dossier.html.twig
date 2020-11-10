@@ -10,40 +10,46 @@
 
             {#            </div>#}
 
+            {# TODO:Include the sidenavbar and have a back button? #}
+
             <div class="col-12 col-md-9">
 
                 <!-- Card -->
                 <div class="card card-bleed shadow-light-lg mb-6">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col">
+                            <div class="col-1">
 
-                                <!-- Heading -->
-                                <h4 class="mb-0">
-                                    {{ 'contract'|trans|capitalize~' '~resource.id }}
-                                </h4>
+                                <!-- Back Button -->
+                                <a class="btn btn-sm btn-primary" href="{{ path('app_dashboard_dossiers') }}">
+                                    {{ 'back'|trans|capitalize }}
+                                </a>
 
                             </div>
 
-                            {#                            <div class="col-auto">#}
+                            <div class="col-10 text-center">
 
-                            {#                                <!-- Button -->#}
-                            {#                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">#}
-                            {#                                    {{ 'add claim'|trans|capitalize }}#}
-                            {#                                </button>#}
+                                <!-- Heading -->
+                                <h4 class="mb-0">{{ 'dossier'|trans|capitalize }}</h4>
+                                <h4 class="mb-0">
+                                    {{ resource.basis }}
+                                </h4>
 
-                            {#                            </div>#}
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <h4>To-do</h4>
-
                         {% if resource|default %}
 
-                            Basis: {{ resource.basis }}
+                            {% if resource.endDate is defined and resource.endDate is not empty %}
+                                <!-- Dossier endDate -->
+                                <h4>{{ 'end date'|trans|capitalize }}:</h4>
+                                <small class="text-gray-700">
+                                    {{ resource.endDate|date("d-m-Y", "Europe/Paris") }}
+                                </small>
+                            {% endif %}
 
                         {% endif %}
-
                     </div>
                 </div>
 

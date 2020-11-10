@@ -10,40 +10,51 @@
 
             {#            </div>#}
 
+            {# TODO:Include the sidenavbar and have a back button? #}
+
             <div class="col-12 col-md-9">
 
                 <!-- Card -->
                 <div class="card card-bleed shadow-light-lg mb-6">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col">
+                            <div class="col-1">
 
-                                <!-- Heading -->
-                                <h4 class="mb-0">
-                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~''~resource.property }}
-                                </h4>
+                                <!-- Back Button -->
+                                <a class="btn btn-sm btn-primary" href="{{ path('app_dashboard_claims') }}">
+                                    {{ 'back'|trans|capitalize }}
+                                </a>
 
                             </div>
 
-                            {#                            <div class="col-auto">#}
+                            <div class="col-10 text-center">
 
-                            {#                                <!-- Button -->#}
-                            {#                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">#}
-                            {#                                    {{ 'add claim'|trans|capitalize }}#}
-                            {#                                </button>#}
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~' '~resource.property }}
+                                </h4>
 
-                            {#                            </div>#}
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <h4>To-do</h4>
                         {% if resource|default %}
-                            Property: {{ resource.property }}
-                            <br>
-                            Person: {{ resource.person }}
+
+                            <!-- Claim data -->
+                            <h3>{{ 'data'|trans|capitalize }}:</h3>
+                            <h4 class="mb-0">
+                                {% if resource.data is defined and resource.data is not empty %}
+                                    {% for dataItem in resource.data %}
+                                        {% if loop.last %}
+                                            {{ dataItem }}
+                                        {% else %}
+                                            {{ dataItem }},
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </h4>
 
                         {% endif %}
-
                     </div>
                 </div>
 
