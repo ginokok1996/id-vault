@@ -121,7 +121,7 @@ class DefaultController extends AbstractController
                 $message['subject'] = 'reset';
                 $html = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'templates', 'id'=>'e86a7cf9-9060-49f7-99dd-ec56339bd278'])['content'];
                 $template = $this->get('twig')->createTemplate($html);
-                $message['content'] = $template->render(array('resource' => $link, 'sender' => 'no-reply@conduction.nl'));
+                $message['content'] = $template->render(['resource' => $link, 'sender' => 'no-reply@conduction.nl']);
                 $message['reciever'] = $user['username'];
                 $message['sender'] = 'no-reply@conduction.nl';
 
