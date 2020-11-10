@@ -103,7 +103,7 @@
 
                         <!-- Form -->
                         <form method="post" action="{{ path('app_user_login') }}?backUrl={{ path('app_dashboard_general') }}"
-                              name="thisForm" class="mb-6">
+                              name="thisForm" class="mb-4">
 
                             <!-- Email -->
                             <div class="form-group">
@@ -129,6 +129,25 @@
                             </button>
 
                         </form>
+
+                        <!-- Social Buttons -->
+                        <div class="d-flex flex-row justify-content-around mb-3" style="width: 100%">
+                            <a style="color: black" href="{{ path('app_user_github') }}?backUrl={{ path('app_dashboard_general') }}">
+                                <button class="btn" style="width: 2.575rem; height: 2.575rem; padding: 0; background-color: #F7F7F7;" >
+                                    <i class="fab fa-github"></i>
+                                </button>
+                            </a>
+                            <a style="color: white;" href="{{ path('app_user_facebook') }}?backUrl={{ path('app_dashboard_general') }}">
+                                <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #4064ac;" >
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                            </a>
+                            <a style="color: white;" href="{{ path('app_user_gmail') }}?backUrl={{ path('app_dashboard_general') }}">
+                                <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #dd4b39;" >
+                                    <i class="fab fa-google"></i>
+                                </button>
+                            </a>
+                        </div>
 
                         <!-- Text -->
                         <p class="mb-0 font-size-sm text-center text-muted">
