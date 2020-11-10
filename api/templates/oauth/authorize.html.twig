@@ -121,6 +121,9 @@
                                 </label>
                                 <input required type="password" name="password" class="form-control" id="password"
                                        placeholder="{{ 'enter your password'|trans|capitalize }}">
+                                <p class="font-size-sm text-center text-muted">
+                                    {{ "forgot password"|trans|capitalize }}? <a href="{{ path('app_default_reset') }}">{{ 'reset'|trans|capitalize }}</a>.
+                                </p>
                             </div>
 
                             <!-- Submit -->
