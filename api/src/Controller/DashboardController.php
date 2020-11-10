@@ -137,6 +137,39 @@ class DashboardController extends AbstractController
 
         if ($this->getUser()) {
             $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+
+            // Set icon background colors
+            foreach ($variables['claims'] as &$claim) {
+                // Set the organization background-color for the authorization icons shown with every claim
+                if (isset($claim['authorizations'])) {
+                    foreach ($claim['authorizations'] as &$authorization) {
+                        if (isset($authorization['application']['contact'])) {
+                            $application = $commonGroundService->isResource($authorization['application']['contact']);
+                            if ($application) {
+                                if (isset($application['organization']['style']['css'])) {
+                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                                    $authorization['iconBackgroundColor'] = $matches;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Set the organization background-color for the proof icons shown with every claim
+                if (isset($claim['proofs'])) {
+                    foreach ($claim['proofs'] as &$proof) {
+                        if (isset($proof['application']['contact'])) {
+                            $application = $commonGroundService->isResource($proof['application']['contact']);
+                            if ($application) {
+                                if (isset($application['organization']['style']['css'])) {
+                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                                    $proof['iconBackgroundColor'] = $matches;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Add a new claim

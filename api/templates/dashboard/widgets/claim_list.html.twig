@@ -90,13 +90,17 @@
 
                                         {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
                                             <!-- Icon -->
-                                            <div class="avatar avatar-xl">
+                                            <div class="avatar avatar-xs">
                                                 <img class="avatar-img"
                                                      src="{{ application.organization.style.favicon.base64 }}"
                                                      alt="..."
-                                                     style="object-fit: fill;"
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if authorization.iconBackgroundColor is defined and authorization.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ authorization.iconBackgroundColor[1] }};
+                                                     {% endif %}"
                                                 >
                                             </div>
+                                            <div style="padding-left: 1.5rem"></div>
                                         {% endif %}
 
                                         {% if application.organization.name is defined and application.organization.name is not empty %}
@@ -140,13 +144,17 @@
 
                                         {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
                                             <!-- Icon -->
-                                            <div class="avatar avatar-xl">
+                                            <div class="avatar avatar-xs">
                                                 <img class="avatar-img"
                                                      src="{{ application.organization.style.favicon.base64 }}"
                                                      alt="..."
-                                                     style="object-fit: fill;"
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if proof.iconBackgroundColor is defined and proof.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ proof.iconBackgroundColor[1] }};
+                                                     {% endif %}"
                                                 >
                                             </div>
+                                            <div style="padding-left: 1.5rem"></div>
                                         {% else %}
                                             <!-- Check -->
                                             <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
