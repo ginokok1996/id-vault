@@ -206,7 +206,6 @@ class UserController extends AbstractController
         } else {
             return $this->render('500.html.twig');
         }
-
     }
 
     /**
