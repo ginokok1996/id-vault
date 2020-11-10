@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Description.
@@ -349,6 +350,82 @@ class DashboardController extends AbstractController
     public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+        $applications = [];
+
+        if ($this->getUser()) {
+            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group) {
+                    $organization = $commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                        $organizations[] = $organization;
+                    }
+                }
+
+                foreach ($organizations as $organization){
+                    $cleanUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+                    $newApplications = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'],['organization' => $cleanUrl])['hydra:member'];
+                    if (count($newApplications) > 0){
+                        foreach ($newApplications as $newApplication){
+                            $applications[] = $newApplication;
+                        }
+                    }
+                }
+
+                $variables['organizations'] = $organizations;
+                $variables['applications'] = $applications;
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('newApplication')) {
+            $name = $request->get('name');
+            $application['name'] = $name;
+            $application['description'] = $request->get('description');
+
+            // Create a wRc application
+            $wrcApplication['name'] = $name;
+            $wrcApplication['description'] = $request->get('description');
+            $wrcApplication['organization'] = '/organizations/' . $request->get('organization');
+            $wrcApplication['domain'] = $request->get('domain');
+
+//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
+//                $path = $_FILES['applicationLogo']['tmp_name'];
+//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
+//                $data = file_get_contents($path);
+//                $wrcApplication['style']['name'] = 'style for '.$name;
+//                $wrcApplication['style']['description'] = 'style for '.$name;
+//                $wrcApplication['style']['css'] = ' ';
+//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
+//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
+//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+//            }
+            $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
+
+            // Create a wAc application
+            $application['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $request->get('organization')]);
+            $application['authorizationUrl'] = $request->get('passthroughUrl');
+            $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
+
+            return $this->redirect($this->generateUrl('app_dashboard_applications'));
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/applications/{id}")
+     * @Security("is_granted('ROLE_group.developer')")
+     * @Template
+     */
+    public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+        $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+        $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
 
         return $variables;
     }
@@ -436,30 +513,6 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($this->getUser()) {
-            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0) {
-                $organizations = [];
-                $user = $users[0];
-                foreach ($user['userGroups'] as $group) {
-                    $organization = $commonGroundService->getResource($group['organization']);
-                    if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
-                        $organizations[] = $organization;
-                    }
-                }
-                $variables['resources'] = $organizations;
-
-                // Set the organization background-color for the icons shown with every organization
-                foreach ($variables['resources'] as &$organization) {
-                    if (isset($organization['style']['css'])) {
-                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $organization['style']['css'], $matches);
-                        $organization['backgroundColor'] = $matches;
-                    }
-                }
-            }
-        }
-
         if ($request->isMethod('POST')) {
             $name = $request->get('name');
             $email = $request->get('email');
@@ -516,6 +569,30 @@ class DashboardController extends AbstractController
                 $user['userGroups'][] = '/groups/'.$group['id'];
 
                 $commonGroundService->updateResource($user);
+            }
+        }
+
+        if ($this->getUser()) {
+            $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $organizations = [];
+                $user = $users[0];
+                foreach ($user['userGroups'] as $group) {
+                    $organization = $commonGroundService->getResource($group['organization']);
+                    if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                        $organizations[] = $organization;
+                    }
+                }
+                $variables['resources'] = $organizations;
+
+                // Set the organization background-color for the icons shown with every organization
+                foreach ($variables['resources'] as &$organization) {
+                    if (isset($organization['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $organization['style']['css'], $matches);
+                        $organization['backgroundColor'] = $matches;
+                    }
+                }
             }
         }
 
@@ -604,27 +681,21 @@ class DashboardController extends AbstractController
             $application['description'] = $request->get('description');
 
             // Create a wRc application
-            $wrcApplication = $application;
+            $wrcApplication['name'] = $name;
+            $wrcApplication['description'] = $request->get('description');
             $wrcApplication['organization'] = '/organizations/'.$id;
             $wrcApplication['domain'] = $request->get('domain');
 
-            // TODO: fix saving the (style and) logo
 //            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
 //                $path = $_FILES['applicationLogo']['tmp_name'];
 //                $type = filetype($_FILES['applicationLogo']['tmp_name']);
 //                $data = file_get_contents($path);
-//
-//                // Create a wRc style (and favicon image)
-//                $style['name'] = 'style for '.$name;
-//                $style['description'] = 'style for '.$name;
-//                $style['css'] = ' ';
-//                $style['organization'] = '/organizations/'.$id;
-//                $style['favicon']['name'] = 'logo for '.$name;
-//                $style['favicon']['description'] = 'logo for '.$name;
-//                $style['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-//                $style = $commonGroundService->createResource($style, ['component' => 'wrc', 'type' => 'styles']);
-//
-//                $wrcApplication['style'] = '/styles/'.$style['id'];
+//                $wrcApplication['style']['name'] = 'style for '.$name;
+//                $wrcApplication['style']['description'] = 'style for '.$name;
+//                $wrcApplication['style']['css'] = ' ';
+//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
+//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
+//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
 //            }
             $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
