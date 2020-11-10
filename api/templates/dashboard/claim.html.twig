@@ -10,6 +10,8 @@
 
             {#            </div>#}
 
+            {# TODO:Include the sidenavbar and/or add a back link? #}
+
             <div class="col-12 col-md-9">
 
                 <!-- Card -->
@@ -20,27 +22,27 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~''~resource.property }}
+                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~' '~resource.property }}
                                 </h4>
 
                             </div>
-
-                            {#                            <div class="col-auto">#}
-
-                            {#                                <!-- Button -->#}
-                            {#                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalClaim">#}
-                            {#                                    {{ 'add claim'|trans|capitalize }}#}
-                            {#                                </button>#}
-
-                            {#                            </div>#}
                         </div>
                     </div>
                     <div class="card-body">
-                        <h4>To-do</h4>
                         {% if resource|default %}
-                            Property: {{ resource.property }}
-                            <br>
-                            Person: {{ resource.person }}
+
+                            <!-- Heading -->
+                            <h4 class="mb-0">
+                                {% if resource.data is defined and resource.data is not empty %}
+                                    {% for dataItem in resource.data %}
+                                        {% if loop.last %}
+                                            {{ dataItem }}
+                                        {% else %}
+                                            {{ dataItem }},
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </h4>
 
                         {% endif %}
 

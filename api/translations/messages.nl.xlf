@@ -161,6 +161,14 @@
         <source>retrieve data</source>
         <target>gegevens ophalen</target>
       </trans-unit>
+      <trans-unit id="pqkfTJH" resname="edit data">
+        <source>edit data</source>
+        <target>gegevens wijzigen</target>
+      </trans-unit>
+      <trans-unit id="OU4pSWb" resname="this claim has no property!">
+        <source>this claim has no property!</source>
+        <target>deze claim heeft geen property!</target>
+      </trans-unit>
       <trans-unit id="iCjvdkP" resname="delete data">
         <source>delete data</source>
         <target>gegevens verwijderen</target>
@@ -1989,7 +1997,7 @@
       </trans-unit>
       <trans-unit id="EMIrz0x" resname="for">
         <source>for</source>
-        <target>vooor</target>
+        <target>voor</target>
       </trans-unit>
       <trans-unit id="zIMh1jd" resname="contract">
         <source>contract</source>
