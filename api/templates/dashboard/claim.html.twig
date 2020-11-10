@@ -10,7 +10,7 @@
 
             {#            </div>#}
 
-            {# TODO:Include the sidenavbar and/or add a back link? #}
+            {# TODO:Include the sidenavbar and have a back button? #}
 
             <div class="col-12 col-md-9">
 
@@ -18,7 +18,16 @@
                 <div class="card card-bleed shadow-light-lg mb-6">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col">
+                            <div class="col-1">
+
+                                <!-- Back Button -->
+                                <a class="btn btn-sm btn-primary" href="{{ path('app_dashboard_claims') }}">
+                                    {{ 'back'|trans|capitalize }}
+                                </a>
+
+                            </div>
+
+                            <div class="col-10 text-center">
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
@@ -31,7 +40,8 @@
                     <div class="card-body">
                         {% if resource|default %}
 
-                            <!-- Heading -->
+                            <!-- Claim data -->
+                            <h3>{{ 'data'|trans|capitalize }}:</h3>
                             <h4 class="mb-0">
                                 {% if resource.data is defined and resource.data is not empty %}
                                     {% for dataItem in resource.data %}
@@ -45,7 +55,6 @@
                             </h4>
 
                         {% endif %}
-
                     </div>
                 </div>
 

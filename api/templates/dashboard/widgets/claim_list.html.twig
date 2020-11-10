@@ -44,9 +44,17 @@
                                 <i class="fe fe-more-vertical"></i>
                             </a>
                             <div class="dropdown-menu" style="">
-                                <a class="dropdown-item" href="#">{{ 'view authorizations'|trans|capitalize }}</a>
-                                <a class="dropdown-item" href="#">{{ 'view dossiers'|trans|capitalize }}</a>
-                                <a class="dropdown-item" href="#">{{ 'view usage_2'|trans|capitalize }}</a>
+                                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                                    <a class="dropdown-item" href="#">{{ 'view authorizations'|trans|capitalize }}</a> {# TODO:add path for link or a modal? #}
+                                    {% set break = false %}
+                                    {% for authorization in claim.authorizations if not break %}
+                                        {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                                            <a class="dropdown-item" href="#">{{ 'view dossiers'|trans|capitalize }}</a> {# TODO:add path for link or a modal? #}
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ path('app_dashboard_claim', {id: claim.id}) }}">{{ 'view usage_2'|trans|capitalize }}</a>
                                 <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteClaim{{ claim.id }}" style="color: red">{{ 'delete data'|trans|capitalize }}</button>
                             </div>
                         </div>
