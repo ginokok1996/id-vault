@@ -14,13 +14,29 @@
                 </h2>
 
                 <!-- Form -->
-                <form method="post" action="{{ path('app_dashboard_organization', {id: organization.id})  }}" enctype="multipart/form-data">
+                <form method="post" action="{% if definedId is defined and definedId is not empty %}
+                    {{ path(route, {id: definedId}) }}
+                {% else %}
+                    {{ path(route) }}
+                {% endif %}" enctype="multipart/form-data">
 
                     <!-- Name -->
                     <div class="form-group">
                         <label for="name">{{ 'name'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
                         <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'name'|trans|capitalize }}">
                     </div>
+
+                    {% if organizations is defined and organizations is not empty %}
+                        <!-- Organization -->
+                        <div class="form-group">
+                            <label for="organization">{{ 'organization'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                            <select class="form-control" name="organization" id="organization">
+                                {% for organization in organizations %}
+                                    <option value="{{ organization.id }}">{{ organization.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
 
                     <!-- Description -->
                     <div class="form-group">
@@ -72,8 +88,7 @@
             reader.onerror = error => reject(error);
         });
 
-        // Main already exists on the organization page!
-        async function Main2() {
+        async function Application() {
             let file = document.querySelector('#applicationLogo').files[0];
             let logoHolder = document.querySelector('#applicationLogoHolder');
             logoHolder.innerHTML = '';
@@ -83,6 +98,6 @@
             logo.setAttribute('src', base64);
             logoHolder.appendChild(logo);
         }
-        Main2();
+        Application();
     }
 </script>
