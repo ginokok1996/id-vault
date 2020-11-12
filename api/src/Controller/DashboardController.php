@@ -72,7 +72,7 @@ class DashboardController extends AbstractController
             // If this user has no person this should be saveResource and the user.person should be set to this $person?
             $commonGroundService->updateResource($person);
 
-            $variables['person'] = $commonGroundService->getResource($variables['person']);
+            return $this->redirect($this->generateUrl('app_dashboard_general'));
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
             // Add current user to userGroup developer.view if switch is on, else remove it instead.
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
