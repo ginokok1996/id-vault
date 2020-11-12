@@ -241,6 +241,10 @@
         <source>no authorizations available</source>
         <target>geen autorisaties beschikbaar</target>
       </trans-unit>
+      <trans-unit id="f4cDNzC" resname="no logs available">
+        <source>no logs available</source>
+        <target>geen logs beschikbaar</target>
+      </trans-unit>
       <trans-unit id="o53kFeO" resname="no dossiers available">
         <source>no dossiers available</source>
         <target>geen dossiers beschikbaar</target>
