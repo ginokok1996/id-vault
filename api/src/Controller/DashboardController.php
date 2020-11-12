@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,6 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DashboardController extends AbstractController
 {
+    /**
+     * @var FlashBagInterface
+     */
+    private $flash;
+
+    public function __construct(FlashBagInterface $flash)
+    {
+        $this->flash = $flash;
+    }
+
     /**
      * @Route("/general")
      * @Template
@@ -521,6 +532,37 @@ class DashboardController extends AbstractController
     public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->isMethod('POST') && $request->get('updateInfo')){
+            $application = $commonGroundService->getResource(['component' => 'wac' , 'type' => 'applications', 'id' => $id]);
+            $wrcApplication = $commonGroundService->getResource($application['contact']);
+
+            //application
+            $application['name'] = $request->get('name');
+            $application['description'] = $request->get('description');
+            $application['authorizationUrl'] = $request->get('authorizationUrl');
+            $application['webhookUrl'] = $request->get('webhookUrl');
+            $application['singleSignOnUrl'] = $request->get('singleSignOnUrl');
+
+            $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
+
+            //wrc application
+            $wrcApplication['name'] = $request->get('name');
+            $wrcApplication['domain'] = $request->get('domain');
+            $wrcApplication['organization'] = '/organizations/'.$wrcApplication['organization']['id'];
+
+            if (isset($wrcApplication['style'])){
+                $wrcApplication['style'] = '/styles/'.$wrcApplication['style']['id'];
+            }
+
+            $wrcApplication = $commonGroundService->saveResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
+        } elseif ($request->isMethod('POST') && $request->get('updateScopes')){
+            $application = $commonGroundService->getResource(['component' => 'wac' , 'type' => 'applications', 'id' => $id]);
+            $application['scopes'] = $request->get('scopes');
+
+            $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
+        }
+
         $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
         $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
 
