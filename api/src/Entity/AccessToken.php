@@ -88,6 +88,7 @@ class AccessToken
      * @example log in to commonground
      *
      * @Groups({"write"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $goal;
 
