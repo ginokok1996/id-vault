@@ -2016,11 +2016,11 @@
       </trans-unit>
       <trans-unit id="y7guvsY" resname="authorization">
         <source>authorization</source>
-        <target>__authorization</target>
+        <target>autorisatie</target>
       </trans-unit>
       <trans-unit id="hmKz7z4" resname="authorization url">
         <source>authorization url</source>
-        <target>__authorization url</target>
+        <target>autorisatie url</target>
       </trans-unit>
       <trans-unit id="Ab4wu0o" resname="reset">
         <source>reset</source>
