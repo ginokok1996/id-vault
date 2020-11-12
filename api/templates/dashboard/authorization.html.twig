@@ -150,4 +150,11 @@
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 
+    <!-- Modals -->
+    {% if resource.dossiers is defined and resource.dossiers is not empty %}
+        {% for dossier in resource.dossiers %}
+            {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}
