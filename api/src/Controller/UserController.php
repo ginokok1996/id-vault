@@ -261,9 +261,10 @@ class UserController extends AbstractController
             $backUrl = $request->query->get('backUrl');
 
             //lets check if there is already a user with this email
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'],['username' => $request->get('username')])['hydra:member'];
-            if (count($users) > 0){
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $request->get('username')])['hydra:member'];
+            if (count($users) > 0) {
                 $this->flash->add('error', 'Email address is already registered with us');
+
                 return $this->redirect($backUrl);
             } else {
                 $user = [];
@@ -283,6 +284,7 @@ class UserController extends AbstractController
                 $user['person'] = $person;
 
                 $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+
                 return $this->redirect($backUrl);
             }
         }
