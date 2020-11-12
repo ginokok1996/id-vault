@@ -533,8 +533,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($request->isMethod('POST') && $request->get('updateInfo')){
-            $application = $commonGroundService->getResource(['component' => 'wac' , 'type' => 'applications', 'id' => $id]);
+        if ($request->isMethod('POST') && $request->get('updateInfo')) {
+            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $wrcApplication = $commonGroundService->getResource($application['contact']);
 
             //application
@@ -551,13 +551,13 @@ class DashboardController extends AbstractController
             $wrcApplication['domain'] = $request->get('domain');
             $wrcApplication['organization'] = '/organizations/'.$wrcApplication['organization']['id'];
 
-            if (isset($wrcApplication['style'])){
+            if (isset($wrcApplication['style'])) {
                 $wrcApplication['style'] = '/styles/'.$wrcApplication['style']['id'];
             }
 
             $wrcApplication = $commonGroundService->saveResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
-        } elseif ($request->isMethod('POST') && $request->get('updateScopes')){
-            $application = $commonGroundService->getResource(['component' => 'wac' , 'type' => 'applications', 'id' => $id]);
+        } elseif ($request->isMethod('POST') && $request->get('updateScopes')) {
+            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $application['scopes'] = $request->get('scopes');
 
             $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
