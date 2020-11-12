@@ -284,6 +284,7 @@ class UserController extends AbstractController
                 $user['person'] = $person;
 
                 $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+                $this->flash->add('success', 'Account created');
 
                 return $this->redirect($backUrl);
             }
