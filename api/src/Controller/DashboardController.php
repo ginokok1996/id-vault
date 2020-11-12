@@ -140,8 +140,10 @@ class DashboardController extends AbstractController
         if ($this->getUser()) {
             $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-            // Set icon background colors
+            // Set icon background colors and dossiers per claim
             foreach ($variables['claims'] as &$claim) {
+                $claim['dossiers'] = [];
+
                 // Set the organization background-color for the authorization icons shown with every claim
                 if (isset($claim['authorizations'])) {
                     foreach ($claim['authorizations'] as &$authorization) {
@@ -152,6 +154,13 @@ class DashboardController extends AbstractController
                                     preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
                                     $authorization['iconBackgroundColor'] = $matches;
                                 }
+                            }
+                        }
+
+                        // Put all dossiers connected to this claim in claim.dossiers
+                        if (isset($authorization['dossiers'])) {
+                            foreach ($authorization['dossiers'] as $dossier) {
+                                array_push($claim['dossiers'], $dossier);
                             }
                         }
                     }
