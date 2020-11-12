@@ -111,6 +111,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[goal]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: id
           in: query
           required: false
@@ -118,6 +127,22 @@ paths:
             type: string
         -
           name: 'id[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        -
+          name: goal
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'goal[]'
           in: query
           required: false
           schema:
@@ -3819,6 +3844,7 @@ components:
         goal:
           description: 'The goal of the request'
           type: string
+          nullable: true
         clientSecret:
           description: 'The secret of your application'
           type: string
@@ -3885,6 +3911,7 @@ components:
         goal:
           description: 'The goal of the request'
           type: string
+          nullable: true
         clientSecret:
           description: 'The secret of your application'
           type: string
@@ -4457,6 +4484,13 @@ definitions:
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
     required: []
+  AccessToken-write:
+    properties:
+      goal:
+        description: 'The goal of the request'
+        type: string
+        example: 'log in to commonground'
+    required: []
   SendList-read:
     properties:
       id:
@@ -4629,12 +4663,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-12 10:57:47'
+        example: '2020-11-12 11:43:23'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-12 10:57:47'
+        example: '2020-11-12 11:43:23'
     required: []
   AuditTrail-write:
     properties:
@@ -4682,12 +4716,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-12 10:57:47'
+        example: '2020-11-12 11:43:23'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-12 10:57:47'
+        example: '2020-11-12 11:43:23'
     required: []
   ChangeLog-write:
     properties:
