@@ -77,7 +77,12 @@
                                     {% if claimDeleteModal is defined %}
                                         <a class="dropdown-item" href="{{ path('app_dashboard_authorization', {id: authorization.id}) }}">{{ 'view usage'|trans|capitalize }}</a>
                                     {% endif %}
-                                    <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteAuthorization{{ authorization.id }}" style="color: red">{{ 'end authorization'|trans|capitalize }}</button>
+                                    {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                                        {# TODO:add a modal or page for showing the dossiers of this authorization? #}
+                                        <a class="dropdown-item" href="{{ path('app_dashboard_dossiers') }}">{{ 'view dossiers'|trans|capitalize }}</a>
+                                    {% else %}
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteAuthorization{{ authorization.id }}" style="color: red">{{ 'end authorization'|trans|capitalize }}</button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

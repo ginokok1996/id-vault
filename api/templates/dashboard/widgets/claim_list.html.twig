@@ -44,20 +44,22 @@
                                 <i class="fe fe-more-vertical"></i>
                             </a>
                             <div class="dropdown-menu" style="">
+                                <a class="dropdown-item" href="{{ path('app_dashboard_claim', {id: claim.id}) }}">{{ 'view usage_2'|trans|capitalize }}</a>
+                                {% set claimHasDossiers = false %}
                                 {% if claim.authorizations is defined and claim.authorizations is not empty %}
                                     {# TODO:add a modal or page for showing the authorizations of this claim? #}
                                     <a class="dropdown-item" href="{{ path('app_dashboard_authorizations') }}">{{ 'view authorizations'|trans|capitalize }}</a>
-                                    {% set break = false %}
-                                    {% for authorization in claim.authorizations if not break %}
+                                    {% for authorization in claim.authorizations if not claimHasDossiers %}
                                         {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
                                             {# TODO:add a modal or page for showing the dossiers of this claim? #}
                                             <a class="dropdown-item" href="{{ path('app_dashboard_dossiers') }}">{{ 'view dossiers'|trans|capitalize }}</a>
-                                            {% set break = true %}
+                                            {% set claimHasDossiers = true %}
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
-                                <a class="dropdown-item" href="{{ path('app_dashboard_claim', {id: claim.id}) }}">{{ 'view usage_2'|trans|capitalize }}</a>
-                                <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteClaim{{ claim.id }}" style="color: red">{{ 'delete data'|trans|capitalize }}</button>
+                                {% if not claimHasDossiers %}
+                                    <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteClaim{{ claim.id }}" style="color: red">{{ 'delete data'|trans|capitalize }}</button>
+                                {% endif %}
                             </div>
                         </div>
 
