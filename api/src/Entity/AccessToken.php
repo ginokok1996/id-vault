@@ -83,6 +83,15 @@ class AccessToken
     private $clientId;
 
     /**
+     * @var string The goal of the request
+     *
+     * @example log in to commonground
+     *
+     * @Groups({"write"})
+     */
+    private $goal;
+
+    /**
      * @var string The secret of your application
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
@@ -177,6 +186,18 @@ class AccessToken
     public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    public function getGoal(): ?string
+    {
+        return $this->goal;
+    }
+
+    public function setGoal(string $goal): self
+    {
+        $this->goal = $goal;
 
         return $this;
     }

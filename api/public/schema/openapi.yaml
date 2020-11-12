@@ -3816,6 +3816,9 @@ components:
         clientId:
           description: 'The id of your application'
           type: string
+        goal:
+          description: 'The goal of the request'
+          type: string
         clientSecret:
           description: 'The secret of your application'
           type: string
@@ -3878,6 +3881,9 @@ components:
           type: string
         clientId:
           description: 'The id of your application'
+          type: string
+        goal:
+          description: 'The goal of the request'
           type: string
         clientSecret:
           description: 'The secret of your application'
@@ -4623,12 +4629,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-11 06:48:46'
+        example: '2020-11-12 09:02:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-11 06:48:46'
+        example: '2020-11-12 09:02:44'
     required: []
   AuditTrail-write:
     properties:
@@ -4676,12 +4682,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-11 06:48:46'
+        example: '2020-11-12 09:02:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-11 06:48:46'
+        example: '2020-11-12 09:02:44'
     required: []
   ChangeLog-write:
     properties:
