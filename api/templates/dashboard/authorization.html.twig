@@ -100,6 +100,29 @@
                     </div>
                 </div>
 
+                {% if resource.dossiers is defined and resource.dossiers is not empty %}
+                    <!-- Card -->
+                    <div class="card card-bleed shadow-light-lg mb-6">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col text-center">
+
+                                    <!-- Heading -->
+                                    <h4 class="mb-0">
+                                        {{ 'this are the dossiers on this authorization:'|trans|capitalize }}
+                                    </h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- list of dossiers -->
+                            {% set dossiers = resource.dossiers %}
+                            {% include 'dashboard/widgets/dossier_list.html.twig' %}
+                        </div>
+                    </div>
+                {% endif %}
+
                 {% if resource.authorizationLogs is defined and resource.authorizationLogs is not empty %}
                     <!-- Card -->
                     <div class="card card-bleed shadow-light-lg mb-6">

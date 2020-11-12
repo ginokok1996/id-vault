@@ -227,6 +227,21 @@ class DashboardController extends AbstractController
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
 
+        // Set the organization background-color for the icons shown with every authorization of this claim
+        if (isset($variables['resource']['authorizations'])) {
+            foreach ($variables['resource']['authorizations'] as &$authorization) {
+                if (isset($authorization['application']['contact'])) {
+                    $application = $commonGroundService->isResource($authorization['application']['contact']);
+                    if ($application) {
+                        if (isset($application['organization']['style']['css'])) {
+                            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                            $authorization['backgroundColor'] = $matches;
+                        }
+                    }
+                }
+            }
+        }
+
         if ($variables['resource']['person'] != $this->getUser()->getPerson()) {
             $this->addFlash('error', 'You do not have access to this claim');
 
@@ -267,7 +282,7 @@ class DashboardController extends AbstractController
                 }
 
                 // Set the organization background-color for the icons shown with every authorization
-                if (key_exists('contact', $authorization['application']) and !empty($authorization['application']['contact'])) {
+                if (isset($authorization['application']['contact'])) {
                     $application = $commonGroundService->isResource($authorization['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
@@ -422,6 +437,17 @@ class DashboardController extends AbstractController
 
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
+
+        // Set the organization background-color for the icon shown with the authorization of this dossier
+        if (isset($variables['resource']['authorization']['application']['contact'])) {
+            $application = $commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
+            if ($application) {
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $variables['resource']['authorization']['backgroundColor'] = $matches;
+                }
+            }
+        }
 
         $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);

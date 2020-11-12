@@ -58,6 +58,29 @@
                     </div>
                 </div>
 
+                {% if resource.authorizations is defined and resource.authorizations is not empty %}
+                    <!-- Card -->
+                    <div class="card card-bleed shadow-light-lg mb-6">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col text-center">
+
+                                    <!-- Heading -->
+                                    <h4 class="mb-0">
+                                        {{ 'this are the authorizations on this claim:'|trans|capitalize }}
+                                    </h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- list of authorizations -->
+                            {% set authorizations = resource.authorizations %}
+                            {% include 'dashboard/widgets/authorization_list.html.twig' %}
+                        </div>
+                    </div>
+                {% endif %}
+
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
