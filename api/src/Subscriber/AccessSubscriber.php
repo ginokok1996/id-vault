@@ -65,7 +65,7 @@ class AccessSubscriber implements EventSubscriberInterface
                 $token->setScope(implode('+', $authorization['scopes']));
                 $authorizationLog['status'] = '200';
                 $goal = $token->getGoal();
-                if (isset($goal)){
+                if (isset($goal)) {
                     $authorizationLog['goal'] = $goal;
                 }
                 $authorizationLog['authorization'] = '/authorizations/'.$authorization['id'];
