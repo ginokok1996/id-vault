@@ -241,13 +241,33 @@
         <source>no authorizations available</source>
         <target>geen autorisaties beschikbaar</target>
       </trans-unit>
+      <trans-unit id="f4cDNzC" resname="no logs available">
+        <source>no logs available</source>
+        <target>geen logs beschikbaar</target>
+      </trans-unit>
       <trans-unit id="o53kFeO" resname="no dossiers available">
         <source>no dossiers available</source>
         <target>geen dossiers beschikbaar</target>
       </trans-unit>
+      <trans-unit id="vU57owd" resname="dossier">
+        <source>dossier</source>
+        <target>dossier</target>
+      </trans-unit>
       <trans-unit id="bqIZyWo" resname="dossiers">
         <source>dossiers</source>
         <target>dossiers</target>
+      </trans-unit>
+      <trans-unit id="Y330gub" resname="this is a dossier on this authorization:">
+        <source>this is a dossier on this authorization:</source>
+        <target>dit is een dossier op deze autorisatie:</target>
+      </trans-unit>
+      <trans-unit id="x72mEYC" resname="this are the authorizations on this claim:">
+        <source>this are the authorizations on this claim:</source>
+        <target>dit zijn de autorisaties op deze claim:</target>
+      </trans-unit>
+      <trans-unit id="ocXBgif" resname="this are the dossiers on this authorization:">
+        <source>this are the dossiers on this authorization:</source>
+        <target>dit zijn de dossiers op deze autorisatie:</target>
       </trans-unit>
       <trans-unit id="D_rhbVU" resname="general">
         <source>general</source>

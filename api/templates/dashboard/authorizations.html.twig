@@ -36,6 +36,7 @@
     {% if authorizations is defined and authorizations is not empty %}
         {% for authorization in authorizations %}
             {% set application = commonground_resource(authorization.application.contact) %}
+            {% include 'dashboard/modals/view_dossiers_modal.html.twig' %}
             {% include 'dashboard/modals/delete_authorization_modal.html.twig' %}
 
             {% if authorization.dossiers is defined and authorization.dossiers is not empty %}

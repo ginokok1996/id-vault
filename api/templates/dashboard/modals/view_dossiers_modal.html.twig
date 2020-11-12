@@ -1,0 +1,69 @@
+<div class="modal fade" id="modalViewDossiers{% if authorization is defined %}{{ authorization.id }}{% elseif claim is defined %}{{ claim.id }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="modalViewDossiersTitle{% if authorization is defined %}{{ authorization.id }}{% elseif claim is defined %}{{ claim.id }}{% endif %}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalViewDossiersTitle{{ authorization.id }}">
+                        {{ 'authorization'|trans|capitalize }}
+                    </h2>
+                    <h3 class="text-center">
+                        {% if application.organization.name is defined and application.organization.name is not empty %}
+                            {{ application.organization.name }} | {{ application.name }}
+                        {% else %}
+                            {{ application.name }}
+                        {% endif %}
+                    </h3>
+
+                    <!-- Divider -->
+                    <hr class="border-gray-300 my-6">
+
+                    <!-- list of dossiers for this authorization -->
+                    <h3 class="text-center">{{ 'dossiers'|trans|capitalize }}</h3>
+                    {% set dossiers = authorization.dossiers %}
+                    {% include 'dashboard/widgets/dossier_list.html.twig' %}
+                {% elseif claim.dossiers is defined and claim.dossiers is not empty %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalViewAuthorizationsTitle{{ claim.id }}">
+                        {{ 'claim'|trans|capitalize }}
+                    </h2>
+                    <h3 class="text-center">
+                        {% if claim.data is defined and claim.data is not empty %}
+                            {% for dataItem in claim.data %}
+                                {% if loop.last %}
+                                    {{ dataItem }}
+                                {% else %}
+                                    {{ dataItem }},
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </h3>
+                    <h4 class="text-gray-700 text-center">
+                        {% if claim.property is defined and claim.property is not empty %}
+                            {{ claim.property }}
+                        {% endif %}
+                    </h4>
+
+                    <!-- Divider -->
+                    <hr class="border-gray-300 my-6">
+
+                    <!-- list of dossiers for this authorization -->
+                    <h3 class="text-center">{{ 'dossiers'|trans|capitalize }}</h3>
+                    {% set dossiers = claim.dossiers %}
+                    {% include 'dashboard/widgets/dossier_list.html.twig' %}
+                {% else %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalViewDossiersTitle{% if authorization is defined %}{{ authorization.id }}{% elseif claim is defined %}{{ claim.id }}{% endif %}">
+                        {{ 'no dossiers available'|trans|capitalize }}
+                    </h2>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
