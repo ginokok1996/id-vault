@@ -681,12 +681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "b4c044b6f8b9915c53717e21a99c6fb246b95655"
+                "reference": "1a346806be45555f8a2a0b5210dfffe2999fc933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/b4c044b6f8b9915c53717e21a99c6fb246b95655",
-                "reference": "b4c044b6f8b9915c53717e21a99c6fb246b95655",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/1a346806be45555f8a2a0b5210dfffe2999fc933",
+                "reference": "1a346806be45555f8a2a0b5210dfffe2999fc933",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2020-11-10T12:05:40+00:00"
+            "time": "2020-11-10T20:57:01+00:00"
         },
         {
             "name": "conduction/landkitbundle",

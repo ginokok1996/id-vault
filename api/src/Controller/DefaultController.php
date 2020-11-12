@@ -118,8 +118,10 @@ class DefaultController extends AbstractController
                     $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
                 }
                 $message['status'] = 'queued';
-                $message['data'] = ['resource' => $link, 'sender'=> 'no-reply@conduction.nl'];
-                $message['content'] = $commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id'=>'e86a7cf9-9060-49f7-99dd-ec56339bd278']);
+                $message['subject'] = 'reset';
+                $html = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'templates', 'id'=>'e86a7cf9-9060-49f7-99dd-ec56339bd278'])['content'];
+                $template = $this->get('twig')->createTemplate($html);
+                $message['content'] = $template->render(['resource' => $link, 'sender' => 'no-reply@conduction.nl']);
                 $message['reciever'] = $user['username'];
                 $message['sender'] = 'no-reply@conduction.nl';
 

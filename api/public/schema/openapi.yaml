@@ -4623,20 +4623,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-<<<<<<< HEAD
-        example: '2020-11-10 13:19:48'
-=======
-        example: '2020-11-10 14:42:52'
->>>>>>> development
+        example: '2020-11-11 06:48:46'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-<<<<<<< HEAD
-        example: '2020-11-10 13:19:48'
-=======
-        example: '2020-11-10 14:42:52'
->>>>>>> development
+        example: '2020-11-11 06:48:46'
     required: []
   AuditTrail-write:
     properties:
@@ -4684,20 +4676,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-<<<<<<< HEAD
-        example: '2020-11-10 13:19:48'
-=======
-        example: '2020-11-10 14:42:52'
->>>>>>> development
+        example: '2020-11-11 06:48:46'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-<<<<<<< HEAD
-        example: '2020-11-10 13:19:48'
-=======
-        example: '2020-11-10 14:42:52'
->>>>>>> development
+        example: '2020-11-11 06:48:46'
     required: []
   ChangeLog-write:
     properties:

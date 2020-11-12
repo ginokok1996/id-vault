@@ -35,6 +35,7 @@ security:
                     - Conduction\CommonGroundBundle\Security\CommongroundIdinLoginAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundFacebookAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundGmailAuthenticator
+                    - Conduction\CommonGroundBundle\Security\CommongroundGithubAuthenticator
                 entry_point: Conduction\CommonGroundBundle\Security\CommongroundApplicationAuthenticator
 
             # activate different ways to authenticate
