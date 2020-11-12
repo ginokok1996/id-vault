@@ -29,56 +29,9 @@
 
                     </div>
                     <div class="card-body">
-                        <div class="list-group list-group-flush">
-                        {% if logs is defined and logs is not empty %}
-                            {% for log in logs %}
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                        {% if log.authorization.application.contact is defined %}
-                                            {% set wrcApplication = commonground_resource(log.authorization.application.contact) %}
-                                                {% if wrcApplication.style.favicon.base64 is defined %}
-                                                    <!-- Avatar -->
-                                                    <div class="avatar avatar-xl">
-                                                        <img
-                                                            style="object-fit: fill;
-                                                            {% if log.backgroundColor is defined and log.backgroundColor|length > 0 %}
-                                                                background-color: {{ log.backgroundColor[1] }};
-                                                            {% endif %}"
-                                                            class="avatar-img"
-                                                            src="{{ wrcApplication.style.favicon.base64 }}"
-                                                            alt="..."
-                                                        >
-                                                    </div>
-                                                {% endif %}
-                                        {% endif %}
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0">
-                                                {{ log.authorization.application.name }}
-                                            </p>
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0">
-                                                {% for scope in log.authorization.scopes %}
-                                                    <span class="text-muted">{{ scope }}</span> <br>
-                                                {% endfor %}
-                                            </p>
-                                        </div>
-                                        <div class="col ml-n5">
-                                            <!-- Heading -->
-                                            <p class="mb-0 text-muted">
-                                                {{ log.authorization.dateCreated|date('H:i:s, d-m-Y', 'Europe/Paris') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                        <!-- list of logs -->
+                        {% include 'dashboard/widgets/log_list.html.twig' %}
                     </div>
-                </div>
                 </div>
             </div>
         </div> <!-- / .row -->

@@ -57,6 +57,8 @@ class DashboardController extends AbstractController
             $address['postalCode'] = $request->get('postalCode');
             $address['locality'] = $request->get('locality');
             $person['adresses'][0] = $address;
+
+            // If this user has no person this should be saveResource and the user.person should be set to this $person?
             $commonGroundService->updateResource($person);
 
             $variables['person'] = $commonGroundService->getResource($variables['person']);
@@ -304,6 +306,23 @@ class DashboardController extends AbstractController
 
         $variables = [];
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
+
+        // Set this resources as authorization for each authorizationLog and set icon background-color
+        foreach ($variables['resource']['authorizationLogs'] as &$log) {
+            // Set this resources as authorization for this Log
+            $log['authorization'] = $variables['resource'];
+
+            // Set the organization background-color for the icon shown with this log
+            if (key_exists('contact', $log['authorization']['application']) && !empty($log['authorization']['application']['contact'])) {
+                $application = $commonGroundService->isResource($log['authorization']['application']['contact']);
+                if ($application) {
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $log['backgroundColor'] = $matches;
+                    }
+                }
+            }
+        }
 
         // Set more variables to show on the authorizations page
         // Set endDate of this authorization by adding the authorization.purposeLimitation.expiryPeriod to the authorization.startingDate
@@ -562,8 +581,8 @@ class DashboardController extends AbstractController
 
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-            $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $user])['hydra:member'];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+            $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
 
             // Set the organization background-color for the icons shown with every log
             foreach ($variables['logs'] as &$log) {
