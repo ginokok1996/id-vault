@@ -1,0 +1,100 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <!-- Heading -->
+        <div class="list-group-item" style="border: none; padding: 0;">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        scopes
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <!-- Form -->
+        <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data">
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.birthPlace' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.birthPlace" name="scopes[]" id="personBirthPlace">
+                        <label class="form-check-label" for="personBirthPlace">
+                            person.birthPlace
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.telehpone' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.telephone" name="scopes[]" id="person.telephone">
+                        <label class="form-check-label" for="person.telephone">
+                            person.telephone
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.email' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.email" name="scopes[]" id="person.email">
+                        <label class="form-check-label" for="person.email">
+                            person.email
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.given_name' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.given_name" name="scopes[]" id="person.givenName">
+                        <label class="form-check-label" for="person.givenName">
+                            person.givenName
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.family_name' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.family_name" name="scopes[]" id="person.familyName">
+                        <label class="form-check-label" for="person.familyName">
+                            person.familyName
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.birthday' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.birthday" name="scopes[]" id="person.birthDate">
+                        <label class="form-check-label" for="person.birthDate">
+                            person.birthDate
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    <div class="form-check">
+                        <input {% if 'schema.person.image' in application.scopes %}checked{% endif %} class="form-check-input" type="checkbox" value="schema.person.image" name="scopes[]" id="person.image">
+                        <label class="form-check-label" for="person.image">
+                            person.image
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-auto">
+                    <!-- Button -->
+                    <button class="btn btn-block btn-primary" name="updateScopes" value="true" type="submit">
+                        {{ 'save changes'|trans|capitalize }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
