@@ -29,15 +29,30 @@ class SendListService
         $newSendList['description'] = $sendList->getDescription();
         $newSendList['mail'] = $sendList->getMail();
         $newSendList['phone'] = $sendList->getPhone();
-        // TODO:get the correct organization for this SendList somehow:
-        $newSendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => '360e17fb-1a98-48b7-a2a8-212c79a5f51a']);
 
-        // Create a new sendList in BS
-        //array_push($results, $this->commonGroundService->createResource($newSendList, ['component' => 'bs', 'type' => 'send_lists']));
+        // Get organization for this new SendList
+        $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendList->getClientSecret()])['hydra:member'];
+        if (count($applications) < 1) {
+            array_push($results, 'No applications found with this client secret');
+            array_push($results, $sendList->getClientSecret());
+        } else {
+            $application = $applications[0];
+            if (isset($application['contact'])) {
+                $applicationContact = $this->commonGroundService->getResource($application['contact']);
+                if (isset($applicationContact['organization']['id'])) {
+                    $newSendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
+                } else {
+                    array_push($results, 'No organization found in this application contact');
+                    array_push($applicationContact);
+                }
+            } else {
+                array_push($results, 'No contact found in this application');
+                array_push($application);
+            }
 
-        // TODO:remove this:
-        array_push($results, 'test');
-        array_push($results, $newSendList);
+            // Create a new sendList in BS
+            array_push($results, $this->commonGroundService->createResource($newSendList, ['component' => 'bs', 'type' => 'send_lists']));
+        }
 
         $sendList->setResult($results);
 
@@ -49,7 +64,7 @@ class SendListService
         $results = [];
 
         // Get info from the DTO SendList
-        //$subscriber['sendLists'] = $sendList->getResource();
+        $subscriber['sendLists'] = $sendList->getResource();
 
         // Update or create a subscriber in BS
         //array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']));

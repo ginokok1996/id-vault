@@ -103,6 +103,15 @@ class SendList
     private $phone = false;
 
     /**
+     * @var string The secret of your application
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Groups({"write"})
+     */
+    private $clientSecret;
+
+    /**
      * @var array The result
      * @Groups({"read"})
      * @ORM\Column(type="array", nullable=true)
@@ -188,6 +197,18 @@ class SendList
     public function setPhone(bool $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getClientSecret(): ?string
+    {
+        return $this->clientSecret;
+    }
+
+    public function setClientSecret(string $clientSecret): self
+    {
+        $this->clientSecret = $clientSecret;
 
         return $this;
     }
