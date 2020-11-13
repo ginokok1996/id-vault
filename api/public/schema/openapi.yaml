@@ -111,15 +111,6 @@ paths:
               - asc
               - desc
         -
-          name: 'order[clientId]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[goal]'
           in: query
           required: false
@@ -136,22 +127,6 @@ paths:
             type: string
         -
           name: 'id[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: clientId
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'clientId[]'
           in: query
           required: false
           schema:
@@ -4511,10 +4486,6 @@ definitions:
     required: []
   AccessToken-write:
     properties:
-      clientId:
-        description: 'The id of your application'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
       goal:
         description: 'The goal of the request'
         type: string
@@ -4692,12 +4663,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-13 17:43:35'
+        example: '2020-11-13 21:50:25'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-13 17:43:35'
+        example: '2020-11-13 21:50:25'
     required: []
   AuditTrail-write:
     properties:
@@ -4745,12 +4716,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-13 17:43:35'
+        example: '2020-11-13 21:50:25'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-13 17:43:35'
+        example: '2020-11-13 21:50:25'
     required: []
   ChangeLog-write:
     properties:

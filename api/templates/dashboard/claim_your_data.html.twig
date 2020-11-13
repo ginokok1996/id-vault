@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-4">
                                 <!-- Card -->
-                                <a style="text-decoration: none" href="{{ commonground_cleanurl({"component":"ds"}) }}?responceUrl={{ path('app_dashboard_general') }}">
+                                <a style="text-decoration: none" href="{{ commonground_cleanurl({"component":"ds"}) }}?responceUrl={{ path('app_dashboard_claimyourdata') }}">
                                     <div class="card card-bleed shadow-light-lg mb-6 lift">
                                         <div class="card-body text-center">
                                             Rijksoverheid
@@ -25,13 +25,29 @@
                             </div>
                         </div>
                     </div>
+                    {% if changedInfo is defined and changedInfo is not empty %}
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">{{ 'changes'|trans|capitalize }}</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for key, value in changedInfo %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            {# @todo show what we changed here #}
-            <div class="col-md-12">
 
-
-            </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 {% endblock %}
