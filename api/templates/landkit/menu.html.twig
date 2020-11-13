@@ -178,7 +178,7 @@
 
             <!-- Button -->
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_dashboard_general') }}">
+                <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_dashboard_index') }}">
                     {{ 'dashboard'|trans|capitalize }}
                 </a>
             {% else %}
