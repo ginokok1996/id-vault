@@ -67,6 +67,65 @@
     <!-- Text -->
     <p class="text-gray-700">Onderschrijvers zijn partijen die jouw uitspraken onderschrijven en daarmee van bewijslast voorzien.</p>
 
+    <!-- hier  nog 3 kopjes -->
+    <!-- datapoints varivyers en issuers -->
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="pricing">Pricing </h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">The pricing for id-vault is determined by scope’s, the user and profile scope are excluded from this (since they are default). Scopes are calculated as total scopes among all authorizations that an application requested.</p>
+
+    <!-- Text -->
+    <p class="text-gray-700">For example, if an application requests the scope schema.address and schema.birthDate from 10 users the scope count is 20 (2 * 20) and so on. Since we want to promote privacy by design we do not charge applications by data request. So the applications will be billed for 20 scopes, whether it does 1 or a 100 data requests during a month to look into these scopes and get there user values.</p>
+
+    <!-- Text -->
+    <p class="text-gray-700">Applications are billed every month on the scopes that they had during that month, the amount that they are billed for each scope determines on their payment settings.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- hier  nog een kopje; Goal -->
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="user_notifications">User Notifications</h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">User’s can activate user notifications, user notifications are a way of receiving alerts when an applications require access to or changes your data. There are three main types of notification, push notifications (these are in browser), email notification (where an email is send) and text notifications (a text message to your  device). Text messages incur costs and will require a user to set up an payment method.</p>
+
+    <!-- Text -->
+    <p class="text-gray-700">As stated above notifications are tied to the change in an specific ID-Vault object, we currently support notifications for Authorisations (a change in applications scopes will also trigger this), Claims, Proof, Dossiers, Contracts and Invoices.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="payment_methods">Payment Methods</h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">Both users and applications can add payment methods to there accounts.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="user_updates">User updates</h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">Users can receive regular updates about there data usage, product updates and the ID-Vault newlster.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+    
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="application_updates">Application updates</h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">Organizations can receive regular updates about  there data usage, product updates and the ID-Vault newlster.</p>
+
 {% endblock %}
 
 {% block jumpto %}
