@@ -42,7 +42,7 @@ class DashboardController extends AbstractController
     public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
-        
+
         $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
@@ -76,9 +76,17 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data")
      * @Template
      */
-    public function claimYourDateAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->isMethod('POST') && $request->get('bsn')){
+            $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'],['burgerservicenummer' => $request->get('bsn')])['hydra:member'];
+            $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            if (count($ingeschrevenPersonen) > 0) {
+                $ingeschrevenPersoon = $ingeschrevenPersonen[0];
+            }
+        }
 
         return $variables;
     }

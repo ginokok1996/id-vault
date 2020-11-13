@@ -17,6 +17,11 @@
                         {{ 'dashboard'|trans|capitalize }}
                     </a>
                 </li>
+                <li class="list-item {% if activeItem == 'claimYourData' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_claimyourdata') }}">
+                        {{ 'claim your data'|trans|capitalize }}
+                    </a>
+                </li>
                 <li class="list-item {% if activeItem == 'alerts' %}active{% endif %}">
                     <a class="list-link text-reset" href="{{ path('app_dashboard_alerts') }}">
                         {{ 'alerts'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">12</span>
