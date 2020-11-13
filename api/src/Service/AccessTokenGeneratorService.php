@@ -48,7 +48,7 @@ class AccessTokenGeneratorService
                     }
                     break;
                 case 'schema.person.birthday':
-                    if (isset($person['birthday'])){
+                    if (isset($person['birthday'])) {
                         $array['birthday'] = $person['birthday'];
                     }
                     break;
