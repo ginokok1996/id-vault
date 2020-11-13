@@ -1,0 +1,131 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <!-- Heading -->
+        <div class="list-group-item" style="border: none; padding: 0;">
+            <div class="row align-items-center">
+                {% if application.style.favicon.base64 is defined %}
+                    <div class="col-auto">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xl">
+                            <img
+                                class="avatar-img"
+                                src="{{ application.style.favicon.base64 }}"
+                                alt="..."
+                                style="object-fit: fill;"
+                            >
+                        </div>
+
+                    </div>
+                {% endif %}
+                <div class="col-6">
+                    <!-- Heading -->
+                    <h4 class="mb-0">
+                        {{ application.name|capitalize }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <!-- Form -->
+        <div class="row">
+            <div class="col-12">
+                <p class="font-weight-bold">app id:</p>
+                <p class="text-gray-700">{{ application.id }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">secret:</p>
+                <p class="text-gray-700">{{ application.secret }}</p>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">test secret:</p>
+                <p class="text-gray-700">{{ application.testSecret }}</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">{{ 'name'|trans|capitalize }} </label>
+                        <input class="form-control" name="name" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
+                               value="{{ application.name }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="description">{{ 'description'|trans|capitalize }} </label>
+                        <textarea class="form-control" name="description" id="description" cols="2" rows="2">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="domain">{{ 'homepage'|trans|capitalize }} </label>
+                        <input class="form-control" name="domain" id="domain" type="text" placeholder="{{ 'homepage'|trans|capitalize }}"
+                            {% if wrcApplication.domain is defined and wrcApplication.domain is not empty %}
+                               value="{{ wrcApplication.domain }}"
+                        {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="authorizationUrl">{{ 'authorization url'|trans|capitalize }} </label>
+                        <input class="form-control" name="authorizationUrl" id="authorizationUrl" type="text" placeholder="{{ 'authorization url'|trans|capitalize }}"
+                            {% if application.authorizationUrl is defined and application.authorizationUrl is not empty %}
+                               value="{{ application.authorizationUrl }}"
+                        {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="webhookUrl">{{ 'webhook url'|trans|capitalize }} </label>
+                        <input class="form-control" name="webhookUrl" id="webhookUrl" type="text" placeholder="{{ 'webhook url'|trans|capitalize }}"
+                            {% if application.webhookUrl is defined and application.webhookUrl is not empty %}
+                               value="{{ application.webhookUrl }}"
+                        {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="singleSignOnUrl">{{ 'Single-Sign-On url'|trans|capitalize }} </label>
+                        <input class="form-control" name="singleSignOnUrl" id="singleSignOnUrl" type="text" placeholder="{{ 'Single-Sign-On url'|trans|capitalize }}"
+                            {% if application.singleSignOnUrl is defined and application.singleSignOnUrl is not empty %}
+                            value="{{ application.singleSignOnUrl }}"
+                            {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-auto">
+                    <!-- Button -->
+                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
+                        {{ 'save changes'|trans|capitalize }}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

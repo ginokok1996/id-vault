@@ -1,0 +1,91 @@
+<section id="register" class="pt-8 pb-8 pb-md-11 pt-md-11 bg-gray-200">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-12 col-md-6 order-md-2" data-aos="fade-left">
+                <!-- Heading -->
+                <h2>
+                    {{ 'the best place to'|trans|capitalize}} <br>
+                    <span class="text-success" data-toggle="typed" data-options='{"strings": ["{{ 'own your data'|trans|capitalize }}.","{{ 'store your data'|trans|capitalize }}.", "{{ 'manage your data'|trans|capitalize }}.", "{{ 'control your data'|trans|capitalize }}.", "{{ 'share your data'|trans|capitalize }}."]}'></span
+                </h2>
+                <!-- Text -->
+                <p class="font-size-lg text-muted mb-6">
+                    {{ 'Get in charge of your online data'|trans|capitalize }}
+                </p>
+                <!-- List -->
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <!-- Item -->
+                        <div class="d-flex">
+                            <!-- Check -->
+                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                <i class="fe fe-check"></i>
+                            </div>
+                            <!-- Text -->
+                            <p class="text-success">
+                                {{ 'secure'|trans|capitalize }}
+                            </p>
+                        </div>
+                        <!-- Item -->
+                        <div class="d-flex">
+                            <!-- Check -->
+                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                <i class="fe fe-check"></i>
+                            </div>
+                            <p class="text-success mb-lg-0">
+                                {{ 'control your own data'|trans|capitalize }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mb-6 mb-md-0">
+                        <!-- Item -->
+                        <div class="d-flex">
+                            <!-- Check -->
+                            <div class="badge badge-rounded-circle badge-success-soft mr-1 mr-4">
+                                <i class="fe fe-check"></i>
+                            </div>
+                            <!-- Text -->
+                            <p class="text-success">
+                                {{ 'Tech support'|trans|capitalize }}
+                            </p>
+                        </div>
+                        <!-- Item -->
+                        <div class="d-flex">
+                            <!-- Check -->
+                            <div class="badge badge-rounded-circle badge-success-soft mr-1 mr-4">
+                                <i class="fe fe-check"></i>
+                            </div>
+                            <!-- Text -->
+                            <p class="text-success mb-0">
+                                {{ 'Easy to use'|trans|capitalize }}
+                            </p>
+                        </div>
+                    </div>
+                </div> <!-- / .row -->
+            </div>
+            <div class="col-12 col-md-6 col-lg-5 order-md-1" data-aos="fade-right">
+                <!-- Card -->
+                <div class="card shadow-light-lg lift lift-lg">
+                   <!-- Body -->
+                    <div class="card-body">
+                        <!-- Form -->
+                        <form action="{{ path('app_default_register') }}">
+                            <div class="form-label-group">
+                                <input type="email" class="form-control form-control-flush" id="cardEmail" placeholder="{{ 'email'|trans|capitalize }}">
+                                <label for="cardEmail">{{ 'email'|trans|capitalize }}</label>
+                            </div>
+                            <div class="form-label-group">
+                                <input type="password" class="form-control form-control-flush" id="cardPassword" placeholder="{{ 'password'|trans|capitalize }}">
+                                <label for="cardPassword">{{ 'password'|trans|capitalize }}</label>
+                            </div>
+                            <div class="mt-6">
+                                <button class="btn btn-block btn-success lift" type="submit">
+                                    {{ 'register'|trans|capitalize }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- / .row -->
+</section>

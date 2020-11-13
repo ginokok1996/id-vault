@@ -1,0 +1,84 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                {% set activeItem = 'organizations' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
+
+            </div>
+
+            <div class="col-12 col-md-9">
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <h4 class="mb-0">
+                                    {{ 'organizations'|trans|capitalize }}
+                                </h4>
+
+                            </div>
+                            <div class="col-auto">
+
+                                <!-- Button -->
+                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalOrganization">
+                                    {{ 'add new'|trans|capitalize }}
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                        {% if resources is defined and resources is not empty %}
+                            {% for resource in resources %}
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                        {% if resource.style.favicon.base64 is defined %}
+                                                <!-- Avatar -->
+                                                <div class="avatar avatar-xl">
+                                                    <img
+                                                        class="avatar-img"
+                                                        src="{{ resource.style.favicon.base64 }}"
+                                                        alt="..."
+                                                        style="object-fit: fill;
+                                                        {% if resource.backgroundColor is defined and resource.backgroundColor|length > 0 %}
+                                                            background-color: {{ resource.backgroundColor[1] }};
+                                                        {% endif %}"
+                                                    >
+                                                </div>
+                                        {% endif %}
+                                        </div>
+                                        <div class="col ml-n5">
+                                            <!-- Heading -->
+                                            <p class="mb-0">
+                                                {{ resource.name }}
+                                            </p>
+                                        </div>
+                                        <div class="col-12 col-md-auto">
+                                            <a class="btn btn-xs btn-primary btn-block mt-5 mt-md-0" href="{{ path('app_dashboard_organization', {id: resource.id}) }}">Open</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+
+    <!-- modals -->
+        {% include '/dashboard/modals/add_organization_modal.html.twig' %}
+
+{% endblock %}

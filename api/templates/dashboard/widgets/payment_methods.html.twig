@@ -1,0 +1,115 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'payment methods'|trans|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalPayment">
+                    {{ 'add new'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <!-- List group -->
+        <div class="list-group list-group-flush">
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+
+                        <!-- Icon -->
+                        <img class="img-fluid" src="/bundles/landkit/img/icons/payment-methods/visa.svg" alt="..." style="max-width: 40px;">
+
+                    </div>
+                    <div class="col ml-n5">
+
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            Visa ending in 1234
+                        </p>
+
+                        <!-- Text -->
+                        <small class="text-gray-700">
+                            Expires 03/2024
+                        </small>
+
+                    </div>
+                    <div class="col-auto mr-n5">
+
+                        <!-- Badge -->
+                        <span class="badge badge-pill badge-secondary-soft">
+                          <span class="h6 text-uppercase font-weight-bold">Default</span>
+                        </span>
+
+                    </div>
+                    <div class="col-auto">
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#">
+                                <i class="fe fe-more-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+
+                        <!-- Icon -->
+                        <img class="img-fluid" src="/bundles/landkit/img/icons/payment-methods/mastercard.svg" alt="..." style="max-width: 40px;">
+
+                    </div>
+                    <div class="col ml-n5">
+
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            Mastercard ending in 1234
+                        </p>
+
+                        <!-- Text -->
+                        <small class="text-gray-700">
+                            Expires 07/2026
+                        </small>
+
+                    </div>
+                    <div class="col-auto">
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#">
+                                <i class="fe fe-more-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,236 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+    <div class="container-md">
+        <div class="row">
+            <div class="col-12 col-md-3">
+
+                {% set activeItem = 'notifications' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
+
+            </div>
+
+            {# todo:add translation for all texts #}
+            <div class="col-12 col-md-9">
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg mb-6">
+                    <div class="card-header">
+
+                        <!-- Title -->
+                        <h4 class="mb-0">
+                            Application Notifications
+                        </h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        <!-- List group -->
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Direct messages
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Messages from people you follow
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchOne" checked="">
+                                            <label class="custom-control-label" for="switchOne"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Reminders
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Wrap up emails about content you missed
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Select -->
+                                        <div class="choices" data-type="select-one" tabindex="0" role="listbox" aria-haspopup="true" aria-expanded="false"><div class="custom-select custom-select-xs"><select class="custom-select custom-select-xs choices__input" data-choices="" hidden="" tabindex="-1" data-choice="active"><option value="weekly">Daily</option></select><div class="none none"><div class="choices__item choices__item--selectable" data-item="" data-id="1" data-value="weekly" data-custom-properties="null" aria-selected="true">Daily</div></div></div><div class="none dropdown-menu" aria-expanded="false"><div class="none" role="listbox"><div id="choices--hcbq-item-choice-1" class="choices__item dropdown-item active choices__item--selectable is-highlighted" role="option" data-choice="" data-id="1" data-value="weekly" data-select-text="Press to select" data-choice-selectable="" aria-selected="true">Daily</div><div id="choices--hcbq-item-choice-2" class="choices__item dropdown-item choices__item--selectable" role="option" data-choice="" data-id="2" data-value="weekly" data-select-text="Press to select" data-choice-selectable="">Monthly</div><div id="choices--hcbq-item-choice-3" class="choices__item dropdown-item choices__item--selectable" role="option" data-choice="" data-id="3" data-value="weekly" data-select-text="Press to select" data-choice-selectable="">Weekly</div></div></div></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Follower updates
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Changes to who’s following you
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchTwo" checked="">
+                                            <label class="custom-control-label" for="switchTwo"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Reposts
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            When others repost your content
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchThree" checked="">
+                                            <label class="custom-control-label" for="switchThree"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="card card-bleed shadow-light-lg">
+                    <div class="card-header">
+
+                        <!-- Title -->
+                        <h4 class="mb-0">
+                            Marketing Communications
+                        </h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        <!-- List group -->
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Sales &amp; Promotions
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            We only notify you for significant promotions
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchFour" checked="">
+                                            <label class="custom-control-label" for="switchFour"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Product updates
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Major changes in our product offering
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchFive" checked="">
+                                            <label class="custom-control-label" for="switchFive"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <p class="mb-0">
+                                            Newsletter
+                                        </p>
+
+                                        <!-- Text -->
+                                        <small class="text-gray-700">
+                                            Updates on what’s going on here at Landkit.
+                                        </small>
+
+                                    </div>
+                                    <div class="col-auto">
+
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="switchSix" checked="">
+                                            <label class="custom-control-label" for="switchSix"></label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+{% endblock %}

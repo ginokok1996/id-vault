@@ -1,0 +1,185 @@
+{% if claims is defined and claims is not empty %}
+    <div class="list-group list-group-flush">
+        {% for claim in claims %}
+            <div class="list-group-item" style="padding-bottom: 0rem">
+                <!-- Header -->
+                <div class="row mb-5">
+                    <div class="col">
+
+                        <!-- Heading -->
+                        <h4 class="mb-0">
+                            {% if claim.data is defined and claim.data is not empty %}
+                                {% for dataItem in claim.data %}
+                                    {% if loop.last %}
+                                        {{ dataItem }}
+                                    {% else %}
+                                        {{ dataItem }},
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </h4>
+
+                        <!-- Property of this claim -->
+                        <small class="text-gray-700">
+                            {% if claim.property is defined and claim.property is not empty %}
+                                {{ claim.property }}
+                            {% endif %}
+                        </small>
+
+                    </div>
+                    <div class="col-auto mr-n5">
+
+                        <!-- Edit button -->
+                        <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalEditClaim{{ claim.id }}">
+                            {{ 'edit'|trans|capitalize }}
+                        </button>
+
+                    </div>
+
+                    <div class="col-auto">
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#" aria-expanded="false">
+                                <i class="fe fe-more-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu" style="">
+                                <a class="dropdown-item" href="{{ path('app_dashboard_claim', {id: claim.id}) }}">{{ 'view usage_2'|trans|capitalize }}</a>
+                                {% set claimHasDossiers = false %}
+                                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                                    <button class="dropdown-item" data-toggle="modal" data-target="#modalViewAuthorizations{{ claim.id }}">{{ 'view authorizations'|trans|capitalize }}</button>
+                                    {% for authorization in claim.authorizations %}
+                                        {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
+                                            {% set claimHasDossiers = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if claimHasDossiers %}
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#modalViewDossiers{{ claim.id }}">{{ 'view dossiers'|trans|capitalize }}</button>
+                                    {% endif %}
+                                {% endif %}
+                                {% if not claimHasDossiers %}
+                                    <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteClaim{{ claim.id }}" style="color: red">{{ 'delete data'|trans|capitalize }}</button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Authorizations of this claim -->
+                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                    <div class="row mb-0">
+                        <div class="col">
+                            <!-- Subheading -->
+                            <h5> {{ 'authorizations'|trans|capitalize }} </h5>
+                        </div>
+
+                        <div class="col-auto mr-n5">
+                            <!-- Link -->
+                            <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#contract">
+                                {{ 'what is an authorization?'|trans|capitalize }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        {% for authorization in claim.authorizations %}
+                            {% if authorization.application.contact is defined and authorization.application.contact is not empty and commonground_is_resource(authorization.application.contact) %}
+                                {% set application = commonground_resource(authorization.application.contact) %}
+                                <div class="col-auto">
+                                    <!-- Item -->
+                                    <div class="d-flex">
+
+                                        {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
+                                            <!-- Icon -->
+                                            <div class="avatar avatar-xs">
+                                                <img class="avatar-img"
+                                                     src="{{ application.organization.style.favicon.base64 }}"
+                                                     alt="..."
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if authorization.iconBackgroundColor is defined and authorization.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ authorization.iconBackgroundColor[1] }};
+                                                     {% endif %}"
+                                                >
+                                            </div>
+                                            <div style="padding-left: 1.5rem"></div>
+                                        {% endif %}
+
+                                        {% if application.organization.name is defined and application.organization.name is not empty %}
+                                            <!-- Text -->
+                                            <p>
+                                                {{ application.organization.name }}
+                                            </p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Proofs of this claim -->
+                {% if claim.proofs is defined and claim.proofs is not empty %}
+                    <div class="row mb-0">
+                        <div class="col">
+                            <!-- Subheading -->
+                            <h5> {{ 'issuers'|trans|capitalize }} </h5>
+                        </div>
+
+                        <div class="col-auto mr-n5">
+                            <!-- Link -->
+                            <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#issuer">
+                                {{ 'what is an issuer?'|trans|capitalize }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        {% for proof in claim.proofs %}
+                            <div class="col-auto">
+                                <!-- Item -->
+                                <div class="d-flex">
+
+                                    {% if proof.application.contact is defined and proof.application.contact is not empty and commonground_is_resource(proof.application.contact) %}
+                                        {% set application = commonground_resource(proof.application.contact) %}
+
+                                        {% if application.organization.style.favicon.base64 is defined and application.organization.style.favicon.base64 is not empty %}
+                                            <!-- Icon -->
+                                            <div class="avatar avatar-xs">
+                                                <img class="avatar-img"
+                                                     src="{{ application.organization.style.favicon.base64 }}"
+                                                     alt="..."
+                                                     style="object-fit: fill; height: 200%; width: 200%;
+                                                     {% if proof.iconBackgroundColor is defined and proof.iconBackgroundColor|length > 0 %}
+                                                         background-color: {{ proof.iconBackgroundColor[1] }};
+                                                     {% endif %}"
+                                                >
+                                            </div>
+                                            <div style="padding-left: 1.5rem"></div>
+                                        {% else %}
+                                            <!-- Check -->
+                                            <div class="badge badge-rounded-circle badge-success-soft mt-1 mr-4">
+                                                <i class="fe fe-check"></i>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if proof.type is defined and proof.type is not empty %}
+                                        <!-- Text -->
+                                        <p>
+                                            {{ proof.type }}
+                                        </p>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="hint__title">{{ 'no claims available'|trans|capitalize }}</p>
+{% endif %}

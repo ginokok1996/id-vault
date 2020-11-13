@@ -1,0 +1,36 @@
+{% extends '/documentation/main.html.twig'%}
+
+{% set currentPage = 'example' %}
+
+{% block documentation %}
+
+    <!-- Heading -->
+    <h1 class="mb-1">Example</h1>
+
+    <!-- Text -->
+    <p id="example" class="font-size-lg text-gray-700 mb-5">
+        How to get started with Landkit!
+    </p>
+
+    <!-- Text -->
+    <p class="text-gray-700">
+        This guide will help you get started with Landkit! All the important stuff – compiling the source, file structure, build tools, file includes – is documented here, but should you have any questions, always feel free to reach out to support@goodthemes.co.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <h3>Test</h3>
+    <p>onder divider</p>
+
+{% endblock %}
+
+{% block jumpto %}
+
+    <li class="list-item">
+        <a class="list-link" href="#example" data-toggle="smooth-scroll">example</a>
+    </li>
+
+    </li>
+
+{% endblock %}

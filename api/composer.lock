@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93ae773660d3153b6bf878ab866b31c3",
+    "content-hash": "87de12e194595c97f0ec43b0c30ff697",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -681,12 +681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "4198e4a6d858244d9c938b6434af1a58238bb8f4"
+                "reference": "1a346806be45555f8a2a0b5210dfffe2999fc933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/4198e4a6d858244d9c938b6434af1a58238bb8f4",
-                "reference": "4198e4a6d858244d9c938b6434af1a58238bb8f4",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/1a346806be45555f8a2a0b5210dfffe2999fc933",
+                "reference": "1a346806be45555f8a2a0b5210dfffe2999fc933",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,58 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2020-09-18T08:55:10+00:00"
+            "time": "2020-11-10T20:57:01+00:00"
+        },
+        {
+            "name": "conduction/landkitbundle",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ConductionNL/LandkitBundle.git",
+                "reference": "158cc1c449fa65fd65207e176f4fe5f3a681626b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ConductionNL/LandkitBundle/zipball/158cc1c449fa65fd65207e176f4fe5f3a681626b",
+                "reference": "158cc1c449fa65fd65207e176f4fe5f3a681626b",
+                "shasum": ""
+            },
+            "require": {
+                "conduction/commongroundbundle": "dev-master",
+                "php": "^7.1.3",
+                "twig/extensions": "^1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Conduction\\LandkitBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben van der Linde",
+                    "email": "ruben@conduction.nl"
+                },
+                {
+                    "name": "Conduction",
+                    "homepage": "https://www.conduction.nl"
+                }
+            ],
+            "description": "Symfony Bundle for dutch common ground functionality",
+            "homepage": "https://www.conduction.nl",
+            "keywords": [
+                "nl design",
+                "symfony",
+                "theme"
+            ],
+            "time": "2020-10-23T12:14:06+00:00"
         },
         {
             "name": "dasprid/enum",
@@ -1907,6 +1958,20 @@
                 "parser",
                 "php"
             ],
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Flexer",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-05-25T17:44:05+00:00"
         },
         {
@@ -2094,6 +2159,20 @@
                 "database",
                 "orm"
             ],
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine/orm",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-05-26T16:03:49+00:00"
         },
         {
@@ -2270,6 +2349,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -7553,6 +7633,20 @@
                 "sse",
                 "updates"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-05-27T14:53:11+00:00"
         },
         {
@@ -10403,6 +10497,7 @@
                 "i18n",
                 "text"
             ],
+            "abandoned": true,
             "time": "2018-12-05T18:34:18+00:00"
         },
         {
@@ -11047,7 +11142,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "conduction/commongroundbundle": 20
+        "conduction/commongroundbundle": 20,
+        "conduction/landkitbundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

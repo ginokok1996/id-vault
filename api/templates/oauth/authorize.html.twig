@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+
+{% set noMenu = true %}
+{% set noFooter = true %}
+
+{% block content %}
+    {% if wrcApplication.style.css is defined %}
+        <style>
+            {{ wrcApplication.style.css|raw }}
+        </style>
+    {% endif %}
+<section class="section border-primary">
+    <div class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center no-gutters min-vh-100">
+            <div class="col-12 col-md-6 col-lg-7 {% if not is_granted('IS_AUTHENTICATED_FULLY') %} offset-md-1 {% endif %}
+            order-md-2 mt-auto mt-md-0 pt-8 pb-4 py-md-11">
+
+                <div class="p-5" style="border-radius: 25px">
+                    <!-- Heading -->
+                    {% if wrcApplication.style.favicon.base64 is defined %}
+                        <div class="text-center">
+                            <img class="" style="width: 100px;" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
+                        </div>
+                    {% endif %}
+
+                    <h1 class="mb-0 font-weight-bold text-center">
+                        {{ application.name|capitalize }}
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="mb-4 text-center text-muted">
+                        {% if application.description is defined and application.description is not empty %}
+                            {{ application.description }}
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-4 text-center">
+                        {{ "boss and owner of your own data"|trans|capitalize }}.
+                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data."|trans }}
+                        <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a></u>
+                    </p>
+
+                    <p class="mb-2 text-center">
+                        {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
+                    </p>
+
+                    <ul class="text-center list-group list-group-flush mb-2">
+                        {% if scopes is defined and scopes is not empty %}
+                            {% for scope in scopes %}
+                                <li style="list-style: none;" class=" text-muted">
+                                    {{ scope }}
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+
+                    <p class="mb-2 text-center">
+                        <u><a style="color: white" target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a></u>
+                    </p>
+
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <div class="text-center">
+                            <form method="post" action="{{ path('app_oauth_authorize') }}">
+                                {%  if scopes is defined %}
+                                    {% for scope in scopes %}
+                                        <input type="hidden" name="scopes[]" value="{{ scope }}">
+                                    {% endfor %}
+                                {% endif %}
+                                {% if state is defined %}
+                                    <input type="hidden" name="state" value="{{ state }}">
+                                {% endif %}
+                                {% if clientId is defined %}
+                                    <input type="hidden" name="client_id" value="{{ clientId }}">
+                                {% endif %}
+                                {% if redirectUrl is defined %}
+                                    <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
+                                {% endif %}
+
+                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
+                                    {{ 'accept'|trans|capitalize }}
+                                </button>
+                                <button name="grantAccess" value="false" class="navbar-btn btn btn-sm btn-danger ml-lg-2 mt-4 mt-lg-0 lift ml-auto">
+                                    {{ 'decline'|trans|capitalize }}
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div style="color: black" class="col-12 col-md-5 col-lg-4 order-md-1 mb-auto mb-md-0 pb-8 py-md-11">
+                    <div id="spinner">
+                        <div class="p-5 bg-white d-flex justify-content-center" style="border-radius: 25px">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loginForm">
+                        <div class="p-5 bg-white" style="border-radius: 25px">
+                            <!-- Heading -->
+                            <h1 class="mb-0 font-weight-bold text-center">
+                                {{ 'login'|trans|capitalize }}
+                            </h1>
+
+                            <!-- Text -->
+                            <p class="mb-6 text-center text-muted">
+                                {{ 'store your data in minutes'|trans|capitalize }}.
+                            </p>
+
+                            <!-- Form -->
+                            <form method="post" action="{{ path('app_user_login') }}?backUrl={{ app.request.uri }}"
+                                  name="thisForm" class="mb-4">
+
+                                <!-- Email -->
+                                <div class="form-group">
+                                    <label for="email">
+                                        {{ 'email address'|trans|capitalize }}
+                                    </label>
+                                    <input required type="email" name="username" class="form-control" id="email"
+                                           placeholder="{{ 'name@address.com'|trans }}">
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group mb-5">
+                                    <label for="password">
+                                        {{ 'password'|trans|capitalize }}
+                                    </label>
+                                    <input required type="password" name="password" class="form-control" id="password"
+                                           placeholder="{{ 'enter your password'|trans|capitalize }}">
+                                    <p class="font-size-sm text-center text-muted">
+                                        {{ "forgot password"|trans|capitalize }}? <a href="{{ path('app_default_reset') }}">{{ 'reset'|trans|capitalize }}</a>.
+                                    </p>
+                                </div>
+
+                                <!-- Submit -->
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    {{ 'sign in'|trans|capitalize }}
+                                </button>
+
+                            </form>
+
+                            <!-- Social Buttons -->
+                            <div class="d-flex flex-row justify-content-around mb-3" style="width: 100%">
+                                <a style="color: black" href="{{ path('app_user_github') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem; height: 2.575rem; padding: 0; background-color: #F7F7F7;" >
+                                        <i class="fab fa-github"></i>
+                                    </button>
+                                </a>
+                                <a style="color: white;" href="{{ path('app_user_facebook') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #4064ac;" >
+                                        <i class="fab fa-facebook-f"></i>
+                                    </button>
+                                </a>
+                                <a style="color: white;" href="{{ path('app_user_gmail') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #dd4b39;" >
+                                        <i class="fab fa-google"></i>
+                                    </button>
+                                </a>
+                            </div>
+
+                            <!-- Text -->
+                            <p class="mb-0 font-size-sm text-center text-muted">
+                                {{ "don't have an account yet"|trans|capitalize }}?
+                                <a href="#" onclick="showRegisterForm();return false;">{{ 'sign up'|trans|capitalize }}</a>.
+                            </p>
+                        </div>
+                    </div>
+                    <div id="registerForm">
+                        <div class="p-5 bg-white" style="border-radius: 25px">
+                            <!-- Heading -->
+                            <h1 class="mb-0 font-weight-bold text-center">
+                                {{ 'register'|trans|capitalize }}
+                            </h1>
+
+                            <!-- Text -->
+                            <p class="mb-6 text-center text-muted">
+                                {{ 'store your data in minutes'|trans|capitalize }}.
+                            </p>
+
+                            <!-- Form -->
+                            <form method="post" id="registrationForm" action="{{ path('app_user_register') }}?backUrl={{ app.request.uri }}"
+                                  name="thisForm" class="mb-4">
+
+                                <!-- Email -->
+                                <div class="form-group">
+                                    <label for="email">
+                                        {{ 'email address'|trans|capitalize }}
+                                    </label>
+                                    <input required type="email" name="username" class="form-control" id="email"
+                                           placeholder="{{ 'name@address.com'|trans }}">
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group mb-5">
+                                    <label for="newPassword">
+                                        {{ 'password'|trans|capitalize }}
+                                    </label>
+                                    <input required type="password" name="newPassword" class="form-control" id="newPassword"
+                                           placeholder="{{ 'enter your password'|trans|capitalize }}">
+                                    <div class="alert alert-danger" id="passwordError" role="alert">
+                                        {{ 'passwords dont match'|trans|capitalize }}
+                                    </div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group mb-5">
+                                    <label for="password">
+                                        {{ 'repeat password'|trans|capitalize }}
+                                    </label>
+                                    <input required type="password" name="passwordRepeat" class="form-control" id="passwordRepeat"
+                                           placeholder="{{ 'enter your password again'|trans|capitalize }}">
+                                </div>
+
+                                <!-- First Name -->
+                                <div class="form-group mb-5">
+                                    <label for="firstName">
+                                        {{ 'first name'|trans|capitalize }}
+                                    </label>
+                                    <input required type="text" name="firstName" class="form-control" id="firstName"
+                                           placeholder="{{ 'enter your first name'|trans|capitalize }}">
+                                </div>
+
+                                <!-- Last Name -->
+                                <div class="form-group mb-5">
+                                    <label for="lastName">
+                                        {{ 'last name'|trans|capitalize }}
+                                    </label>
+                                    <input required type="text" name="lastName" class="form-control" id="lastName"
+                                           placeholder="{{ 'enter your last name'|trans|capitalize }}">
+                                </div>
+
+                                <!-- Submit -->
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    {{ 'register'|trans|capitalize }}
+                                </button>
+
+                            </form>
+
+                            <!-- Social Buttons -->
+                            <div class="d-flex flex-row justify-content-around mb-3" style="width: 100%">
+                                <a style="color: black" href="{{ path('app_user_github') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem; height: 2.575rem; padding: 0; background-color: #F7F7F7;" >
+                                        <i class="fab fa-github"></i>
+                                    </button>
+                                </a>
+                                <a style="color: white;" href="{{ path('app_user_facebook') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #4064ac;" >
+                                        <i class="fab fa-facebook-f"></i>
+                                    </button>
+                                </a>
+                                <a style="color: white;" href="{{ path('app_user_gmail') }}?backUrl={{ app.request.uri }}">
+                                    <button class="btn" style="width: 2.575rem;color: white; height: 2.575rem; padding: 0; background-color: #dd4b39;" >
+                                        <i class="fab fa-google"></i>
+                                    </button>
+                                </a>
+                            </div>
+
+                            <!-- Text -->
+                            <p class="mb-0 font-size-sm text-center text-muted">
+                                {{ "already have an account"|trans|capitalize }}?
+                                <a href="#" onclick="showLoginForm();return false;">{{ 'log in'|trans|capitalize }}</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>
+
+<script>
+    $('#spinner').hide();
+    $('#registerForm').hide();
+    $('#passwordError').hide();
+
+    function showRegisterForm() {
+        $('#loginForm').hide();
+        $('#spinner').fadeIn(500);
+
+        setTimeout(
+            function()
+            {
+                $('#spinner').hide();
+                $('#registerForm').fadeIn(500);
+            }, 1000);
+
+    }
+
+    function showLoginForm() {
+        $('#registerForm').hide();
+        $('#spinner').fadeIn(500);
+
+        setTimeout(
+            function()
+            {
+                $('#spinner').hide();
+                $('#loginForm').fadeIn(500);
+            }, 1000);
+    }
+
+    $('#registrationForm').submit(function() {
+        $('#passwordError').hide();
+        let newPass = document.getElementById('newPassword');
+        let repeatPass = document.getElementById('passwordRepeat');
+
+        console.log(newPass.value);
+        console.log(repeatPass.value);
+
+        if ( newPass.value === repeatPass.value){
+            return true;
+        } else {
+            $('#passwordError').fadeIn(500);
+            return false;
+        }
+
+    });
+</script>
+
+{% endblock %}

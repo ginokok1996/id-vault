@@ -1,0 +1,106 @@
+{% extends '/documentation/main.html.twig'%}
+
+{% block documentation %}
+
+    <!-- Heading -->
+    <h1 class="mb-1">Introduction</h1>
+
+    <!-- Text -->
+    <p class="font-size-lg text-gray-700 mb-5">
+        How to get started with ID-Vault!
+    </p>
+
+    <!-- Text -->
+    <p class="text-gray-700">
+       ID-Vault is a Self Sovereign Identity (SSI) framework, that means that it aims to make users (self) the ultimate masters (sovereign) of thier data (identity). It does so by providing them a save and reliable wallet to store thire online data.
+    </p>
+
+
+    <!-- Text -->
+    <p class="text-gray-700">
+        The ID-Vault framework
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="why">
+        Why ID-Vault?
+    </h3>
+
+    <!-- Text -->
+    <p class="text-gray-700">Historically seen there have been a lot of digital identity wallet solutions, SSI is in fact a popular theme or trac on many hackathons and ID-Vault it&rsquo;s is actually a child of the Dutch / EU oddesy program. So why would we need a new solution?</p>
+
+    <p class="text-gray-700">
+        Well actually there are two main reasons
+        <ul>
+            <li>Simplicity</li>
+            <li>Compliance</li>
+        </ul>
+    </p>
+
+    <p class="text-gray-700">Let talk a little bit about simplicity first, most wallet and SSI solution operate on a blockchain premise where users make claims about there identity and external organisation back those claims up by proof. A user can then provide there claim + proof to a third party wich based on there trust in the signing organisation accepts the claim. This concept is called chain of trust. Actually ID-Vault is bassed on the same principle, but with one major difference. We handle all of this blockchain magic on our side. And instead of requiring blockchain knowledge from developers we provide a simple to implement OAuth2 interface. That means that if you as a developer have ever build a Facebook, Google of Github sign-on form you have all the knowledge that you need.</p>
+
+    <p class="text-gray-700">The second major difference is compliance, most if not all SSI solutions give full control to users. In fact in most cases the data is stored in a wallet on a mobile device (like a phone) and a user can delete this data at will. That is a nice and idyllic thought but in practice most organizations that you give access to your data are required by law to &ldquo;hold on to&rdquo; that data for a given period of time (in europe for example an employer needs to keep employee data in a register for seven years). That dosn&rsquo;t fly when a user can delete there data at will of simply lose or destroy a device. So in practice organization copy data from a user that logs in with SSI to here own databases. Unfortunately that mean that data moves out of the users control and that a user leads a breadcrumb trail of data with different organizations. In this way a device based wallet leads to less control on your data. How dos ID-Vault solve this? Quite simple actually, first instead of storing the data on a device we store in a secure cloud. Secondly we allow users to set up contracts with organizations that guarantee them access to the users data for a given time. That way the organization is ensurer of legal compliance and no langer needs to store the data locally. Keeping al the users data where it belongs, in your data wallet.</p>
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="data-ownership">
+        So I just give you al my data? right&#8230;.
+    </h3>
+    <!-- Text -->
+    <p class="text-gray-700"> Well actually no, with ID-Vault a user NEVER transfers the ownership or right of there data to ID-Vault the data stays yours. You simply use the wallet to store it, and share it. Look to us as service provider, an online storage box of sorts that helps you keep in control.</p>
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="user-pay">
+        But if i&rsquo;m not paying for it then i am the product right?
+    </h3>
+    <!-- Text -->
+    <p class="text-gray-700"> Well that part is actually true, but not in a traditional sense of the word. We actually went to great legal lengths to prevent us form owning your data or having any right to it. That means that we can&rsquo;t sell ot give it to other parties (even if we wanted to,wich obviously we don&rsquo;t).</p>
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="who-pays">
+        So who pays for al of this?
+    </h3>
+    <!-- Text -->
+    <p class="text-gray-700"> The organizations that use your data, in the world of modern e-commerce data equals money. That means that you as a user are sitting on a gold mine without the ability to mine it. With ID-Vault you mine it a little bit, organizations pay for accessing your data and that money is then used to keep your data. In a weird way instead of multinationals datamining you, you mine them. Like a modern day data robin hood.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="newAndExtendedComponents">
+        The claim and proof infrastructure
+    </h3>
+
+{% endblock %}
+
+{% block jumpto %}
+
+
+    <div class="my-7 my-lg-9 px-lg-7 border-left-lg border-gray-300">
+
+        <!-- Heading -->
+        <h6 class="text-uppercase font-weight-bold">
+            Frequently Asked Questions
+        </h6>
+
+        <!-- Links -->
+        <ul class="list mb-0">
+            <li class="list-item">
+                <a class="list-link" href="#why" data-toggle="smooth-scroll">Why ID-Vault?</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#data-ownership" data-toggle="smooth-scroll">Data Ownership</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#user-pay" data-toggle="smooth-scroll">Does a user pay?</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#who-pays" data-toggle="smooth-scroll">Who does pay?</a>
+            </li>
+        </ul>
+
+    </div>
+
+{% endblock %}
