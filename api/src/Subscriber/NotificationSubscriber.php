@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Subscriber;
+
+use Conduction\CommonGroundBundle\Event\CommonGroundEvents;
+use Conduction\CommonGroundBundle\Event\CommongroundUpdateEvent;
+use App\Service\NotificationService;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class NotificationSubscriber implements EventSubscriberInterface
+{
+    private $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            CommonGroundEvents::UPDATE  => 'update',
+//            CommonGroundEvents::CREATE  => 'create',
+//            CommonGroundEvents::CREATED => 'created',
+        ];
+    }
+
+    public function update(CommongroundUpdateEvent $event)
+    {
+        // Lets make sure that we are dealing with a Claim resource from the WAC
+        $resource = $event->getResource();
+        $url = $event->getUrl();
+        if (!$url || !is_array($url) || $url['component'] != 'wac' || $url['type'] != 'claims') {
+            return;
+        }
+
+        // Lets see if we need to do anything with the resource
+        $resource = $event->getResource();
+        $resource = $this->notificationService->checkAuthorizationScopes($resource);
+        $event->setResource($resource);
+
+        return $event;
+    }
+
+//    public function create(CommongroundUpdateEvent $event)
+//    {
+//        $resource = $event->getResource();
+//        $url = $event->getUrl();
+//        if (!$url || !is_array($url) || $url['component'] != 'wac' || $url['type'] != 'claims') {
+//            return false;
+//        }
+//
+//        $event->setResource($this->notificationService->checkAuthorizationScopes($resource));
+//
+//        return $event;
+//    }
+//
+//    public function created(CommongroundUpdateEvent $event)
+//    {
+//        $resource = $event->getResource();
+//        if (!array_key_exists('@type', $resource) || $resource['@type'] != 'Claim') {
+//            return;
+//        }
+//
+//        $resource = $this->notificationService->setForwardUrl($resource);
+//
+//        $event->setResource($resource);
+//
+//        return $event;
+//    }
+}
