@@ -7,10 +7,383 @@
     <h1 class="mb-1">Roadmap</h1>
 
     <!-- Text -->
-    <p class="font-size-lg text-gray-700 mb-5">
-        Feeling a bit lost in all of the technical terms of an online SSI Wallet (or thinking a what?), don't worry we understand that it can al be a bit overwelming. So we set up this glossery to help you allong.
+    <p class="text-gray-700">
+        ID-Vault follows the concept of continuous beta. That means that features will be added whenever we are confident enough that they are ready enough for the world instead of a fixed release schedule. There are always several features under development that have not yet been released for the wider public.
     </p>
 
+    <p class="text-gray-700">
+        If you want early access so you can use one of those features you can join the beta program for that feature. You can do so by sending us a message explaining why you want to join the beta program and how you want to use that specific feature. This way you will be able to use the feature early and provide us with specific feedback
+    </p>
+
+    <p class="text-gray-700">
+        The following list of features is presented as such, it doesn't aim to be comprehensive and are that none of these features are guaranteed to make it to production.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Notifications</h3>
+
+
+    <p class="text-gray-700">
+        The notification service allows organizations to stay “in touch” with an user's data.The notification service notifies the organisation when when a users data changes within a dataset(claim) to which the organisation has a scope. For security reasons the notification doesn’t actually contain the information that was changed, it merely points out that the claim was changed.
+    </p>
+
+    <p class="text-gray-700">
+        Notifications can be simply activated by providing a notification endpoint on your applications configuration. A POST containing a JSON message will be sent to that endpoint every time a claim is changed, to validify the post as originating from ID-Vault your applications state property will be added as a query parameter.
+    </p>
+
+    <p class="text-gray-700">
+        The message itself will contain the authorization token id (as an URI), and an array of the changed sopes allowing your application to make a precise call to get only the claims that have actually changed.
+    </p>
+
+    <pre><code class="json">
+            {
+                “authorization_token”:”https://id-vault.com/oauth/tokeninfo/uuid”,
+                “scopes”:[“schema.person.adress”]
+            }
+        </code></pre>
+
+    <p class="text-gray-700">
+        You can view the notification logs of your application from the dashboard for debugging purposes. Keep in mind that making a call to the authorization token to get and compare the changed data will show up in the users logs and statistics. As such it is good practice to ONLY evaluate the users claim if this is essential to your primary process.
+    </p>
+
+    <p class="text-gray-700 font-weight-bold">
+        Required Scope: notification
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Dossiers</h3>
+
+    <p class="text-gray-700">
+        A dossier is a data collection that isn’t part of the ID-Vault data set but is dependent on data that is part of the ID-Vault dataset, a good example of this would be an personnel file. Tough the file itself is part of an external HR system, it legally requires data that is part of a wallet (in this case social security numbers and contact details). Since this information is required by law users are unable to simply “delete” data that is part of a dossier. In fact dossiers are the only way a user can be blocked from simply deleting there data (do keep in mind that a user can still object to a dossier and get it removed by ID-Vault).
+    </p>
+
+    <p class="text-gray-700">
+        As such dossier are a rather heavy thing to use and come with there own limitations, as with all options that infringe on the users right a special scope has to be granted by the user ‘dosier’, additionally a user needs a way to access there dossier to be able to see what you actually have on them, this is done by providing a specific Single Sign On url (read more about single sign on functionality here).  You also need to provide a name and description that are meaningful to the user, the actual scopes for which this  dossier is blocking, a GDPR based goal for the dossier and an expiry date. All dossiers MUST have an expiry date the MAY NOT be more than 10 years in the future. Lastly the users authentication token is used to identify a user.
+    </p>
+
+    <p class="text-gray-700">
+        Actually creating a dossier is rather easy, just post it to https://id-vault.com/api/dossier (and don’t forget to add the user authorization token in the authentication header)
+    </p>
+
+    <pre>
+        <code class="json">
+            {
+                “name”:”Personel file at conduction”,
+                “description”:”For your personal file at conduction we are legaly required to maintain your data for tax purposes”,
+                “sso”:”{ your single sign on url}”,
+                “scopes”:”schema.person.adress”,
+                “goal”:”legal”,
+                “expiryDate”:”legal”
+            }
+        </code>
+    </pre>
+
+    <p class="text-gray-700">
+        The dossier can then be altered or deleted by the application at the dossier specific endpoint https://id-vault.com/api/dossier/{uuid}, keep in mind that do no user permissions is required for that you can only create, update or destroy dossier while you hold the “dossier” scope.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Contract (and signing)</h3>
+
+    <p class="text-gray-700">
+        Contracts represent an ongoing or proposed legal commitment between one or more persons  (represented by users)
+    </p>
+
+    <p class="text-gray-700">
+        A nice little sub feature of contracts is the signing of contract’s, that actually included in the contract. Basically there are two ways of offering a contract, either you add an already signed contract to a users wallet (in which case the signed property should be true) or you are requesting a user to sign a contract  (in which case the signed property should be false) the later will trigger a signing procedure by the user.
+    </p>
+
+    <p class="text-gray-700">
+        It is also possible to allow users to terminate contract trough id vault, in that case the contract MAY BE with a “noticePeriod” property, stating the period that the contract runs after a termination request by the user. If a contract dosn’t have a  “noticePeriod” it MUST have an “expiryDate”.
+    </p>
+
+    <p class="text-gray-700 font-weight-bold">
+        There are actually two ways of setting up contracts
+        the first is for a single given user to wich you hold an authorization token AND have the contrac scope.
+    </p>
+
+    <p class="text-gray-700">
+        In that case ust post it to https://id-vault.com/api/contract (and don’t forget to add the user authorization token in the authentication header).
+        <p class="font-weight-bold">This is the ONLY way you can post already signed contracts.</p>
+    </p>
+
+    <pre>
+        <code class="json">
+            {
+                “name”:”Phone Subscription”,
+                “description”:”Your subscription at ConduCom”,
+                “singed”:”false”,
+                “expiryDate”:”legal”
+            }
+        </code>
+    </pre>
+    <p class="text-gray-700">
+        The second way allows you to add multiple signees to a contract,<br>
+        Contracts by there nature cant be a altered or deleted by the application, they can however be viewed https://id-vault.com/api/contract/{uuid}, keep in mind that do no user permissions is required for that you can only create, update or destroy dossier while you hold the “contract” scope.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Single Sign On</h3>
+
+    <p class="text-gray-700">
+        To be honest, setting up single sign on is super easy, once you have setup OAUTH. Basically you just skip the first part of the OAuth implementation and set up an endpoint on which a user land (users will be forwarded form there ID-Vault SSO dashboard) , the user will again be provided with the code and state parameters when they hit your endpoint. Do this time the state will be a key provided by you during setup.
+    </p>
+
+    <p class="text-gray-700">
+        You can than use the code to acquire an access token normally and use that acces token to obtain user info and handle the login normally. Be aware that you need the single_sign_on scope for the user, this does mean that the user will need have to have authorized your application in the past (which implies that a regular login/registration has taken place in the past).
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Mailing and Phone lists</h3>
+
+    <p class="text-gray-700">
+        By GDPR user need to consent to being mailed or called for commercial purposes, do most mailing tool nowdays include both this and an “opt-out” option it can be hard for users to keep track of where they have subscribed to.
+    </p>
+
+    <p class="text-gray-700">
+        First you need to create a list, this is as simple a posting a name and description to https://id-vault.com/api/send_list (keep in mind that in this cause you will need to authenticate as an application instead of as a user)
+    </p>
+
+    <pre>
+        <code class="json">
+            {
+                “name”:”My mailing list”,
+                “description”:”For my awsome weekly mailing”,
+                “mail”:true,
+                “phone”:false,
+                “clientSecret”:”{the client secret for your application}”
+            }
+        </code>
+    </pre>
+
+    <p class="text-gray-700">
+        Actually adding a user is then done by post to https://id-vault.com/api/send_list/{send_list uuid} no body is required (and don’t forget to add the user authorization token in the authentication header)
+    </p>
+
+    <p class="text-gray-700">
+        Alternatively you can add users to a mailing list in on a per email or phone basis, this feature is mainly mend for the “join mailing list” box commonly found on site. It requires you to forward an user to  https://id-vault.com/send_list/{send_list uuid} the user will then be prompted to join you mailing list (and if he/she isn’t jet logged in login or create an account in order to manage their mailing preferences).  You can include both email als phonenumber as a query property.
+    </p>
+
+    <p class="text-gray-700">
+        This allows you to either make a simple join mailing list link
+    </p>
+
+    <pre>
+        <code class="html">&lt;a href=”https://id-vault.com/send_list/{send_list uuid}">Join our mailing list&lt;/a&gt;'</code>
+    </pre>
+
+    <p class="text-gray-700">
+        or a slightly more elaborate join mailing list form.
+    </p>
+
+    <pre>
+        <code class="html">
+            &lt;form action=”https://id-vault.com/send_list/{send_list uuid}”&gt;
+                &lt;input type=”email” name=”email” id=”email” placeholder=”Your email addres”&gt;
+                &lt;input type=”button” value="Join our mailing list"&gt;
+            &lt;/form&gt;
+        </code>
+    </pre>
+
+    <p class="text-gray-700">
+        As a next stap you can then actually send you mailing and/or text messages trough ID-Vault, by posting it to https://id-vault.com/api/send_list/{uuid}/send. Additional cost will apply
+    </p>
+
+    <pre>
+        <code>
+            {
+                “title”:”My awsome mailing”,
+                “message”:”My mailing”,
+                “text”:”My mailing”,
+                “html”:”&lt;p>HTML content of the mail&lt;/p&gt;”,
+            }
+
+        </code>
+    </pre>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Contact lists</h3>
+
+    <p class="text-gray-700">
+        This is more of a concept, but what if we linked our contacts from our phones and mailbox to our vault? Would it be nice to receive an update when a friend changes their phone number or moves? And wouldn’t it be nice to see who actually has your number on their phone?
+    </p>
+
+    <p class="text-gray-700">
+        For this ID-Vault provides the contact list functionality, a contact list binds users to each other as is. Contacts lists use claim data but require no proof. Meaning that is is purposely possible to lie, distort or obfuscate through this feature. Equally so contacts can not be bound by dossiers and are therefore always and at all time’s deletable by either user. This means that a user can actively delete itself from another users phone book without that other user having to agree to this.
+    </p>
+
+    <p class="text-gray-700">
+        The contact list uses the /contacts endpoint under a users authorization token, https://id-vault.com/api/{user_uuid}/contacts.
+
+        Contacts in themselves consist of three permission types: email, phone and address and contact object adhering to schmea.org. Meaning that a normal contact would look something like:
+    </p>
+
+    <pre>
+        <code>
+            {
+                “contact”:{...},
+                “email”:true,
+                “phone ”:true,
+                “address  ”:false,
+            }
+        </code>
+    </pre>
+
+    <p class="text-gray-700">
+        Users both ends of a contact connection can remove permissions, but adding a permission requeres mutual consent. Contact details are shared on a “i;’’ show you mine if you show me yours”  basis meaning that permissions always work BOTH ways. With the node that no proof is required so while user A might get user B’s, he or she has no way of validating there data.
+    </p>
+
+    <p class="text-gray-700 font-weight-bold">
+        Required Scope: contact_list
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Tracking Cookie</h3>
+
+    <p class="text-gray-700">
+        ID-Vault wouldn't be ID-Vault if we didn’t have some thoughts on tracking cookies. So that why we offer our own cookie alternative. That, does not collect data about users but collects data for users.
+    </p>
+
+    <p class="text-gray-700">
+        So how does that work? When you place the ID-Vault trace code on your website the users actions aren’t logged to a big data set where you can analyse them. Instead they are logged to the respective user wallet’s (if that user is known to us) or to anonymized dataset.
+    </p>
+
+    <p class="text-gray-700">
+        What does that mean?
+        <br>
+        In general an applications gets way less info then with (for example) an facebook or gmail tracing cookie. You see what amounts of users visit what page, how long they stay there and when they leave your website.  You won’t see there age, sex, etc. And you cant follow individual users trough your website.
+    </p>
+
+    <p class="text-gray-700">
+        So wait, this provides way less information then google? ehm, yes…. that exactly the point.
+        <br>
+        So way should I use it as an application? First of all (since we don’t follow behavior) you won’t need a cookie warning, but more importantly because its the right thing to do.
+        <br>
+        But here is a twist, since a user has al of his account in its vault it can actually choose to share its data with you (that goes a bit further then a cookie warning). In that case you can trace actions to a specific user and actually get more data then you get with for example google. You just need to convince the user to voluntarily share it with you.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Authorization request</h3>
+
+    <p class="text-gray-700">
+        At any given time it might be necessary for an application to request access to a data’s user without the user performing having an authorization token. For example because you want to perform a user migration, and don’t know whether a user is already on id-vault.
+        <br>
+        This can be done by sending a POST to the /getScopes endpoint.
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">Creating Users</h3>
+
+    <p class="text-gray-700">
+        When switching your user base to ID-Vault you might need to create users that do or don’t exist in ID-Vault. You can create users by making a POST to the /user  endpoint, user are then made unique by e-mail address. This means that making a user can have one of three results
+    </p>
+
+    <p class="text-gray-700">
+        <ul>
+            <li>
+                The email address is invalid,  or not in use (an error is thrown).
+            </li>
+            <li>
+                The email address is not currently claimed by an account
+            <ul>
+                <li>A user is created</li>
+                <li>The users claimes are filled by your provided data</li>
+                <li>An authorization code is automatically created with scopes for the supplied data and returned</li>
+            </ul>
+            </li>
+            <li>
+                The email address is currently claimed by an account
+                <ul>
+                    <li>A claim requests is created for any provided data that is not currently part of the users identity wallet</li>
+                    <li>An authorization request is created for all scopes within the supplied data.</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">User migration </h3>
+
+    <p class="text-gray-700">
+        When switching your user base to id-vault you will probably need to perform a mass user migration, this sounds more tricky then it is. But to do it right you want to take care of some crucial steps.
+    </p>
+
+    <p class="text-gray-700">
+        First we need to be aware that the creating users functionality handles most logic of figuring out whether or not a user should be created and so on based on a user's email address. That means that from a business logic point of view you can just make a script to iterate trough all your users, post them to the id-vault user endpoint and handle any or all requests
+    </p>
+
+    <p class="text-gray-700">
+        So lets take a look at what might happen, you post a user to the user endpoint and one of the following thing happens.
+    </p>
+
+    <p class="text-gray-700">
+        <ul>
+            <li>
+                The email address is invalid,  or not in use (an error is thrown).
+                <ul>
+                    <li>You should probably delete this account from your own system</li>
+                </ul>
+            </li>
+            <li>
+                The email address is not currently claimed by an account
+                <ul>
+                    <li>You get an authorization token, and can continue normally</li>
+                </ul>
+            </li>
+            <li>
+                The email address is currently claimed by an account
+                <ul>
+                    <li>You need to alert the user to migrate there account</li>
+                </ul>
+            </li>
+        </ul>
+    </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    {# Heading #}
+    <h3 class="font-weight-bold">User Groups</h3>
+
+    <p class="text-gray-700">
+        As a matter of design OAuth en OpenId Connect offer Authentication (that is they determine who is who). As a developer you might however prefer to handle part of the Authorisation (who has wichs rights) process as a part of the general login process.
+    </p>
+
+    <p class="text-gray-700">
+        A normal authorization process calls for a user to be part of user groups, these user groups in turn have specific rights. YDoh you definitely want to check the rights of user groups on your applications itself but you can defer the registrations of user groups to ID-Vault as a part of your application's authorization token.
+        <br>
+        This basically saves you the huzzle of setting up your own system for user groups.
+    </p>
 {% endblock %}
 
 {% block jumpto %}
