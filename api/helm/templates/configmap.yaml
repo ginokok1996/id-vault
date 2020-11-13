@@ -55,6 +55,3 @@ data:
 
   redis-host: '{{ .Values.settings.name }}-cache'
   redis-port: {{ .Values.redis.port | toString | quote }}
-  
-  digispoof-location: {{ .Values.commonground.digispoof.location }}
-  eherkenning-location: {{ .Values.commonground.eherkenning.location }}

@@ -74,6 +74,10 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		# this should only be done in an build
 		echo "Updating publiccode charts"
 		bin/console app:publiccode:update --location=/srv/api/public/schema/ --spec-version=0.2
+
+		# getting the lates template updates
+		echo "Updating template and public files"
+		bin/console assets:install
 	fi
 fi
 

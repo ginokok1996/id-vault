@@ -15,6 +15,10 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  tls: 
+  - hosts: 
+    - {{ $.Values.settings.domain }}
+    secretName: {{ template "fullname" . }}
   rules:
     {{- if and (eq $.Values.settings.env "prod") (eq $.Values.settings.type "component") }}
 

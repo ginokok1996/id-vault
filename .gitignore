@@ -3,6 +3,8 @@
 
 api/helm/kubeconfig.yaml
 
+!/api/public/bundle/*
+
 .idea/
 
 api/helm/*-kubeconfig.yaml
