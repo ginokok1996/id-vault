@@ -1,0 +1,102 @@
+<!-- modals -->
+<div class="modal fade" id="modalAddClaim" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
+                    {{ 'load data'|trans|capitalize }}
+                </h2>
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_claims') }}" enctype="multipart/form-data" style="padding-top: 1rem">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <!-- Select -->
+                        <select class="custom-select custom-select-xs" data-choices>
+                            <option value="" disabled selected hidden>{{ 'Where do you want to retrieve your data from?'|trans }}</option>
+                            <option>Github</option>
+                            <option>Facebook</option>
+                            <option>Gmail</option>
+                            <option>Idin</option>
+                        </select>
+                    </div>
+                    <!-- Submit -->
+                    <button class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'retrieve data'|trans }}
+                    </button>
+                </form>
+
+                <div style="padding-top: 2rem"></div>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
+                    {{ 'add manually'|trans|capitalize }}
+                </h2>
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_claims') }}" enctype="multipart/form-data" style="padding-top: 1rem">
+                    <!-- Select -->
+                    <select class="custom-select custom-select-xs" data-choices onchange="handleSelect()" id="addManuallySelect">
+                        <option value="" disabled selected hidden>{{ 'What data do you want to add manually?'|trans }}</option>
+                        <option value="email">{{ 'email'|trans|capitalize }}</option>
+                        <option value="name">{{ 'name'|trans|capitalize }}</option>
+                        <option value="phoneNumber">{{ 'phone number'|trans|capitalize }}</option>
+                    </select>
+
+                    <!-- Hidden input for property -->
+                    <input type="hidden" value="X" name="property" id="property">
+
+                    <!-- Input -->
+                    <div class="form-group">
+                        <input required disabled class="form-control" name="data[email]" id="email" type="hidden" placeholder="{{ 'email'|trans|capitalize }}">
+                        <input required disabled class="form-control" name="data[name]" id="name" type="hidden" placeholder="{{ 'name'|trans|capitalize }}">
+                        <input required disabled class="form-control" name="data[phoneNumber]" id="phoneNumber" type="hidden" placeholder="{{ 'phone number'|trans|capitalize }}">
+                    </div>
+
+                    <!-- Submit -->
+                    <button name="addClaim" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'add'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleSelect() {
+        let property_input = document.getElementById("property");
+        let select_element = document.getElementById("addManuallySelect");
+        let email_input = document.getElementById("email");
+        let name_input = document.getElementById("name");
+        let phoneNumber_input = document.getElementById("phoneNumber");
+
+        email_input.type = 'hidden';
+        email_input.disabled = true;
+        name_input.type = 'hidden';
+        name_input.disabled = true;
+        phoneNumber_input.type = 'hidden';
+        phoneNumber_input.disabled = true;
+
+        property_input.value = select_element.innerText;
+        let selected_value = select_element.value;
+        switch (selected_value) {
+            case 'email':
+                email_input.type = 'email';
+                email_input.disabled = false;
+                break;
+            case 'name':
+                name_input.type = 'text';
+                name_input.disabled = false;
+                break;
+            case 'phoneNumber':
+                phoneNumber_input.type = 'tel';
+                phoneNumber_input.disabled = false;
+                break;
+        }
+    }
+</script>

@@ -10,8 +10,123 @@
 
             </div>
 
-            {# todo:add translation for all texts #}
             <div class="col-12 col-md-9">
+{# todo: We are not going to be using two factor yet so its disabled for now #}
+                {# todo:add translation for all texts in this card #}
+{#                <!-- Card -->#}
+{#                <div class="card card-bleed shadow-light-lg mb-6">#}
+{#                    <div class="card-header">#}
+{#                        <div class="row align-items-center">#}
+{#                            <div class="col">#}
+
+{#                                <!-- Heading -->#}
+{#                                <h4 class="mb-0">#}
+{#                                    Two Factor#}
+{#                                </h4>#}
+
+{#                            </div>#}
+{#                            <div class="col-auto mr-n5">#}
+
+{#                                <!-- Text -->#}
+{#                                <small class="text-gray-700">#}
+{#                                    Required?#}
+{#                                </small>#}
+
+{#                            </div>#}
+{#                            <div class="col-auto">#}
+
+{#                                <!-- Switch -->#}
+{#                                <div class="custom-control custom-switch">#}
+{#                                    <input type="checkbox" class="custom-control-input" id="twoFactorSwitch" checked="">#}
+{#                                    <label class="custom-control-label" for="twoFactorSwitch"></label>#}
+{#                                </div>#}
+
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="card-body">#}
+
+{#                        <!-- List group -->#}
+{#                        <div class="list-group list-group-flush">#}
+{#                            <div class="list-group-item">#}
+{#                                <div class="row align-items-center">#}
+{#                                    <div class="col">#}
+
+{#                                        <!-- Heading -->#}
+{#                                        <p class="mb-0">#}
+{#                                            Authenticator App#}
+{#                                        </p>#}
+
+{#                                        <!-- Text -->#}
+{#                                        <small class="text-gray-700">#}
+{#                                            Google auth or 1Password#}
+{#                                        </small>#}
+
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+
+{#                                        <!-- Button -->#}
+{#                                        <button class="btn btn-xs btn-outline-white">#}
+{#                                            Setup#}
+{#                                        </button>#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="list-group-item">#}
+{#                                <div class="row align-items-center">#}
+{#                                    <div class="col">#}
+
+{#                                        <!-- Heading -->#}
+{#                                        <p class="mb-0">#}
+{#                                            SMS Recovery <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>#}
+{#                                        </p>#}
+
+{#                                        <!-- Text -->#}
+{#                                        <small class="text-gray-700">#}
+{#                                            Standard messaging rates apply#}
+{#                                        </small>#}
+
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+
+{#                                        <!-- Button -->#}
+{#                                        <button class="btn btn-xs btn-danger">#}
+{#                                            Disable#}
+{#                                        </button>#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="list-group-item">#}
+{#                                <div class="row align-items-center">#}
+{#                                    <div class="col">#}
+
+{#                                        <!-- Heading -->#}
+{#                                        <p class="mb-0">#}
+{#                                            Recovery Codes <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>#}
+{#                                        </p>#}
+
+{#                                        <!-- Text -->#}
+{#                                        <small class="text-gray-700">#}
+{#                                            One time use safety codes#}
+{#                                        </small>#}
+
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+
+{#                                        <!-- Button -->#}
+{#                                        <button class="btn btn-xs btn-outline-white">#}
+{#                                            Reveal#}
+{#                                        </button>#}
+
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+
+{#                    </div>#}
+{#                </div>#}
 
                 <!-- Card -->
                 <div class="card card-bleed shadow-light-lg mb-6">
@@ -21,107 +136,43 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    Two Factor
+                                    {{ 'username'|trans|capitalize }}
                                 </h4>
-
-                            </div>
-                            <div class="col-auto mr-n5">
-
-                                <!-- Text -->
-                                <small class="text-gray-700">
-                                    Required?
-                                </small>
 
                             </div>
                             <div class="col-auto">
 
-                                <!-- Switch -->
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="twoFactorSwitch" checked="">
-                                    <label class="custom-control-label" for="twoFactorSwitch"></label>
-                                </div>
+                                <!-- Link -->
+                                <a class="small text-gray-700" href="#!">
+                                    {{ 'forgot your password?'|trans|capitalize }}
+                                </a>
 
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
 
-                        <!-- List group -->
-                        <div class="list-group list-group-flush">
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col">
+                        <!-- New username -->
+                        <div class="form-group">
+                            <label for="newUsername">{{ 'username'|trans|capitalize }}</label>
+                            <input class="form-control" id="newUsername" type="text" value="{{ app.user.username }}" placeholder="{{ app.user.username }}">
+                        </div>
 
-                                        <!-- Heading -->
-                                        <p class="mb-0">
-                                            Authenticator App
-                                        </p>
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password">{{ 'password'|trans|capitalize }}</label>
+                            <input class="form-control" id="password" type="password">
+                        </div>
 
-                                        <!-- Text -->
-                                        <small class="text-gray-700">
-                                            Google auth or 1Password
-                                        </small>
 
-                                    </div>
-                                    <div class="col-auto">
+                        <div class="row">
+                            <div class="col-12 col-md-auto">
 
-                                        <!-- Button -->
-                                        <button class="btn btn-xs btn-outline-white">
-                                            Setup
-                                        </button>
+                                <!-- Button -->
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    {{ 'update username'|trans|capitalize }}
+                                </button>
 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col">
-
-                                        <!-- Heading -->
-                                        <p class="mb-0">
-                                            SMS Recovery <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>
-                                        </p>
-
-                                        <!-- Text -->
-                                        <small class="text-gray-700">
-                                            Standard messaging rates apply
-                                        </small>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <button class="btn btn-xs btn-danger">
-                                            Disable
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="list-group-item">
-                                <div class="row align-items-center">
-                                    <div class="col">
-
-                                        <!-- Heading -->
-                                        <p class="mb-0">
-                                            Recovery Codes <i class="fe fe-info text-gray-500" data-toggle="tooltip" title="" data-original-title="We use the the phone number you provide in General"></i>
-                                        </p>
-
-                                        <!-- Text -->
-                                        <small class="text-gray-700">
-                                            One time use safety codes
-                                        </small>
-
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Button -->
-                                        <button class="btn btn-xs btn-outline-white">
-                                            Reveal
-                                        </button>
-
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -136,7 +187,7 @@
 
                                 <!-- Heading -->
                                 <h4 class="mb-0">
-                                    Password
+                                    {{ 'password'|trans|capitalize }}
                                 </h4>
 
                             </div>
@@ -144,7 +195,7 @@
 
                                 <!-- Link -->
                                 <a class="small text-gray-700" href="#!">
-                                    Forgot your password?
+                                    {{ 'forgot your password?'|trans|capitalize }}
                                 </a>
 
                             </div>
@@ -154,19 +205,19 @@
 
                         <!-- Current password -->
                         <div class="form-group">
-                            <label for="currentPassword">Current Password</label>
+                            <label for="currentPassword">{{ 'current password'|trans|capitalize }}</label>
                             <input class="form-control" id="currentPassword" type="password">
                         </div>
 
                         <!-- New password -->
                         <div class="form-group">
-                            <label for="newPassword">New Password</label>
+                            <label for="newPassword">{{ 'new password'|trans|capitalize }}</label>
                             <input class="form-control" id="newPassword" type="password">
                         </div>
 
                         <!-- Confirm password -->
                         <div class="form-group">
-                            <label for="confirmPassword">Confirm Password</label>
+                            <label for="confirmPassword">{{ 'confirm password'|trans|capitalize }}</label>
                             <input class="form-control" id="confirmPassword" type="password">
                         </div>
 
@@ -176,7 +227,7 @@
 
                                 <!-- Button -->
                                 <button class="btn btn-block btn-primary" type="submit">
-                                    Update Password
+                                    {{ 'update password'|trans|capitalize }}
                                 </button>
 
                             </div>
@@ -185,6 +236,7 @@
                     </div>
                 </div>
 
+                {# todo:add translation for all texts in this card #}
                 <!-- Card -->
                 <div class="card card-bleed shadow-light-lg">
                     <div class="card-header">

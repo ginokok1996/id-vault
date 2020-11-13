@@ -25,37 +25,106 @@
                     <div class="card-body">
 
                         <!-- Form -->
-                        <form>
+                        <form action="{{ path('app_dashboard_general') }}" method="post">
                             <div class="row">
                                 <div class="col-12 col-md-6">
 
                                     <!-- Name -->
                                     <div class="form-group">
-                                        <label for="name">{{ 'name'|trans|capitalize }}</label>
-                                        <input class="form-control" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
-                                        {% if app.user.name is defined and app.user.name is not empty %}value="{{ app.user.name }}"{% endif %}>
+                                        <label for="name">{{ 'name'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                                        <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'full name'|trans|capitalize }}"
+                                        value="{{ person.name }}">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                                        <input required class="form-control" name="email" id="email" type="email" placeholder="{{ 'name@provider.com'|trans }}"
+                                            {% if person.emails is defined and person.emails|length > 0 %}
+                                            value="{{ person.emails[0].email }}"
+                                            {% endif %}>
                                     </div>
 
                                 </div>
                                 <div class="col-12 col-md-6">
 
-                                    <!-- Email -->
+                                    <!-- Telephone -->
                                     <div class="form-group">
-                                        <label for="email">{{ 'email'|trans|capitalize }}</label>
-                                        <input class="form-control" id="email" type="email" placeholder="{{ 'name@address.com'|trans|capitalize }}"
-                                        {% if app.user.person is defined and app.user.person is not empty and commonground_is_resource(app.user.person) %}
-                                            {% set person = commonground_resource(app.user.person) %}
-                                            {% if person.emails is defined and person.emails|length > 0 %}
-                                                value="{{ person.emails[0].email }}"
-                                            {% endif %}
-                                        {% endif %}>
+                                        <label for="telephone">{{ 'telephone number'|trans|capitalize }}</label>
+                                        <input class="form-control" name="telephone" id="telephone" type="tel" placeholder="0612345678"
+                                            {% if person.telephones is defined and person.telephones|length > 0 %}
+                                                value="{{ person.telephones[0].telephone }}"
+                                            {% endif %}>
                                     </div>
 
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <!-- Street -->
+                                    <div class="form-group">
+                                        <label for="street">{{ 'street'|trans|capitalize }}</label>
+                                        <input class="form-control" name="street" id="street" type="text" placeholder="{{ 'street'|trans|capitalize }}"
+                                            {% if person.adresses[0].street is defined and person.adresses[0].street is not empty %}
+                                                value="{{ person.adresses[0].street }}"
+                                            {% endif %}>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <!-- House number -->
+                                    <div class="form-group">
+                                        <label for="houseNumber">{{ 'house number'|trans|capitalize }}</label>
+                                        <input class="form-control" name="houseNumber" id="houseNumber" type="text" placeholder="{{ 'house number'|trans|capitalize }}"
+                                            {% if person.adresses[0].houseNumber is defined and person.adresses[0].houseNumber is not empty %}
+                                                value="{{ person.adresses[0].houseNumber }}"
+                                            {% endif %}>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <!-- House number suffix -->
+                                    <div class="form-group">
+                                        <label for="email">{{ 'suffix'|trans|capitalize }}</label>
+                                        <input class="form-control" name="houseNumberSuffix" id="houseNumberSuffix" type="text" placeholder="{{ 'suffix'|trans|capitalize }}"
+                                            {% if person.adresses[0].houseNumberSuffix is defined and person.adresses[0].houseNumberSuffix is not empty %}
+                                                value="{{ person.adresses[0].houseNumberSuffix }}"
+                                            {% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+
+                                    <!-- Postal code -->
+                                    <div class="form-group">
+                                        <label for="postalCode">{{ 'postal code'|trans|capitalize }}</label>
+                                        <input class="form-control" name="postalCode" id="postalCode" type="text" placeholder="{{ 'postal code'|trans|capitalize }}"
+                                            {% if person.adresses[0].postalCode is defined and person.adresses[0].postalCode is not empty %}
+                                                value="{{ person.adresses[0].postalCode }}"
+                                            {% endif %}>
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <!-- Locality -->
+                                    <div class="form-group">
+                                        <label for="locality">{{ 'locality'|trans|capitalize }}</label>
+                                        <input class="form-control" name="locality" id="locality" type="text" placeholder="{{ 'locality'|trans|capitalize }}"
+                                            {% if person.adresses[0].locality is defined and person.adresses[0].locality is not empty %}
+                                                value="{{ person.adresses[0].locality }}"
+                                            {% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-12 col-md-auto">
 
                                     <!-- Button -->
-                                    <button class="btn btn-block btn-primary" type="submit">
+                                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
                                         {{ 'save changes'|trans|capitalize }}
                                     </button>
 
@@ -66,67 +135,75 @@
                     </div>
                 </div>
 
-                <!-- Card -->
-                <div class="card card-bleed shadow-light-lg mb-6">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
+                {% if 'group.developer' in app.user.roles %}
+                    <!-- Card -->
+                    <div class="card card-bleed shadow-light-lg mb-6">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
 
-                                <!-- Heading -->
-                                <h4 class="mb-0">
-                                    {{ 'developer view'|trans|capitalize }}
-                                </h4>
+                                    <!-- Heading -->
+                                    <h4 class="mb-0">
+                                        {{ 'developer view'|trans|capitalize }}
+                                    </h4>
 
-                            </div>
-                            <div class="col-auto">
-
-                                <!-- Switch -->
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="twoFactorSwitch" checked="">
-                                    <label class="custom-control-label" for="twoFactorSwitch"></label>
                                 </div>
+                                <div class="col-auto">
 
+                                    <form action="{{ path('app_dashboard_general') }}" method="post">
+                                        <!-- Switch -->
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" name="twoFactorSwitch" id="twoFactorSwitch" onchange="this.form.submit()"
+                                            {% if 'group.developer-view' in app.user.roles %}checked=""{% endif %}>
+                                            <label class="custom-control-label" for="twoFactorSwitch"></label>
+                                        </div>
+
+                                        <!-- Hidden input for handling multiple forms with the same action -->
+                                        <input class="btn btn-block btn-primary" name="twoFactorSwitchSubmit" value="true" type="hidden">
+                                    </form>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    <!-- Card -->
+                    <div class="card card-bleed shadow-light-lg mb-6">
+                        <div class="card-header">
 
-                <!-- Card -->
-                <div class="card card-bleed shadow-light-lg mb-6">
-                    <div class="card-header">
+                            <!-- Heading -->
+                            <h4 class="mb-0">
+                                {{ 'become a developer!'|trans|capitalize }}
+                            </h4>
 
-                        <!-- Heading -->
-                        <h4 class="mb-0">
-                            {{ 'become a developer!'|trans|capitalize }}
-                        </h4>
+                        </div>
 
-                    </div>
+                        <div class="card-body">
 
-                    <div class="card-body">
+                            <!-- Form -->
+                            <form action="{{ path('app_dashboard_general') }}" method="post">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
 
-                        <!-- Form -->
-                        <form>
-                            <div class="row">
-                                <div class="col-12 col-md-12">
+                                        <p>
+                                            {{ 'Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is become a developer by pressing this button and turn on the developer view after that by using the slider in your personal settings.'|trans }}
+                                        </p>
 
-                                    <p>
-                                        {{ 'Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.'|trans }}
-                                    </p>
+                                    </div>
+                                    <div class="col-12 col-md-auto">
 
+                                        <!-- Button -->
+                                        <button class="btn btn-block btn-primary" name="becomeDeveloper" value="true" type="submit">
+                                            {{ 'become a developer!'|trans|capitalize }}
+                                        </button>
+
+                                    </div>
                                 </div>
-                                <div class="col-12 col-md-auto">
+                            </form>
 
-                                    <!-- Button -->
-                                    <button class="btn btn-block btn-primary" type="submit">
-                                        {{ 'become a developer!'|trans|capitalize }}
-                                    </button>
-
-                                </div>
-                            </div>
-                        </form>
-
+                        </div>
                     </div>
-                </div>
+                {% endif %}
 
             </div>
         </div> <!-- / .row -->

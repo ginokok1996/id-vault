@@ -7,7 +7,7 @@ security:
             id: Conduction\CommonGroundBundle\Security\User\CommongroundProvider
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js|docs)/
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         # The mollie webhook does not have our API key
         webhook:
@@ -35,6 +35,7 @@ security:
                     - Conduction\CommonGroundBundle\Security\CommongroundIdinLoginAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundFacebookAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundGmailAuthenticator
+                    - Conduction\CommonGroundBundle\Security\CommongroundGithubAuthenticator
                 entry_point: Conduction\CommonGroundBundle\Security\CommongroundApplicationAuthenticator
 
             # activate different ways to authenticate

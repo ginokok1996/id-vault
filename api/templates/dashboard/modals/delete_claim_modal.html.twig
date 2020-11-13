@@ -1,0 +1,88 @@
+<div class="modal fade" id="modalDeleteClaim{{ claim.id }}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteClaimTitle{{ claim.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                {% if claim.authorizations is defined and claim.authorizations is not empty %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalDeleteClaimTitle{{ claim.id }}">
+                        {{ 'There are still authorizations on this claim!'|trans|capitalize }}
+                    </h2>
+                    <h3 class="text-center">
+                        {% if claim.data is defined and claim.data is not empty %}
+                            {% for dataItem in claim.data %}
+                                {% if loop.last %}
+                                    {{ dataItem }}
+                                {% else %}
+                                    {{ dataItem }},
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </h3>
+                    <h4 class="text-gray-700 text-center">
+                        {% if claim.property is defined and claim.property is not empty %}
+                            {{ claim.property }}
+                        {% endif %}
+                    </h4>
+
+                    <!-- Divider -->
+                    <hr class="border-gray-300 my-6">
+
+                    <!-- list of authorizations for this claim -->
+                    <h3 class="text-center">{{ 'authorizations'|trans|capitalize }}</h3>
+                    {% set authorizations = claim.authorizations %}
+                    {% set claimDeleteModal = true %}
+                    {% include 'dashboard/widgets/authorization_list.html.twig' %}
+                {% else %}
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold text-center mb-1" id="modalDeleteClaimTitle{{ claim.id }}">
+                        {{ 'Are you sure you want to delete this claim?'|trans|capitalize }}
+                    </h2>
+                    <br>
+                    <h3 class="text-center">
+                        {% if claim.data is defined and claim.data is not empty %}
+                            {% for dataItem in claim.data %}
+                                {% if loop.last %}
+                                    {{ dataItem }}
+                                {% else %}
+                                    {{ dataItem }},
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </h3>
+                    <h4 class="text-gray-700 text-center">
+                        {% if claim.property is defined and claim.property is not empty %}
+                            {{ claim.property }}
+                        {% endif %}
+                    </h4>
+                    <br>
+
+                    <!-- Form -->
+                    <form method="post" action="{{ path('app_dashboard_claims') }}" enctype="multipart/form-data">
+                        <input type="hidden" name="claimID" value="{{ claim.id }}">
+
+                        <!-- No -->
+                        <button type="button" class="btn btn-block btn-primary mt-3 lift" data-dismiss="modal" aria-label="Close">
+                            {{ 'no'|trans|capitalize }}
+                        </button>
+
+                        <!-- Yes -->
+                        <button
+                            name="deleteClaim"
+                            style="background-color: red"
+                            value="true"
+                            class="btn btn-block btn-primary mt-3 lift">
+                            {{ 'yes'|trans|capitalize }}
+                        </button>
+
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Class UserController.
  *
-* @Route("/user")
+ * @Route("/user")
  */
 class UserController extends AbstractController
 {
@@ -60,16 +60,16 @@ class UserController extends AbstractController
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
         } else {
-            $backUrl = '/';
+            $backUrl = '/dashboard/general';
         }
         $session->set('backUrl', $backUrl);
 
         if ($this->getUser()) {
-            $this->flash->add('success', 'Welcome '.$this->getUser()->getName());
-            return $this->redirect($this->generateUrl('app_default_index'));
+            $this->flash->add('success', 'Welcome '.ucwords($this->getUser()->getName()));
+
+            return $this->redirect($this->generateUrl('app_dashboard_general'));
         } else {
             return $this->redirect($this->generateUrl('app_default_index'));
-
         }
     }
 
@@ -195,7 +195,17 @@ class UserController extends AbstractController
         $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'github', 'application' => $params->get('app_id')])['hydra:member'];
         $provider = $providers[0];
 
-        return $this->redirect('https://github.com/login/oauth/authorize?state='.$this->params->get('app_id').'&redirect_uri=https://checkin.dev.zuid-drecht.nl/github&client_id=0106127e5103f0e5af24');
+        $redirect = $request->getUri();
+
+        if (strpos($redirect, '?') == true) {
+            $redirect = substr($redirect, 0, strpos($redirect, '?'));
+        }
+
+        if (isset($provider['configuration']['app_id']) && isset($provider['configuration']['secret'])) {
+            return $this->redirect('https://github.com/login/oauth/authorize?state='.$params->get('app_id').'&redirect_uri='.$redirect.'&client_id='.$provider['configuration']['app_id']);
+        } else {
+            return $this->render('500.html.twig');
+        }
     }
 
     /**
@@ -216,7 +226,7 @@ class UserController extends AbstractController
         }
 
         if (isset($provider['configuration']['app_id']) && isset($provider['configuration']['secret'])) {
-            return $this->redirect('https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=46119456250-gad8g8342inudo8gp8v63ovokq21itt2.apps.googleusercontent.com&scope=openid%20email%20profile%20https://www.googleapis.com/auth/user.phonenumbers.read&redirect_uri='.$redirect);
+            return $this->redirect('https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile%20https://www.googleapis.com/auth/user.phonenumbers.read&redirect_uri='.$redirect);
         } else {
             return $this->render('500.html.twig');
         }
@@ -247,104 +257,38 @@ class UserController extends AbstractController
      */
     public function registerAction(Session $session, Request $request, ApplicationService $applicationService, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
-        $content = false;
-        $variables = $applicationService->getVariables();
-
-        // Lets provide this data to the template
-        $variables['query'] = $request->query->all();
-        $variables['post'] = $request->request->all();
-
-        // Get resource
-        $application = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
-        $variables['userGroups'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $application['organization']['@id'], 'canBeRegisteredFor' => true])['hydra:member'];
-        // Lets see if there is a post to procces
         if ($request->isMethod('POST')) {
-            $resource = $request->request->all();
+            $backUrl = $request->query->get('backUrl');
 
-            $email = [];
-            $contact = [];
-            $user = [];
+            //lets check if there is already a user with this email
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $request->get('username')])['hydra:member'];
+            if (count($users) > 0) {
+                $this->flash->add('error', 'Email address is already registered with us');
 
-            //create the email in CC
-            $email['name'] = 'userEmail';
-            $email['email'] = $resource['email'];
-            $email = $commonGroundService->createResource($email, ['component' => 'cc', 'type' => 'emails']);
+                return $this->redirect($backUrl);
+            } else {
+                $user = [];
+                $person = [];
 
-            //create the contact in CC
-            if (array_key_exists('achternaam', $resource)) {
-                if (array_key_exists('tussenvoegsel', $resource)) {
-                    $contact['additionalName'] = $resource['tussenvoegsel'];
-                }
-                $contact['familyName'] = $resource['achternaam'];
+                //create person
+                $person['givenName'] = $request->get('firstName');
+                $person['familyName'] = $request->get('lastName');
+                $person['emails'][0]['email'] = $request->get('username');
+
+                $person = $commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
+                $person = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $person['id']]);
+
+                //create user
+                $user['username'] = $request->get('username');
+                $user['password'] = $request->get('newPassword');
+                $user['person'] = $person;
+
+                $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+                $this->flash->add('success', 'Account created');
+
+                return $this->redirect($backUrl);
             }
-            foreach ($resource['userGroups'] as $userGroupUrl) { //check the selected group(s)
-                $userGroup = $commonGroundService->getResource($userGroupUrl); //get the group resource
-                if ($userGroup['name'] == 'Studenten') { //check if the group studenten is selected
-                    $contact['name'] = 'studentUserContact';
-                    if (array_key_exists('voornaam', $resource) && !empty($resource['voornaam'])) {
-                        $contact['givenName'] = $resource['voornaam'];
-                    } else {
-                        $contact['givenName'] = 'studentUserContact';
-                    }
-                    $contact['emails'] = [];
-                    $contact['emails'][0] = $email['@id'];
-                    $contact = $commonGroundService->createResource($contact, ['component' => 'cc', 'type' => 'people']); //create a person in CC
-
-                    //create the participant in EDU
-                    $participant = [];
-                    $participant['person'] = $contact['@id'];
-                    $commonGroundService->createResource($participant, ['component' => 'edu', 'type' => 'participants']);
-
-                    //create the employee in MRC
-                    $employee = [];
-                    $employee['person'] = $contact['@id'];
-                    $employee['organization'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organizations']);
-                    $commonGroundService->createResource($employee, ['component' => 'mrc', 'type' => 'employees']);
-                } elseif ($userGroup['name'] == 'Bedrijven') { //check if the group bedrijven is selected
-                    $contactPerson = [];
-                    $contactPerson['name'] = 'bedrijfUserContact';
-                    if (array_key_exists('voornaam', $resource) && !empty($resource['voornaam'])) {
-                        $contactPerson['givenName'] = $resource['voornaam'];
-                    } else {
-                        $contactPerson['givenName'] = 'bedrijfUserContact';
-                    }
-                    $contactPerson['emails'] = [];
-                    $contactPerson['emails'][0] = $email['@id'];
-                    $contactPerson = $commonGroundService->createResource($contactPerson, ['component' => 'cc', 'type' => 'people']); //create a person in CC
-
-                    //create an organization in CC
-                    $contact['name'] = 'bedrijfUserContact';
-                    $contact['description'] = 'Beschrijving van dit bedrijfUserContact';
-                    $contact['type'] = 'Participant';
-                    $contact['emails'] = [];
-                    $contact['emails'][0] = $email['@id'];
-                    $contact['persons'] = [];
-                    $contact['persons'][0] = $contactPerson['@id'];
-                    $contact = $commonGroundService->createResource($contact, ['component' => 'cc', 'type' => 'organizations']);
-
-                    //create an organization in WRC
-//                    $organization = [];
-//                    $organization['name'] = 'bedrijfUserContact';
-//                    $organization['description'] = 'Beschrijving van dit bedrijfUserContact';
-//                    $organization['rsin'] = '999912345';
-//                    $organization['contact'] = $contact['@id'];
-//                    $commonGroundService->createResource($organization, ['component' => 'wrc', 'type' => 'organizations']);
-                }
-            }
-
-            //create the user in UC
-            $user['organization'] = $application['organization']['@id'];
-            $user['username'] = $resource['email'];
-            $user['password'] = $resource['wachtwoord'];
-            $user['person'] = $contact['@id'];
-            $user['userGroups'] = [];
-            $user['userGroups'] = $resource['userGroups'];
-            $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
-
-            return $this->redirectToRoute('app_default_index');
         }
-
-        return $variables;
     }
 
     /**

@@ -133,19 +133,143 @@
         <source>claims</source>
         <target>claims</target>
       </trans-unit>
-      <trans-unit id="2yIQEqv" resname="no claims available">
+      <trans-unit id="gQYeqgz" resname="what is a claim?">
+        <source>what is a claim?</source>
+        <target>wat is een claim?</target>
+      </trans-unit>
+      <trans-unit id="ckvw2St" resname="no claims available">
         <source>no claims available</source>
         <target>geen claims beschikbaar</target>
       </trans-unit>
-      <trans-unit id="9FjPhPy" resname="contracts">
-        <source>contracts</source>
-        <target>contracten</target>
+      <trans-unit id="h1m65Pe" resname="issuers">
+        <source>issuers</source>
+        <target>onderschrijvers</target>
       </trans-unit>
-      <trans-unit id="WCt473o" resname="no contracts available">
-        <source>no contracts available</source>
-        <target>geen contracten beschikbaar</target>
+      <trans-unit id="Py7WL4D" resname="what is an issuer?">
+        <source>what is an issuer?</source>
+        <target>wat is een onderschrijver?</target>
       </trans-unit>
-      <trans-unit id="zQrJVzP" resname="general">
+      <trans-unit id="z3RWAVu" resname="data">
+        <source>data</source>
+        <target>gegevens</target>
+      </trans-unit>
+      <trans-unit id="JaYFiUq" resname="add data">
+        <source>add data</source>
+        <target>gegevens toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Agb34dE" resname="load data">
+        <source>load data</source>
+        <target>gegevens inladen</target>
+      </trans-unit>
+      <trans-unit id="jEjQVne" resname="retrieve data">
+        <source>retrieve data</source>
+        <target>gegevens ophalen</target>
+      </trans-unit>
+      <trans-unit id="pqkfTJH" resname="edit data">
+        <source>edit data</source>
+        <target>gegevens wijzigen</target>
+      </trans-unit>
+      <trans-unit id="OU4pSWb" resname="this claim has no property!">
+        <source>this claim has no property!</source>
+        <target>deze claim heeft geen property!</target>
+      </trans-unit>
+      <trans-unit id="iCjvdkP" resname="delete data">
+        <source>delete data</source>
+        <target>gegevens verwijderen</target>
+      </trans-unit>
+      <trans-unit id="ffA_V3I" resname="Where do you want to retrieve your data from?">
+        <source>Where do you want to retrieve your data from?</source>
+        <target>Waar wilt u uw gegevens van ophalen?</target>
+      </trans-unit>
+      <trans-unit id="XONZXtq" resname="What data do you want to add manually?">
+        <source>What data do you want to add manually?</source>
+        <target>Welke gegevens wilt u handmatig toevoegen?</target>
+      </trans-unit>
+      <trans-unit id="q.74DtX" resname="add manually">
+        <source>add manually</source>
+        <target>handmatig toevoegen</target>
+      </trans-unit>
+      <trans-unit id="akl9V3K" resname="authorizations">
+        <source>authorizations</source>
+        <target>autorisaties</target>
+      </trans-unit>
+      <trans-unit id="LE88zD9" resname="what is an authorization?">
+        <source>what is an authorization?</source>
+        <target>wat is een autorisatie?</target>
+      </trans-unit>
+      <trans-unit id="nghg_oW" resname="view authorizations">
+        <source>view authorizations</source>
+        <target>autorisaties bekijken</target>
+      </trans-unit>
+      <trans-unit id="pxjjb8m" resname="There are still authorizations on this claim!">
+        <source>There are still authorizations on this claim!</source>
+        <target>Er zijn nog autorisaties op deze claim!</target>
+      </trans-unit>
+      <trans-unit id="LsyWSou" resname="Are you sure you want to delete this claim?">
+        <source>Are you sure you want to delete this claim?</source>
+        <target>Weet u zeker dat u deze claim wilt verwijderen?</target>
+      </trans-unit>
+      <trans-unit id="JxwOJkn" resname="There are still dossiers on this authorization!">
+        <source>There are still dossiers on this authorization!</source>
+        <target>Er zijn nog dossiers op deze autorisatie!</target>
+      </trans-unit>
+      <trans-unit id="S9wfYiD" resname="Are you sure you want to delete this authorization?">
+        <source>Are you sure you want to delete this authorization?</source>
+        <target>Weet u zeker dat u deze autorisatie wilt verwijderen?</target>
+      </trans-unit>
+      <trans-unit id="UGG5OgW" resname="this authorization has no application!">
+        <source>this authorization has no application!</source>
+        <target>deze autorisatie heeft geen applicatie!</target>
+      </trans-unit>
+      <trans-unit id="LiWSJcv" resname="You cannot delete this dossier because of legal reasons!">
+        <source>You cannot delete this dossier because of legal reasons!</source>
+        <target>U kunt dit dossier om juridische redenen niet verwijderen!</target>
+      </trans-unit>
+      <trans-unit id="5N0Ep7z" resname="Are you sure you want to delete this dossier?">
+        <source>Are you sure you want to delete this dossier?</source>
+        <target>Weet u zeker dat u dit dossier wilt verwijderen?</target>
+      </trans-unit>
+      <trans-unit id="pauBzKJ" resname="view dossier">
+        <source>view dossier</source>
+        <target>dossier bekijken</target>
+      </trans-unit>
+      <trans-unit id="oHFRTN5" resname="view dossiers">
+        <source>view dossiers</source>
+        <target>dossiers bekijken</target>
+      </trans-unit>
+      <trans-unit id="PeyX35A" resname="no authorizations available">
+        <source>no authorizations available</source>
+        <target>geen autorisaties beschikbaar</target>
+      </trans-unit>
+      <trans-unit id="f4cDNzC" resname="no logs available">
+        <source>no logs available</source>
+        <target>geen logs beschikbaar</target>
+      </trans-unit>
+      <trans-unit id="o53kFeO" resname="no dossiers available">
+        <source>no dossiers available</source>
+        <target>geen dossiers beschikbaar</target>
+      </trans-unit>
+      <trans-unit id="vU57owd" resname="dossier">
+        <source>dossier</source>
+        <target>dossier</target>
+      </trans-unit>
+      <trans-unit id="bqIZyWo" resname="dossiers">
+        <source>dossiers</source>
+        <target>dossiers</target>
+      </trans-unit>
+      <trans-unit id="Y330gub" resname="this is a dossier on this authorization:">
+        <source>this is a dossier on this authorization:</source>
+        <target>dit is een dossier op deze autorisatie:</target>
+      </trans-unit>
+      <trans-unit id="x72mEYC" resname="this are the authorizations on this claim:">
+        <source>this are the authorizations on this claim:</source>
+        <target>dit zijn de autorisaties op deze claim:</target>
+      </trans-unit>
+      <trans-unit id="ocXBgif" resname="this are the dossiers on this authorization:">
+        <source>this are the dossiers on this authorization:</source>
+        <target>dit zijn de dossiers op deze autorisatie:</target>
+      </trans-unit>
+      <trans-unit id="D_rhbVU" resname="general">
         <source>general</source>
         <target>algemeen</target>
       </trans-unit>
@@ -181,21 +305,29 @@
         <source>basic information</source>
         <target>basis informatie</target>
       </trans-unit>
-      <trans-unit id="Xnff1qp" resname="become a developer!">
+      <trans-unit id="Pnh8r_r" resname="become a developer!">
         <source>become a developer!</source>
         <target>word ontwikkelaar!</target>
       </trans-unit>
-      <trans-unit id="b92VYGa" resname="Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.">
-        <source>Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is turn on the developer view, you can do that by using the slider in your personal settings or by pressing this button.</source>
-        <target>Ben je een ontwikkelaar van applicaties? En jeuken je handen om aan de slag te gaan met id-vault? Dan is het enige wat je hoeft te doen de ontwikkelaars weergave aanzetten, dat kan je doen moet het schuifje in je persoonlijke instellingen of door op deze knop te drukken.</target>
+      <trans-unit id="e7G5UTV" resname="Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is become a developer by pressing this button and turn on the developer view after that by using the slider in your personal settings.">
+        <source>Are you an application developer? And are your hands itching to get started with id-vault? Then all you have to do is become a developer by pressing this button and turn on the developer view after that by using the slider in your personal settings.</source>
+        <target>Ben je een ontwikkelaar van applicaties? En jeuken je handen om aan de slag te gaan met id-vault? Dan is het enige wat je hoeft te doen ontwikkelaar worden door op deze knop te drukken en ontwikkelaars weergave aan te zetten met het schuifje in je persoonlijke instellingen.</target>
       </trans-unit>
-      <trans-unit id="zhdiace" resname="view usage">
+      <trans-unit id="K4KgXGQ" resname="view usage">
         <source>view usage</source>
         <target>gebruik inzien</target>
       </trans-unit>
-      <trans-unit id="mTPq2tC" resname="end contract">
-        <source>end contract</source>
-        <target>contract beëindigen</target>
+      <trans-unit id="SPmU4AJ" resname="view usage_2">
+        <source>view usage_2</source>
+        <target>gebruik bekijken</target>
+      </trans-unit>
+      <trans-unit id="ep_pgH3" resname="end authorization">
+        <source>end authorization</source>
+        <target>autorisatie beëindigen</target>
+      </trans-unit>
+      <trans-unit id="Pc2VX3X" resname="delete dossier">
+        <source>delete dossier</source>
+        <target>dossier verwijderen</target>
       </trans-unit>
       <trans-unit id="qDoxMg2" resname="resume">
         <source>resume</source>
@@ -447,7 +579,7 @@
       </trans-unit>
       <trans-unit id="h3gPpd5" resname="register">
         <source>register</source>
-        <target>aanmelden</target>
+        <target>registreren</target>
       </trans-unit>
       <trans-unit id="CxGYhAj" resname="for citizen">
         <source>for citizen</source>
@@ -717,6 +849,14 @@
         <source>read more</source>
         <target>meer lezen</target>
       </trans-unit>
+      <trans-unit id="dln3wzQ" resname="read more_2">
+        <source>read more_2</source>
+        <target>lees meer</target>
+      </trans-unit>
+      <trans-unit id="dPooEZY" resname="read more about scopes">
+        <source>read more about scopes</source>
+        <target>lees meer over scopes</target>
+      </trans-unit>
       <trans-unit id="PEgjRvN" resname="back">
         <source>back</source>
         <target>terug</target>
@@ -817,11 +957,11 @@
         <source>organizations</source>
         <target>organisaties</target>
       </trans-unit>
-      <trans-unit id="rdEelFO" resname="applications">
+      <trans-unit id=".VTlqC4" resname="applications">
         <source>applications</source>
         <target>applicaties</target>
       </trans-unit>
-      <trans-unit id="JBcFHV7" resname="documentation">
+      <trans-unit id="yvn5BrF" resname="documentation">
         <source>documentation</source>
         <target>documentatie</target>
       </trans-unit>
@@ -829,15 +969,15 @@
         <source>new</source>
         <target>nieuw</target>
       </trans-unit>
-      <trans-unit id="rLIFg9y" resname="no organizations available">
+      <trans-unit id="XZU7vso" resname="no organizations available">
         <source>no organizations available</source>
         <target>geen organisaties beschikbaar</target>
       </trans-unit>
-      <trans-unit id="krBI52J" resname="no applications available">
+      <trans-unit id="NUxmLWT" resname="no applications available">
         <source>no applications available</source>
         <target>geen applicaties beschikbaar</target>
       </trans-unit>
-      <trans-unit id="dRTIT9E" resname="developer view">
+      <trans-unit id="j1SayIl" resname="developer view">
         <source>developer view</source>
         <target>ontwikkelaars weergave</target>
       </trans-unit>
@@ -920,6 +1060,18 @@
       <trans-unit id="NFa6QMk" resname="www.horeca-name.nl">
         <source>www.horeca-name.nl</source>
         <target>www.horeca-naam.nl</target>
+      </trans-unit>
+      <trans-unit id="nNfvp7z" resname="www.application-name.nl">
+        <source>www.application-name.nl</source>
+        <target>www.applicatie-naam.nl</target>
+      </trans-unit>
+      <trans-unit id="gMY1gFU" resname="www.application-name.nl/page-name">
+        <source>www.application-name.nl/page-name</source>
+        <target>www.applicatie-naam.nl/pagina-naam</target>
+      </trans-unit>
+      <trans-unit id="8v_Dhgp" resname="domain">
+        <source>domain</source>
+        <target>domein</target>
       </trans-unit>
       <trans-unit id="QZbttrP" resname="This is the webpage that customers will be redirected to after a successful check-in.">
         <source>This is the webpage that customers will be redirected to after a successful check-in.</source>
@@ -1233,6 +1385,10 @@
         <source>forgot password</source>
         <target>wachtwoord vergeten</target>
       </trans-unit>
+      <trans-unit id="2E3HPNj" resname="forgot your password?">
+        <source>forgot your password?</source>
+        <target>je wachtwoord vergeten?</target>
+      </trans-unit>
       <trans-unit id="5cf.rCb" resname="click">
         <source>click</source>
         <target>klik</target>
@@ -1245,7 +1401,7 @@
         <source>to change your password</source>
         <target>om uw wachtwoord te wijzigen</target>
       </trans-unit>
-      <trans-unit id="6FehZBm" resname="to login">
+      <trans-unit id="Afpzh5U" resname="to login">
         <source>to login</source>
         <target>om in te loggen</target>
       </trans-unit>
@@ -1343,7 +1499,7 @@
       </trans-unit>
       <trans-unit id="pcfRcZ4" resname="month">
         <source>month</source>
-        <target>__month</target>
+        <target>maand</target>
       </trans-unit>
       <trans-unit id="ZqQkqal" resname="every">
         <source>every</source>
@@ -1376,6 +1532,14 @@
       <trans-unit id="idUPqG8" resname="new password">
         <source>new password</source>
         <target>nieuw wachtwoord</target>
+      </trans-unit>
+      <trans-unit id="U0xWDbF" resname="new username">
+        <source>new username</source>
+        <target>nieuwe gebruikersnaam</target>
+      </trans-unit>
+      <trans-unit id="XqLsoLi" resname="current username">
+        <source>current username</source>
+        <target>huidige gebruikersnaam</target>
       </trans-unit>
       <trans-unit id="txDKmt0" resname="your password has been reset">
         <source>your password has been reset</source>
@@ -1485,6 +1649,18 @@
         <source>repeat password</source>
         <target>herhaal wachtwoord</target>
       </trans-unit>
+      <trans-unit id="nJ7X5Sm" resname="confirm password">
+        <source>confirm password</source>
+        <target>bevestig wachtwoord</target>
+      </trans-unit>
+      <trans-unit id="NNd.6cm" resname="update password">
+        <source>update password</source>
+        <target>wachtwoord wijzigen</target>
+      </trans-unit>
+      <trans-unit id="86gQRRr" resname="update username">
+        <source>update username</source>
+        <target>gebruikersnaam wijzigen</target>
+      </trans-unit>
       <trans-unit id="rmgdyVm" resname="passwords dont match">
         <source>passwords dont match</source>
         <target>wachtwoorden komen niet overeen</target>
@@ -1523,7 +1699,7 @@
       </trans-unit>
       <trans-unit id="lFniS0w" resname="checkins">
         <source>checkins</source>
-        <target>__checkins</target>
+        <target>checkins</target>
       </trans-unit>
       <trans-unit id="pMxrwBq" resname="privacy">
         <source>privacy</source>
@@ -1661,9 +1837,314 @@
         <source>back to safety</source>
         <target>back to safety</target>
       </trans-unit>
-      <trans-unit id="ckvw2St" resname="no claims available">
-        <source>no claims available</source>
-        <target>__no claims available</target>
+      <trans-unit id="rLIFg9y" resname="no organizations">
+        <source>no organizations</source>
+        <target>geen organisaties</target>
+      </trans-unit>
+      <trans-unit id="h1uTgIZ" resname="development">
+        <source>development</source>
+        <target>ontwikkeling</target>
+      </trans-unit>
+      <trans-unit id="rZXV_mU" resname="free">
+        <source>free</source>
+        <target>gratis</target>
+      </trans-unit>
+      <trans-unit id="46yqBsy" resname="email us">
+        <source>email us</source>
+        <target>mail ons</target>
+      </trans-unit>
+      <trans-unit id="Y9wL1uo" resname="take control">
+        <source>take control</source>
+        <target>take control</target>
+      </trans-unit>
+      <trans-unit id="iMUF5FS" resname="take your data">
+        <source>take your data</source>
+        <target>take your data</target>
+      </trans-unit>
+      <trans-unit id="hJbA0qI" resname="authenticate users via oauth">
+        <source>authenticate users via oauth</source>
+        <target>gebruikers authenticeren via oauth</target>
+      </trans-unit>
+      <trans-unit id="7ZfaMBm" resname="basic data">
+        <source>basic data</source>
+        <target>basis gegevens</target>
+      </trans-unit>
+      <trans-unit id="lEC_gte" resname="access to the basic user data">
+        <source>access to the basic user data</source>
+        <target>toegang to basis gebruikers gegevens</target>
+      </trans-unit>
+      <trans-unit id="25354Dy" resname="SAML / Active Directory">
+        <source>SAML / Active Directory</source>
+        <target>SAML / Active Directory</target>
+      </trans-unit>
+      <trans-unit id="IlSdG6f" resname="short text">
+        <source>short text</source>
+        <target>short text</target>
+      </trans-unit>
+      <trans-unit id="KvaKJqc" resname="certain claims for data">
+        <source>certain claims for data</source>
+        <target>bepaalde claims voor gegevens</target>
+      </trans-unit>
+      <trans-unit id="_GG5w.K" resname="for example: IDIN, IDeal or phone number">
+        <source>for example: IDIN, IDeal or phone number</source>
+        <target>bijvoorbeeld: IDIN, IDeal of telefoonnummer</target>
+      </trans-unit>
+      <trans-unit id="h61KHva" resname="how does it work">
+        <source>how does it work</source>
+        <target>hoe werkt het</target>
+      </trans-unit>
+      <trans-unit id="4S3IzMF" resname="technics">
+        <source>technics</source>
+        <target>techniek</target>
+      </trans-unit>
+      <trans-unit id="NJt7gGk" resname="terminology">
+        <source>terminology</source>
+        <target>terminologie</target>
+      </trans-unit>
+      <trans-unit id="kAjnxY_" resname="terminology for id-vault">
+        <source>terminology for id-vault</source>
+        <target>terminologie voor id-vault</target>
+      </trans-unit>
+      <trans-unit id="Up8OX0d" resname="terms of service">
+        <source>terms of service</source>
+        <target>algemene voorwaarden</target>
+      </trans-unit>
+      <trans-unit id="6P1yk37" resname="add new">
+        <source>add new</source>
+        <target>toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Rt_JKGd" resname="add organization">
+        <source>add organization</source>
+        <target>organisatie toevoegen</target>
+      </trans-unit>
+      <trans-unit id="_Q7ud4u" resname="choose logo">
+        <source>choose logo</source>
+        <target>kies logo</target>
+      </trans-unit>
+      <trans-unit id="MzUTmF9" resname="add developer">
+        <source>add developer</source>
+        <target>developer toevoegen</target>
+      </trans-unit>
+      <trans-unit id="USch23n" resname="add application">
+        <source>add application</source>
+        <target>applicatie toevoegen</target>
+      </trans-unit>
+      <trans-unit id="zXn19Gz" resname="i agree to the">
+        <source>i agree to the</source>
+        <target>ik ga akkoord met de</target>
+      </trans-unit>
+      <trans-unit id="Tt5IBaB" resname="terms and services">
+        <source>terms and services</source>
+        <target>algemene voorwaarden</target>
+      </trans-unit>
+      <trans-unit id="CuZtPJt" resname="add payment method">
+        <source>add payment method</source>
+        <target>betaal methode toevoegen</target>
+      </trans-unit>
+      <trans-unit id="WNpsN.o" resname="card number">
+        <source>card number</source>
+        <target>kaartnummer</target>
+      </trans-unit>
+      <trans-unit id="2a_h9qz" resname="payment methods">
+        <source>payment methods</source>
+        <target>betaal methodes</target>
+      </trans-unit>
+      <trans-unit id="XcjaL9_" resname="This project has been set up to help students find internships, challenge and tutorials that they can do from the comforts of their home">
+        <source>This project has been set up to help students find internships, challenge and tutorials that they can do from the comforts of their home</source>
+        <target>Dit project is opgezet zodat studenten in staat zijn om online stage plaatsen, challenges en tutorials te vinden</target>
+      </trans-unit>
+      <trans-unit id="ZfjpwS5" resname="add claim">
+        <source>add claim</source>
+        <target>claim toevoegen</target>
+      </trans-unit>
+      <trans-unit id="Zs2WiKK" resname="dashboard">
+        <source>dashboard</source>
+        <target>dashboard</target>
+      </trans-unit>
+      <trans-unit id="FvlNPAE" resname="boss and owner of your own data">
+        <source>boss and owner of your own data</source>
+        <target>baas én eigenaar van je eigen gegeven</target>
+      </trans-unit>
+      <trans-unit id="H9xv84b" resname="Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data.">
+        <source>Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data.</source>
+        <target>Id-vault is een plek waar je veilig je data online op kan slaan.
+                   Jij blijft de baas over je gegevens en bepaald ten allertijden wie er bij kan.</target>
+      </trans-unit>
+      <trans-unit id="Omh9HAZ" resname="the application is requesting the following scopes from you">
+        <source>the application is requesting the following scopes from you</source>
+        <target>de applicatie vraagt de volgende scopes van u</target>
+      </trans-unit>
+      <trans-unit id="1b3h_Ot" resname="log in to continue">
+        <source>log in to continue</source>
+        <target>log in om door te gaan</target>
+      </trans-unit>
+      <trans-unit id="wSXQOXt" resname="accept">
+        <source>accept</source>
+        <target>accepteren</target>
+      </trans-unit>
+      <trans-unit id=".V_MvtP" resname="decline">
+        <source>decline</source>
+        <target>afwijzen</target>
+      </trans-unit>
+      <trans-unit id="TK0XkQv" resname="conduction">
+        <source>conduction</source>
+        <target>conduction</target>
+      </trans-unit>
+      <trans-unit id="lEwn5bl" resname="day">
+        <source>day</source>
+        <target>dag</target>
+      </trans-unit>
+      <trans-unit id="bfN9qqR" resname="week">
+        <source>week</source>
+        <target>week</target>
+      </trans-unit>
+      <trans-unit id="FrYOneY" resname="quarter">
+        <source>quarter</source>
+        <target>kwartaal</target>
+      </trans-unit>
+      <trans-unit id="TLTqJVg" resname="year">
+        <source>year</source>
+        <target>jaar</target>
+      </trans-unit>
+      <trans-unit id="UR28jOS" resname="view authorization">
+        <source>view authorization</source>
+        <target>bekijk authorisatie</target>
+      </trans-unit>
+      <trans-unit id=".GdDtrG" resname="name@provider.com">
+        <source>name@provider.com</source>
+        <target>naam@provider.com</target>
+      </trans-unit>
+      <trans-unit id="mPOPEts" resname="logs">
+        <source>logs</source>
+        <target>logs</target>
+      </trans-unit>
+      <trans-unit id="N7DDRa4" resname="for organizations">
+        <source>for organizations</source>
+        <target>Voor organisaties</target>
+      </trans-unit>
+      <trans-unit id="3Rs8MSz" resname="claim">
+        <source>claim</source>
+        <target>claim</target>
+      </trans-unit>
+      <trans-unit id="EMIrz0x" resname="for">
+        <source>for</source>
+        <target>voor</target>
+      </trans-unit>
+      <trans-unit id="zIMh1jd" resname="contract">
+        <source>contract</source>
+        <target>contract</target>
+      </trans-unit>
+      <trans-unit id="y7guvsY" resname="authorization">
+        <source>authorization</source>
+        <target>autorisatie</target>
+      </trans-unit>
+      <trans-unit id="hmKz7z4" resname="authorization url">
+        <source>authorization url</source>
+        <target>autorisatie url</target>
+      </trans-unit>
+      <trans-unit id="Ab4wu0o" resname="reset">
+        <source>reset</source>
+        <target>resetten</target>
+      </trans-unit>
+      <trans-unit id="ZYrfjXM" resname="password reset">
+        <source>password reset</source>
+        <target>wachtwoord resetten</target>
+      </trans-unit>
+      <trans-unit id="QmzIxNK" resname="change password">
+        <source>change password</source>
+        <target>wachtwoord wijzigen</target>
+      </trans-unit>
+      <trans-unit id="W6xJAaL" resname="password has been changed">
+        <source>password has been changed</source>
+        <target>wachtwoord is gewijzigd</target>
+      </trans-unit>
+      <trans-unit id="YjL8wi6" resname="enter your email address to reset your password">
+        <source>enter your email address to reset your password</source>
+        <target>voer uw email adres in om uw wachtwoord te resetten</target>
+      </trans-unit>
+      <trans-unit id="8hGtqC1" resname="reset password">
+        <source>reset password</source>
+        <target>wachtwoord resetten</target>
+      </trans-unit>
+      <trans-unit id="EVKkiQb" resname="remember your password">
+        <source>remember your password</source>
+        <target>weet u uw wachtwoord</target>
+      </trans-unit>
+      <trans-unit id="D699o9R" resname="getting started">
+        <source>getting started</source>
+        <target>getting started</target>
+      </trans-unit>
+      <trans-unit id="09tTOKr" resname="introduction">
+        <source>introduction</source>
+        <target>introductie</target>
+      </trans-unit>
+      <trans-unit id=".jADDhA" resname="tutorial">
+        <source>tutorial</source>
+        <target>tutorial</target>
+      </trans-unit>
+      <trans-unit id="P13LRtQ" resname="glossary">
+        <source>glossary</source>
+        <target>glossary</target>
+      </trans-unit>
+      <trans-unit id="TKMDo79" resname="architecture">
+        <source>architecture</source>
+        <target>architecture</target>
+      </trans-unit>
+      <trans-unit id="VrNmnDo" resname="scopes">
+        <source>scopes</source>
+        <target>scopes</target>
+      </trans-unit>
+      <trans-unit id="ks0Q5ri" resname="plugins">
+        <source>plugins</source>
+        <target>plugins</target>
+      </trans-unit>
+      <trans-unit id="PeFYBJD" resname="roadmap">
+        <source>roadmap</source>
+        <target>roadmap</target>
+      </trans-unit>
+      <trans-unit id="CjKrGvt" resname="closed betá">
+        <source>closed betá</source>
+        <target>closed betá</target>
+      </trans-unit>
+      <trans-unit id="pwjfksn" resname="legal">
+        <source>legal</source>
+        <target>legaal</target>
+      </trans-unit>
+      <trans-unit id="Fz9fnya" resname="Terms &amp; Conditions">
+        <source>Terms &amp; Conditions</source>
+        <target>voorwaarden &amp; regels</target>
+      </trans-unit>
+      <trans-unit id="VKV8MUf" resname="Privacy">
+        <source>Privacy</source>
+        <target>Privacy</target>
+      </trans-unit>
+      <trans-unit id="5y5cXUJ" resname="quick menu">
+        <source>quick menu</source>
+        <target>quick menu</target>
+      </trans-unit>
+      <trans-unit id="pCYuHJv" resname="about">
+        <source>about</source>
+        <target>over</target>
+      </trans-unit>
+      <trans-unit id="8N_1KZw" resname="terms &amp; conditions">
+        <source>terms &amp; conditions</source>
+        <target>voorwaarden &amp; regels</target>
+      </trans-unit>
+      <trans-unit id="bzv7gUZ" resname="dive into the action">
+        <source>dive into the action</source>
+        <target>duik in de actie</target>
+      </trans-unit>
+      <trans-unit id="S0kYZZ2" resname="libaries">
+        <source>libaries</source>
+        <target>libaries</target>
+      </trans-unit>
+      <trans-unit id="zFhuDyW" resname="websites">
+        <source>websites</source>
+        <target>websites</target>
+      </trans-unit>
+      <trans-unit id="y.PzGJJ" resname="user acounts">
+        <source>user acounts</source>
+        <target>gebruiker accounts</target>
       </trans-unit>
     </body>
   </file>

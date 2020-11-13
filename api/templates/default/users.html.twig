@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <!-- WELCOME
+      ================================================== -->
+    <section class="py-10 py-md-14 bg-primary" id="welcome">
+
+        <!-- Shape -->
+        <div class="shape shape-blur-3 svg-shim text-white">
+            <svg viewBox="0 0 1738 487" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1420.92s713.43 457.505 0 485.868C707.502 514.231 0 0 0 0z" fill="url(#paint0_linear)"/><defs><linearGradient id="paint0_linear" x1="0" y1="0" x2="1049.98" y2="912.68" gradientUnits="userSpaceOnUse"><stop stop-color="currentColor" stop-opacity=".075"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs></svg>
+        </div>
+
+        <!-- Content -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                    <!-- Heading -->
+                    <h1 class="display-2 font-weight-bold text-white">
+                        <span data-toggle="typed" data-options='{"strings": ["{{ 'take control'|trans|capitalize }}","{{ 'take your data'|trans|capitalize }}"]}'></span>
+                    </h1>
+
+                    <!-- Text -->
+                    <p class="lead text-white mb-8">
+                        Your data belongs to you, lets take it back.
+                    </p>
+
+                    <!-- Button -->
+                    <a href="#register" class="btn btn-white shadow lift" data-toggle="smooth-scroll" data-offset="0">
+                        Create your acount
+                    </a>
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+
+    </section>
+
+    <!-- SHAPE
+    ================================================== -->
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/></svg>
+        </div>
+    </div>
+
+    <!-- ABOUT
+    ================================================== -->
+    <section class="pt-8 pt-md-10" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+
+                    <!-- Button -->
+                    <a href="#about" class="btn btn-white btn-rounded-circle shadow mt-n12 mt-md-n14" data-toggle="smooth-scroll">
+                        <i class="fe fe-arrow-down"></i>
+                    </a>
+
+                </div>
+            </div> <!-- / .row -->
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+
+                    <!-- Heading -->
+                    <h2 class="font-weight-bold">
+                        The hub for your <span class="text-primary">online identity</span>.
+                    </h2>
+
+                    <!-- Text -->
+                    <p class="font-size-lg text-muted mb-9">
+                        id-vault gives you an unprecedented amount of control on your personal data, it combines the widely accepted engineering under the famous login with google or facebook buttons with the exciting technology of blockchain wallets.
+                    </p>
+
+                </div>
+            </div> <!-- / .row -->
+            <div class="row">
+                <div class="col-12 col-lg-6">
+
+                    <!-- Item -->
+                    <div class="row align-items-center mb-8"data-aos="fade-up">
+                        <div class="col-4 col-lg-5">
+
+                            <!-- Image -->
+                            <img src="/images/user_data.svg" alt="..." class="img-fluid">
+
+                        </div>
+                        <div class="col-8 col-lg-7">
+
+                            <!-- Heading -->
+                            <h3 class="font-weight-bold mb-2">
+                                Own your own data
+                            </h3>
+
+                            <!-- Text -->
+                            <p class="text-gray-700 mb-0">
+                                On the id-vault platform you own your data, not us, not some big social firm, not the site’s you visit but you are the owner and master.
+                            </p>
+
+                        </div>
+                    </div> <!-- / .row -->
+
+                    <!-- Item -->
+                    <div class="row align-items-center mb-8" data-aos="fade-up">
+                        <div class="col-4 col-lg-5">
+
+                            <!-- Image -->
+                            <img src="/images/user_identity.svg" alt="..." class="img-fluid">
+
+                        </div>
+                        <div class="col-8 col-lg-7">
+
+                            <!-- Heading -->
+                            <h3 class="font-weight-bold mb-2">
+                                Widely accepted login
+                            </h3>
+
+                            <!-- Text -->
+                            <p class="text-gray-700 mb-0">
+                                id-vault support both OAuth and OpenId Connect allowing you to login to over a thousand websites without creating accounts there.
+                            </p>
+
+                        </div>
+                    </div> <!-- / .row -->
+
+
+                </div>
+                <div class="col-12 col-lg-6">
+                    <!-- Item -->
+                    <div class="row align-items-center mb-8" data-aos="fade-up">
+                        <div class="col-4 col-lg-5">
+
+                            <!-- Image -->
+                            <img src="/images/user_person.svg" alt="..." class="img-fluid">
+
+                        </div>
+                        <div class="col-8 col-lg-7">
+
+                            <!-- Heading -->
+                            <h3 class="font-weight-bold mb-2">
+                                Share access instead of data
+                            </h3>
+
+                            <!-- Text -->
+                            <p class="text-gray-700 mb-0">
+                                Allow applications to look into your data “wallet” instead of transfering the data to them, keeping a firm grasp on who has what.
+                            </p>
+
+                        </div>
+                    </div> <!-- / .row -->
+
+                    <!-- Item -->
+                    <div class="row align-items-center mb-8" data-aos="fade-up">
+                        <div class="col-4 col-lg-5">
+
+                            <!-- Image -->
+                            <img src="/images/user_logs.svg" alt="..." class="img-fluid">
+
+                        </div>
+                        <div class="col-8 col-lg-7">
+
+                            <!-- Heading -->
+                            <h3 class="font-weight-bold mb-2">
+                                See who access your data
+                            </h3>
+
+                            <!-- Text -->
+                            <p class="text-gray-700 mb-0">
+                                View detailed logs on which organization and application accessed what part of your dataset and for what reason.
+                            </p>
+
+                        </div>
+                    </div> <!-- / .row -->
+
+                </div>
+            </div> <!-- / .row -->
+        </div> <!-- / .container -->
+    </section>
+
+    <!-- registration section -->
+    {% include 'landkit/registration-section.html.twig' %}
+{% endblock %}

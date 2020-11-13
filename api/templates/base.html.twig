@@ -17,6 +17,20 @@
     <link rel="stylesheet" href="/bundles/landkit/libs/jarallax/dist/jarallax.css">
     <link rel="stylesheet" href="/bundles/landkit/libs/quill/dist/quill.core.css" />
 
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/be1c31fb58.js" crossorigin="anonymous"></script>
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+    <!-- chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+
     <style>
         @font-face {
             font-family: "HKGroteskPro";
@@ -40,14 +54,16 @@
 </head>
 <body>
 <!-- MENU -->
-{% include 'landkit/menu.html.twig' %}
+{% if noMenu is not defined %}
+    {% include 'landkit/menu.html.twig' %}
+{% endif %}
 
 {% set flashes = [] %}
 {% for label, messages in app.flashes() %}
     {% for message in messages %}
         {% if message not in flashes %}
         {% set flashes = flashes|merge([message]) %}
-        <div class="alert alert-{{ label }} rounded-0 mb-0">
+        <div class="alert alert-{% if label == 'error' %}{% set label = 'danger' %}{% endif %}{{ label }} rounded-0 mb-0">
             <div class="container-md">
                 <div class="row">
                     <div class="col-12">
