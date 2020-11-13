@@ -2906,73 +2906,7 @@ paths:
                   $ref: '#/components/schemas/SendList-read'
       parameters:
         -
-          name: mail
-          in: query
-          required: false
-          schema:
-            type: boolean
-        -
-          name: phone
-          in: query
-          required: false
-          schema:
-            type: boolean
-        -
           name: 'order[id]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[resource]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[name]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[description]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[mail]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[phone]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[result]'
           in: query
           required: false
           schema:
@@ -3061,102 +2995,6 @@ paths:
             items:
               type: string
           style: form
-          explode: true
-        -
-          name: resource
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'resource[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'name[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: mail
-          in: query
-          required: false
-          schema:
-            type: boolean
-        -
-          name: 'mail[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: boolean
-          style: form
-          explode: true
-        -
-          name: phone
-          in: query
-          required: false
-          schema:
-            type: boolean
-        -
-          name: 'phone[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: boolean
-          style: form
-          explode: true
-        -
-          name: result
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'result[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: deepObject
           explode: true
         -
           name: dateCreated
@@ -4327,14 +4165,12 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-          nullable: true
         name:
           description: 'The name of this SendList.'
           type: string
         description:
           description: 'The description of this SendList.'
           type: string
-          nullable: true
         mail:
           description: 'True if this is an mailing list.'
           type: boolean
@@ -4346,7 +4182,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
         dateCreated:
           description: 'The moment this claim was created'
           type: string
@@ -4357,8 +4192,6 @@ components:
           type: string
           format: date-time
           nullable: true
-      required:
-        - name
     SendList-write:
       type: object
       description: ''
@@ -4368,14 +4201,12 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-          nullable: true
         name:
           description: 'The name of this SendList.'
           type: string
         description:
           description: 'The description of this SendList.'
           type: string
-          nullable: true
         mail:
           description: 'True if this is an mailing list.'
           type: boolean
@@ -4385,8 +4216,6 @@ components:
         clientSecret:
           description: 'The secret of your application'
           type: string
-      required:
-        - name
     'SendList:jsonld-read':
       type: object
       description: ''
@@ -4412,14 +4241,12 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-          nullable: true
         name:
           description: 'The name of this SendList.'
           type: string
         description:
           description: 'The description of this SendList.'
           type: string
-          nullable: true
         mail:
           description: 'True if this is an mailing list.'
           type: boolean
@@ -4431,7 +4258,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
         dateCreated:
           description: 'The moment this claim was created'
           type: string
@@ -4442,8 +4268,6 @@ components:
           type: string
           format: date-time
           nullable: true
-      required:
-        - name
     'SendList:jsonld-write':
       type: object
       description: ''
@@ -4462,14 +4286,12 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-          nullable: true
         name:
           description: 'The name of this SendList.'
           type: string
         description:
           description: 'The description of this SendList.'
           type: string
-          nullable: true
         mail:
           description: 'True if this is an mailing list.'
           type: boolean
@@ -4479,8 +4301,6 @@ components:
         clientSecret:
           description: 'The secret of your application'
           type: string
-      required:
-        - name
 definitions:
   AccessToken-read:
     properties:
@@ -4504,67 +4324,13 @@ definitions:
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
-      resource:
-        description: 'A BS/SendList resource'
-        type: string
-        format: url
-        maxLength: 255
-      name:
-        description: 'The name of this SendList.'
-        type: string
-        example: 'News email'
-        maxLength: 255
-      description:
-        description: 'The description of this SendList.'
-        type: string
-        example: 'Mailing list for sending news'
-        maxLength: 255
-      mail:
-        description: 'True if this is an mailing list.'
-        type: bool
-        example: 'true'
-      phone:
-        description: 'True if this is an phone list.'
-        type: bool
-        example: 'true'
-      result:
-        description: 'The result'
-        type: array
       dateCreated:
         description: 'The moment this claim was created'
         type: \Datetime
       dateModified:
         description: 'The moment this claim was last Modified'
         type: \Datetime
-    required:
-      - name
-  SendList-write:
-    properties:
-      resource:
-        description: 'A BS/SendList resource'
-        type: string
-        format: url
-        maxLength: 255
-      name:
-        description: 'The name of this SendList.'
-        type: string
-        example: 'News email'
-        maxLength: 255
-      description:
-        description: 'The description of this SendList.'
-        type: string
-        example: 'Mailing list for sending news'
-        maxLength: 255
-      mail:
-        description: 'True if this is an mailing list.'
-        type: bool
-        example: 'true'
-      phone:
-        description: 'True if this is an phone list.'
-        type: bool
-        example: 'true'
-    required:
-      - name
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -4669,12 +4435,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-13 15:45:10'
+        example: '2020-11-13 18:52:50'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-13 15:45:10'
+        example: '2020-11-13 18:52:50'
     required: []
   AuditTrail-write:
     properties:
@@ -4722,12 +4488,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-13 15:45:10'
+        example: '2020-11-13 18:52:50'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-13 15:45:10'
+        example: '2020-11-13 18:52:50'
     required: []
   ChangeLog-write:
     properties:
