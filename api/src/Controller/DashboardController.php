@@ -51,7 +51,7 @@ class DashboardController extends AbstractController
             $name = $request->get('name');
             $email = $request->get('email');
 
-            // Update the cc/person of this user
+            // Update (or create) the cc/person of this user
             $person = $variables['person'];
             $person['name'] = $name;
             $person['emails'][0] = [];
@@ -69,8 +69,18 @@ class DashboardController extends AbstractController
             $address['locality'] = $request->get('locality');
             $person['adresses'][0] = $address;
 
-            // If this user has no person this should be saveResource and the user.person should be set to this $person?
-            $commonGroundService->updateResource($person);
+            $person = $commonGroundService->saveResource($person, ['component'=>'cc', 'type'=>'people']);
+
+            // If this user has no person the user.person should be set to this $person?
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+
+                if (!isset($user['person'])) {
+                    $user['person'] = $commonGroundService->cleanUrl(['component'=>'cc', 'type'=>'people', 'id'=>$person['id']]);
+                    $commonGroundService->updateResource($user);
+                }
+            }
 
             return $this->redirect($this->generateUrl('app_dashboard_general'));
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
