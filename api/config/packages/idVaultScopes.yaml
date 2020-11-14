@@ -1,0 +1,60 @@
+parameters:
+    scopes:
+        schema:
+            person:
+                birthPlace:
+                    location:
+                        component: cc
+                        type: people
+                        property: birthPlace
+                birthday:
+                    location:
+                        component: cc
+                        type: people
+                        property: birthday
+                address:
+                    location:
+                        component: cc
+                        type: people
+                        property:
+                            name: adresses
+                            subType: array
+                            type: array
+                telephone:
+                    location:
+                        component: cc
+                        type: people
+                        property:
+                            name: telephones
+                            type: array
+                            subType: array
+                            key: telephone
+                email:
+                    location:
+                        component: uc
+                        type: users
+                        property: username
+                family_name:
+                    location:
+                        component: cc
+                        type: people
+                        property: familyName
+                given_name:
+                    location:
+                        component: cc
+                        type: people
+                        property: givenName
+                image:
+                taxID:
+                    location:
+                        component: cc
+                        type: people
+                        property: taxID
+                    source: "%env(APP_DIGISPOOF_LOCATION)%"
+            organization:
+                vatID:
+                    location:
+                        component: wrc
+                        type: organizations
+                        property: vatID
+

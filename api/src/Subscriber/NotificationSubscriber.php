@@ -2,9 +2,9 @@
 
 namespace App\Subscriber;
 
+use App\Service\NotificationService;
 use Conduction\CommonGroundBundle\Event\CommonGroundEvents;
 use Conduction\CommonGroundBundle\Event\CommongroundUpdateEvent;
-use App\Service\NotificationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class NotificationSubscriber implements EventSubscriberInterface
@@ -20,8 +20,8 @@ class NotificationSubscriber implements EventSubscriberInterface
     {
         return [
             CommonGroundEvents::SAVE  => 'save',
-//            CommonGroundEvents::CREATE  => 'create',
-//            CommonGroundEvents::CREATED => 'created',
+            //            CommonGroundEvents::CREATE  => 'create',
+            //            CommonGroundEvents::CREATED => 'created',
         ];
     }
 

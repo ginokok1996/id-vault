@@ -5,10 +5,10 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\Security;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Client;
 
 class NotificationService
 {
@@ -16,7 +16,6 @@ class NotificationService
      * @var Security
      */
     private $security;
-
 
     private $commonGroundService;
 
@@ -42,7 +41,6 @@ class NotificationService
             foreach ($claim['authorizations'] as $auth) {
                 if (isset($auth['application']['scopes']) && !empty($auth['application']['scopes'])) {
                     if (in_array($requiredScope, $auth['application']['scopes']) && in_array('notification', $auth['application']['scopes'])) {
-
                         if (isset($auth['application']['notificationEndpoint']) && !empty($auth['application']['notificationEndpoint'])) {
                             $this->sendNotification($auth['application']['notificationEndpoint'], $claim, );
                         }
@@ -66,25 +64,25 @@ class NotificationService
 //            }
 //        }
 
-        die;
+        exit;
+
         return $claim;
     }
 
-    public
-    function getRequiredScope($type)
+    public function getRequiredScope($type)
     {
 //        var_dump('scope wordt gecheckt');
         switch ($type) {
-            case "Email":
+            case 'Email':
                 $requiredScope = 'claim.email';
                 break;
-            case "email adresses":
+            case 'email adresses':
                 $requiredScope = 'claim.email';
                 break;
-            case "Telefoonnummer":
+            case 'Telefoonnummer':
                 $requiredScope = 'claim.phonenumber';
                 break;
-            case "Naam":
+            case 'Naam':
                 $requiredScope = 'claim.name';
                 break;
         }
@@ -92,8 +90,7 @@ class NotificationService
         return $requiredScope;
     }
 
-    public
-    function sendNotification($endpoint, $claim)
+    public function sendNotification($endpoint, $claim)
     {
         $user = $this->security->getUser();
 
@@ -108,8 +105,7 @@ class NotificationService
             'message' => 'The claim '.$claim['name'].' on ID-Vault has been edited by '.$user->getUsername(),
         ]);
 //        var_dump('post is gestuurd');
-        die;
-
+        exit;
     }
 
 //    public function setForwardUrl(array $resource)

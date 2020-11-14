@@ -82,6 +82,9 @@ class DashboardController extends AbstractController
 
         if ($session->get('bsn')) {
             $bsn = $session->get('bsn');
+            if ($session->get('backUrl')) {
+                $backUrl = $session->get('backUrl');
+            }
             $session->remove('bsn');
             $variables['changedInfo'] = [];
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
@@ -121,6 +124,10 @@ class DashboardController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('bsn')) {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
+        } elseif (isset($backUrl)) {
+            $session->remove('backUrl');
+
+            return $this->redirect($backUrl);
         }
 
         return $variables;
@@ -771,7 +778,7 @@ class DashboardController extends AbstractController
 
             // Set the organization background-color for the icons shown with every log
             foreach ($variables['logs'] as &$log) {
-                if (key_exists('contact', $log['authorization']['application']) && !empty($log['authorization']['application']['contact'])) {
+                if (isset($log['authorization']['application']['contact'])) {
                     $application = $commonGroundService->isResource($log['authorization']['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
@@ -781,6 +788,48 @@ class DashboardController extends AbstractController
                     }
                 }
             }
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/logs/{id}")
+     * @Template
+     */
+    public function logAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        if (empty($this->getUser())) {
+            $this->addFlash('error', 'This page requires you to be logged in');
+
+            return $this->redirect($this->generateUrl('app_default_login'));
+        }
+        if (!$id) {
+            $this->addFlash('error', 'No id provided');
+
+            return $this->redirect($this->generateUrl('app_dashboard_logs'));
+        }
+
+        $variables = [];
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id'=>$id]);
+
+        // Set the organization background-color for the icon shown with this log
+        if (isset($variables['resource']['authorization']['application']['contact'])) {
+            $application = $commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
+            if ($application) {
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $variables['resource']['backgroundColor'] = $matches;
+                }
+            }
+        }
+
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
+            $this->addFlash('error', 'You do not have access to this log');
+
+            return $this->redirect($this->generateUrl('app_dashboard_logs'));
         }
 
         return $variables;
