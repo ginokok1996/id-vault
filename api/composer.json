@@ -26,7 +26,7 @@
 		"web-token/jwt-framework": "^2.2",
 		"webonyx/graphql-php": "^0.13.8",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^6.3"
     },
 	"require-dev" : {
 		"api-platform/schema-generator": "^2.1",
