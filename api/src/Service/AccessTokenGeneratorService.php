@@ -37,6 +37,25 @@ class AccessTokenGeneratorService
                 case 'schema.person.family_name':
                     $array['family_name'] = $person['familyName'];
                     break;
+                case 'person.birthPlace':
+                    if (isset($person['birthplace'])) {
+                        $array['birth_place'] = $person['birthplace'];
+                    }
+                    break;
+                case 'schema.person.telephone':
+                    if (isset($person['telephones'][0]['telephone'])) {
+                        $array['telephone'] = $person['telephones'][0]['telephone'];
+                    }
+                    break;
+                case 'schema.person.birthday':
+                    if (isset($person['birthday'])) {
+                        $array['birthday'] = $person['birthday'];
+                    }
+                    break;
+                case'other.brp.ingeschrevenpersoon.persoonsnummer':
+                    if (isset($person['taxID'])) {
+                        $array['bsn'] = $person['taxID'];
+                    }
             }
         }
 
