@@ -1,0 +1,18 @@
+component_depth: 1
+languages:
+    - php
+- exclude:
+    - /nlx-setup/.*
+    - /resources/.*
+    - /api/bin/.*
+    - /api/config/.*
+    - /api/docker/.*
+    - /api/docs/.*
+    - /api/helm/.*
+    - /api/migrations/.*
+    - /api/nlx-setup/.*
+    - /api/public/.*
+    - /api/templates/.*
+    - /api/translations/.*
+    - /api/var/.*
+    - /api/vendor/.*

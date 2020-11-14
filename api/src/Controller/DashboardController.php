@@ -82,6 +82,9 @@ class DashboardController extends AbstractController
 
         if ($session->get('bsn')) {
             $bsn = $session->get('bsn');
+            if ($session->get('backUrl')) {
+                $backUrl = $session->get('backUrl');
+            }
             $session->remove('bsn');
             $variables['changedInfo'] = [];
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
@@ -121,6 +124,10 @@ class DashboardController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('bsn')) {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
+        } elseif (isset($backUrl)) {
+            $session->remove('backUrl');
+
+            return $this->redirect($backUrl);
         }
 
         return $variables;
