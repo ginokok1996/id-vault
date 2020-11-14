@@ -1,0 +1,5 @@
+{% if tasks is defined and tasks is not empty %}
+
+{% else %}
+    <p class="hint__title">{{ 'no tasks available'|trans|capitalize }}</p>
+{% endif %}
