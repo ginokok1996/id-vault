@@ -4161,22 +4161,34 @@ components:
           type: string
           format: uuid
         resource:
-          description: 'A BS/SendList resource'
+          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
         name:
-          description: 'The name of this SendList.'
+          description: 'The name of a new SendList. Used for creating a BS/SendList.'
           type: string
         description:
-          description: 'The description of this SendList.'
+          description: 'The description of a new SendList. Used for creating a BS/SendList.'
           type: string
         mail:
-          description: 'True if this is an mailing list.'
+          description: 'True if this is a new mailing sendList. Used for creating a BS/SendList.'
           type: boolean
         phone:
-          description: 'True if this is an phone list.'
+          description: 'True if this is a new phone sendList. Used for creating a BS/SendList.'
           type: boolean
+        title:
+          description: 'The title for sending an text/email to all BS/SendList->Subscribers.'
+          type: string
+        message:
+          description: 'The message for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        text:
+          description: 'The text for sending an text to all BS/SendList->Subscribers.'
+          type: string
+        html:
+          description: 'The html for sending an email to all BS/SendList->Subscribers.'
+          type: string
         result:
           description: 'The result'
           type: array
@@ -4197,24 +4209,36 @@ components:
       description: ''
       properties:
         resource:
-          description: 'A BS/SendList resource'
+          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
         name:
-          description: 'The name of this SendList.'
+          description: 'The name of a new SendList. Used for creating a BS/SendList.'
           type: string
         description:
-          description: 'The description of this SendList.'
+          description: 'The description of a new SendList. Used for creating a BS/SendList.'
           type: string
         mail:
-          description: 'True if this is an mailing list.'
+          description: 'True if this is a new mailing sendList. Used for creating a BS/SendList.'
           type: boolean
         phone:
-          description: 'True if this is an phone list.'
+          description: 'True if this is a new phone sendList. Used for creating a BS/SendList.'
           type: boolean
         clientSecret:
-          description: 'The secret of your application'
+          description: 'The secret of your application. Used for creating a BS/SendList.'
+          type: string
+        title:
+          description: 'The title for sending an text/email to all BS/SendList->Subscribers.'
+          type: string
+        message:
+          description: 'The message for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        text:
+          description: 'The text for sending an text to all BS/SendList->Subscribers.'
+          type: string
+        html:
+          description: 'The html for sending an email to all BS/SendList->Subscribers.'
           type: string
     'SendList:jsonld-read':
       type: object
@@ -4237,22 +4261,34 @@ components:
           type: string
           format: uuid
         resource:
-          description: 'A BS/SendList resource'
+          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
         name:
-          description: 'The name of this SendList.'
+          description: 'The name of a new SendList. Used for creating a BS/SendList.'
           type: string
         description:
-          description: 'The description of this SendList.'
+          description: 'The description of a new SendList. Used for creating a BS/SendList.'
           type: string
         mail:
-          description: 'True if this is an mailing list.'
+          description: 'True if this is a new mailing sendList. Used for creating a BS/SendList.'
           type: boolean
         phone:
-          description: 'True if this is an phone list.'
+          description: 'True if this is a new phone sendList. Used for creating a BS/SendList.'
           type: boolean
+        title:
+          description: 'The title for sending an text/email to all BS/SendList->Subscribers.'
+          type: string
+        message:
+          description: 'The message for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        text:
+          description: 'The text for sending an text to all BS/SendList->Subscribers.'
+          type: string
+        html:
+          description: 'The html for sending an email to all BS/SendList->Subscribers.'
+          type: string
         result:
           description: 'The result'
           type: array
@@ -4282,24 +4318,36 @@ components:
           readOnly: true
           type: string
         resource:
-          description: 'A BS/SendList resource'
+          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
         name:
-          description: 'The name of this SendList.'
+          description: 'The name of a new SendList. Used for creating a BS/SendList.'
           type: string
         description:
-          description: 'The description of this SendList.'
+          description: 'The description of a new SendList. Used for creating a BS/SendList.'
           type: string
         mail:
-          description: 'True if this is an mailing list.'
+          description: 'True if this is a new mailing sendList. Used for creating a BS/SendList.'
           type: boolean
         phone:
-          description: 'True if this is an phone list.'
+          description: 'True if this is a new phone sendList. Used for creating a BS/SendList.'
           type: boolean
         clientSecret:
-          description: 'The secret of your application'
+          description: 'The secret of your application. Used for creating a BS/SendList.'
+          type: string
+        title:
+          description: 'The title for sending an text/email to all BS/SendList->Subscribers.'
+          type: string
+        message:
+          description: 'The message for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        text:
+          description: 'The text for sending an text to all BS/SendList->Subscribers.'
+          type: string
+        html:
+          description: 'The html for sending an email to all BS/SendList->Subscribers.'
           type: string
 definitions:
   AccessToken-read:

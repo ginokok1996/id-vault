@@ -24,8 +24,10 @@
 		"symfony/yaml": "4.3.*",
 		"tbbc/money-bundle": "^3.1",
 		"web-token/jwt-framework": "^2.2",
-		"webonyx/graphql-php": "^0.13.8"
-	},
+		"webonyx/graphql-php": "^0.13.8",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.3"
+    },
 	"require-dev" : {
 		"api-platform/schema-generator": "^2.1",
 		"symfony/maker-bundle": "^1.11",
