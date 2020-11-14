@@ -12,7 +12,7 @@ info:
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/id-vault-php) 
     - Datamodel: [postman](/schema/id-vault.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
     
-    Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.         
+    "Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar."         
     
 paths:
   /api/access_tokens:
@@ -4435,12 +4435,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-14 11:19:41'
+        example: '2020-11-14 19:43:13'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-14 11:19:41'
+        example: '2020-11-14 19:43:13'
     required: []
   AuditTrail-write:
     properties:
@@ -4488,12 +4488,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-14 11:19:41'
+        example: '2020-11-14 19:43:13'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-14 11:19:41'
+        example: '2020-11-14 19:43:13'
     required: []
   ChangeLog-write:
     properties:
