@@ -80,15 +80,47 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($request->isMethod('POST') && $request->get('bsn')){
-
-            return $this->redirect($this->generateUrl('app_dashboard_index'));
-
-            $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'],['burgerservicenummer' => $request->get('bsn')])['hydra:member'];
+        if ($session->get('bsn')) {
+            $bsn = $session->get('bsn');
+            $session->remove('bsn');
+            $variables['changedInfo'] = [];
+            $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            $person = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
             if (count($ingeschrevenPersonen) > 0) {
                 $ingeschrevenPersoon = $ingeschrevenPersonen[0];
+                $person['taxID'] = $ingeschrevenPersoon['burgerservicenummer'];
+                $variables['changedInfo']['bsn'] = $ingeschrevenPersoon['burgerservicenummer'];
+
+                if (isset($ingeschrevenPersoon['geboorte']['plaats']['omschrijving'])) {
+                    $person['birthPlace'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
+                    $variables['changedInfo']['birth_place'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
+                }
+
+                if (isset($ingeschrevenPersoon['geboorte']['datum']['datum'])) {
+                    $person['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
+                    $variables['changedInfo']['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
+                }
+
+                if (isset($ingeschrevenPersoon['verblijfplaats'])) {
+                    $person['adresses'][0] = [];
+                    $person['adresses'][0]['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
+                    $person['adresses'][0]['houseNumber'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $person['adresses'][0]['houseNumberSuffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $person['adresses'][0]['postalCode'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
+
+                    $variables['changedInfo']['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
+                    $variables['changedInfo']['house_number'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
+                }
+
+                $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
             }
+        }
+
+        if ($request->isMethod('POST') && $request->get('bsn')) {
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
         }
 
         return $variables;
@@ -101,9 +133,16 @@ class DashboardController extends AbstractController
     public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->query->get('bsn')) {
+            $session->set('bsn', $request->query->get('bsn'));
+
+            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
+        }
+
         if ($this->getUser()) {
-            $personUrl = $this->getUser()->getPerson();
-            $variables['person'] = $commonGroundService->getResource($personUrl);
+            $variables['person'] = $commonGroundService->getResource($this->getUser()->getPerson());
+            $variables['person'] = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people' , 'id' => $variables['person']['id']]);
         }
 
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
