@@ -4,16 +4,496 @@
 
 
     <!-- Heading -->
-    <h1 class="mb-1">Tutorial</h1>
+    <h1 class="mb-1">Tutorials</h1>
 
     <!-- Text -->
     <p class="font-size-lg text-gray-700 mb-5">
-        Feeling a bit lost in all of the technical terms of an online SSI Wallet (or thinking a what?), don't worry we understand that it can al be a bit overwelming. So we set up this glossery to help you allong.
+        Okey, we get it. The whole wallet, blockchain claims etc can be rather daunting. And to be frank quote complicated. Thats exactly why we chose to implement OAuth as our main ID-Provider, because that makes it extremely easy. Still you might be wondering how to implement OAuth in you application and use it to get a users data. That why we made a couple of tutorials to help you along.
     </p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="setup">Setting up your application</h3>
+    <p class="text-gray-700">Before you can begin implementing ID-Vault you need to register your applications to ID-Vault, for legal reasons applications always belong to organizations. So let's setup an organization first, you can do that form your personal dashboard.</p>
+
+    <p class="text-gray-700">But first you need to activate developer mode, you can do that from the settings page with the developers view slider.</p>
+
+    <p class="text-gray-700">You should then see a developers menu appear at the bottom left of your dashboard menu, go to organisations and press &ldquo;add&rdquo;, fill in the form and save your organization.</p>
+
+    <p class="text-gray-700">Next you can setup your application, and save it. Now scroll to the bottom of the organisation page to the application settings and press &lsquo;add&rsquo;, fill in the form and presto! You have yourself an application including a client secret for production and one for testing purposes.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="login">Setting up a login</h3>
+
+    <p class="text-gray-700"> The main identity provider for the id-vault platform is <a href="https://www.oauth.com/" target="_blank">OAuth2</a> or more specific <a href="https://openid.net/" target="_blank">OpenID</a>, the main reasons for this are simplicity, compliance to standards (most providers use oauth) and control of data (oauth allows a user to choose which data to unlock for applications).</p>
+
+    <p class="text-gray-700">So how does that work? Well rather easily actually first you need to set up your application (see tutorial here) and then you just redirect the user to the authorize url <code>https://id-vault.com/oauth/authorize</code></p>
+
+    <p class="text-gray-700">When redirecting the user to the authorize url you include the following query parameters</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Parameter</th>
+            <th scope="col">Required</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><code>response_type</code></td>
+            <td>yes</td>
+            <td>this tells the authorization server that the application is initiating the authorization code flow. This value should be &lsquo;code&rsquo;</td>
+        </tr>
+        <tr>
+            <td><code>clientId</code></td>
+            <td>yes</td>
+            <td> The public identifier for the application obtained when the developer first registered the application</td>
+        </tr>
+        <tr>
+            <td><code>scopes</code></td>
+            <td>yes</td>
+            <td>One or more separated strings indicating which permissions the application is requesting. The strings are separated by a + sign e.g. &amp;scope=create+delete</td>
+        </tr>
+        <tr>
+            <td><code>redirect_uri</code></td>
+            <td>no</td>
+            <td>Tells the authorization server where to send the user back to after they approve the request. This need to be either a whitelisted response url for your application or &lsquo;localhost&rsquo; (if you are usung your test secret)</td>
+        </tr>
+        <tr>
+            <td><code>state</code></td>
+            <td>no</td>
+            <td>A random string used by your application to identify a unique session</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <p class="text-gray-700">Putting that all together we get something like this <code>https://id-vault.com/oauth/authorize?response_type=code&clientId=759a959a-85bf-42c6-bc43-1a7d00ad14c0&scope=create+delete</code>. So that the beauty and simplicity of the OAuth setup, you simply foreward the user to somewhere else and wait until the user returns authenticated.</p>
+
+    <p class="text-gray-700">At the foreward url the user will then be presented with an authorization screen by ID-Vault (or login screen if the user isn&rsquo;t currently logged in). After autorisation the user is then forwarded to the authorization url (provided at application registration) with the code and state parameters, or localhost if a test secret is used and the redirect_uri property is set to localhost (both http and https supported)</p>
+
+    <p class="text-gray-700">You will then need to &ldquo;handle&rdquo; the login request at your application, that goes in two stages.</p>
+
+    <p class="text-gray-700">First an applications needs to exchange the authorization code for an access token (be aware that an authorization code is only valid for 10 minutes). This is done by Making a POST request to the <code>https://id-vault.com/oauth/access_tokens</code> endpoint. The request MUST be POST and MUST contain a JSON encoded body with the following parameters.</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Property</th>
+            <th scope="col">Required</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><code>grantType</code></td>
+            <td>yes</td>
+            <td>always &lsquo;authorization_code&rsquo;</td>
+        </tr>
+        <tr>
+            <td><code>clientId</code></td>
+            <td>yes</td>
+            <td>The applications id</td>
+        </tr>
+        <tr>
+            <td><code>clientSecret</code></td>
+            <td>yes</td>
+            <td>The applications secret</td>
+        </tr>
+        <tr>
+            <td><code>code</code></td>
+            <td>yes</td>
+            <td>The code send by ID-Vault when returning a user</td>
+        </tr>
+        <tr>
+            <td><code>state</code></td>
+            <td>no</td>
+            <td>A random string used by your application to identify a unique session</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="text-gray-700">so for example:</p>
+
+    <pre>
+<code class="language-json">{
+    "grant_type":"b8133d82-8dc3-40fb-8626-e251c797416e",
+    "client_id":"759a959a-85bf-42c6-bc43-1a7d00ad14c0",
+    "client_secret":"c9c19e37-0802-4d77-85fd-62ca86dc83c4",
+    "code":"d7f33b1b-be8d-4cda-9617-7eaa04678f14",
+    "state":"97a564b2-33cb-4dfd-b6a7-d59a6664731e"
+}</code>
+    </pre>
+
+
+    <p class="text-gray-700">You will then get an response containing you your Access token, for example</p>
+
+    <pre>
+<code class="language-json">{
+    "token_type":"bearer",
+    "expires_in":3600,
+    "scope":"public_repo,user",
+    "access_token":"....",
+    "state":"97a564b2-33cb-4dfd-b6a7-d59a6664731e"
+}</code>
+    </pre>
+
+    <p class="text-gray-700">The properties should be interpreted as follows</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Property</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><code>token_type</code></td>
+            <td>always &lsquo;authorization_code&rsquo;</td>
+        </tr>
+        <tr>
+            <td><code>expires_in</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>scope</code></td>
+            <td>The scopes granted by the user, note that these might difer from the requested scopes</td>
+        </tr>
+        <tr>
+            <td><code>access_token</code></td>
+            <td>A jwt token</td>
+        </tr>
+        <tr>
+            <td><code>state</code></td>
+            <td>The state provided in the request, passed in order for your application to be able to check the validity of the login</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="text-gray-700">Okay so let's take a look at this JWT token, this can be storred as a text in wisch case you can simply use it to login the ID-Vault api but we can also parse it(see tutorial) which will give us something like:</p>
+
+    <pre>
+<code class="language-json">
+ {
+    "azp":"272196069173.apps.googleusercontent.com",
+    "aud":"272196069173.apps.googleusercontent.com",
+    "sub":"110248495921238986420",
+    "hd": "id-vault.com",
+    "name": Ruben van der Linde",
+    "given_name": "Ruben",
+    "family_name": "van der Linde",
+    "picture": "[[url]",
+    "email":"ruben@id-vault.com",
+    "email_verified": true,
+    "locale":"en",
+    "at_hash":"0bzSP5g7IfV3HXoLwYS3Lg",
+    "exp":1524601669,
+    "iss":"https://www.id-vault.com/dashboard",
+    "iat":1524598069,
+    "alg":"RS256",
+    "kid":"affc62907a446182adc1fa4e81fdba6310dce63f"
+}</code>
+    </pre>
+
+    <p class="text-gray-700">Wich we can then interpated as follows</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Property</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><code>azp</code></td>
+            <td>always &lsquo;authorization_code&rsquo;</td>
+        </tr>
+        <tr>
+            <td><code>aud</code></td>
+            <td>The full URL of the resource you're using the JWT to authenticate to</td>
+        </tr>
+        <tr>
+            <td><code>sub</code></td>
+            <td>The sub (subject) property contains the unique user identifier of the user who signed in</td>
+        </tr>
+        <tr>
+            <td><code>name</code></td>
+            <td>The username of the user (in most cases an email addres)</td>
+        </tr>
+        <tr>
+            <td><code>given_name</code></td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td><code>family_name</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>picture</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>email</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>email_verified</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>locale</code></td>
+            <td>The preferred language of a user</td>
+        </tr>
+        <tr>
+            <td><code>exp</code></td>
+            <td>expire duration</td>
+        </tr>
+        <tr>
+            <td><code>iss</code></td>
+            <td>client_id</td>
+        </tr>
+        <tr>
+            <td><code>iat</code></td>
+            <td>date token was created</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="text-gray-700"> So that&rsquo;s nice, the access token itself already gives you some basic information to fire up your UI and present a user with his/her with an familiar enviroment.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="retrieve_id">Using the ID Token to Retrieve User </h3>
+
+    <p class="text-gray-700">Info ID-Vault provides an additional API endpoint, called the tokeninfo endpoint, which you can use to look up the ID token details instead of parsing it yourself. This is not recommended for production applications, as it requires an additional HTTP round trip, but can be useful for testing and troubleshooting.</p>
+
+    <p class="text-gray-700">ID-Vaults tokeninfo endpoint is at <code>https://id-vault.com/oauth/tokeninfo/[[uuid]]</code>, as found in their OpenID Connect discovery document at <code>https://www..id-vault.com/dashboard/.well-known/openid-configuration</code>. To look up the info for the ID token we received, make a GET request to the tokeninfo endpoint with the ID token in the query string.</p>
+
+    <p><code>https://www.id-vault.com/oauth2/v3/tokeninfo?id_token=eyJ...</code> The response will be a JSON object with a similar list of properties that were included in the JWT itself.</p>
+<pre>
+    <code class="language-json">
+{
+    "azp":"272196069173.apps.googleusercontent.com",
+    "aud":"272196069173.apps.googleusercontent.com",
+    "sub":"110248495921238986420",
+    "hd": "id-vault.com",
+    "email":"ruben@id-vault.com",
+    "email_verified": true,
+    "at_hash":"0bzSP5g7IfV3HXoLwYS3Lg",
+    "exp":1524601669,
+    "iss":"https://www.id-vault.com/dashboard",
+    "iat":1524598069,
+    "alg":"RS256",
+    "kid":"affc62907a446182adc1fa4e81fdba6310dce63f"
+}</code>
+</pre>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="retrieve_token"> Using the Access Token to Retrieve User Info</h3>
+
+    <p class="text-gray-700"> As mentioned before, many OAuth 2.0 services also provide an endpoint to retrieve the user info of the user who logged in. This is part of the OpenID Connect standard, and the endpoint will be part of the service&rsquo;s OpenID Connect Discovery Document.</p>
+
+    <p class="text-gray-700">ID-Vault&rsquo;s userinfo endpoint is <code>https://www.id-vault.com/oauth2/v3/userinfo</code>. In this case, you use the access token rather than the ID token to look up the user info. Make a GET request to that endpoint and pass the access token in the HTTP Authorization header like you normally would when making an OAuth 2.0 API request.</p>
+
+    <p><code>GET /oauth2/v3/userinfo Host: www.id-vault.com Authorization: Bearer ya29.Gl-oBRPLiI9IrSRA70&#8230;</code></p>
+
+    <p class="text-gray-700"> The response will be a JSON object with several properties about the user. The response will always include the sub key, which is the unique identifier for the user. ID-Vault also returns the user&rsquo;s profile information such as name (first and last), profile photo URL, gender, locale, profile URL, and email</p>
+
+    <pre>
+<code class="language-json">
+{
+    "sub": "110248495921238986420",
+    "name": Ruben van der Linde",
+    "given_name": "Ruben",
+    "family_name": "van der Linde",
+    "picture": "[[url]",
+    "email": "ruben@id-vault.com",
+    "email_verified": true,
+    "locale":"en",
+    "hd":"id-vault.com"
+}</code>
+</pre>
+
+    <p class="text-gray-700">That means that you will always have acces to a users primary email, name and locale as part of an authorization request. EVEN IF YOU DO NOT REQUIRE ANY SCOPES</p>
+
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="scopes">Working with scopes</h3>
+
+    <p class="text-gray-700">Scopes form the base for both the OAuth2 and OpenId Connect protocol, they define both what an application can do on its users behalve and to which data it has access. Both the OAuth2 and OpenId Connect protocol give a great amount of liberty to how you can define scopes, there is however some conformity to be found between wallet solutions and that is dot notation.</p>
+
+    <p class="text-gray-700">We differentiate between 3 base structures schema, application and special</p>
+
+    <p class="text-gray-700">The first two of these are about data storage and sharing, it is basically how users fill up their wallet. The first (and preferred way) is using <a href="https://schema.org/" target="_blank">schema.org</a> object structure, this provides a communal point for data mapping e.g. more than one application can provide an authenticated telephone nr. The second way (and deterred way) is by application this is an way of storing data that simply won&rsquo;t fit in the shema.org system, this is stored in an application specific way onder the application reference as a key. The obvious problem with the second concept being that you don&rsquo;t share data between applications.</p>
+
+    <p class="text-gray-700"> Requesting a schema scope automatically give&rsquo;s you both the read and the wright right&rsquo;s to that specific datapoint. But keep in mind that a user will always be alerted and promoted when you add data to their wallet and has a final say. E.g. you may suggest a user to add something to his or her wallet but they choice to do so.</p>
+
+    <p class="text-gray-700">You do not need to request application scopes for scopes that are part of your application nor is a user required to accept changes. You MAY request scopes for other applications and when in the possession of suchs a scope you MAY write to such a scope but the original application AND the user will need to accept such a write as per schema scope change.</p>
+
+    <p class="text-gray-700">This means that your application data may be altered by the user outside of your application, but only if everybody agrees. This reflects the fact that the data is owned by the user and not the application.</p>
+
+    {% include 'dashboard/widgets/scope_list.html.twig' %}
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="get_from_wallet">Obtaining information from a user&rsquo;s wallet</h3>
+    <p class="text-gray-700">As mentioned before ID-Vault provides an endpoint to retrieve the user info of the user who logged in. This is part of the OpenID Connect standard. This endpoint (<code> https://www.id-vault.com/oauth2/v3/userinfo</code>) is configured to give back a minimal set of data by default but can also provide access to those claims in a users wallet that the application was granted a scope to.</p>
+
+    <p class="text-gray-700">In this case, you again use the access token rather than the ID token to look up the user info. Make a GET request to that endpoint and pass the access token in the HTTP Authorization header like you normally would when making an OAuth 2.0 API request.</p>
+
+    <p class="text-gray-700">But as an additional option you provide scopes in a query parameter divided by commas (,) and a goal parameter, the later one states the goal for wich you want to use the data.</p>
+
+    <p><code>GET /oauth2/v3/userinfo?scopes=schema.person.birthDate,schema.person.telephone&amp;goal=birthdaycall  Host: www.id-vault.com Authorization: Bearer ya29.Gl-oBRPLiI9IrSRA70&#8230;</code></p>
+
+    <p class="text-gray-700"> The relevant claim data will then either be added to the schema or application part of the response, in this case:</p>
+
+    <pre>
+<code class="language-json">{
+    "sub": "110248495921238986420",
+    "name": Ruben van der Linde",
+    "given_name": "Ruben",
+    "family_name": "van der Linde",
+    "picture": "[[url]",
+    "email": "ruben@id-vault.com",
+    "email_verified": true,
+    "locale":"en",
+    "hd":"id-vault.com",
+    "claims":{
+        "schema":{
+           "person": {
+                "telephone":"+316-12345678",
+                "birthDate":"1985-07-27"
+            }
+        }
+    }
+}</code>
+</pre>
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="store_to_wallet">Storing information to a user&rsquo;s wallet</h3>
+    <p class="text-gray-700">This is where it gets a bit more tricky, as an application you can not simply &ldquo;write&rdquo; something to someone&rsquo;s wallet. A wallet is a personal concept, unique to a specific user. So you cant just &ldquo;write&rdquo; to a scope. You need proof :)</p>
+
+    <p class="text-gray-700">The concept of &ldquo;proof&rdquo; within a chain of trust is that is sharable and controllable, you can read a bit more about that here. But for now that means that in order to varify proof a verifier needs an endpoint against wichs to check that proof. That leaves you with two options, first is that you setup your own verification endpoint (recommended but hard) or secondly you use ID-Vaults proofing endpoint (less save but easier).</p>
+
+    <p class="text-gray-700">Lets focus on the second one first, and then move on to the preferable more complex one. You just post the claims that you want to proof to the claim endpoint and the claim api handles the rest. So a post would look like.</p>
+
+<pre>
+<code class="language-json">{
+    "claims":{
+        "schema":{
+           "person": {
+                "telephone":"+316-12345678",
+                "birthDate":"1985-07-27"
+            }
+        }
+    }
+}</code>
+</pre>
+
+    <p class="text-gray-700">Downright easy right? The problem here is that id-vault will create a signing certificate for this data (and reference your organisation in it). That means that our endpoint will be used to verify the claim, which means that you will need to keep our database in sync with ours to prevent a &ldquo;false&rdquo; positive on the provided data. That also means that the data can not be used on a trustlevel of 3 or higher, significantly reducing its value.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="factor_authentication">Two (or three) Factor Authentication</h3>
+
+    <p class="text-gray-700"> For some user actions you might need an additional layer of proof that a user is who he&rsquo;s says he or she is. A common practice is the implementation of two factor authentication, this means that a user will be required to take an additional action to identify themselves. Normally this takes the form of an additional security code, either provided by a randomizer, text or mail message.</p>
+
+    <p class="text-gray-700">ID-Vault has a build in two factor authentication which you can trigger by setting up a normal OAuth request and adding the factor parameter to your authenitcation url and setting it to the factor that you require e.g. <code>&amp;factor=2</code> (default is 1). ID-Vault will then check if the user has done a multiple factor authentication on there current sesion in the last 10 minuten, and if not require the user to use a secondary (or thirth) authentication method of there choice.</p>
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="forcing_authentication">Forcing Authentication</h3>
+    <p class="text-gray-700">On a normal OAuth request id-vault will use its own session with a user to determine whether or not a user is logged in, you can however force a user to re-autenticate themselves on an OAuth request by adding the <code>&amp;force=true</code> parameter. This will force a user to present their password credential to id-vault (akin to the linux sudo command). This might get in handy when you need a bit of additional proof but don&rsquo;t know if the user has set op two (or three) factor authentication.</p>
+
+    <p class="text-gray-700">This form of authentication communly used when users check their personal data or perform destructive action&rsquo;s (like deleting objects or canceling orders)</p>
+
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="proof">Requiring proof</h3>
+    <p class="text-gray-700"> <code>&amp;proof=true</code> </p>
+
+
+    <!-- Divider -->
+    <hr class="border-gray-300 my-6">
+
+    <!-- Heading -->
+    <h3 class="font-weight-bold" id="trust">Adjusting the level of trust</h3>
+    <p class="text-gray-700"> <code>&amp;levelOfTrust=4</code> </p>
 
 {% endblock %}
 
 {% block jumpto %}
+    <div class="my-7 my-lg-9 px-lg-7 border-left-lg border-gray-300">
 
+        <!-- Heading -->
+        <h6 class="text-uppercase font-weight-bold">
+            Index
+        </h6>
+
+        <!-- Links -->
+        <ul class="list mb-0">
+            <li class="list-item">
+                <a class="list-link" href="#setup" data-toggle="smooth-scroll">Setting up an application</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#login" data-toggle="smooth-scroll">Setting up an OAuth login</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#retrieve_id" data-toggle="smooth-scroll">Get data from a token id</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#retrieve_token" data-toggle="smooth-scroll">Get data from a autorization token</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#scopes" data-toggle="smooth-scroll">Working with scopes</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#get_from_wallet" data-toggle="smooth-scroll">Getting data from a wallet</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#store_to_wallet" data-toggle="smooth-scroll">Storing data to a wallet</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#factor_authentication" data-toggle="smooth-scroll">Two/Three factor authentication</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#forcing_authentication" data-toggle="smooth-scroll">Forcing Authentication</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#proof" data-toggle="smooth-scroll">Requiring proof</a>
+            </li>
+            <li class="list-item">
+                <a class="list-link" href="#trust" data-toggle="smooth-scroll">Adjusting the level of trust</a>
+            </li>
+        </ul>
+
+    </div>
 
 {% endblock %}

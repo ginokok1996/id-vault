@@ -81,6 +81,9 @@ class DashboardController extends AbstractController
         $variables = [];
 
         if ($request->isMethod('POST') && $request->get('bsn')){
+
+            return $this->redirect($this->generateUrl('app_dashboard_index'));
+
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'],['burgerservicenummer' => $request->get('bsn')])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
             if (count($ingeschrevenPersonen) > 0) {
