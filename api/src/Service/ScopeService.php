@@ -19,12 +19,13 @@ class ScopeService
         $this->params = $params;
     }
 
-    private function getScope(string $scope): ?array{
+    private function getScope(string $scope): ?array
+    {
         $returnScope = $this->params->get('scopes');
         $scope = explode('.', $scope);
-        while($scope != null){
+        while ($scope != null) {
             $part = array_shift($scope);
-            if(key_exists($part, $returnScope)){
+            if (key_exists($part, $returnScope)) {
                 $returnScope = $returnScope[$part];
             } else {
                 return null;
@@ -34,40 +35,43 @@ class ScopeService
         return $returnScope;
     }
 
-    private function validateArrayProperty($property, $resource){
-        if(key_exists('name', $property)){
+    private function validateArrayProperty($property, $resource)
+    {
+        if (key_exists('name', $property)) {
             $data = $resource[$property['name']];
         } else {
             return false;
         }
-        if(key_exists('type', $property) && $property['type'] == 'array' && key_exists('subType', $property) && count($data) > 0){
+        if (key_exists('type', $property) && $property['type'] == 'array' && key_exists('subType', $property) && count($data) > 0) {
             $data = $data[0];
-            if(key_exists('key', $property) && key_exists($property['key'], $data)){
+            if (key_exists('key', $property) && key_exists($property['key'], $data)) {
                 $data = $data[$property['key']];
-            } elseif(key_exists('key', $property) && !key_exists($property['key'], $data)){
+            } elseif (key_exists('key', $property) && !key_exists($property['key'], $data)) {
                 return false;
             }
-        } elseif(key_exists('type', $property) && $property['type'] == 'array' && key_exists('key', $property) && key_exists($property['key'], $data)) {
+        } elseif (key_exists('type', $property) && $property['type'] == 'array' && key_exists('key', $property) && key_exists($property['key'], $data)) {
             $data = $data[$property['key']];
-        } elseif(key_exists('key', $property) && !key_exists($property['key'], $data)){
+        } elseif (key_exists('key', $property) && !key_exists($property['key'], $data)) {
             return false;
         }
+
         return $data;
     }
 
-    private function validateResource($scope, $resource){
-        if(is_array($scope['location']['property'])){
+    private function validateResource($scope, $resource)
+    {
+        if (is_array($scope['location']['property'])) {
             $returned = $this->validateArrayProperty($scope['location']['property'], $resource);
-            if($returned){
+            if ($returned) {
                 return true;
-            } elseif(key_exists('source', $scope)){
+            } elseif (key_exists('source', $scope)) {
                 return $scope['source'];
             } else {
                 return false;
             }
-        } elseif(key_exists($scope['location']['property'], $resource) && $resource[$scope['location']['property']]) {
+        } elseif (key_exists($scope['location']['property'], $resource) && $resource[$scope['location']['property']]) {
             return true;
-        } elseif(key_exists('source', $scope)) {
+        } elseif (key_exists('source', $scope)) {
             return $scope['source'];
         } else {
             return false;
@@ -85,29 +89,26 @@ class ScopeService
         foreach ($scopes as $scope) {
             $toValidate = $this->getScope($scope);
 
-            if(!$toValidate ||
+            if (!$toValidate ||
                 !key_exists('location', $toValidate) ||
                 !key_exists('component', $toValidate['location']) ||
                 !key_exists('type', $toValidate['location'])
-            ){
+            ) {
                 $result = true;
-            }
-            elseif($toValidate['location']['component'] == 'cc' && $toValidate['location']['type'] == 'people'){
+            } elseif ($toValidate['location']['component'] == 'cc' && $toValidate['location']['type'] == 'people') {
                 $result = $this->validateResource($toValidate, $person);
-            }
-            elseif($toValidate['location']['component'] == 'uc' && $toValidate['location']['type'] == 'users'){
+            } elseif ($toValidate['location']['component'] == 'uc' && $toValidate['location']['type'] == 'users') {
                 $result = $this->validateResource($toValidate, $user);
-            }
-            elseif($toValidate['location']['component'] == 'wrc' && $toValidate['location']['type'] == 'organizations'){
+            } elseif ($toValidate['location']['component'] == 'wrc' && $toValidate['location']['type'] == 'organizations') {
                 $result = $this->validateResource($toValidate, $user);
             } else {
                 $result = true;
             }
 
-            if($result !== true){
+            if ($result !== true) {
                 $deficiency['scope'] = $scope;
 
-                if($result !== false){
+                if ($result !== false) {
                     $deficiency['source'] = $result;
                 }
                 $deficiencies[] = $deficiency;
@@ -116,8 +117,5 @@ class ScopeService
         }
 
         return $deficiencies;
-
-
     }
-
 }

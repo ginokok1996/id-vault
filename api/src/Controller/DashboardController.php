@@ -80,10 +80,9 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-
         if ($session->get('bsn')) {
             $bsn = $session->get('bsn');
-            if($session->get('backUrl')){
+            if ($session->get('backUrl')) {
                 $backUrl = $session->get('backUrl');
             }
             $session->remove('bsn');
@@ -125,8 +124,9 @@ class DashboardController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('bsn')) {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
-        } elseif(isset($backUrl)){
+        } elseif (isset($backUrl)) {
             $session->remove('backUrl');
+
             return $this->redirect($backUrl);
         }
 

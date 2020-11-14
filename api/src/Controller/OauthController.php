@@ -128,17 +128,16 @@ class OauthController extends AbstractController
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
         }
-        if($this->getUser()){
+        if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             if (count($users) > 0) {
                 $user = $users[0];
             }
             $variables['deficiencies'] = $scopeService->checkScopes($variables['scopes'], $user);
-            if($variables['deficiencies']){
+            if ($variables['deficiencies']) {
                 $session->set('backUrl', $request->getRequestUri());
 //                var_dump($session->get('backUrl'));
             }
-
         }
         $session->set('backUrl', $request->getUri());
 
