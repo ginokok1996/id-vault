@@ -10,7 +10,7 @@ settings:
   version: V1.0
   majorVersion: v1
   id: 22888b97-d12b-4505-9a20-ee9cc148d442
-  description: '&quot;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&quot;'
+  description: 'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'
   type: application
   repro: https://github.com/ConductionNL/id-vault
   demo: dev.id-vault.com
