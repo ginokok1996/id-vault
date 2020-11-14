@@ -126,6 +126,7 @@ class DashboardController extends AbstractController
         if ($request->isMethod('POST') && $request->get('bsn')) {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
         } elseif(isset($backUrl)){
+            $session->remove('backUrl');
             return $this->redirect($backUrl);
         }
 
