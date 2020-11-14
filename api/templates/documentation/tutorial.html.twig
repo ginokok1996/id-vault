@@ -355,13 +355,13 @@
 
     <!-- Heading -->
     <h3 class="font-weight-bold" id="get_from_wallet">Obtaining information from a user&rsquo;s wallet</h3>
-    <p class="text-gray-700">As mentioned before ID-Vault provides an endpoint to retrieve the user info of the user who logged in. This is part of the OpenID Connect standard. This endpoint (<code> https://www.id-vault.com/oauth2/v3/userinfo</code>) is configured to give back a minimal set of data by default but can also provide access to those claims in a users wallet that the application was granted a scope to.</p>
+    <p class="text-gray-700">As mentioned before ID-Vault provides an endpoint to retrieve the user info of the user who logged in. This is part of the OpenID Connect standard. This endpoint (<code>https://www.id-vault.com/oauth/userinfo</code>) is configured to give back a minimal set of data by default but can also provide access to those claims in a users wallet that the application was granted a scope to.</p>
 
     <p class="text-gray-700">In this case, you again use the access token rather than the ID token to look up the user info. Make a GET request to that endpoint and pass the access token in the HTTP Authorization header like you normally would when making an OAuth 2.0 API request.</p>
 
     <p class="text-gray-700">But as an additional option you provide scopes in a query parameter divided by commas (,) and a goal parameter, the later one states the goal for wich you want to use the data.</p>
 
-    <p><code>GET /oauth2/v3/userinfo?scopes=schema.person.birthDate,schema.person.telephone&amp;goal=birthdaycall  Host: www.id-vault.com Authorization: Bearer ya29.Gl-oBRPLiI9IrSRA70&#8230;</code></p>
+    <p><code>GET /oauth/userinfo?scopes=schema.person.birthDate,schema.person.telephone&amp;goal=birthdaycall  Host: www.id-vault.com Authorization: Bearer ya29.Gl-oBRPLiI9IrSRA70&#8230;</code></p>
 
     <p class="text-gray-700"> The relevant claim data will then either be added to the schema or application part of the response, in this case:</p>
 
@@ -386,6 +386,9 @@
     }
 }</code>
 </pre>
+    <p class="text-gray-700">Interestingly enough that means that you can actually get the wallet information as part of your normal OAuth login flow, you just need to make an call to the <code>https://www.id-vault.com/oauth/userinfo</code> endpoint afhter obtaining the authorization token in the last fase of your login handling</p>
+
+
     <!-- Divider -->
     <hr class="border-gray-300 my-6">
 
