@@ -142,7 +142,7 @@ class DashboardController extends AbstractController
 
         if ($this->getUser()) {
             $variables['person'] = $commonGroundService->getResource($this->getUser()->getPerson());
-            $variables['person'] = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people' , 'id' => $variables['person']['id']]);
+            $variables['person'] = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $variables['person']['id']]);
         }
 
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
