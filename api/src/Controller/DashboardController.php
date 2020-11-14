@@ -86,6 +86,7 @@ class DashboardController extends AbstractController
             $variables['changedInfo'] = [];
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            $person = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
             if (count($ingeschrevenPersonen) > 0) {
                 $ingeschrevenPersoon = $ingeschrevenPersonen[0];
                 $person['taxID'] = $ingeschrevenPersoon['burgerservicenummer'];
@@ -113,7 +114,7 @@ class DashboardController extends AbstractController
                     $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
                 }
-                var_dump($person['@id']);
+                
                 $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
             }
         }
