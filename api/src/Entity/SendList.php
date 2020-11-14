@@ -44,33 +44,30 @@ class SendList
     private $id;
 
     /**
-     * @var string A BS/SendList resource
+     * @var string A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
      *
      * @Groups({"read", "write"})
      * @Assert\Url
      * @Assert\Length(
      *     max=255
      * )
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resource;
 
     /**
-     * @var string The name of this SendList.
+     * @var string The name of a new SendList. Used for creating a BS/SendList.
      *
      * @example News email
      *
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @var string The description of this SendList.
+     * @var string The description of a new SendList. Used for creating a BS/SendList.
      *
      * @example Mailing list for sending news
      *
@@ -78,34 +75,88 @@ class SendList
      *      max = 255
      * )
      * @Groups({"read","write"})
-     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var bool True if this is an mailing list.
+     * @var bool True if this is a new mailing sendList. Used for creating a BS/SendList.
      *
      * @example true
      *
      * @Groups({"read", "write"})
-     * @ORM\Column(type="boolean")
      */
     private $mail = false;
 
     /**
-     * @var bool True if this is an phone list.
+     * @var bool True if this is a new phone sendList. Used for creating a BS/SendList.
      *
      * @example true
      *
      * @Groups({"read", "write"})
-     * @ORM\Column(type="boolean")
      */
     private $phone = false;
 
     /**
+     * @var string The secret of your application. Used for creating a BS/SendList.
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Groups({"write"})
+     */
+    private $clientSecret;
+
+    /**
+     * @var string The title for sending an text/email to all BS/SendList->Subscribers.
+     *
+     * @example My awesome mailing
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     */
+    private $title;
+
+    /**
+     * @var string The message for sending an email to all BS/SendList->Subscribers.
+     *
+     * @example My mailing
+     *
+     * @Assert\Length(
+     *      max = 2550
+     * )
+     * @Groups({"read","write"})
+     */
+    private $message;
+
+    /**
+     * @var string The text for sending an text to all BS/SendList->Subscribers.
+     *
+     * @example My mailing
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     */
+    private $text;
+
+    /**
+     * @var string The html for sending an email to all BS/SendList->Subscribers.
+     *
+     * @example <p>HTML content of the mail</p><p>{% if title is defined and title is not empty %}Title: {{ title }}{% endif %}</p><p>{% if message is defined and message is not empty %}Message: {{ message }}{% endif %}</p><p>{% if text is defined and text is not empty %}Text: {{ text }}{% endif %}</p><p>{% if resource.name is defined and resource.name is not empty %}(resource/)Sendlist name: {{ resource.name }}{% endif %}</p><p>{% if receiver.givenName is defined and receiver.givenName is not empty %}Receiver: {{ receiver.givenName }}{% endif %}</p><p>{% if sender.name is defined and sender.name is not empty %}Sender: {{ sender.name }}{% endif %}</p>
+     *
+     * @Assert\Length(
+     *      max = 2550
+     * )
+     * @Groups({"read","write"})
+     */
+    private $html;
+
+    /**
      * @var array The result
+     *
      * @Groups({"read"})
-     * @ORM\Column(type="array", nullable=true)
      */
     private $result = [];
 
@@ -188,6 +239,66 @@ class SendList
     public function setPhone(bool $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getClientSecret(): ?string
+    {
+        return $this->clientSecret;
+    }
+
+    public function setClientSecret(string $clientSecret): self
+    {
+        $this->clientSecret = $clientSecret;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(?string $text): self
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    public function getHtml(): ?string
+    {
+        return $this->html;
+    }
+
+    public function setHtml(?string $html): self
+    {
+        $this->html = $html;
 
         return $this;
     }
