@@ -114,7 +114,7 @@ class DashboardController extends AbstractController
                     $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
                 }
-                
+
                 $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
             }
         }
@@ -141,8 +141,8 @@ class DashboardController extends AbstractController
         }
 
         if ($this->getUser()) {
-            $personUrl = $this->getUser()->getPerson();
-            $variables['person'] = $commonGroundService->getResource($personUrl);
+            $variables['person'] = $commonGroundService->getResource($this->getUser()->getPerson());
+            $variables['person'] = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people' , 'id' => $variables['person']['id']]);
         }
 
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
