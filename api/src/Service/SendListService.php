@@ -134,7 +134,7 @@ class SendListService
                 $message = $this->createMessage($data, $sendList, $content, $subscriber['person']);
 
                 // Send email to this subscriber
-                array_push($results,$this->commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages'])['@id']);
+                array_push($results, $this->commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages'])['@id']);
             }
         } else {
             array_push($results, 'This sendList has no subscribers!');
