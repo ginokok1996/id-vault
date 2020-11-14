@@ -58,6 +58,9 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        /*@todo get alerts for current user only */
+        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'])['hydra:member'];
+
         return $variables;
     }
 
@@ -114,7 +117,7 @@ class DashboardController extends AbstractController
                     $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
                 }
-                
+
                 $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
             }
         }
