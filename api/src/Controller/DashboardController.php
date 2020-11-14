@@ -7,7 +7,6 @@ namespace App\Controller;
 use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -85,7 +84,7 @@ class DashboardController extends AbstractController
             $bsn = $session->get('bsn');
             $session->remove('bsn');
             $variables['changedInfo'] = [];
-            $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'],['burgerservicenummer' => $bsn])['hydra:member'];
+            $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
             if (count($ingeschrevenPersonen) > 0) {
                 $ingeschrevenPersoon = $ingeschrevenPersonen[0];
@@ -97,7 +96,7 @@ class DashboardController extends AbstractController
                     $variables['changedInfo']['birth_place'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
                 }
 
-                if (isset($ingeschrevenPersoon['geboorte']['datum']['datum'])){
+                if (isset($ingeschrevenPersoon['geboorte']['datum']['datum'])) {
                     $person['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
                     $variables['changedInfo']['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
                 }
@@ -105,20 +104,20 @@ class DashboardController extends AbstractController
                 if (isset($ingeschrevenPersoon['verblijfplaats'])) {
                     $person['adresses'][0] = [];
                     $person['adresses'][0]['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $person['adresses'][0]['houseNumber'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $person['adresses'][0]['houseNumberSuffix'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $person['adresses'][0]['houseNumber'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $person['adresses'][0]['houseNumberSuffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $person['adresses'][0]['postalCode'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
 
                     $variables['changedInfo']['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $variables['changedInfo']['house_number'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $variables['changedInfo']['house_number_suffix'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $variables['changedInfo']['house_number'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
                 }
                 $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
             }
         }
 
-        if ($request->isMethod('POST') && $request->get('bsn')){
+        if ($request->isMethod('POST') && $request->get('bsn')) {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
         }
 
@@ -133,12 +132,11 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($request->query->get('bsn')){
+        if ($request->query->get('bsn')) {
             $session->set('bsn', $request->query->get('bsn'));
+
             return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
-
         }
-
 
         if ($this->getUser()) {
             $personUrl = $this->getUser()->getPerson();
