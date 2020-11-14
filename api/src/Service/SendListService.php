@@ -78,7 +78,7 @@ class SendListService
                 $subscriberSendLists = [];
                 foreach ($subscriber['sendLists'] as $subscriberSendList) {
                     if ($subscriberSendList['id'] != $sendList['id']) {
-                        array_push($subscriberSendLists, '/send_lists/'.$sendList['id']);
+                        array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
                     }
                 }
 
