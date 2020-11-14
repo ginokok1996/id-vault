@@ -1974,6 +1974,10 @@
         <source>the application is requesting the following scopes from you</source>
         <target>de applicatie vraagt de volgende scopes van u</target>
       </trans-unit>
+      <trans-unit id="waxRp2A" resname="this application would like to add you to the following mailing lists">
+        <source>this application would like to add you to the following mailing lists</source>
+        <target>deze applicatie wil je toevoegen aan de volgende mailinglijsten</target>
+      </trans-unit>
       <trans-unit id="1b3h_Ot" resname="log in to continue">
         <source>log in to continue</source>
         <target>log in om door te gaan</target>
