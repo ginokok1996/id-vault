@@ -52,7 +52,7 @@ class AccessTokenGeneratorService
                         $array['birthday'] = $person['birthday'];
                     }
                     break;
-                case'other.brp.ingeschrevenpersoon.persoonsnummer':
+                case'schema.person.taxID':
                     if (isset($person['taxID'])) {
                         $array['bsn'] = $person['taxID'];
                     }

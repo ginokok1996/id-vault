@@ -4,6 +4,7 @@
 
 namespace App\Controller;
 
+use App\Service\ScopeService;
 use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
@@ -27,7 +28,7 @@ class OauthController extends AbstractController
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
     {
         $variables = [];
 
@@ -127,7 +128,17 @@ class OauthController extends AbstractController
         } else {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
         }
-
+        if ($this->getUser()) {
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+            $variables['deficiencies'] = $scopeService->checkScopes($variables['scopes'], $user);
+            if ($variables['deficiencies']) {
+                $session->set('backUrl', $request->getRequestUri());
+//                var_dump($session->get('backUrl'));
+            }
+        }
         $session->set('backUrl', $request->getUri());
 
         $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
