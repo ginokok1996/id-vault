@@ -23,8 +23,13 @@ class AccessTokenGeneratorService
     {
         $user = $this->commonGroundService->getResource($authorization['userUrl']);
         $person = $this->commonGroundService->getResource($user['person']);
+        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+        $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $personUrl])['hydra:member'];
 
         $array = [];
+
+        //@todo array vullen met gegevens van claims via claim service
 
         foreach ($authorization['scopes'] as $scope) {
             switch ($scope) {
