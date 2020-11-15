@@ -1,0 +1,58 @@
+<div class="modal fade" id="modalRedirect" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
+                    {{ 'Success'|trans|capitalize }}
+                </h2>
+
+                <p class="text-center">{{ 'Do you wish to continue to the application?' }}</p>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-around">
+                            {% if backUrl is defined and backUrl is not empty %}
+                                <a class="btn-primary btn" href="{{ backUrl }}">{{ 'Yes' }}</a>
+                                <button type="button" class="btn-danger btn" data-dismiss="modal" aria-label="Close">
+                                    {{ 'no' }}
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function showApplicationLogo(){
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function Application() {
+            let file = document.querySelector('#applicationLogo').files[0];
+            let logoHolder = document.querySelector('#applicationLogoHolder');
+            logoHolder.innerHTML = '';
+            let logo = document.createElement('img');
+            let base64 = await toBase64(file);
+            logo.setAttribute('style', 'height: 100px;');
+            logo.setAttribute('src', base64);
+            logoHolder.appendChild(logo);
+        }
+        Application();
+    }
+</script>
