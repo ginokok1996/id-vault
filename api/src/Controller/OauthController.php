@@ -5,7 +5,6 @@
 namespace App\Controller;
 
 use App\Service\ScopeService;
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,7 +27,7 @@ class OauthController extends AbstractController
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
     {
         $variables = [];
 

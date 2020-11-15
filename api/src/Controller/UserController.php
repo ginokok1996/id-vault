@@ -4,7 +4,6 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -255,7 +254,7 @@ class UserController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, ApplicationService $applicationService, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
         if ($request->isMethod('POST')) {
             $backUrl = $request->query->get('backUrl');
@@ -320,7 +319,7 @@ class UserController extends AbstractController
      * @Route("/userinfo")
      * @Template
      */
-    public function userInfoAction(Session $session, Request $request, ApplicationService $applicationService, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function userInfoAction(Session $session, Request $request,CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
         $variables = [];
 

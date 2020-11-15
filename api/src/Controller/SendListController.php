@@ -4,7 +4,6 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,7 +26,7 @@ class SendListController extends AbstractController
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -146,8 +145,8 @@ class SendListController extends AbstractController
 
             $sendLists = [];
             foreach ($variables['sendListIds'] as $sendListId) {
-                // TODO: check if this user isn't already a subscriber in this sendList and if so, dont put this sendList in $variables to be shown on screen or used in the post
-                // TODO: redirect or do something if the user is already a subscriber in all of these sendLists!
+                // TD: check if this user isn't already a subscriber in this sendList and if so, dont put this sendList in $variables to be shown on screen or used in the post
+                // TD: redirect or do something if the user is already a subscriber in all of these sendLists!
                 // (The post already ensures that a user is not put in a mailing list if he is already subscribed to it)
                 array_push($sendLists, $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendListId]));
             }
