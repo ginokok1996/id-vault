@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Service\ClaimService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -48,16 +47,15 @@ class AccessTokenGeneratorService
             }
         }
 
-        foreach ($authorization['scopes'] as $scope){
-            if ($this->claimService->checkUserScope($personUrl, $scope)){
-                foreach ($claims as $claim){
-                    if($scope == $claim['property']){
+        foreach ($authorization['scopes'] as $scope) {
+            if ($this->claimService->checkUserScope($personUrl, $scope)) {
+                foreach ($claims as $claim) {
+                    if ($scope == $claim['property']) {
                         $array['claims'][$claim['property']][] = $claim['data'];
                     }
                 }
             }
         }
-
 
         $array['iss'] = $application['id'];
         $array['aud'] = $application['authorizationUrl'];
