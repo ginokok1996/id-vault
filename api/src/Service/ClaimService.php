@@ -8,7 +8,8 @@ class ClaimService
 {
     private $commonGroundService;
 
-    public function __construct(CommonGroundService $commonGroundService) {
+    public function __construct(CommonGroundService $commonGroundService)
+    {
         $this->commonGroundService = $commonGroundService;
     }
 
@@ -16,9 +17,10 @@ class ClaimService
     {
         $scopes = $this->getUserScopes($person);
 
-        if(array_key_exists($scope, $scopes)){
+        if (array_key_exists($scope, $scopes)) {
             return true;
         }
+
         return false;
     }
 
@@ -27,11 +29,10 @@ class ClaimService
         $claims = $this->commonGroundService->getResourceList(['component'=>'wac', 'type'=>'claims'], ['person'=>$person])['hydra:member'];
 
         $results = [];
-        foreach ($claims as $claim){
+        foreach ($claims as $claim) {
             $results[$claim['property']] = $claim;
         }
 
         return $results;
     }
-
 }

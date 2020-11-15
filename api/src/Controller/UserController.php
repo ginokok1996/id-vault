@@ -69,7 +69,6 @@ class UserController extends AbstractController
         $session->set('backUrl', $backUrl);
 
         return $this->redirect($this->generateUrl('app_default_index'));
-
     }
 
     /**
@@ -319,7 +318,7 @@ class UserController extends AbstractController
      * @Route("/userinfo")
      * @Template
      */
-    public function userInfoAction(Session $session, Request $request,CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function userInfoAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
         $variables = [];
 

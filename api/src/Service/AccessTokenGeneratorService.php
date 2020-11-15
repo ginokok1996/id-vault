@@ -28,7 +28,7 @@ class AccessTokenGeneratorService
         $person = $this->commonGroundService->getResource($user['person']);
         $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
-        $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'],['person' => $personUrl])['hydra:member'];
+        $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $personUrl])['hydra:member'];
 
         $array = [];
 

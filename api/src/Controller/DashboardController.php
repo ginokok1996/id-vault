@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 //use App\Service\RequestService;
+use App\Service\ScopeService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\ScopeService;
 
 /**
  * Description.
@@ -41,7 +41,7 @@ class DashboardController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -82,7 +82,7 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($request->query->get('authorization')){
+        if ($request->query->get('authorization')) {
             $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
             $scopes = $authorization['scopes'];
 
@@ -91,7 +91,6 @@ class DashboardController extends AbstractController
                 $user = $users[0];
             }
             $variables['deficiencies'] = $this->scopeService->checkScopes($scopes, $user);
-
         }
 
         if ($session->get('brp') && $type = 'brp') {
@@ -154,17 +153,17 @@ class DashboardController extends AbstractController
 
             $variables['newClaim'] = $claim;
 
-            if ($session->get('backUrl')){
+            if ($session->get('backUrl')) {
                 $backUrl = $session->get('backUrl');
                 $session->remove('backUrl');
+
                 return $this->redirect($backUrl);
             }
-
         }
 
         if ($request->isMethod('POST') && $type == 'brp') {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
-        } elseif ($request->isMethod('POST') && $type == 'duo'){
+        } elseif ($request->isMethod('POST') && $type == 'duo') {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
         } elseif (isset($backUrl)) {
             $session->remove('backUrl');
@@ -285,7 +284,7 @@ class DashboardController extends AbstractController
      * @Route("/security")
      * @Template
      */
-    public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService,ParameterBagInterface $params, string $slug = 'home')
+    public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -296,7 +295,7 @@ class DashboardController extends AbstractController
      * @Route("/notifications")
      * @Template
      */
-    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -429,7 +428,7 @@ class DashboardController extends AbstractController
      * @Route("/authorizations")
      * @Template
      */
-    public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -563,7 +562,7 @@ class DashboardController extends AbstractController
      * @Route("/dossiers")
      * @Template
      */
-    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -596,7 +595,7 @@ class DashboardController extends AbstractController
      * @Route("/dossiers/{id}")
      * @Template
      */
-    public function dossierAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function dossierAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -727,7 +726,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService,ParameterBagInterface $params, string $slug = 'home')
+    public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -815,7 +814,7 @@ class DashboardController extends AbstractController
      * @Route("/logs")
      * @Template
      */
-    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService,ParameterBagInterface $params, string $slug = 'home')
+    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -983,7 +982,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
