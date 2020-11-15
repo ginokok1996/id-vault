@@ -60,6 +60,18 @@
 
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="text-center">
+
+                            {% if deficiencies|default %}
+                                <p class="warning mb-2">
+                                    Some scopes are not present in your account, in the next window you will be able to provide information for the following scopes:
+                                    <ul class="text-center list-group list-group-flush mb-2"></ul>
+                                    {% for deficiency in deficiencies %}
+                                        <li style="list-style: none;" class=" text-muted">
+                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
                             <form method="post" action="{{ path('app_oauth_authorize') }}">
                                 {%  if scopes is defined %}
                                     {% for scope in scopes %}
@@ -74,6 +86,11 @@
                                 {% endif %}
                                 {% if redirectUrl is defined %}
                                     <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
+                                {% endif %}
+                                {% if deficiencies|default %}
+                                    {% for deficiency in deficiencies %}
+                                        <input type="hidden" name="needScopes[]" value="{{ deficiency.scope }}">
+                                    {% endfor %}
                                 {% endif %}
 
                                 <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">

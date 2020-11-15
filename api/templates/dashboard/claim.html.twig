@@ -3,14 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            {#            <div class="col-12 col-md-3">#}
+                        <div class="col-12 col-md-3">
 
-            {#                {% set activeItem = 'claims' %}#}
-            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+                            {% set activeItem = 'claims' %}
+                            {% include 'dashboard/sidenavbar.html.twig' %}
 
-            {#            </div>#}
-
-            {# TODO:Include the sidenavbar and have a back button? #}
+                        </div>
 
             <div class="col-12 col-md-9">
 
@@ -29,30 +27,60 @@
 
                             <div class="col-10 text-center">
 
-                                <!-- Heading -->
-                                <h4 class="mb-0">
-                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~' '~resource.property }}
-                                </h4>
-
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         {% if resource|default %}
 
-                            <!-- Claim data -->
-                            <h3>{{ 'data'|trans|capitalize }}:</h3>
-                            <h4 class="mb-0">
-                                {% if resource.data is defined and resource.data is not empty %}
-                                    {% for dataItem in resource.data %}
-                                        {% if loop.last %}
-                                            {{ dataItem }}
-                                        {% else %}
-                                            {{ dataItem }},
+                        <div class="list-group-item" style="padding-bottom: 0rem; border: none;">
+                            <!-- Header -->
+                            <div class="row mb-5">
+                                <div class="col">
+
+                                    <!-- Heading -->
+                                    <div class="list-group list-group-flush">
+                                        <!-- Property of this claim -->
+                                        <div style="border: none" class="list-group-item pb-0">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                </div>
+                                                <div class="col-11 ml-n5">
+                                                    <!-- Heading -->
+                                                    <p class="mb-0 font-weight-bold">
+                                                        {{ 'scope' }}
+                                                    </p>
+                                                    <!-- Text -->
+                                                    <p class="text-gray-700">
+                                                        {{ resource.property }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if resource.data is defined and resource.data is not empty %}
+                                            {% for key, value in resource.data %}
+                                                <div style="border: none" class="list-group-item pb-0">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto">
+                                                        </div>
+                                                        <div class="col-11 ml-n5">
+                                                            <!-- Heading -->
+                                                            <p class="mb-0 font-weight-bold">
+                                                                {{ key }}
+                                                            </p>
+                                                            <!-- Text -->
+                                                            <p class="text-gray-700">
+                                                                {{ value }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
                                         {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </h4>
+                                    </div>
+
+                                </div>
+                            </div>
 
                         {% endif %}
                     </div>
