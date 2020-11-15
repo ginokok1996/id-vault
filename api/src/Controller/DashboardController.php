@@ -154,10 +154,9 @@ class DashboardController extends AbstractController
             $variables['newClaim'] = $claim;
 
             if ($session->get('backUrl')) {
-                $backUrl = $session->get('backUrl');
+                $variables['backUrl'] = $session->get('backUrl');
+                $variables['showModal'] = true;
                 $session->remove('backUrl');
-
-                return $this->redirect($backUrl);
             }
         }
 
