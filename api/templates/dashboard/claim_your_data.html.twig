@@ -57,6 +57,53 @@
                             </table>
                         </div>
                     {% endif %}
+                    {% if newClaim is defined and newClaim is not empty %}
+                        <!-- Card -->
+                        <div class="card card-bleed shadow-light-lg mb-6">
+                            <div class="card-header">
+
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <h4 class="mb-0">
+                                            {{ 'new claim'|capitalize }}
+                                        </h4>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="list-group list-group-flush">
+                                            {% for key, value in newClaim.data %}
+                                            <div class="list-group-item">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                    </div>
+                                                    <div class="col-11 ml-n5">
+                                                        <!-- Heading -->
+                                                        <p class="mb-0 font-weight-bold">
+                                                            {{ key }}
+                                                        </p>
+                                                        <!-- Text -->
+                                                        <p class="text-gray-700">
+                                                            {{ value }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    {% endif %}
                 </div>
             </div>
 

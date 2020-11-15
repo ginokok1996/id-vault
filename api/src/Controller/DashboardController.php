@@ -138,6 +138,8 @@ class DashboardController extends AbstractController
 
             $claim = $commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
 
+            $variables['newClaim'] = $claim;
+
         }
 
         if ($request->isMethod('POST') && $type == 'brp') {

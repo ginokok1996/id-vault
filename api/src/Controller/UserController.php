@@ -276,14 +276,39 @@ class UserController extends AbstractController
                 $person['emails'][0]['email'] = $request->get('username');
 
                 $person = $commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
-                $person = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $person['id']]);
+                $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
                 //create user
                 $user['username'] = $request->get('username');
                 $user['password'] = $request->get('newPassword');
-                $user['person'] = $person;
+                $user['person'] = $personUrl;
 
                 $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+
+                // given name claim
+                $claimFirstName = [];
+                $claimFirstName['person'] = $personUrl;
+                $claimFirstName['property'] = 'schema.person.given_name';
+                $claimFirstName['data']['given_name'] = $person['givenName'];
+
+                $commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
+
+                // family name claim
+                $claimLastName = [];
+                $claimLastName['person'] = $personUrl;
+                $claimLastName['property'] = 'schema.person.family_name';
+                $claimLastName['data']['family_name'] = $person['familyName'];
+
+                $commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
+
+                // email claim
+                $claimEmail = [];
+                $claimEmail['person'] = $personUrl;
+                $claimEmail['property'] = 'schema.person.email';
+                $claimEmail['data']['email'] = $request->get('username');
+
+                $commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+
                 $this->flash->add('success', 'Account created');
 
                 return $this->redirect($backUrl);
