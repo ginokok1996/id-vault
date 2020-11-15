@@ -19,7 +19,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            CommonGroundEvents::SAVE  => 'save',
+            CommonGroundEvents::SAVED  => 'save',
             //            CommonGroundEvents::CREATE  => 'create',
             //            CommonGroundEvents::CREATED => 'created',
         ];

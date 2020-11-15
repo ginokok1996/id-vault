@@ -27,7 +27,7 @@ class OauthController extends AbstractController
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
     {
         $variables = [];
 
@@ -99,6 +99,12 @@ class OauthController extends AbstractController
                 $authorization['userUrl'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
                 $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
+
+                if ($request->get('needScopes')) {
+                    $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
+
+                    return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
+                }
 
                 return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
             } else {

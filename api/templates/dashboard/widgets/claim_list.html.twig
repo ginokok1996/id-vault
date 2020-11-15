@@ -1,30 +1,51 @@
 {% if claims is defined and claims is not empty %}
     <div class="list-group list-group-flush">
         {% for claim in claims %}
-            <div class="list-group-item" style="padding-bottom: 0rem">
+            <div class="list-group-item" style="padding-bottom: 0rem; border: 1px solid #bbbbbb; border-top: 0; border-width: 0 0 1px;">
                 <!-- Header -->
                 <div class="row mb-5">
                     <div class="col">
 
                         <!-- Heading -->
-                        <h4 class="mb-0">
+                        <div class="list-group list-group-flush">
+                            <!-- Property of this claim -->
+                            <div style="border: none" class="list-group-item pb-0">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                    </div>
+                                    <div class="col-11 ml-n5">
+                                        <!-- Heading -->
+                                        <p class="mb-0 font-weight-bold">
+                                            {{ 'scope' }}
+                                        </p>
+                                        <!-- Text -->
+                                        <p class="text-gray-700">
+                                            {{ claim.property }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                             {% if claim.data is defined and claim.data is not empty %}
-                                {% for dataItem in claim.data %}
-                                    {% if loop.last %}
-                                        {{ dataItem }}
-                                    {% else %}
-                                        {{ dataItem }},
-                                    {% endif %}
+                                {% for key, value in claim.data %}
+                                    <div style="border: none" class="list-group-item pb-0">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                            </div>
+                                            <div class="col-11 ml-n5">
+                                                <!-- Heading -->
+                                                <p class="mb-0 font-weight-bold">
+                                                    {{ key }}
+                                                </p>
+                                                <!-- Text -->
+                                                <p class="text-gray-700">
+                                                    {{ value }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% endfor %}
                             {% endif %}
-                        </h4>
-
-                        <!-- Property of this claim -->
-                        <small class="text-gray-700">
-                            {% if claim.property is defined and claim.property is not empty %}
-                                {{ claim.property }}
-                            {% endif %}
-                        </small>
+                        </div>
 
                     </div>
                     <div class="col-auto mr-n5">

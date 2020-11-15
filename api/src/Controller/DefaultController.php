@@ -26,7 +26,7 @@ class DefaultController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -37,7 +37,7 @@ class DefaultController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -135,7 +135,7 @@ class DefaultController extends AbstractController
      * @Route("/error")
      * @Template
      */
-    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService,ParameterBagInterface $params, string $slug = 'home')
+    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -168,7 +168,7 @@ class DefaultController extends AbstractController
      * @Route("/developers")
      * @Template
      */
-    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -179,7 +179,7 @@ class DefaultController extends AbstractController
      * @Route("/pricing")
      * @Template
      */
-    public function pricingAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function pricingAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
