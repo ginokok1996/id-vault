@@ -4,7 +4,6 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,7 +26,7 @@ class DocumentationController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -38,7 +37,7 @@ class DocumentationController extends AbstractController
      * @Route("/glossary")
      * @Template
      */
-    public function glossaryAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function glossaryAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -49,7 +48,7 @@ class DocumentationController extends AbstractController
      * @Route("/plugins")
      * @Template
      */
-    public function pluginsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function pluginsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -60,7 +59,7 @@ class DocumentationController extends AbstractController
      * @Route("/scopes")
      * @Template
      */
-    public function scopesAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function scopesAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -71,7 +70,7 @@ class DocumentationController extends AbstractController
      * @Route("/api")
      * @Template
      */
-    public function apiAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function apiAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -82,7 +81,7 @@ class DocumentationController extends AbstractController
      * @Route("/tutorial")
      * @Template
      */
-    public function tutorialAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function tutorialAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -93,7 +92,7 @@ class DocumentationController extends AbstractController
      * @Route("/earn-money")
      * @Template
      */
-    public function earnMoneyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function earnMoneyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -104,7 +103,7 @@ class DocumentationController extends AbstractController
      * @Route("/terms")
      * @Template
      */
-    public function termsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function termsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -115,7 +114,7 @@ class DocumentationController extends AbstractController
      * @Route("/privacy")
      * @Template
      */
-    public function privacyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function privacyAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -126,7 +125,7 @@ class DocumentationController extends AbstractController
      * @Route("/beta")
      * @Template
      */
-    public function betaAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function betaAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -137,7 +136,7 @@ class DocumentationController extends AbstractController
      * @Route("/architecture")
      * @Template
      */
-    public function architectureAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function architectureAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -148,7 +147,7 @@ class DocumentationController extends AbstractController
      * @Route("/support")
      * @Template
      */
-    public function supportAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function supportAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
