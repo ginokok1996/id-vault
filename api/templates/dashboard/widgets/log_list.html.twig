@@ -39,8 +39,20 @@
                     <div class="col ml-n5">
                         <!-- Heading -->
                         <p class="mb-0 text-muted">
-                            {{ log.authorization.dateCreated|date('H:i, d-m-Y', 'Europe/Paris') }}
+                            {{ log.dateCreated|date('H:i, d-m-Y', 'Europe/Paris') }}
                         </p>
+                    </div>
+                    <div class="col-auto">
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <a class="text-gray-400 text-decoration-none" data-toggle="dropdown" href="#" aria-expanded="false">
+                                <i class="fe fe-more-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu" style="">
+                                <a class="dropdown-item" href="{{ path('app_dashboard_log', {id: log.id}) }}">{{ 'view usage'|trans|capitalize }}</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

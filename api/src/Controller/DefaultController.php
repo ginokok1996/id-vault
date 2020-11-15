@@ -4,7 +4,6 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,7 +26,7 @@ class DefaultController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -38,7 +37,7 @@ class DefaultController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -49,7 +48,7 @@ class DefaultController extends AbstractController
      * @Route("/login")
      * @Template
      */
-    public function loginAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function loginAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -60,7 +59,7 @@ class DefaultController extends AbstractController
      * @Route("/reset/{token}")
      * @Template
      */
-    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, $token = null)
+    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, $token = null)
     {
         $variables = [];
 
@@ -136,7 +135,7 @@ class DefaultController extends AbstractController
      * @Route("/error")
      * @Template
      */
-    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService,ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -147,7 +146,7 @@ class DefaultController extends AbstractController
      * @Route("/users")
      * @Template
      */
-    public function usersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function usersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -158,7 +157,7 @@ class DefaultController extends AbstractController
      * @Route("/organizations")
      * @Template
      */
-    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -169,7 +168,7 @@ class DefaultController extends AbstractController
      * @Route("/developers")
      * @Template
      */
-    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -180,7 +179,7 @@ class DefaultController extends AbstractController
      * @Route("/pricing")
      * @Template
      */
-    public function pricingAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function pricingAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -191,7 +190,7 @@ class DefaultController extends AbstractController
      * @Route("/oauth")
      * @Template
      */
-    public function oauthAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function oauthAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -223,9 +222,9 @@ class DefaultController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
             if ($request->get('grantAccess') == 'true') {
-                //@todo create token & send back to authorization url defined in application
+                // TD: create token & send back to authorization url defined in application
             } else {
-                //@todo send message back that access was denied.
+                // TD:send message back that access was denied.
             }
         }
 

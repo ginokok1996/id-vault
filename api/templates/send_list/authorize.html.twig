@@ -41,45 +41,33 @@
                     </p>
 
                     <p class="mb-2 text-center">
-                        {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
+                        {{ 'this application would like to add you to the following mailing lists'|trans|capitalize }}:
                     </p>
 
                     <ul class="text-center list-group list-group-flush mb-2">
-                        {% if scopes is defined and scopes is not empty %}
-                            {% for scope in scopes %}
+                        {% if sendLists is defined and sendLists is not empty %}
+                            {% for sendList in sendLists %}
                                 <li style="list-style: none;" class=" text-muted">
-                                    {{ scope }}
+                                    {{ sendList.name }}
                                 </li>
                             {% endfor %}
                         {% endif %}
                     </ul>
 
+                    {# Read more about mailing lists?¿ #}
+                    {#
                     <p class="mb-2 text-center">
-                        <u><a style="color: white" target="_blank" href="{{ path('app_documentation_scopes') }}">{{ 'read more about scopes'|trans }}</a></u>
+                        <u><a style="color: white" target="_blank" href="{{ path('app_documentation_x') }}">{{ 'read more about mailing lists'|trans }}</a></u>
                     </p>
+                    #}
 
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="text-center">
-
-                            {% if deficiencies|default %}
-                                <p class="warning mb-2">
-                                    Some scopes cannot be shared because they are not present in your account:
-                                    <ul class="text-center list-group list-group-flush mb-2"></ul>
-                                    {% for deficiency in deficiencies %}
-                                        <li style="list-style: none;" class=" text-muted">
-                                            {{ deficiency.scope }} {% if deficiency.source|default %}<a href="{{ deficiency.source }}?responceUrl={{ path("app_dashboard_claimyourdata") }}?back_url={{ app.request.uri }}">Resolve it here!</a>{% endif %}
-                                        </li>
+                            <form method="post" action="{{ path('app_sendlist_authorize') }}">
+                                {%  if sendLists is defined %}
+                                    {% for sendList in sendLists %}
+                                        <input type="hidden" name="sendLists[]" value="{{ sendList['id'] }}">
                                     {% endfor %}
-                                </p>
-                            {% endif %}
-                            <form method="post" action="{{ path('app_oauth_authorize') }}">
-                                {%  if scopes is defined %}
-                                    {% for scope in scopes %}
-                                        <input type="hidden" name="scopes[]" value="{{ scope }}">
-                                    {% endfor %}
-                                {% endif %}
-                                {% if state is defined %}
-                                    <input type="hidden" name="state" value="{{ state }}">
                                 {% endif %}
                                 {% if clientId is defined %}
                                     <input type="hidden" name="client_id" value="{{ clientId }}">
@@ -88,8 +76,7 @@
                                     <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
                                 {% endif %}
 
-                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto"
-                                    {% if deficiencies|default %}disabled{% endif %}>
+                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
                                     {{ 'accept'|trans|capitalize }}
                                 </button>
                                 <button name="grantAccess" value="false" class="navbar-btn btn btn-sm btn-danger ml-lg-2 mt-4 mt-lg-0 lift ml-auto">
