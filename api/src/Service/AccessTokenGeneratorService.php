@@ -31,38 +31,38 @@ class AccessTokenGeneratorService
 
         //@todo array vullen met gegevens van claims via claim service
 
-//        foreach ($authorization['scopes'] as $scope) {
-//            switch ($scope) {
-//                case 'schema.person.email':
-//                    $array['email'] = $user['username'];
-//                    break;
-//                case 'schema.person.given_name':
-//                    $array['given_name'] = $person['givenName'];
-//                    break;
-//                case 'schema.person.family_name':
-//                    $array['family_name'] = $person['familyName'];
-//                    break;
-//                case 'person.birthPlace':
-//                    if (isset($person['birthplace'])) {
-//                        $array['birth_place'] = $person['birthplace'];
-//                    }
-//                    break;
-//                case 'schema.person.telephone':
-//                    if (isset($person['telephones'][0]['telephone'])) {
-//                        $array['telephone'] = $person['telephones'][0]['telephone'];
-//                    }
-//                    break;
-//                case 'schema.person.birthday':
-//                    if (isset($person['birthday'])) {
-//                        $array['birthday'] = $person['birthday'];
-//                    }
-//                    break;
-//                case'schema.person.taxID':
-//                    if (isset($person['taxID'])) {
-//                        $array['bsn'] = $person['taxID'];
-//                    }
-//            }
-//        }
+        foreach ($authorization['scopes'] as $scope) {
+            switch ($scope) {
+                case 'schema.person.email':
+                    $array['email'] = $user['username'];
+                    break;
+                case 'schema.person.given_name':
+                    $array['given_name'] = $person['givenName'];
+                    break;
+                case 'schema.person.family_name':
+                    $array['family_name'] = $person['familyName'];
+                    break;
+                case 'person.birthPlace':
+                    if (isset($person['birthplace'])) {
+                        $array['birth_place'] = $person['birthplace'];
+                    }
+                    break;
+                case 'schema.person.telephone':
+                    if (isset($person['telephones'][0]['telephone'])) {
+                        $array['telephone'] = $person['telephones'][0]['telephone'];
+                    }
+                    break;
+                case 'schema.person.birthday':
+                    if (isset($person['birthday'])) {
+                        $array['birthday'] = $person['birthday'];
+                    }
+                    break;
+                case'schema.person.taxID':
+                    if (isset($person['taxID'])) {
+                        $array['bsn'] = $person['taxID'];
+                    }
+            }
+        }
 
         $array['sub'] = $application['id'];
         $array['iss'] = $application['id'];
