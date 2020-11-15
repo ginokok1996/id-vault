@@ -4,6 +4,7 @@
 
 namespace App\Controller;
 
+use Conduction\CommonGroundBundle\Security\User\CommongroundUser;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -306,6 +308,12 @@ class UserController extends AbstractController
                 $claimEmail['data']['email'] = $request->get('username');
 
                 $commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+
+                $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
+
+                $token = new UsernamePasswordToken($userObject, null, 'main', $userObject->getRoles());
+                $this->container->get('security.token_storage')->setToken($token);
+                $this->container->get('session')->set('_security_main', serialize($token));
 
                 $this->flash->add('success', 'Account created');
 

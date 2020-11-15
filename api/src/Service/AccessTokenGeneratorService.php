@@ -11,12 +11,14 @@ class AccessTokenGeneratorService
     private $em;
     private $commonGroundService;
     private $params;
+    private $claimService;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
     {
         $this->em = $em;
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
+        $this->claimService = $claimService;
     }
 
     public function generateAccessToken($authorization, $application)
@@ -29,8 +31,8 @@ class AccessTokenGeneratorService
 
         $array = [];
 
-        //@todo array vullen met gegevens van claims via claim service
-
+        $array['sub'] = $application['id'];
+        $array['name'] = $person['name'];
         foreach ($authorization['scopes'] as $scope) {
             switch ($scope) {
                 case 'schema.person.email':
@@ -42,29 +44,19 @@ class AccessTokenGeneratorService
                 case 'schema.person.family_name':
                     $array['family_name'] = $person['familyName'];
                     break;
-                case 'person.birthPlace':
-                    if (isset($person['birthplace'])) {
-                        $array['birth_place'] = $person['birthplace'];
-                    }
-                    break;
-                case 'schema.person.telephone':
-                    if (isset($person['telephones'][0]['telephone'])) {
-                        $array['telephone'] = $person['telephones'][0]['telephone'];
-                    }
-                    break;
-                case 'schema.person.birthday':
-                    if (isset($person['birthday'])) {
-                        $array['birthday'] = $person['birthday'];
-                    }
-                    break;
-                case'schema.person.taxID':
-                    if (isset($person['taxID'])) {
-                        $array['bsn'] = $person['taxID'];
-                    }
             }
         }
 
-        $array['sub'] = $application['id'];
+        foreach ($authorization['scopes'] as $scope) {
+            if ($this->claimService->checkUserScope($personUrl, $scope)) {
+                foreach ($claims as $claim) {
+                    if ($scope == $claim['property']) {
+                        $array['claims'][$claim['property']][] = $claim['data'];
+                    }
+                }
+            }
+        }
+
         $array['iss'] = $application['id'];
         $array['aud'] = $application['authorizationUrl'];
         $array['exp'] = '3600';
