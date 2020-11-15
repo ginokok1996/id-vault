@@ -160,10 +160,12 @@
     </div> <!-- / .container -->
     {% include 'dashboard/modals/redirect_modal.html.twig' %}
 
+    {% if showModal is defined and showModal is not empty %}
         <script type="text/javascript">
             $(window).on('load',function(){
                 $('#modalRedirect').modal('show');
             });
         </script>
+    {% endif %}
 
 {% endblock %}
