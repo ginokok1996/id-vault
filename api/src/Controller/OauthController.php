@@ -27,7 +27,7 @@ class OauthController extends AbstractController
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
     {
         $variables = [];
 
@@ -102,6 +102,7 @@ class OauthController extends AbstractController
 
                 if ($request->get('needScopes')) {
                     $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
+
                     return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
                 }
 
