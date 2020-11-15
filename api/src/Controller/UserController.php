@@ -56,6 +56,11 @@ class UserController extends AbstractController
 
             $session->set('loggedOut', null);
         }
+        if ($this->getUser()) {
+            $this->flash->add('success', 'Welcome '.ucwords($this->getUser()->getName()));
+
+            return $this->redirect($this->generateUrl('app_dashboard_index'));
+        }
 
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
@@ -64,13 +69,8 @@ class UserController extends AbstractController
         }
         $session->set('backUrl', $backUrl);
 
-        if ($this->getUser()) {
-            $this->flash->add('success', 'Welcome '.ucwords($this->getUser()->getName()));
+        return $this->redirect($this->generateUrl('app_default_index'));
 
-            return $this->redirect($this->generateUrl('app_dashboard_index'));
-        } else {
-            return $this->redirect($this->generateUrl('app_default_index'));
-        }
     }
 
     /**

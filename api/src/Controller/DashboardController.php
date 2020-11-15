@@ -73,19 +73,19 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/claim-your-data")
+     * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
-        if ($session->get('bsn')) {
-            $bsn = $session->get('bsn');
+        if ($session->get('brp') && $type = 'brp') {
+            $bsn = $session->get('brp');
             if ($session->get('backUrl')) {
                 $backUrl = $session->get('backUrl');
             }
-            $session->remove('bsn');
+            $session->remove('brp');
             $variables['changedInfo'] = [];
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
@@ -122,8 +122,28 @@ class DashboardController extends AbstractController
             }
         }
 
-        if ($request->isMethod('POST') && $request->get('bsn')) {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
+        if ($session->get('duo') && $type = 'duo') {
+            $session->remove('duo');
+            $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+            $claim = [];
+            $claim['person'] = $person;
+            $claim['property'] = 'schema.person.educationalCredential';
+            $claim['data']['credentialCategory'] = 'diploma';
+            $claim['data']['name'] = 'Verpleegkundige';
+            $claim['data']['description'] = 'De Mbo-Verpleegkundige werkt met mensen die door ziekte, ouderdom of een beperking specialistische hulp of verzorging nodig hebben. De begeleiding varieert per zorgvrager. Je kan te maken krijgen met situaties waarbij de (psychische) gezondheidstoestand van de zorgvrager snel wisselt. Het gaat dan om situaties waarbij intensieve behandeling, therapie of medicatie wordt toegepast. Je werkt zelfstandig en je bent medeverantwoordelijk voor het opstellen van zorgplannen.';
+            $claim['data']['educationLevel'] = 'MBO 4';
+            $claim['data']['recognizedBy'] = 'https://www.nvao.net/';
+
+            $claim = $commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
+
+        }
+
+        if ($request->isMethod('POST') && $type == 'brp') {
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
+        } elseif ($request->isMethod('POST') && $type == 'duo'){
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
         } elseif (isset($backUrl)) {
             $session->remove('backUrl');
 
@@ -141,10 +161,16 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
-        if ($request->query->get('bsn')) {
-            $session->set('bsn', $request->query->get('bsn'));
+        if ($request->query->get('brp')) {
+            $session->set('brp', $request->query->get('brp'));
 
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
+            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'brp']));
+        }
+
+        if ($request->query->get('duo')) {
+            $session->set('duo', $request->query->get('duo'));
+
+            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'duo']));
         }
 
         if ($this->getUser()) {
