@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use function GuzzleHttp\Promise\all;
@@ -26,7 +25,7 @@ class NewsLetterController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params)
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
     }
 }

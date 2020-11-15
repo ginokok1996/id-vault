@@ -16,3 +16,4 @@ exclude:
 - /api/translations/.*
 - /api/var/.*
 - /api/vendor/.*
+- /api/src/Entity/.*

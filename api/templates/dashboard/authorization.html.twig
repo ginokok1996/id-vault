@@ -75,12 +75,8 @@
                                 <!-- Authorization scopes -->
                                 <h4>Scopes:</h4>
                                 <small class="text-gray-700">
-                                    {% for scopeItem in resource.scopes %}
-                                        {% if loop.last %}
-                                            {{ scopeItem }}
-                                        {% else %}
-                                            {{ scopeItem }},
-                                        {% endif %}
+                                    {% for scope in resource.scopes %}
+                                        {{ scope }}<br>
                                     {% endfor %}
                                 </small>
                                 <br>
