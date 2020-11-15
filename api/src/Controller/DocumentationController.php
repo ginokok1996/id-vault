@@ -48,7 +48,7 @@ class DocumentationController extends AbstractController
      * @Route("/plugins")
      * @Template
      */
-    public function pluginsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function pluginsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -70,7 +70,7 @@ class DocumentationController extends AbstractController
      * @Route("/api")
      * @Template
      */
-    public function apiAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function apiAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -81,7 +81,7 @@ class DocumentationController extends AbstractController
      * @Route("/tutorial")
      * @Template
      */
-    public function tutorialAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function tutorialAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -103,7 +103,7 @@ class DocumentationController extends AbstractController
      * @Route("/terms")
      * @Template
      */
-    public function termsAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function termsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -125,7 +125,7 @@ class DocumentationController extends AbstractController
      * @Route("/beta")
      * @Template
      */
-    public function betaAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function betaAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -147,7 +147,7 @@ class DocumentationController extends AbstractController
      * @Route("/support")
      * @Template
      */
-    public function supportAction(Session $session, Request $request, CommonGroundService $commonGroundService,  ParameterBagInterface $params, string $slug = 'home')
+    public function supportAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
