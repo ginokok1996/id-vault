@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\ScopeService;
 
 /**
  * Description.
@@ -28,10 +29,12 @@ class DashboardController extends AbstractController
      * @var FlashBagInterface
      */
     private $flash;
+    private $scopeService;
 
-    public function __construct(FlashBagInterface $flash)
+    public function __construct(FlashBagInterface $flash, ScopeService $scopeService)
     {
         $this->flash = $flash;
+        $this->scopeService = $scopeService;
     }
 
     /**
@@ -75,9 +78,21 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        if ($request->query->get('authorization')){
+            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
+            $scopes = $authorization['scopes'];
+
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+            $variables['deficiencies'] = $this->scopeService->checkScopes($scopes, $user);
+
+        }
 
         if ($session->get('brp') && $type = 'brp') {
             $bsn = $session->get('brp');
@@ -138,6 +153,12 @@ class DashboardController extends AbstractController
             $claim = $commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
 
             $variables['newClaim'] = $claim;
+
+            if ($session->get('backUrl')){
+                $backUrl = $session->get('backUrl');
+                $session->remove('backUrl');
+                return $this->redirect($backUrl);
+            }
 
         }
 

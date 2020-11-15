@@ -37,6 +37,54 @@
                             </div>
                         </div>
                     </div>
+                    {% if deficiencies is defined and deficiencies is not empty %}
+                        <!-- Card -->
+                        <div class="card card-bleed shadow-light-lg mb-6">
+                            <div class="card-header">
+
+                                <div class="row align-items-center">
+                                    <div class="col">
+
+                                        <!-- Heading -->
+                                        <h4 class="mb-0">
+                                            {{ 'requested scopes'|capitalize }}
+                                        </h4>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="list-group list-group-flush">
+                                            {% for deficiency in deficiencies %}
+                                                {% if deficiency.scope == 'schema.person.educationalCredential' %}
+                                                    <div class="list-group-item">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                            </div>
+                                                            <div class="col-11 ml-n5">
+                                                                <!-- Heading -->
+                                                                <p class="mb-0 font-weight-bold">
+                                                                    {{ deficiency.scope }}
+                                                                </p>
+                                                                <!-- Text -->
+                                                                <p class="text-gray-700">
+                                                                    {{ 'method' }}: Duo
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endif %}
                     {% if changedInfo is defined and changedInfo is not empty %}
                         <div class="col-md-12">
                             <table class="table">

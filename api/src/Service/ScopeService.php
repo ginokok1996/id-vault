@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use App\Service\ClaimService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -11,12 +12,14 @@ class ScopeService
     private $em;
     private $commonGroundService;
     private $params;
+    private $claimService;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
     {
         $this->em = $em;
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
+        $this->claimService = $claimService;
     }
 
     private function getScope(string $scope): ?array
@@ -81,29 +84,31 @@ class ScopeService
     public function checkScopes(array $scopes, $user)
     {
         $person = $this->commonGroundService->getResource($user['person']);
-        $organization = $this->commonGroundService->getResource($user['organization']);
-        $possibleScopes = $this->params->get('scopes');
-
+        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+//        $possibleScopes = $this->params->get('scopes');
+//
         $deficiencies = [];
 
         foreach ($scopes as $scope) {
-            $toValidate = $this->getScope($scope);
+//            $toValidate = $this->getScope($scope);
+//
+//            if (!$toValidate ||
+//                !key_exists('location', $toValidate) ||
+//                !key_exists('component', $toValidate['location']) ||
+//                !key_exists('type', $toValidate['location'])
+//            ) {
+//                $result = true;
+//            } elseif ($toValidate['location']['component'] == 'cc' && $toValidate['location']['type'] == 'people') {
+//                $result = $this->validateResource($toValidate, $person);
+//            } elseif ($toValidate['location']['component'] == 'uc' && $toValidate['location']['type'] == 'users') {
+//                $result = $this->validateResource($toValidate, $user);
+//            } elseif ($toValidate['location']['component'] == 'wrc' && $toValidate['location']['type'] == 'organizations') {
+//                $result = $this->validateResource($toValidate, $user);
+//            } else {
+//                $result = true;
+//            }
 
-            if (!$toValidate ||
-                !key_exists('location', $toValidate) ||
-                !key_exists('component', $toValidate['location']) ||
-                !key_exists('type', $toValidate['location'])
-            ) {
-                $result = true;
-            } elseif ($toValidate['location']['component'] == 'cc' && $toValidate['location']['type'] == 'people') {
-                $result = $this->validateResource($toValidate, $person);
-            } elseif ($toValidate['location']['component'] == 'uc' && $toValidate['location']['type'] == 'users') {
-                $result = $this->validateResource($toValidate, $user);
-            } elseif ($toValidate['location']['component'] == 'wrc' && $toValidate['location']['type'] == 'organizations') {
-                $result = $this->validateResource($toValidate, $user);
-            } else {
-                $result = true;
-            }
+            $result = $this->claimService->checkUserScope($personUrl, $scope);
 
             if ($result !== true) {
                 $deficiency['scope'] = $scope;

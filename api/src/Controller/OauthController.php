@@ -100,6 +100,11 @@ class OauthController extends AbstractController
 
                 $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
 
+                if ($request->get('needScopes')) {
+                    $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
+                    return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
+                }
+
                 return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
             } else {
                 return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
