@@ -63,11 +63,11 @@
 
                             {% if deficiencies|default %}
                                 <p class="warning mb-2">
-                                    Some scopes cannot be shared because they are not present in your account:
+                                    Some scopes are not present in your account, in the next window you will be able to provide information for the following scopes:
                                     <ul class="text-center list-group list-group-flush mb-2"></ul>
                                     {% for deficiency in deficiencies %}
                                         <li style="list-style: none;" class=" text-muted">
-                                            {{ deficiency.scope }} {% if deficiency.source|default %}<a href="{{ deficiency.source }}?responceUrl={{ path("app_dashboard_claimyourdata") }}?back_url={{ app.request.uri }}">Resolve it here!</a>{% endif %}
+                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope }}</span>
                                         </li>
                                     {% endfor %}
                                 </p>
@@ -87,9 +87,13 @@
                                 {% if redirectUrl is defined %}
                                     <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
                                 {% endif %}
+                                {% if deficiencies|default %}
+                                    {% for deficiency in deficiencies %}
+                                        <input type="hidden" name="needScopes[]" value="{{ deficiency.scope }}">
+                                    {% endfor %}
+                                {% endif %}
 
-                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto"
-                                    {% if deficiencies|default %}disabled{% endif %}>
+                                <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
                                     {{ 'accept'|trans|capitalize }}
                                 </button>
                                 <button name="grantAccess" value="false" class="navbar-btn btn btn-sm btn-danger ml-lg-2 mt-4 mt-lg-0 lift ml-auto">
