@@ -18,36 +18,73 @@
                 <div class="card card-bleed shadow-light-lg mb-6">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <div class="col-1">
+                            <div class="col-2">
 
                                 <!-- Back Button -->
-                                <a class="btn btn-sm btn-primary" href="{{ path('app_dashboard_dossiers') }}">
+                                <a class="btn btn-sm btn-primary" href="{{ path('app_dashboard_logs') }}">
                                     {{ 'back'|trans|capitalize }}
                                 </a>
 
                             </div>
 
-                            <div class="col-10 text-center">
+                            <div class="col-8 text-center">
 
                                 <!-- Heading -->
-                                <h4 class="mb-0">{{ 'dossier'|trans|capitalize }}</h4>
+                                <h4 class="mb-0">{{ 'log'|trans|capitalize }}</h4>
                                 <h4 class="mb-0">
-                                    {{ resource.basis }}
+                                    {{ resource.authorization.application.name }} | {{ resource.dateCreated|date('d-m-Y', 'Europe/Paris') }}
                                 </h4>
 
+                            </div>
+
+                            <div class="col-2">
+                                <!-- Icon -->
+                                {% if resource.authorization.application.contact is defined and resource.authorization.application.contact is not empty and commonground_is_resource(resource.authorization.application.contact) %}
+                                    {% set application = commonground_resource(resource.authorization.application.contact) %}
+                                    <div class="avatar avatar-xl">
+                                        <img class="avatar-img"
+                                            {% if application.style.favicon.base64 is defined and application.style.favicon.base64 is not empty %}
+                                                src="{{ application.style.favicon.base64 }}"
+                                            {% endif %}
+                                             alt="..."
+                                             style="object-fit: fill;
+                                             {% if resource.backgroundColor is defined and resource.backgroundColor|length > 0 %}
+                                                 background-color: {{ resource.backgroundColor[1] }};
+                                             {% endif %}"
+                                        >
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         {% if resource|default %}
 
-                            {% if resource.endDate is defined and resource.endDate is not empty %}
-                                <!-- Dossier endDate -->
-                                <h4>{{ 'end date'|trans|capitalize }}:</h4>
+                            {% if resource.authorization.scopes is defined and resource.authorization.scopes is not empty %}
+                                <!-- Authorization scopes -->
+                                <h4>Scopes:</h4>
                                 <small class="text-gray-700">
-                                    {{ resource.endDate|date("d-m-Y", "Europe/Paris") }}
+                                    {% for scope in resource.authorization.scopes %}
+                                        {{ scope }}<br>
+                                    {% endfor %}
                                 </small>
+                                <br>
                             {% endif %}
+
+                            {% if resource.goal is defined and resource.goal is not empty %}
+                                <!-- Log Goal -->
+                                <h4>{{ 'goal'|trans|capitalize }}</h4>
+                                <small class="text-gray-700">
+                                    {{ resource.goal }}
+                                </small>
+                                <br>
+                            {% endif %}
+
+                            <!-- Authorization endDate -->
+                            <h4>{{ 'logged at'|trans|capitalize }}:</h4>
+                            <small class="text-gray-700">
+                                {{ resource.dateCreated|date('H:i, d-m-Y', 'Europe/Paris') }}
+                            </small>
 
                         {% endif %}
                     </div>
@@ -62,7 +99,7 @@
 
                                     <!-- Heading -->
                                     <h4 class="mb-0">
-                                        {{ 'this is a dossier on this authorization:'|trans|capitalize }}
+                                        {{ 'this is the authorization of this log:'|trans|capitalize }}
                                     </h4>
 
                                 </div>
@@ -84,8 +121,8 @@
                                                 {% endif %}
                                                  alt="..."
                                                  style="object-fit: fill;
-                                                 {% if resource.authorization.backgroundColor is defined and resource.authorization.backgroundColor|length > 0 %}
-                                                     background-color: {{ resource.authorization.backgroundColor[1] }};
+                                                 {% if resource.backgroundColor is defined and resource.backgroundColor|length > 0 %}
+                                                     background-color: {{ resource.backgroundColor[1] }};
                                                  {% endif %}"
                                             >
                                         </div>

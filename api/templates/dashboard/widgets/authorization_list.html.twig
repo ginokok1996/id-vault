@@ -37,12 +37,8 @@
                             {% if authorization.scopes is defined and authorization.scopes is not empty %}
                                 <!-- Text -->
                                 <small class="text-gray-700">
-                                    {% for scopeItem in authorization.scopes %}
-                                        {% if loop.last %}
-                                            {{ scopeItem }}
-                                        {% else %}
-                                            {{ scopeItem }},
-                                        {% endif %}
+                                    {% for scope in authorization.scopes %}
+                                        {{ scope }}<br>
                                     {% endfor %}
                                 </small>
                                 <br>
