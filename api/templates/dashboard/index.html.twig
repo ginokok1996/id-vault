@@ -15,58 +15,6 @@
                             Let us help you claim your data back from external parties, lets go!
                         </a>
                     </div>
-                    {# if authorizations is defined and authorizations is not empty #}
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-3">
-                                <!-- Card -->
-                                <div class="card card-bleed shadow-light-lg mb-6 lift" style="height: 120px;">
-                                    <div class="card-body">
-                                        <!-- list of claims -->
-                                        Voorbeeld
-                                    </div>
-                                </div>
-                            </div>
-                    {# for authorization in authorizations %}
-                            <div class="col-3">
-                                <!-- Card -->
-                                <div class="card card-bleed shadow-light-lg mb-6 lift" style="height: 120px;">
-                                    <div class="card-body">
-                                        <!-- list of claims -->
-                                        Voorbeeld
-                                    </div>
-                                </div>
-                            </div>
-                    {% endfor #}
-                        </div>
-                    </div>
-                    {# endif #}
-                    <div class="col-12">
-                        <!-- Card -->
-                        <div class="card card-bleed shadow-light-lg mb-6 lift" style="height: 120px;">
-                            <div class="card-body">
-                                <div class="datausage-chart"></div>
-                                <script>
-                                    new Chartist.Line('.datausage', {
-                                        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-                                        series: [
-                                            [12, 9, 7, 8, 5],
-                                            [2, 1, 3.5, 7, 3],
-                                            [1, 3, 4, 5, 6]
-                                        ]
-                                    }, {
-                                        fullWidth: true,
-                                        chartPadding: {
-                                            right: 40
-                                        },
-                                        plugins: [
-                                            Chartist.plugins.tooltip()
-                                        ]
-                                    });
-                                </script>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
