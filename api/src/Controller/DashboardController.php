@@ -79,6 +79,10 @@ class DashboardController extends AbstractController
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
+        foreach ($variables['authorizations'] as &$authorization) {
+            $authorization['singleSignOnUrl'] = $authorization['application']['authorizationUrl']."?code={$authorization['id']}";
+        }
+
         return $variables;
     }
 
