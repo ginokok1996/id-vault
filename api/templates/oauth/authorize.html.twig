@@ -48,7 +48,7 @@
                         {% if scopes is defined and scopes is not empty %}
                             {% for scope in scopes %}
                                 <li style="list-style: none;" class=" text-muted">
-                                    {{ scope }}
+                                    {{ scope|trans }}
                                 </li>
                             {% endfor %}
                         {% endif %}
@@ -67,7 +67,7 @@
                                     <ul class="text-center list-group list-group-flush mb-2"></ul>
                                     {% for deficiency in deficiencies %}
                                         <li style="list-style: none;" class=" text-muted">
-                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope }}</span>
+                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope|trans }}</span>
                                         </li>
                                     {% endfor %}
                                 </p>
@@ -86,6 +86,9 @@
                                 {% endif %}
                                 {% if redirectUrl is defined %}
                                     <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
+                                {% endif %}
+                                {% if authorization is defined %}
+                                    <input type="hidden" name="authorization" value="{{ authorization }}">
                                 {% endif %}
                                 {% if deficiencies|default %}
                                     {% for deficiency in deficiencies %}
@@ -123,7 +126,7 @@
 
                             <!-- Text -->
                             <p class="mb-6 text-center text-muted">
-                                {{ 'store your data in minutes'|trans|capitalize }}.
+                                {{ 'secure your data with the push of a button'|trans|capitalize }}.
                             </p>
 
                             <!-- Form -->
@@ -193,7 +196,7 @@
 
                             <!-- Text -->
                             <p class="mb-6 text-center text-muted">
-                                {{ 'store your data in minutes'|trans|capitalize }}.
+                                {{ 'secure your data with the push of a button'|trans|capitalize }}.
                             </p>
 
                             <!-- Form -->

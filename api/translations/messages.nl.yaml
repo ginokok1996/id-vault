@@ -1,0 +1,8 @@
+schema.person.email: email
+schema.person.telephone: telephone
+schema.person.birthPlace: birthplace
+schema.person.given_name: given name
+schema.person.family_name: family name
+schema.person.birthday: birthday
+schema.person.educationalCredential: educational credentials
+other.brp.ingeschrevenpersoon.persoonsnummer: bsn
