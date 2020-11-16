@@ -37,9 +37,8 @@ class DashboardController extends AbstractController
         $this->scopeService = $scopeService;
     }
 
-    public function provideCounterData(CommonGroundService $commonGroundService, $variables){
-
-
+    public function provideCounterData(CommonGroundService $commonGroundService, $variables)
+    {
         $person = $commonGroundService->getResource($this->getUser()->getPerson());
         $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
         $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
@@ -106,7 +105,6 @@ class DashboardController extends AbstractController
                 $variables['alerts'][] = $todo['alarm'];
             }
         }
-
 
         return $variables;
     }
