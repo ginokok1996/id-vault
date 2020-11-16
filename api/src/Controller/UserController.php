@@ -309,6 +309,14 @@ class UserController extends AbstractController
 
                 $commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
 
+                //calendar for the user
+                $calendar = [];
+                $calendar['name'] = 'calendar for '.$person['name'];
+                $calendar['resource'] = $personUrl;
+                $calendar['timeZone'] = 'CET';
+
+                $commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
+
                 $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
 
                 $token = new UsernamePasswordToken($userObject, null, 'main', $userObject->getRoles());

@@ -55,9 +55,6 @@ class OauthController extends AbstractController
         $state = $request->get('state');
         $variables['state'] = $state;
 
-        $scopes = $request->get('scopes');
-        $variables['scopes'] = $scopes;
-
         /*
          *  Then we NEED to get a redirect url, for this we have several options
          */
@@ -86,7 +83,34 @@ class OauthController extends AbstractController
                 $redirectUrl = $variables['application']['authorizationUrl'];
             }
 
-            if ($request->get('grantAccess') == 'true') {
+            if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
+
+                $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorization')]);
+                $authorization['application'] = '/applications/'.$authorization['application']['id'];
+                $scopes = $request->get('scopes');
+
+                $authLogs = [];
+                foreach ($authorization['authorizationLogs'] as $log) {
+                    $authLogs = ['/authorization_logs/'.$log['id']];
+                }
+
+                $authorization['authorizationLogs'] = $authLogs;
+
+                foreach ($scopes as $scope) {
+                    $authorization['scopes'][] = $scope;
+                }
+
+                $commonGroundService->saveResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
+
+                if ($request->get('needScopes')) {
+                    $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
+
+                    return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
+                }
+
+                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
+
+            } elseif ($request->get('grantAccess') == 'true') {
                 $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
                 if (count($users) > 0) {
                     $user = $users[0];
@@ -120,7 +144,26 @@ class OauthController extends AbstractController
             if (count($authorizations) > 0) {
                 $authorization = $authorizations['0'];
 
-                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+                if ($request->query->get('scopes')) {
+                    $unAuthorizedScopes = false;
+                    $scopes = explode(' ', $request->query->get('scopes'));
+                    $newScopes = [];
+
+                    foreach ($scopes as $scope) {
+                        if (!in_array($scope, $authorization['scopes'])){
+                            $newScopes[] = $scope;
+                            $unAuthorizedScopes = true;
+                        }
+                    }
+
+                    if ($unAuthorizedScopes) {
+                        $variables['authorization'] = $authorization['id'];
+                        $variables['scopes'] = $newScopes;
+                    } else {
+                        return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+                    }
+                }
+
             }
         }
 
@@ -130,7 +173,7 @@ class OauthController extends AbstractController
 
         if (!$request->query->get('scopes')) {
             return $this->redirect($redirectUrl.'?errorMessage=no+scopes+provided');
-        } else {
+        } elseif (!isset($variables['scopes'])) {
             $variables['scopes'] = explode(' ', $request->query->get('scopes'));
         }
         if ($this->getUser()) {
