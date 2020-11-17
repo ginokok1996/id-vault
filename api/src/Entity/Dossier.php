@@ -46,7 +46,7 @@ class Dossier
 
     /**
      * @var string Name of the Dossier
-     *
+     * @Assert\NotNull
      * @example employee dossier
      *
      * @Assert\Length(
@@ -70,7 +70,7 @@ class Dossier
 
     /**
      * @var string The goal of a the dossier
-     *
+     * @Assert\NotNull
      * @example employee dossier of henk
      *
      * @Assert\Length(
@@ -81,7 +81,8 @@ class Dossier
     private $goal;
 
     /**
-     *
+     * @Assert\NotNull
+
      * @example 27-10-2020 10:47:00
      *
      * @Groups({"read","write"})
@@ -93,6 +94,7 @@ class Dossier
      *
      * @example https://dev.id-vault.com/dossiers/x (?)
      *
+     * @Assert\NotNull
      * @Assert\Url
      * @Assert\Length(
      *     max = 255
@@ -113,7 +115,8 @@ class Dossier
 
     /**
      * @var array scopes this authorization has access to
-     *
+     * @Assert\NotNull
+
      * @Groups({"read","write"})
      */
     private $scopes = [];

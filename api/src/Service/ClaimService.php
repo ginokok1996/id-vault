@@ -17,7 +17,8 @@ class ClaimService
     {
         $scopes = $this->getUserScopes($person);
 
-        if (array_key_exists($scope, $scopes)) {
+        // check if there is an claim for the requested scope & schema or application is in the scope.
+        if (array_key_exists($scope, $scopes) || (!strpos('schema', $scope) !== false || !strpos('application', $scope !== false))) {
             return true;
         }
 

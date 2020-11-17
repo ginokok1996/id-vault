@@ -6,3 +6,4 @@ schema.person.family_name: family name
 schema.person.birthday: birthday
 schema.person.educationalCredential: educational credentials
 other.brp.ingeschrevenpersoon.persoonsnummer: bsn
+single_sign_on: single sign on
