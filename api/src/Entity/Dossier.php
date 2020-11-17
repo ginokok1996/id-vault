@@ -46,9 +46,10 @@ class Dossier
 
     /**
      * @var string Name of the Dossier
-     * @Assert\NotNull
+     *
      * @example employee dossier
      *
+     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -70,9 +71,9 @@ class Dossier
 
     /**
      * @var string The goal of a the dossier
-     * @Assert\NotNull
      * @example employee dossier of henk
      *
+     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -81,9 +82,9 @@ class Dossier
     private $goal;
 
     /**
-     * @Assert\NotNull
-
      * @example 27-10-2020 10:47:00
+     *
+     * @Assert\NotNull
      *
      * @Groups({"read","write"})
      */
@@ -115,8 +116,9 @@ class Dossier
 
     /**
      * @var array scopes this authorization has access to
+     *
      * @Assert\NotNull
-
+     * 
      * @Groups({"read","write"})
      */
     private $scopes = [];
