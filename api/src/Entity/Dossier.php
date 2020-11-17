@@ -8,9 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -47,6 +45,7 @@ class Dossier
     /**
      * @var string Name of the Dossier
      * @Assert\NotNull
+     *
      * @example employee dossier
      *
      * @Assert\Length(
@@ -71,6 +70,7 @@ class Dossier
     /**
      * @var string The goal of a the dossier
      * @Assert\NotNull
+     *
      * @example employee dossier of henk
      *
      * @Assert\Length(
@@ -82,7 +82,8 @@ class Dossier
 
     /**
      * @Assert\NotNull
-
+     *
+     *
      * @example 27-10-2020 10:47:00
      *
      * @Groups({"read","write"})
@@ -116,7 +117,7 @@ class Dossier
     /**
      * @var array scopes this authorization has access to
      * @Assert\NotNull
-
+     *
      * @Groups({"read","write"})
      */
     private $scopes = [];
@@ -209,5 +210,4 @@ class Dossier
 
         return $this;
     }
-
 }
