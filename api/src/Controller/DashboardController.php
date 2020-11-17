@@ -43,23 +43,31 @@ class DashboardController extends AbstractController
         $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
         $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
-        $calendar = $calendars[0];
 
-        //alerts
-        if (count($calendar['todos']) > 0) {
-            foreach ($calendar['todos'] as $todo) {
-                $alerts = $todo['alarm'];
-            }
-            $variables['alertCount'] = (string) count($alerts);
-        } else {
-            $variables['alertCount'] = '0';
+        if (!count($calendars) > 0 ) {
+            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
         }
 
-        //tasks
-        if (count($calendar['todos']) > 0) {
-            $variables['taskCount'] = (string) count($calendar['todos']);
-        } else {
-            $variables['taskCount'] = '0';
+        if (count($calendars) > 0 ) {
+            $calendar = $calendars[0];
+
+            //alerts
+            if (count($calendar['todos']) > 0) {
+                foreach ($calendar['todos'] as $todo) {
+                    $alerts = $todo['alarm'];
+                }
+                $variables['alertCount'] = (string) count($alerts);
+            } else {
+                $variables['alertCount'] = '0';
+            }
+
+            //tasks
+            if (count($calendar['todos']) > 0) {
+                $variables['taskCount'] = (string) count($calendar['todos']);
+            } else {
+                $variables['taskCount'] = '0';
+            }
+            
         }
 
         return $variables;
