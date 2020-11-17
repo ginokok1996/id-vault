@@ -40,7 +40,7 @@ class DossierSubscriber implements EventSubscriberInterface
 
     public function createDossier(ViewEvent $event)
     {
-        $token = $event->getControllerResult();
+        $dossier = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         $authentication = $event->getRequest()->headers->get('authentication');
         $route = $event->getRequest()->attributes->get('_route');
@@ -48,14 +48,42 @@ class DossierSubscriber implements EventSubscriberInterface
         if ($method != 'POST') {
             return;
         }
-        if ($token instanceof Dossier) {
+        if ($dossier instanceof Dossier) {
 
-            if ($authentication == 'test') {
-                throw new  Exception('Invalid authentication key');
+            try {
+                $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'],['id' => $authentication])['hydra:member'];
+            } catch (\Throwable $e) {
+                throw new  Exception('Invalid authentication header');
             }
+
+            if (!count($authorizations) > 0){
+                throw new  Exception('Invalid authentication header');
+            }
+
+            $authorization = $authorizations[0];
+
+            $scopes = $dossier->getScopes();
+
+            foreach ($scopes as $scope) {
+                if (!in_array($scope, $authorization['scopes'])) {
+                    throw new  Exception('Scope '.$scope.' is not authorized by user');
+                }
+            }
+
+            $newDossier = [];
+            $newDossier['name'] = $dossier->getName();
+            $newDossier['description'] = $dossier->getDescription();
+            $newDossier['goal'] = $dossier->getGoal();
+            $newDossier['scopes'] = $dossier->getScopes();
+            $newDossier['expiryDate'] = $dossier->getExpiryDate()->format('h:m Y-m-d');
+            $newDossier['sso'] = $dossier->getSso();
+            $newDossier['legal'] = (bool) $dossier->getLegal();
+            $newDossier['authorization'] = '/authorizations/'.$authorization['id'];
+
+            $this->commonGroundService->saveResource($newDossier, ['component' => 'wac', 'type' => 'dossiers']);
 
         }
 
-        return $token;
+        return $dossier;
     }
 }

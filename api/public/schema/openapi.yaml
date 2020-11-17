@@ -4918,9 +4918,21 @@ components:
           type: array
           items:
             type: string
+      required:
+        - name
+        - goal
+        - expiryDate
+        - sso
+        - scopes
     Dossier-write:
       type: object
       description: ''
+      required:
+        - name
+        - goal
+        - expiryDate
+        - sso
+        - scopes
       properties:
         name:
           description: 'Name of the Dossier'
@@ -4994,9 +5006,21 @@ components:
           type: array
           items:
             type: string
+      required:
+        - name
+        - goal
+        - expiryDate
+        - sso
+        - scopes
     'Dossier:jsonld-write':
       type: object
       description: ''
+      required:
+        - name
+        - goal
+        - expiryDate
+        - sso
+        - scopes
       properties:
         '@context':
           readOnly: true
@@ -5375,12 +5399,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-16 15:15:15'
+        example: '2020-11-17 10:04:22'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-16 15:15:15'
+        example: '2020-11-17 10:04:22'
     required: []
   AuditTrail-write:
     properties:
@@ -5428,12 +5452,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-11-16 15:15:15'
+        example: '2020-11-17 10:04:22'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-11-16 15:15:15'
+        example: '2020-11-17 10:04:22'
     required: []
   ChangeLog-write:
     properties:
