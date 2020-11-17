@@ -49,14 +49,13 @@ class DossierSubscriber implements EventSubscriberInterface
             return;
         }
         if ($dossier instanceof Dossier) {
-
             try {
-                $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'],['id' => $authentication])['hydra:member'];
+                $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['id' => $authentication])['hydra:member'];
             } catch (\Throwable $e) {
                 throw new  Exception('Invalid authentication header');
             }
 
-            if (!count($authorizations) > 0){
+            if (!count($authorizations) > 0) {
                 throw new  Exception('Invalid authentication header');
             }
 
@@ -81,7 +80,6 @@ class DossierSubscriber implements EventSubscriberInterface
             $newDossier['authorization'] = '/authorizations/'.$authorization['id'];
 
             $this->commonGroundService->saveResource($newDossier, ['component' => 'wac', 'type' => 'dossiers']);
-
         }
 
         return $dossier;
