@@ -8,9 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -71,6 +69,7 @@ class Dossier
 
     /**
      * @var string The goal of a the dossier
+     *
      * @example employee dossier of henk
      *
      * @Assert\NotNull
@@ -118,7 +117,7 @@ class Dossier
      * @var array scopes this authorization has access to
      *
      * @Assert\NotNull
-     * 
+     *
      * @Groups({"read","write"})
      */
     private $scopes = [];
@@ -211,5 +210,4 @@ class Dossier
 
         return $this;
     }
-
 }
