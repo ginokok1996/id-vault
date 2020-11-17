@@ -26,7 +26,11 @@
                                         <div class="card card-bleed shadow-light-lg mb-6 lift">
                                             {% set wrcApplication = commonground_resource(authorization.application.contact) %}
                                             {% if wrcApplication.style.favicon is defined %}
-                                                <img alt="" style="width: 100px; height: 100px; margin-left: auto; margin-right: auto" src="{{ wrcApplication.style.favicon.base64 }}" />
+                                                <img alt="" style="
+                                                {% if authorization.backgroundColor is defined and authorization.backgroundColor|length > 0 %}
+                                                    background-color: {{ authorization.backgroundColor[1] }};
+                                                {% endif %}
+                                                    width: 100px; height: 100px; margin-left: auto; margin-right: auto" src="{{ wrcApplication.style.favicon.base64 }}" />
                                             {% endif %}
                                             <div class="card-body text-center">
                                                 {{ authorization.application.name }}

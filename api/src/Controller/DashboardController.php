@@ -41,6 +41,7 @@ class DashboardController extends AbstractController
     {
         $person = $commonGroundService->getResource($this->getUser()->getPerson());
         $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
         $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
         $calendar = $calendars[0];
 
@@ -79,7 +80,17 @@ class DashboardController extends AbstractController
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         foreach ($variables['authorizations'] as &$authorization) {
-            $authorization['singleSignOnUrl'] = $authorization['application']['authorizationUrl']."?code={$authorization['id']}";
+            if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
+                $application = $commonGroundService->isResource($authorization['application']['contact']);
+                if ($application) {
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $authorization['backgroundColor'] = $matches;
+                    }
+                }
+
+                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
+            }
         }
 
         return $variables;
