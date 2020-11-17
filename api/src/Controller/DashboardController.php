@@ -44,11 +44,11 @@ class DashboardController extends AbstractController
 
         $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
 
-        if (!count($calendars) > 0 ) {
+        if (!count($calendars) > 0) {
             $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
         }
 
-        if (count($calendars) > 0 ) {
+        if (count($calendars) > 0) {
             $calendar = $calendars[0];
 
             //alerts
@@ -67,7 +67,6 @@ class DashboardController extends AbstractController
             } else {
                 $variables['taskCount'] = '0';
             }
-            
         }
 
         return $variables;
