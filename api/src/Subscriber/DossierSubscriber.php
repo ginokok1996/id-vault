@@ -80,6 +80,15 @@ class DossierSubscriber implements EventSubscriberInterface
             $newDossier['authorization'] = '/authorizations/'.$authorization['id'];
 
             $this->commonGroundService->saveResource($newDossier, ['component' => 'wac', 'type' => 'dossiers']);
+
+            $alert = [];
+            $alert['name'] = 'Dossier created';
+            $alert['description'] = 'dossier '.$dossier->getName().' created by '.$authorization['application']['name'];
+            $alert['link'] = $authorization['userUrl'];
+            $alert['icon'] = 'fas fa-bell';
+            $alert['type'] = 'info';
+
+            $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
         }
 
         return $dossier;
