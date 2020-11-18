@@ -81,7 +81,6 @@ class AccessSubscriber implements EventSubscriberInterface
             $alert['type'] = 'info';
 
             $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
-
         }
 
         return $token;

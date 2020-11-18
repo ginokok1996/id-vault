@@ -49,7 +49,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
         }
 
         if ($scopeRequest instanceof GetScopes) {
-
             try {
                 $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['id' => $scopeRequest->getAuthorization()])['hydra:member'];
             } catch (\Throwable $e) {
@@ -88,7 +87,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
 //                $todo['resource'] = $personUrl;
 //
 //                $this->commonGroundService->saveResource($todo, ['component' => 'arc', 'type' => 'todos']);
-
             } else {
                 throw new  Exception('Invalid authorization code');
             }
