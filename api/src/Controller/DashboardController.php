@@ -112,7 +112,7 @@ class DashboardController extends AbstractController
         $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
-        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
+        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         return $variables;
     }
