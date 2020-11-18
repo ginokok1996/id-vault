@@ -72,6 +72,16 @@ class AccessSubscriber implements EventSubscriberInterface
             }
             $authorizationLog['endpoint'] = 'access_tokens';
             $this->commonGroundService->createResource($authorizationLog, ['component' => 'wac', 'type' => 'authorization_logs']);
+
+            $alert = [];
+            $alert['name'] = 'Information requested';
+            $alert['description'] = 'Information requested by'.$authorization['application']['name'];
+            $alert['link'] = $authorization['userUrl'];
+            $alert['icon'] = 'fas fa-bell';
+            $alert['type'] = 'info';
+
+            $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
+
         }
 
         return $token;
