@@ -1,55 +1,31 @@
 {% if alerts is defined and alerts is not empty %}
+    <div class="list-group list-group-flush">
+        {% for alert in alerts %}
+            <div class="list-group-item d-flex align-items-center">
 
-<div class="card card-bleed shadow-light-lg">
-    <div class="card-header">
-        <div class="row align-items-center">
-            <div class="col">
+                <!-- Text -->
+                <div class="mr-auto">
 
-                <!-- Heading -->
-                <h4 class="mb-0">
-                    {{ 'your alerts'|trans|capitalize }}
-                </h4>
+                    <!-- Heading -->
+                    <p class="font-weight-bold mb-1">
+                        {{ alert.name }}
+                    </p>
+
+                    <!-- Text -->
+                    <p class="font-size-sm text-muted mb-0">
+                        {{ alert.description|capitalize }}
+                    </p>
+
+                </div>
+
+                <!-- Check -->
+                <div style="height: fit-content" class="badge badge-rounded-circle badge-{{ alert.type }}-soft ml-4">
+                    <i style="font-size: 2rem;" class="{{ alert.icon }}"></i>
+                </div>
 
             </div>
-        </div>
+        {% endfor%}
     </div>
-    <div class="card-body">
-
-        <!-- List group -->
-        <div class="list-group list-group-flush">
-            {% for alert in alerts %}
-                <div class="list-group-item">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-
-                            <!-- Icon -->
-                            <div class="icon icon-sm text-gray-400"><i class="{{ alert.icon }}"></i></div>
-                        </div>
-                        <div class="col ml-n5">
-
-                            <!-- Heading -->
-                            <p class="mb-0">
-                                {{ alert.name }}
-                            </p>
-
-                            <!-- Text -->
-                            <small class="text-gray-700">
-                                 {{ alert.description }}
-                            </small>
-
-                        </div>
-                        <div class="col-auto">
-                            <!-- Button -->
-                            <a class="btn btn-xs btn-outline-white" href="{{ alert.link }}">
-                                {{ 'view alert'|trans|capitalize }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
 {% else %}
     <p class="hint__title">{{ 'no alerts available'|trans|capitalize }}</p>
 {% endif %}

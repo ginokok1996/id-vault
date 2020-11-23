@@ -118,6 +118,74 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="singleSignOnUrl">{{ 'Single-Sign-On url'|trans|capitalize }} </label>
+                        <input class="form-control" name="singleSignOnUrl" id="singleSignOnUrl" type="text" placeholder="{{ 'Single-Sign-On url'|trans|capitalize }}"
+                            {% if application.singleSignOnUrl is defined and application.singleSignOnUrl is not empty %}
+                            value="{{ application.singleSignOnUrl }}"
+                            {% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="gdprContact">{{ 'gdpr contact'|trans|capitalize }} </label>
+                        <select class="form-control" name="gdprContact" id="gdprContact">
+                            {% for user in users %}
+                                {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                <option {% if application.gdprContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="technicalContact">{{ 'technical contact'|trans|capitalize }} </label>
+                        <select class="form-control" name="technicalContact" id="technicalContact">
+                            {% for user in users %}
+                                {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                <option {% if application.technicalContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="privacyContact">{{ 'privacy contact'|trans|capitalize }} </label>
+                        <select class="form-control" name="privacyContact" id="privacyContact">
+                            {% for user in users %}
+                                {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                <option {% if application.privacyContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="billingContact">{{ 'billing contact'|trans|capitalize }} </label>
+                        <select class="form-control" name="billingContact" id="billingContact">
+                            {% for user in users %}
+                                {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                <option {% if application.billingContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-12 col-md-auto">
                     <!-- Button -->
                     <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">

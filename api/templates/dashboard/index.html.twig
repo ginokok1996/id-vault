@@ -8,7 +8,6 @@
                 {% include 'dashboard/sidenavbar.html.twig' %}
 
             </div>
-
             <div class="col-12 col-md-9">
                 <div class="row">
                     <div class="col-12 mb-6">
@@ -16,33 +15,32 @@
                             Let us help you claim your data back from external parties, lets go!
                         </a>
                     </div>
-                    {# if authorizations is defined and authorizations is not empty #}
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-3">
-                                <!-- Card -->
-                                <div class="card card-bleed shadow-light-lg mb-6 lift">
-                                    <div class="card-body">
-                                        <!-- list of claims -->
-                                        Voorbeeld
-                                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        {% for authorization in authorizations %}
+                            {% if authorization.singleSignOnUrl is defined %}
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <!-- Card -->
+                                    <a target="_blank" style="text-decoration: none" href="{{ authorization.singleSignOnUrl }}">
+                                        <div class="card card-bleed shadow-light-lg mb-6 lift">
+                                            {% set wrcApplication = commonground_resource(authorization.application.contact) %}
+                                            {% if wrcApplication.style.favicon is defined %}
+                                                <img alt="" style="
+                                                {% if authorization.backgroundColor is defined and authorization.backgroundColor|length > 0 %}
+                                                    background-color: {{ authorization.backgroundColor[1] }};
+                                                {% endif %}
+                                                    width: 100px; height: 100px; margin-left: auto; margin-right: auto" src="{{ wrcApplication.style.favicon.base64 }}" />
+                                            {% endif %}
+                                            <div class="card-body text-center pl-2 pr-2">
+                                                {{ authorization.application.name }}
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-                    {# for authorization in authorizations %}
-                            <div class="col-3 card card-bleed shadow-light-lg">
-                                <!-- Card -->
-                                <div class="card card-bleed shadow-light-lg mb-6">
-                                    <div class="card-body">
-                                        <!-- list of claims -->
-                                        {{ application.name }}
-                                    </div>
-                                </div>
-                            </div>
-                    {% endfor #}
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    {# endif #}
-
                 </div>
             </div>
 

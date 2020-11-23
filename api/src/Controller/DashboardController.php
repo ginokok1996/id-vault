@@ -4,8 +4,8 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
 //use App\Service\RequestService;
+use App\Service\ScopeService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,23 +29,72 @@ class DashboardController extends AbstractController
      * @var FlashBagInterface
      */
     private $flash;
+    private $scopeService;
 
-    public function __construct(FlashBagInterface $flash)
+    public function __construct(FlashBagInterface $flash, ScopeService $scopeService)
     {
         $this->flash = $flash;
+        $this->scopeService = $scopeService;
+    }
+
+    public function provideCounterData(CommonGroundService $commonGroundService, $variables)
+    {
+        $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
+        $person = $commonGroundService->getResource($this->getUser()->getPerson());
+        $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+//        //tasks
+//        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
+//
+//        if (!count($calendars) > 0) {
+//            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
+//        }
+//
+//        if (count($calendars) > 0) {
+//            $calendar = $calendars[0];
+//            if (count($calendar['todos']) > 0) {
+//                $variables['taskCount'] = (string) count($calendar['todos']);
+//            } else {
+//                $variables['taskCount'] = '0';
+//            }
+//        }
+
+        //alerts
+        $alerts = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
+        $variables['alertCount'] = (string) count($alerts);
+
+        return $variables;
     }
 
     /**
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+
+        foreach ($variables['authorizations'] as &$authorization) {
+            if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
+                $application = $commonGroundService->isResource($authorization['application']['contact']);
+                if ($application) {
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $authorization['backgroundColor'] = $matches;
+                    }
+                }
+
+                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
+            }
+        }
 
         return $variables;
     }
@@ -54,12 +103,16 @@ class DashboardController extends AbstractController
      * @Route("/alerts")
      * @Template
      */
-    public function alertsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function alertsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
-        /*@todo get alerts for current user only */
-        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'])['hydra:member'];
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
+        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         return $variables;
     }
@@ -68,24 +121,55 @@ class DashboardController extends AbstractController
      * @Route("/tasks")
      * @Template
      */
-    public function tasksAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function tasksAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        $person = $commonGroundService->getResource($this->getUser()->getPerson());
+        $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
+
+        if (!count($calendars) > 0) {
+            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
+        }
+
+        if (count($calendars) > 0) {
+            $calendar = $calendars[0];
+            $variables['tasks'] = $calendar['todos'];
+        }
 
         return $variables;
     }
 
     /**
-     * @Route("/claim-your-data")
+     * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
-        if ($session->get('bsn')) {
-            $bsn = $session->get('bsn');
-            $session->remove('bsn');
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        if ($request->query->get('authorization')) {
+            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
+            $scopes = $authorization['scopes'];
+
+            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+            $variables['deficiencies'] = $this->scopeService->checkScopes($scopes, $user);
+        }
+
+        if ($session->get('brp') && $type = 'brp') {
+            $bsn = $session->get('brp');
+            if ($session->get('backUrl')) {
+                $backUrl = $session->get('backUrl');
+            }
+            $session->remove('brp');
             $variables['changedInfo'] = [];
             $ingeschrevenPersonen = $commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
             $person = $commonGroundService->getResource($this->getUser()->getPerson());
@@ -122,8 +206,39 @@ class DashboardController extends AbstractController
             }
         }
 
-        if ($request->isMethod('POST') && $request->get('bsn')) {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?bsn='.$request->get('bsn'));
+        if ($session->get('duo') && $type = 'duo') {
+            $session->remove('duo');
+            $person = $commonGroundService->getResource($this->getUser()->getPerson());
+            $person = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+            $claim = [];
+            $claim['person'] = $person;
+            $claim['property'] = 'schema.person.educationalCredential';
+            $claim['data']['credentialCategory'] = 'diploma';
+            $claim['data']['name'] = 'Verpleegkundige';
+            $claim['data']['description'] = 'De Mbo-Verpleegkundige werkt met mensen die door ziekte, ouderdom of een beperking specialistische hulp of verzorging nodig hebben. De begeleiding varieert per zorgvrager. Je kan te maken krijgen met situaties waarbij de (psychische) gezondheidstoestand van de zorgvrager snel wisselt. Het gaat dan om situaties waarbij intensieve behandeling, therapie of medicatie wordt toegepast. Je werkt zelfstandig en je bent medeverantwoordelijk voor het opstellen van zorgplannen.';
+            $claim['data']['educationLevel'] = 'MBO 4';
+            $claim['data']['recognizedBy'] = 'https://www.nvao.net/';
+
+            $claim = $commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
+
+            $variables['newClaim'] = $claim;
+
+            if ($session->get('backUrl')) {
+                $variables['backUrl'] = $session->get('backUrl');
+                $variables['showModal'] = true;
+                $session->remove('backUrl');
+            }
+        }
+
+        if ($request->isMethod('POST') && $type == 'brp') {
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
+        } elseif ($request->isMethod('POST') && $type == 'duo') {
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
+        } elseif (isset($backUrl)) {
+            $session->remove('backUrl');
+
+            return $this->redirect($backUrl);
         }
 
         return $variables;
@@ -133,19 +248,27 @@ class DashboardController extends AbstractController
      * @Route("/general")
      * @Template
      */
-    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
-        if ($request->query->get('bsn')) {
-            $session->set('bsn', $request->query->get('bsn'));
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
+        if ($request->query->get('brp')) {
+            $session->set('brp', $request->query->get('brp'));
+
+            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'brp']));
+        }
+
+        if ($request->query->get('duo')) {
+            $session->set('duo', $request->query->get('duo'));
+
+            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'duo']));
         }
 
         if ($this->getUser()) {
-            $personUrl = $this->getUser()->getPerson();
-            $variables['person'] = $commonGroundService->getResource($personUrl);
+            $variables['person'] = $commonGroundService->getResource($this->getUser()->getPerson());
+            $variables['person'] = $commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $variables['person']['id']]);
         }
 
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
@@ -233,9 +356,11 @@ class DashboardController extends AbstractController
      * @Route("/security")
      * @Template
      */
-    public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function securityAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         return $variables;
     }
@@ -244,9 +369,11 @@ class DashboardController extends AbstractController
      * @Route("/notifications")
      * @Template
      */
-    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         return $variables;
     }
@@ -255,9 +382,11 @@ class DashboardController extends AbstractController
      * @Route("/claims")
      * @Template
      */
-    public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
@@ -333,7 +462,7 @@ class DashboardController extends AbstractController
      * @Route("/claims/{id}")
      * @Template
      */
-    public function claimAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -347,6 +476,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
 
         // Set the organization background-color for the icons shown with every authorization of this claim
@@ -377,9 +509,11 @@ class DashboardController extends AbstractController
      * @Route("/authorizations")
      * @Template
      */
-    public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -437,7 +571,7 @@ class DashboardController extends AbstractController
      * @Route("/authorizations/{id}")
      * @Template
      */
-    public function authorizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -451,6 +585,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
 
         // Set this resources as authorization for each authorizationLog and set icon background-color
@@ -511,9 +648,11 @@ class DashboardController extends AbstractController
      * @Route("/dossiers")
      * @Template
      */
-    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function dossiersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -544,7 +683,7 @@ class DashboardController extends AbstractController
      * @Route("/dossiers/{id}")
      * @Template
      */
-    public function dossierAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function dossierAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         if (empty($this->getUser())) {
             $this->addFlash('error', 'This page requires you to be logged in');
@@ -558,6 +697,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
 
         // Set the organization background-color for the icon shown with the authorization of this dossier
@@ -587,9 +729,12 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $applications = [];
 
         if ($this->getUser()) {
@@ -659,9 +804,16 @@ class DashboardController extends AbstractController
             $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
             $application['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $request->get('organization')]);
             $application['authorizationUrl'] = $request->get('passthroughUrl');
             $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $application['gdprContact'] = $userUrl;
+            $application['technicalContact'] = $userUrl;
+            $application['privacyContact'] = $userUrl;
+            $application['billingContact'] = $userUrl;
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_applications'));
@@ -675,9 +827,11 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function applicationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
             $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
@@ -689,6 +843,11 @@ class DashboardController extends AbstractController
             $application['authorizationUrl'] = $request->get('authorizationUrl');
             $application['webhookUrl'] = $request->get('webhookUrl');
             $application['singleSignOnUrl'] = $request->get('singleSignOnUrl');
+
+            $application['gdprContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('gdprContact')]);
+            $application['technicalContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('technicalContact')]);
+            $application['privacyContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('privacyContact')]);
+            $application['billingContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('billingContact')]);
 
             $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
@@ -712,6 +871,13 @@ class DashboardController extends AbstractController
         $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
         $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
 
+        $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $variables['wrcApplication']['organization']['id']]);
+        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organization])['hydra:member'];
+        if (count($groups) > 0) {
+            $group = $groups[0];
+            $variables['users'] = $group['users'];
+        }
+
         return $variables;
     }
 
@@ -719,9 +885,12 @@ class DashboardController extends AbstractController
      * @Route("/conduction")
      * @Template
      */
-    public function conductionAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function conductionAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $query = [];
         $date = new \DateTime('today');
         if ($request->isMethod('POST')) {
@@ -763,9 +932,11 @@ class DashboardController extends AbstractController
      * @Route("/logs")
      * @Template
      */
-    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function logsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -774,7 +945,7 @@ class DashboardController extends AbstractController
 
             // Set the organization background-color for the icons shown with every log
             foreach ($variables['logs'] as &$log) {
-                if (key_exists('contact', $log['authorization']['application']) && !empty($log['authorization']['application']['contact'])) {
+                if (isset($log['authorization']['application']['contact'])) {
                     $application = $commonGroundService->isResource($log['authorization']['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
@@ -790,13 +961,60 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/logs/{id}")
+     * @Template
+     */
+    public function logAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        if (empty($this->getUser())) {
+            $this->addFlash('error', 'This page requires you to be logged in');
+
+            return $this->redirect($this->generateUrl('app_default_login'));
+        }
+        if (!$id) {
+            $this->addFlash('error', 'No id provided');
+
+            return $this->redirect($this->generateUrl('app_dashboard_logs'));
+        }
+
+        $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id'=>$id]);
+
+        // Set the organization background-color for the icon shown with this log
+        if (isset($variables['resource']['authorization']['application']['contact'])) {
+            $application = $commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
+            if ($application) {
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $variables['resource']['backgroundColor'] = $matches;
+                }
+            }
+        }
+
+        $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
+            $this->addFlash('error', 'You do not have access to this log');
+
+            return $this->redirect($this->generateUrl('app_dashboard_logs'));
+        }
+
+        return $variables;
+    }
+
+    /**
      * @Route("/organizations")
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($request->isMethod('POST')) {
             $name = $request->get('name');
@@ -889,9 +1107,12 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ApplicationService $applicationService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         if (key_exists('contact', $variables['organization']) and !empty($variables['organization']['contact'])) {
             $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
@@ -985,9 +1206,16 @@ class DashboardController extends AbstractController
             $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
             $application['organization'] = $organization;
             $application['authorizationUrl'] = $request->get('passthroughUrl');
             $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $application['gdprContact'] = $userUrl;
+            $application['technicalContact'] = $userUrl;
+            $application['privacyContact'] = $userUrl;
+            $application['billingContact'] = $userUrl;
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));

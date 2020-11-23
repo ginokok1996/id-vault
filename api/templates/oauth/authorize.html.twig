@@ -37,7 +37,7 @@
                     <p class="mb-4 text-center">
                         {{ "boss and owner of your own data"|trans|capitalize }}.
                         {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data."|trans }}
-                        <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more_2'|trans }}</a></u>
+                        <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more'|trans }}</a></u>
                     </p>
 
                     <p class="mb-2 text-center">
@@ -48,7 +48,7 @@
                         {% if scopes is defined and scopes is not empty %}
                             {% for scope in scopes %}
                                 <li style="list-style: none;" class=" text-muted">
-                                    {{ scope }}
+                                    {{ scope|trans }}
                                 </li>
                             {% endfor %}
                         {% endif %}
@@ -60,6 +60,18 @@
 
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <div class="text-center">
+
+                            {% if deficiencies|default %}
+                                <p class="warning mb-2">
+                                    Some scopes are not present in your account, in the next window you will be able to provide information for the following scopes:
+                                    <ul class="text-center list-group list-group-flush mb-2"></ul>
+                                    {% for deficiency in deficiencies %}
+                                        <li style="list-style: none;" class=" text-muted">
+                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope|trans }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
                             <form method="post" action="{{ path('app_oauth_authorize') }}">
                                 {%  if scopes is defined %}
                                     {% for scope in scopes %}
@@ -74,6 +86,14 @@
                                 {% endif %}
                                 {% if redirectUrl is defined %}
                                     <input type="hidden" name="redirect_uri" value="{{ redirectUrl }}">
+                                {% endif %}
+                                {% if authorization is defined %}
+                                    <input type="hidden" name="authorization" value="{{ authorization }}">
+                                {% endif %}
+                                {% if deficiencies|default %}
+                                    {% for deficiency in deficiencies %}
+                                        <input type="hidden" name="needScopes[]" value="{{ deficiency.scope }}">
+                                    {% endfor %}
                                 {% endif %}
 
                                 <button name="grantAccess" value="true" class="navbar-btn btn btn-sm btn-success lift ml-auto">
@@ -106,7 +126,7 @@
 
                             <!-- Text -->
                             <p class="mb-6 text-center text-muted">
-                                {{ 'store your data in minutes'|trans|capitalize }}.
+                                {{ 'secure your data with the push of a button'|trans|capitalize }}.
                             </p>
 
                             <!-- Form -->
@@ -176,7 +196,7 @@
 
                             <!-- Text -->
                             <p class="mb-6 text-center text-muted">
-                                {{ 'store your data in minutes'|trans|capitalize }}.
+                                {{ 'secure your data with the push of a button'|trans|capitalize }}.
                             </p>
 
                             <!-- Form -->

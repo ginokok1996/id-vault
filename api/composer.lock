@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87de12e194595c97f0ec43b0c30ff697",
+    "content-hash": "024e8354db84904d5347edf255f0ee08",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -681,12 +681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "f97475133671b06d4df426c057d7a5d1a1466ce7"
+                "reference": "d9ca2ab06236a0716c3bd924d285a5f2893e5362"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/f97475133671b06d4df426c057d7a5d1a1466ce7",
-                "reference": "f97475133671b06d4df426c057d7a5d1a1466ce7",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/d9ca2ab06236a0716c3bd924d285a5f2893e5362",
+                "reference": "d9ca2ab06236a0716c3bd924d285a5f2893e5362",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2020-11-14T09:24:04+00:00"
+            "time": "2020-11-14T09:42:37+00:00"
         },
         {
             "name": "conduction/landkitbundle",
@@ -11150,7 +11150,8 @@
     "platform": {
         "php": "^7.1.3",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

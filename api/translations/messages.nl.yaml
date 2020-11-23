@@ -1,30 +1,9 @@
-# translations/messages.nl.yaml
-requested: aangevraagd
-granted: ingestemd
-submitted: ingediend
-retracted: ingetrokken
-declined: afgewezen
-incomplete: incompleet
-complete: compleet
-processed: verwerkt
-cancelled: geannuleerd
-reference: kenmerk
-name: naam
-created: aangemaakt
-modified: aangepast
-status: status
-request: verzoek
-event: afspraak
-calendar: agenda
-orderitem: product bij bestelling
-givenname: voornaam
-value is empty: nog geen waarde opgegeven
-given names: voornamen
-family name: geslachtsnaam
-social service number: burgerservicenummer
-placename: woonplaats
-location: locatie
-date of birth: geboortedatum
-place of birth: geboorteplaats
-account settings: account gegevens
-internships: stages
+schema.person.email: email
+schema.person.telephone: telephone
+schema.person.birthPlace: birthplace
+schema.person.given_name: given name
+schema.person.family_name: family name
+schema.person.birthday: birthday
+schema.person.educationalCredential: educational credentials
+other.brp.ingeschrevenpersoon.persoonsnummer: bsn
+single_sign_on: single sign on

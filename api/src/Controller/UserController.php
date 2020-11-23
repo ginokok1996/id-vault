@@ -4,7 +4,7 @@
 
 namespace App\Controller;
 
-use Conduction\CommonGroundBundle\Service\ApplicationService;
+use Conduction\CommonGroundBundle\Security\User\CommongroundUser;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -56,6 +57,11 @@ class UserController extends AbstractController
 
             $session->set('loggedOut', null);
         }
+        if ($this->getUser()) {
+            $this->flash->add('success', 'Welcome '.ucwords($this->getUser()->getName()));
+
+            return $this->redirect($this->generateUrl('app_dashboard_index'));
+        }
 
         // Dealing with backUrls
         if ($backUrl = $request->query->get('backUrl')) {
@@ -64,13 +70,7 @@ class UserController extends AbstractController
         }
         $session->set('backUrl', $backUrl);
 
-        if ($this->getUser()) {
-            $this->flash->add('success', 'Welcome '.ucwords($this->getUser()->getName()));
-
-            return $this->redirect($this->generateUrl('app_dashboard_index'));
-        } else {
-            return $this->redirect($this->generateUrl('app_default_index'));
-        }
+        return $this->redirect($this->generateUrl('app_default_index'));
     }
 
     /**
@@ -255,7 +255,7 @@ class UserController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, ApplicationService $applicationService, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
         if ($request->isMethod('POST')) {
             $backUrl = $request->query->get('backUrl');
@@ -276,14 +276,53 @@ class UserController extends AbstractController
                 $person['emails'][0]['email'] = $request->get('username');
 
                 $person = $commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
-                $person = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $person['id']]);
+                $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
                 //create user
                 $user['username'] = $request->get('username');
                 $user['password'] = $request->get('newPassword');
-                $user['person'] = $person;
+                $user['person'] = $personUrl;
 
                 $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+
+                // given name claim
+                $claimFirstName = [];
+                $claimFirstName['person'] = $personUrl;
+                $claimFirstName['property'] = 'schema.person.given_name';
+                $claimFirstName['data']['given_name'] = $person['givenName'];
+
+                $commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
+
+                // family name claim
+                $claimLastName = [];
+                $claimLastName['person'] = $personUrl;
+                $claimLastName['property'] = 'schema.person.family_name';
+                $claimLastName['data']['family_name'] = $person['familyName'];
+
+                $commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
+
+                // email claim
+                $claimEmail = [];
+                $claimEmail['person'] = $personUrl;
+                $claimEmail['property'] = 'schema.person.email';
+                $claimEmail['data']['email'] = $request->get('username');
+
+                $commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+
+                //calendar for the user
+                $calendar = [];
+                $calendar['name'] = 'calendar for '.$person['name'];
+                $calendar['resource'] = $personUrl;
+                $calendar['timeZone'] = 'CET';
+
+                $commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
+
+                $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
+
+                $token = new UsernamePasswordToken($userObject, null, 'main', $userObject->getRoles());
+                $this->container->get('security.token_storage')->setToken($token);
+                $this->container->get('session')->set('_security_main', serialize($token));
+
                 $this->flash->add('success', 'Account created');
 
                 return $this->redirect($backUrl);
@@ -295,7 +334,7 @@ class UserController extends AbstractController
      * @Route("/userinfo")
      * @Template
      */
-    public function userInfoAction(Session $session, Request $request, ApplicationService $applicationService, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function userInfoAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
         $variables = [];
 

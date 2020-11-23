@@ -104,12 +104,8 @@
                                         {% if resource.authorization.scopes is defined and resource.authorization.scopes is not empty %}
                                             <!-- Text -->
                                             <small class="text-gray-700">
-                                                {% for scopeItem in resource.authorization.scopes %}
-                                                    {% if loop.last %}
-                                                        {{ scopeItem }}
-                                                    {% else %}
-                                                        {{ scopeItem }},
-                                                    {% endif %}
+                                                {% for scope in resource.authorization.scopes %}
+                                                    {{ scope }}<br>
                                                 {% endfor %}
                                             </small>
                                             <br>
