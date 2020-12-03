@@ -37,6 +37,37 @@ class DashboardController extends AbstractController
         $this->scopeService = $scopeService;
     }
 
+    public function provideCounterData(CommonGroundService $commonGroundService, $variables)
+    {
+        $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
+        $person = $commonGroundService->getResource($this->getUser()->getPerson());
+        $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+//        //tasks
+//        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
+//
+//        if (!count($calendars) > 0) {
+//            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
+//        }
+//
+//        if (count($calendars) > 0) {
+//            $calendar = $calendars[0];
+//            if (count($calendar['todos']) > 0) {
+//                $variables['taskCount'] = (string) count($calendar['todos']);
+//            } else {
+//                $variables['taskCount'] = '0';
+//            }
+//        }
+
+        //alerts
+        $alerts = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
+        $variables['alertCount'] = (string) count($alerts);
+
+        return $variables;
+    }
+
     /**
      * @Route("/")
      * @Template
@@ -45,9 +76,25 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+
+        foreach ($variables['authorizations'] as &$authorization) {
+            if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
+                $application = $commonGroundService->isResource($authorization['application']['contact']);
+                if ($application) {
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $authorization['backgroundColor'] = $matches;
+                    }
+                }
+
+                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
+            }
+        }
 
         return $variables;
     }
@@ -60,6 +107,13 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
+        $variables['alerts'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+
         return $variables;
     }
 
@@ -71,6 +125,21 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        $person = $commonGroundService->getResource($this->getUser()->getPerson());
+        $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
+
+        if (!count($calendars) > 0) {
+            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
+        }
+
+        if (count($calendars) > 0) {
+            $calendar = $calendars[0];
+            $variables['tasks'] = $calendar['todos'];
+        }
+
         return $variables;
     }
 
@@ -81,6 +150,8 @@ class DashboardController extends AbstractController
     public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($request->query->get('authorization')) {
             $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
@@ -180,6 +251,8 @@ class DashboardController extends AbstractController
     public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($request->query->get('brp')) {
             $session->set('brp', $request->query->get('brp'));
@@ -287,6 +360,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         return $variables;
     }
 
@@ -298,6 +373,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         return $variables;
     }
 
@@ -308,6 +385,8 @@ class DashboardController extends AbstractController
     public function claimsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $variables['claims'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
@@ -397,6 +476,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
 
         // Set the organization background-color for the icons shown with every authorization of this claim
@@ -430,6 +512,8 @@ class DashboardController extends AbstractController
     public function authorizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -501,6 +585,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
 
         // Set this resources as authorization for each authorizationLog and set icon background-color
@@ -565,6 +652,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
@@ -608,6 +697,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
 
         // Set the organization background-color for the icon shown with the authorization of this dossier
@@ -640,6 +732,9 @@ class DashboardController extends AbstractController
     public function applicationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $applications = [];
 
         if ($this->getUser()) {
@@ -709,9 +804,16 @@ class DashboardController extends AbstractController
             $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
             $application['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $request->get('organization')]);
             $application['authorizationUrl'] = $request->get('passthroughUrl');
             $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $application['gdprContact'] = $userUrl;
+            $application['technicalContact'] = $userUrl;
+            $application['privacyContact'] = $userUrl;
+            $application['billingContact'] = $userUrl;
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_applications'));
@@ -729,6 +831,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         if ($request->isMethod('POST') && $request->get('updateInfo')) {
             $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $wrcApplication = $commonGroundService->getResource($application['contact']);
@@ -739,6 +843,11 @@ class DashboardController extends AbstractController
             $application['authorizationUrl'] = $request->get('authorizationUrl');
             $application['webhookUrl'] = $request->get('webhookUrl');
             $application['singleSignOnUrl'] = $request->get('singleSignOnUrl');
+
+            $application['gdprContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('gdprContact')]);
+            $application['technicalContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('technicalContact')]);
+            $application['privacyContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('privacyContact')]);
+            $application['billingContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('billingContact')]);
 
             $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
@@ -762,6 +871,13 @@ class DashboardController extends AbstractController
         $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
         $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
 
+        $organization = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $variables['wrcApplication']['organization']['id']]);
+        $groups = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organization])['hydra:member'];
+        if (count($groups) > 0) {
+            $group = $groups[0];
+            $variables['users'] = $group['users'];
+        }
+
         return $variables;
     }
 
@@ -772,6 +888,9 @@ class DashboardController extends AbstractController
     public function conductionAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $query = [];
         $date = new \DateTime('today');
         if ($request->isMethod('POST')) {
@@ -817,6 +936,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
@@ -857,6 +978,9 @@ class DashboardController extends AbstractController
         }
 
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id'=>$id]);
 
         // Set the organization background-color for the icon shown with this log
@@ -889,6 +1013,8 @@ class DashboardController extends AbstractController
     public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
 
         if ($request->isMethod('POST')) {
             $name = $request->get('name');
@@ -984,6 +1110,9 @@ class DashboardController extends AbstractController
     public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         if (key_exists('contact', $variables['organization']) and !empty($variables['organization']['contact'])) {
             $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
@@ -1077,9 +1206,16 @@ class DashboardController extends AbstractController
             $wrcApplication = $commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+
             $application['organization'] = $organization;
             $application['authorizationUrl'] = $request->get('passthroughUrl');
             $application['contact'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
+            $application['gdprContact'] = $userUrl;
+            $application['technicalContact'] = $userUrl;
+            $application['privacyContact'] = $userUrl;
+            $application['billingContact'] = $userUrl;
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));

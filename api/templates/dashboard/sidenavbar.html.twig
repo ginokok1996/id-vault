@@ -1,3 +1,4 @@
+{# get alert & task numbers #}
 <!-- Card -->
 <div class="card card-bleed border-bottom border-bottom-md-0 shadow-light-lg">
 
@@ -24,12 +25,12 @@
                 </li>
                 <li class="list-item {% if activeItem == 'alerts' %}active{% endif %}">
                     <a class="list-link text-reset" href="{{ path('app_dashboard_alerts') }}">
-                        {{ 'alerts'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">12</span>
+                        {{ 'alerts'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">{% if alertCount is defined %}{{ alertCount }}{% endif %}</span>
                     </a>
                 </li>
                 <li class="list-item {% if activeItem == 'tasks' %}active{% endif %}">
                     <a class="list-link text-reset" href="{{ path('app_dashboard_tasks') }}">
-                        {{ 'tasks'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">4</span>
+                        {{ 'tasks'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">{% if taskCount is defined %}{{ taskCount }}{% endif %}</span>
                     </a>
                 </li>
                 <li class="list-item {% if activeItem == 'general' %}active{% endif %}">
