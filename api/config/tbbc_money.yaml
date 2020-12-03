@@ -1,5 +1,0 @@
-# Configuration for https://packagist.org/packages/tbbc/money-bundle
-tbbc_money:
-    currencies: ["USD", "EUR"]
-    reference_currency: "EUR"
-    decimals: 2

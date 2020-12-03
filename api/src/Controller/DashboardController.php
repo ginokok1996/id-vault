@@ -6,7 +6,9 @@ namespace App\Controller;
 
 //use App\Service\RequestService;
 use App\Service\ScopeService;
+use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -843,6 +845,9 @@ class DashboardController extends AbstractController
             $application['authorizationUrl'] = $request->get('authorizationUrl');
             $application['webhookUrl'] = $request->get('webhookUrl');
             $application['singleSignOnUrl'] = $request->get('singleSignOnUrl');
+            $application['mailgunApiKey'] = $request->get('mailgunApiKey');
+            $application['mailgunDomain'] = $request->get('mailgunDomain');
+            $application['messageBirdApiKey'] = $request->get('messageBirdApiKey');
 
             $application['gdprContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('gdprContact')]);
             $application['technicalContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('technicalContact')]);
@@ -1010,7 +1015,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationsAction(Session $session, Request $request, BalanceService $balanceService, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -1049,6 +1054,20 @@ class DashboardController extends AbstractController
             }
 
             $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
+
+            $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrc['id']]);
+
+            $validChars = '0123456789';
+            $reference = substr(str_shuffle(str_repeat($validChars, ceil(3 / strlen($validChars)))), 1, 10);
+
+            $account = [];
+            $account['resource'] = $organizationUrl;
+            $account['reference'] = $reference;
+            $account['name'] = $wrc['name'];
+
+            $account = $commonGroundService->createResource($account, ['component' => 'bare', 'type' => 'acounts']);
+
+            $balanceService->addCredit(Money::EUR(1000), $organizationUrl, $wrc['name']);
 
             $userGroup = [];
             $userGroup['name'] = 'developers-'.$name;
