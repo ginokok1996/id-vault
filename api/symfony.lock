@@ -46,6 +46,9 @@
     "conduction/commongroundbundle": {
         "version": "dev-master"
     },
+    "conduction/idvaultbundle": {
+        "version": "dev-master"
+    },
     "conduction/landkitbundle": {
         "version": "dev-main"
     },
