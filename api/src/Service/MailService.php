@@ -4,12 +4,11 @@ namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
-use GuzzleHttp\Client;
 
 class MailService
 {
@@ -29,8 +28,8 @@ class MailService
         $this->client = new Client();
     }
 
-    public function sendMail($mailgunKey, $mailgunDomain, $body, $subject, $receiver, $sender) {
-
+    public function sendMail($mailgunKey, $mailgunDomain, $body, $subject, $receiver, $sender)
+    {
         $url = "mailgun+api://{$mailgunKey}:{$mailgunDomain}@api.eu.mailgun.net";
 
         $transport = Transport::fromDsn($url);
