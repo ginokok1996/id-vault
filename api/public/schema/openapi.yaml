@@ -6654,7 +6654,6 @@ components:
         - subject
         - receiver
         - sender
-        - message
     Mail-write:
       type: object
       description: ''
@@ -6724,7 +6723,6 @@ components:
         - subject
         - receiver
         - sender
-        - message
     'Mail:jsonld-write':
       type: object
       description: ''
@@ -7117,12 +7115,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-12-03 13:29:50'
+        example: '2020-12-03 14:46:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-12-03 13:29:50'
+        example: '2020-12-03 14:46:44'
     required: []
   AuditTrail-write:
     properties:
@@ -7170,12 +7168,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-12-03 13:29:50'
+        example: '2020-12-03 14:46:44'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-12-03 13:29:50'
+        example: '2020-12-03 14:46:44'
     required: []
   ChangeLog-write:
     properties:
