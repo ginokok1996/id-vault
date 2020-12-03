@@ -845,6 +845,9 @@ class DashboardController extends AbstractController
             $application['authorizationUrl'] = $request->get('authorizationUrl');
             $application['webhookUrl'] = $request->get('webhookUrl');
             $application['singleSignOnUrl'] = $request->get('singleSignOnUrl');
+            $application['mailgunApiKey'] = $request->get('mailgunApiKey');
+            $application['mailgunDomain'] = $request->get('mailgunDomain');
+            $application['messageBirdApiKey'] = $request->get('messageBirdApiKey');
 
             $application['gdprContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('gdprContact')]);
             $application['technicalContact'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $request->get('technicalContact')]);
