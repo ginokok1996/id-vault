@@ -869,7 +869,7 @@ class DashboardController extends AbstractController
 
             //bs sendList
             $sendList['name'] = $request->get('sendListName');
-            $sendList['description'] = $request->get('sendListDescription');;
+            $sendList['description'] = $request->get('sendListDescription');
             $sendList['email'] = true;
             $sendList['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrcApplication['organization']['id']]);
 
