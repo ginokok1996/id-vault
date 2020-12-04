@@ -866,6 +866,14 @@ class DashboardController extends AbstractController
             }
 
             $wrcApplication = $commonGroundService->saveResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
+
+            //bs sendList
+            $sendList['name'] = $request->get('sendListName');
+            $sendList['description'] = $request->get('sendListDescription');;
+            $sendList['email'] = true;
+            $sendList['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrcApplication['organization']['id']]);
+
+            $sendList = $commonGroundService->saveResource($sendList, ['component' => 'bs', 'type' => 'send_lists']);
         } elseif ($request->isMethod('POST') && $request->get('updateScopes')) {
             $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $application['scopes'] = $request->get('scopes');
@@ -881,6 +889,10 @@ class DashboardController extends AbstractController
         if (count($groups) > 0) {
             $group = $groups[0];
             $variables['users'] = $group['users'];
+        }
+        $sendLists = $commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization])['hydra:member'];
+        if (count($sendLists) > 0) {
+            $variables['sendList'] = $sendLists[0];
         }
 
         return $variables;
