@@ -68,7 +68,7 @@
                     <!-- Name -->
                     <div class="form-group">
                         <label for="description">{{ 'description'|trans|capitalize }} </label>
-                        <textarea class="form-control" name="description" id="description" cols="2" rows="2">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
+                        <textarea class="form-control" name="description" id="description" cols="2" rows="2" placeholder="{{ 'description'|trans|capitalize }}">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
                     </div>
                 </div>
             </div>
@@ -233,22 +233,13 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-md-auto">
-                    <!-- Button -->
-                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
-                        {{ 'save changes'|trans|capitalize }}
-                    </button>
-                </div>
-            </div>
-
             <h3>{{ 'Your mailing list'|trans|capitalize }}</h3>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <!-- Name -->
                     <div class="form-group">
                         <label for="sendListName">{{ 'name'|trans|capitalize }} </label>
-                        <input class="form-control" name="sendListName" id="sendListName" type="text" placeholder="{{ 'name'|trans|capitalize }}"
+                        <input class="form-control" name="sendListName" id="sendListName" type="text" placeholder="{{ 'newsletter'|trans|capitalize }}"
                             {% if sendList.name is defined and sendList.name is not empty %}
                                 value="{{ sendList.name }}"
                             {% endif %}>
@@ -260,8 +251,16 @@
                     <!-- Name -->
                     <div class="form-group">
                         <label for="sendListDescription">{{ 'description'|trans|capitalize }} </label>
-                        <textarea class="form-control" name="sendListDescription" id="sendListDescription" cols="2" rows="2">{% if sendList.description is defined and sendList.description is not empty %}{{ sendList.description }}{% endif %}</textarea>
+                        <textarea class="form-control" name="sendListDescription" id="sendListDescription" cols="2" rows="1" placeholder="{{ 'description'|trans|capitalize }}">{% if sendList.description is defined and sendList.description is not empty %}{{ sendList.description }}{% endif %}</textarea>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-auto">
+                    <!-- Button -->
+                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
+                        {{ 'save changes'|trans|capitalize }}
+                    </button>
                 </div>
             </div>
         </form>
