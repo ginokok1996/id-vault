@@ -128,7 +128,7 @@ class SendListController extends AbstractController
                         // Update or create a subscriber in BS
                         $commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']);
                     } else {
-                        // This user has no person
+                        return $this->redirect($redirectUrl.'&errorMessage=User+has+no+contact');
                     }
                 }
 
