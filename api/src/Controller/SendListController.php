@@ -134,12 +134,12 @@ class SendListController extends AbstractController
 
                 return $this->redirect($redirectUrl);
             } else {
-                return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
+                return $this->redirect($redirectUrl.'&errorMessage=Authorization+denied+by+user');
             }
         }
 
         if (!isset($variables['sendListIds'])) {
-            return $this->redirect($redirectUrl.'?errorMessage=no+send_lists+provided');
+            return $this->redirect($redirectUrl.'&errorMessage=no+send_lists+provided');
         } else {
             $variables['sendListIds'] = explode(' ', $request->query->get('send_lists'));
 
