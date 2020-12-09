@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 //use App\Service\RequestService;
+use App\Service\MailingService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,7 +60,7 @@ class DefaultController extends AbstractController
      * @Route("/reset/{token}")
      * @Template
      */
-    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, $token = null)
+    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, $token = null)
     {
         $variables = [];
 
@@ -109,22 +110,11 @@ class DefaultController extends AbstractController
                 $url = $request->getUri();
                 $link = $url.'/'.$token['token'];
 
-                $message = [];
+                $data = [];
+                $data['resource'] = $link;
+                $data['sender'] = 'no-reply@conduction.nl';
 
-                if ($params->get('app_env') == 'prod') {
-                    $message['service'] = '/services/eb7ffa01-4803-44ce-91dc-d4e3da7917da';
-                } else {
-                    $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
-                }
-                $message['status'] = 'queued';
-                $message['subject'] = 'reset';
-                $html = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'templates', 'id'=>'e86a7cf9-9060-49f7-99dd-ec56339bd278'])['content'];
-                $template = $this->get('twig')->createTemplate($html);
-                $message['content'] = $template->render(['resource' => $link, 'sender' => 'no-reply@conduction.nl']);
-                $message['reciever'] = $user['username'];
-                $message['sender'] = 'no-reply@conduction.nl';
-
-                $commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages']);
+                $mailingService->sendMail('mails/password_reset.html.twig', 'no-reply@conduction.nl', $user['username'], 'Password reset', $data);
             }
         }
 
