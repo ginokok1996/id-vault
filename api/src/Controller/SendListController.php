@@ -128,18 +128,18 @@ class SendListController extends AbstractController
                         // Update or create a subscriber in BS
                         $commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']);
                     } else {
-                        // This user has no person
+                        return $this->redirect($redirectUrl.'&errorMessage=User+has+no+contact');
                     }
                 }
 
                 return $this->redirect($redirectUrl);
             } else {
-                return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
+                return $this->redirect($redirectUrl.'&errorMessage=Authorization+denied+by+user');
             }
         }
 
         if (!isset($variables['sendListIds'])) {
-            return $this->redirect($redirectUrl.'?errorMessage=no+send_lists+provided');
+            return $this->redirect($redirectUrl.'&errorMessage=no+send_lists+provided');
         } else {
             $variables['sendListIds'] = explode(' ', $request->query->get('send_lists'));
 

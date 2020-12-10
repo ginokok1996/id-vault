@@ -1,0 +1,54 @@
+<div class="modal fade" id="modalEditMailingList{{ sendList.id }}" tabindex="-1" role="dialog" aria-labelledby="modalEditMailingListTitle{{ sendList.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalEditMailingListTitle{{ sendList.id }}">
+                    {{ 'edit mailing list'|trans|capitalize }}
+                </h2>
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">{{ 'name'|trans|capitalize }} </label>
+                        <input class="form-control" name="name" id="name" type="text" placeholder="{{ 'newsletter'|trans|capitalize }}"
+                            value="{{ sendList.name }}">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">{{ 'description'|trans|capitalize }} </label>
+                        <textarea class="form-control" name="description" id="description"
+                                  cols="2" rows="1" style="max-height: 8rem; min-height: 3.5rem"
+                                  placeholder="{{ 'description'|trans|capitalize }}"
+                        >{% if sendList.description is defined and sendList.description is not empty %}{{ sendList.description }}{% endif %}</textarea>
+                    </div>
+
+                    <!-- Hidden input for wrcOrganization -->
+                    <input type="hidden" value="{{ wrcOrganization }}" name="organization" id="organization">
+
+                    <!-- Hidden input for ID -->
+                    {% if sendList['id'] is defined %}
+                        <input type="hidden" id="id" name ="id" value="{{ sendList['id'] }}">
+                    {% endif %}
+
+                    <!-- Hidden input for @ID -->
+                    {% if sendList['@id'] is defined %}
+                        <input type="hidden" id="@id" name ="@id" value="{{ sendList['@id'] }}">
+                    {% endif %}
+
+                    <!-- Submit -->
+                    <button name="editMailingList" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'edit'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

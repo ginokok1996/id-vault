@@ -30,7 +30,6 @@
     </div>
     <div class="card-body">
 
-        <!-- Form -->
         <div class="row">
             <div class="col-12">
                 <p class="font-weight-bold">app id:</p>
@@ -68,7 +67,7 @@
                     <!-- Name -->
                     <div class="form-group">
                         <label for="description">{{ 'description'|trans|capitalize }} </label>
-                        <textarea class="form-control" name="description" id="description" cols="2" rows="2">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
+                        <textarea class="form-control" name="description" id="description" cols="2" rows="2" placeholder="{{ 'description'|trans|capitalize }}">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
                     </div>
                 </div>
             </div>
@@ -231,14 +230,6 @@
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-auto">
-                    <!-- Button -->
-                    <button class="btn btn-block btn-primary" name="updateInfo" value="true" type="submit">
-                        {{ 'save changes'|trans|capitalize }}
-                    </button>
                 </div>
             </div>
         </form>

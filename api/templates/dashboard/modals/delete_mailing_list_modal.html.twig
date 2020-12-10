@@ -1,0 +1,51 @@
+<div class="modal fade" id="modalDeleteMailingList{{ sendList.id }}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteMailingListTitle{{ sendList.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalDeleteMailingListTitle{{ sendList.id }}">
+                    {{ 'Are you sure you want to delete this mailing list?'|trans|capitalize }}
+                </h2>
+                <br>
+                <h3 class="text-center">
+                    {{ sendList.name }}
+                </h3>
+                {% if sendList.description is defined and sendList.description is not empty %}
+                    <h4 class="text-gray-700 text-center">
+                        {{ sendList.description }}
+                    </h4>
+                {% endif %}
+                <h4 class="text-gray-700 text-center">
+                    Id: {{ sendList.id }}
+                </h4>
+                <br>
+
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data">
+                    <input type="hidden" name="mailingListID" value="{{ sendList.id }}">
+
+                    <!-- No -->
+                    <button type="button" class="btn btn-block btn-primary mt-3 lift" data-dismiss="modal" aria-label="Close">
+                        {{ 'no'|trans|capitalize }}
+                    </button>
+
+                    <!-- Yes -->
+                    <button
+                        name="deleteMailingList"
+                        style="background-color: red"
+                        value="true"
+                        class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'yes'|trans|capitalize }}
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
