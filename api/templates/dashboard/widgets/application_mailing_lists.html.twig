@@ -1,5 +1,5 @@
 <!-- Card -->
-<div class="card card-bleed shadow-light-lg mb-6">
+<div class="card card-bleed shadow-light-lg mb-6" id="mailingLists">
     <div class="card-header">
         <div class="row align-items-center">
             <div class="col">
@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <div class="card-body" id="mailingLists">
+    <div class="card-body">
         {% if sendLists is defined and sendLists is not empty %}
             <div class="list-group list-group-flush">
                 {% for sendList in sendLists %}

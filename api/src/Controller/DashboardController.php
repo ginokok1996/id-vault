@@ -875,15 +875,24 @@ class DashboardController extends AbstractController
         // Add a new mailing list or edit one
         elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
             $resource = $request->request->all();
-            $resource['email'] = true;
 
+            // Save mailing list
+            $resource['email'] = true;
             $resource = $commonGroundService->saveResource($resource, (['component' => 'bs', 'type' => 'send_lists']));
 
             // add mailing list to wac application
-//            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
-//            $application['mailingLists'] = $request->get('mailingLists');
-//
-//            $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
+            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+            $sendLists = [];
+            if (isset($application['sendLists'])) {
+                foreach ($application['sendLists'] as $sendList) {
+                    if ($sendList != $resource['id']) {
+                        array_push($sendLists, $sendList);
+                    }
+                }
+            }
+            array_push($sendLists, $resource['id']);
+            $application['sendLists'] = $sendLists;
+            $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_application', ['id'=>$id]).'#'.$resource['id']);
         }
@@ -892,10 +901,17 @@ class DashboardController extends AbstractController
             $sendList = $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $request->get('mailingListID')]);
 
             // Remove mailing list from wac application
-//            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
-//            $application['mailingLists'] = $request->get('mailingLists');
-//
-//            $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
+            $application = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+            $sendLists = [];
+            if (isset($application['sendLists'])) {
+                foreach ($application['sendLists'] as $sendListItem) {
+                    if ($sendListItem != $sendList['id']) {
+                        array_push($sendLists, $sendListItem);
+                    }
+                }
+            }
+            $application['sendLists'] = $sendLists;
+            $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             // Delete mailing list
             $commonGroundService->deleteResource($sendList);
