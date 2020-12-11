@@ -1348,4 +1348,20 @@ class DashboardController extends AbstractController
 
         return $variables;
     }
+
+    /**
+     * @Route("/invoices")
+     * @Template
+     */
+    public function invoicesAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    {
+        $variables = [];
+
+        $organization = $commonGroundService->getResource($this->getUser()->getOrganization());
+        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+        $variables['invoices'] = $commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices']/*, ['customer' => $organizationUrl]*/)['hydra:member'];
+
+        return $variables;
+
+    }
 }
