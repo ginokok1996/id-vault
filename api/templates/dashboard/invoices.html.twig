@@ -20,6 +20,7 @@
                         </h4>
 
                     </div>
+                    {% if invoices is defined and invoices is not empty %}
                     <div class="card-body">
 
                         <!-- List group -->
@@ -31,7 +32,7 @@
 
                                         <!-- Heading -->
                                         <p class="mb-0">
-                                            <a href="#!">{{'invoice'|trans|capitalize}} {{ invoice.name }}</a>
+                                            <a href="{{ path('app_dashboard_invoice', {id: invoice.id}) }}">{{'invoice'|trans|capitalize}} {{ invoice.name }}</a>
                                         </p>
 
                                         <!-- Text -->
@@ -42,13 +43,11 @@
 
                                     </div>
                                     <div class="col-auto">
-
                                         <!-- Button -->
                                         {#add path#}
-                                        <button class="btn btn-xs btn-outline-white" href="#">
-                                            {{ 'view details'|trans|capitalize }}
+                                        <button class="btn btn-xs btn-outline-white">
+                                            <a href="{{ path('app_dashboard_invoice', {id: invoice.id}) }}" style="color: black"> {{ 'view details'|trans|capitalize }}</a>
                                         </button>
-
                                     </div>
                                 </div>
                             </div>
@@ -56,6 +55,9 @@
                         </div>
 
                     </div>
+                    {% else %}
+                    <h4>{{ 'no invoices found'|trans|capitalize }}</h4>
+                    {% endif %}
                 </div>
             </div>
         </div>

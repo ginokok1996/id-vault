@@ -1,0 +1,91 @@
+{% extends 'dashboard/dashboard.html.twig' %}
+
+{% block pageContent %}
+<div class="container-md">
+    <div class="row">
+        <div class="col-12 col-md-3">
+
+            {% set activeItem = 'invoices' %}
+            {% include 'dashboard/sidenavbar.html.twig' %}
+
+        </div>
+
+        <section class="section bg-soft section-lg pt-8">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10">
+                        <div class="card shadow-soft border-light p-4 p-md-5 position-relative">
+                            <div class="mb-6 d-flex align-items-center justify-content-center">
+                                <h2 class="h1 mb-0">{{ 'invoice details'|trans|capitalize }}</h2>
+                                <span class="badge badge-xl badge-success ml-2">{{ invoice.name }}</span>
+                            </div>
+                            <div class="row justify-content-between mb-4 mb-md-5">
+                                <div class="col-sm col-lg-12">
+                                    <dl class="row text-sm-left">
+                                        <dt class="col-6"><strong>invoice paid:</strong></dt>
+                                        {% if invoice.paid == false %}
+                                            <dd class="col-6 badge badge-warning">{{'pending payment'|trans|capitalize}}</dd>
+                                        {% else %}
+                                            <dd class="col-6 badge badge-success">{{'paid'|trans|capitalize}}</dd>
+                                        {% endif %}
+                                        <dt class="col-6"><strong>Date Issued:</strong></dt>
+                                        <dd class="col-6">{{ invoice.dateCreated|date("d-m-Y") }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table mb-0">
+                                            <thead class="bg-light border-top">
+                                            <tr>
+                                                <th scope="row" class="border-0 text-left">{{'item'|trans|capitalize}}</th>
+                                                <th scope="row" class="border-0">{{'description'|trans|capitalize}}</th>
+                                                <th scope="row" class="border-0">{{'price'|trans|capitalize}}</th>
+                                                <th scope="row" class="border-0">Qty</th>
+                                                <th scope="row" class="border-0">{{'total'|trans|capitalize}}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in invoice.items %}
+                                                <tr>
+                                                    <th scope="row" class="text-left">{{ item.name }}</th>
+                                                    <td>{{item.description}}</td>
+                                                    <td>{{ invoice.priceCurrency }} {{ item.price }}</td>
+                                                    <td>{{ item.quantity }}</td>
+                                                    <td>{{ item.price * item.quantity }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-flex justify-content-end text-right mb-4 py-4 border-bottom">
+                                        <div class="mt-4">
+                                            <table class="table table-clear">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="left"><strong>{{'Subtotal'|trans|capitalize}}</strong></td>
+                                                    <td class="right">{{ invoice.price }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="left"><strong>{{'VAT'|trans}}</strong></td>
+                                                    <td class="right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="left"><strong>{{'total'|trans|capitalize}}</strong></td>
+                                                    <td class="right"><strong>$7.477,36</strong></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
