@@ -1,0 +1,87 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6" id="mailingLists">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'your mailing lists'|trans }}
+                </h4>
+
+            </div>
+
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalAddMailingList">
+                    {{ 'add mailing list'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% if sendLists is defined and sendLists is not empty %}
+            <div class="list-group list-group-flush">
+                {% for sendList in sendLists %}
+                    <div class="list-group-item" id="{{ sendList.id }}" style="padding-bottom: 0rem; border: 1px solid #bbbbbb; border-top: 0; border-width: 0 0 1px;">
+                        <!-- Header -->
+                        <div class="row mb-5">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <div class="list-group list-group-flush">
+                                    <!-- Info of this mailing list -->
+                                    <div style="border: none" class="list-group-item pb-0">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                            </div>
+                                            <div class="col-11 ml-n5">
+                                                <!-- Heading -->
+                                                <p class="mb-0 font-weight-bold">
+                                                    {{ sendList.name }}
+                                                </p>
+                                                <!-- Description -->
+                                                {% if sendList.description is defined and sendList.description is not empty %}
+                                                    <p class="mb-0 text-gray-700">
+                                                        {{ sendList.description }}
+                                                    </p>
+                                                {% endif %}
+                                                <!-- ID -->
+                                                <p class="mb-0 text-gray-700">
+                                                    Id: {{ sendList.id }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-auto mr-n5">
+
+                                <!-- Edit button -->
+                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalEditMailingList{{ sendList.id }}">
+                                    {{ 'edit'|trans|capitalize }}
+                                </button>
+
+                            </div>
+
+                            <div class="col-auto">
+
+                                <!-- Delete button -->
+                                <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modalDeleteMailingList{{ sendList.id }}">
+                                    {{ 'delete'|trans|capitalize }}
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="hint__title">{{ 'no mailing lists available'|trans|capitalize }}</p>
+        {% endif %}
+    </div>
+</div>
