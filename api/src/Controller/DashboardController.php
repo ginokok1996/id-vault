@@ -685,8 +685,8 @@ class DashboardController extends AbstractController
             $request['requestType'] = 'url request type';
             $request['processType'] = 'url process type';
             $request['properties'] = [
-                'dossier' => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
-                'explanation' => $request->get('explanation')
+                'dossier'     => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
+                'explanation' => $request->get('explanation'),
             ];
 
 //            $request = $commonGroundService->createResource($request, ['component' => 'vrc', 'type' => 'requests']);
