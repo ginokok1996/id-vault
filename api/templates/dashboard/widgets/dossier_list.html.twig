@@ -8,13 +8,13 @@
 
                         <!-- Heading -->
                         <h4 class="mb-0">
-                            {{ dossier.basis }}
+                            {{ dossier.name }}
                         </h4>
 
-                        {% if dossier.endDate is defined and dossier.endDate is not empty %}
+                        {% if dossier.expiryDate is defined and dossier.expiryDate is not empty %}
                             <!-- Text -->
                             <small class="text-gray-700">
-                                {{ 'end date'|trans|capitalize }}: {{ dossier.endDate|date("d-m-Y", "Europe/Paris") }}
+                                {{ 'expiry date'|trans|capitalize }}: {{ dossier.expiryDate|date("d-m-Y", "Europe/Paris") }}
                             </small>
                         {% endif %}
 
