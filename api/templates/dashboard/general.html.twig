@@ -135,7 +135,7 @@
                     </div>
                 </div>
 
-                {% if 'group.developer' in app.user.roles %}
+                {% if 'ROLE_group.developer' in app.user.roles %}
                     <!-- Card -->
                     <div class="card card-bleed shadow-light-lg mb-6">
                         <div class="card-header">
@@ -154,7 +154,7 @@
                                         <!-- Switch -->
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" name="twoFactorSwitch" id="twoFactorSwitch" onchange="this.form.submit()"
-                                            {% if 'group.developer-view' in app.user.roles %}checked=""{% endif %}>
+                                            {% if 'ROLE_group.developer-view' in app.user.roles %}checked=""{% endif %}>
                                             <label class="custom-control-label" for="twoFactorSwitch"></label>
                                         </div>
 

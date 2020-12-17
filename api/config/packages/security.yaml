@@ -1,5 +1,6 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    always_authenticate_before_granting: true
     providers:
         commongroundApplicationProvider:
             id: Conduction\CommonGroundBundle\Security\User\CommongroundApplicationProvider

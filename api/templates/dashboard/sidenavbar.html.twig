@@ -87,7 +87,7 @@
                 </li>
             </ul>
 
-            {% if 'group.developer' in app.user.roles and 'group.developer-view' in app.user.roles %}
+            {% if 'ROLE_group.developer' in app.user.roles and 'ROLE_group.developer-view' in app.user.roles %}
                 <!-- Heading -->
                 <h6 class="font-weight-bold text-uppercase mb-3">
                     {{ 'development'|trans|capitalize }}
