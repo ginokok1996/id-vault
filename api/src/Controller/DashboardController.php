@@ -676,6 +676,25 @@ class DashboardController extends AbstractController
             } else {
                 return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
             }
+        } elseif ($request->isMethod('POST') && ($request->get('dossierObjection'))) {
+            $dossier = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $request->get('dossierID')]);
+
+            // Create vrc request
+            $request['status'] = 'submitted';
+            $request['organization'] = 'url org';
+            $request['requestType'] = 'url request type';
+            $request['processType'] = 'url process type';
+            $request['properties'] = [
+                'dossier' => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
+                'explanation' => $request->get('explanation')
+            ];
+
+//            $request = $commonGroundService->createResource($request, ['component' => 'vrc', 'type' => 'requests']);
+
+//            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
+            $this->flash->add('error', 'No objection submitted for: '.$dossier['name']);
+
+            return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
 
         return $variables;

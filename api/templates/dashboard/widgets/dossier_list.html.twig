@@ -19,7 +19,16 @@
                         {% endif %}
 
                     </div>
+                    {% if authorizationDeleteModal is not defined and viewDossiersModal is not defined %}
+                        <div class="col-auto mr-n5">
+                            {# TODO:disable button if request already exists? / view objection button? #}
+                            <!-- Button -->
+                            <a class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalObjectDossier{{ dossier.id }}">
+                                {{ 'object to this dossier'|trans|capitalize }}
+                            </a>
 
+                        </div>
+                    {% endif %}
                     <div class="col-auto">
 
                         <!-- Dropdown -->
@@ -28,6 +37,9 @@
                                 <i class="fe fe-more-vertical"></i>
                             </a>
                             <div class="dropdown-menu" style="">
+                                {% if authorizationDeleteModal is defined or viewDossiersModal is defined%}
+                                    <button class="dropdown-item" data-toggle="modal" data-target="#modalObjectDossier{{ dossier.id }}">{{ 'object to this dossier'|trans|capitalize }}</button>
+                                {% endif %}
                                 <a class="dropdown-item" href="{{ path('app_dashboard_dossier',{'id': dossier.id}) }}">{{ 'view dossier'|trans|capitalize }}</a>
                                 <button class="dropdown-item" data-toggle="modal" data-target="#modalDeleteDossier{{ dossier.id }}" style="color: red">{{ 'delete dossier'|trans|capitalize }}</button>
                             </div>

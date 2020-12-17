@@ -27,60 +27,36 @@
 
                             <div class="col-10 text-center">
 
+                                <!-- Heading -->
+                                <h4 class="mb-0">{{ 'claim'|trans|capitalize }}</h4>
+                                <h4 class="mb-0">
+                                    {{ resource.property }}
+                                </h4>
+
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         {% if resource|default %}
 
-                        <div class="list-group-item" style="padding-bottom: 0rem; border: none;">
-                            <!-- Header -->
-                            <div class="row mb-5">
-                                <div class="col">
-
-                                    <!-- Heading -->
-                                    <div class="list-group list-group-flush">
-                                        <!-- Property of this claim -->
-                                        <div style="border: none" class="list-group-item pb-0">
-                                            <div class="row align-items-center">
-                                                <div class="col-auto">
-                                                </div>
-                                                <div class="col-11 ml-n5">
-                                                    <!-- Heading -->
-                                                    <p class="mb-0 font-weight-bold">
-                                                        {{ 'scope' }}
-                                                    </p>
-                                                    <!-- Text -->
-                                                    <p class="text-gray-700">
-                                                        {{ resource.property }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% if resource.data is defined and resource.data is not empty %}
-                                            {% for key, value in resource.data %}
-                                                <div style="border: none" class="list-group-item pb-0">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-auto">
-                                                        </div>
-                                                        <div class="col-11 ml-n5">
-                                                            <!-- Heading -->
-                                                            <p class="mb-0 font-weight-bold">
-                                                                {{ key }}
-                                                            </p>
-                                                            <!-- Text -->
-                                                            <p class="text-gray-700">
-                                                                {{ value }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-
-                                </div>
+                            <!-- Claim data -->
+                            <h3>{{ 'data'|trans|capitalize }}:</h3>
+                            <div class="mb-4">
+                                <p class="mb-0 font-weight-bold">{{ 'scope' }}</p>
+                                <small class="text-gray-700">
+                                    {{ resource.property }}
+                                </small>
                             </div>
+                            {% if resource.data is defined and resource.data is not empty %}
+                                {% for key, value in resource.data %}
+                                    <div class="mb-4">
+                                        <p class="mb-0 font-weight-bold">{{ key }}</p>
+                                        <small class="text-gray-700">
+                                            {{ value }}
+                                        </small>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
 
                         {% endif %}
                     </div>
@@ -122,6 +98,7 @@
 
             {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
                 {% for dossier in authorization.dossiers %}
+                    {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
                     {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
                 {% endfor %}
             {% endif %}

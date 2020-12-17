@@ -3,14 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            {#            <div class="col-12 col-md-3">#}
+            <div class="col-12 col-md-3">
 
-            {#                {% set activeItem = 'claims' %}#}
-            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+                {% set activeItem = 'authorizations' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
 
-            {#            </div>#}
-
-            {# TODO:Include the sidenavbar and have a back button? #}
+            </div>
 
             <div class="col-12 col-md-9">
 
@@ -149,6 +147,7 @@
     <!-- Modals -->
     {% if resource.dossiers is defined and resource.dossiers is not empty %}
         {% for dossier in resource.dossiers %}
+            {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
             {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
         {% endfor %}
     {% endif %}
