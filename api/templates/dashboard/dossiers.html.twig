@@ -35,6 +35,7 @@
     <!-- modals -->
     {% if dossiers is defined and dossiers is not empty %}
         {% for dossier in dossiers %}
+            {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
             {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
         {% endfor %}
     {% endif %}

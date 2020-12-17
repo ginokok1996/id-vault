@@ -41,6 +41,7 @@
 
             {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
                 {% for dossier in authorization.dossiers %}
+                    {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
                     {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
                 {% endfor %}
             {% endif %}
