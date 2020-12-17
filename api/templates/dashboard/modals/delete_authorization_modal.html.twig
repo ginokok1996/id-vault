@@ -27,6 +27,7 @@
                     <!-- list of dossiers for this authorization -->
                     <h3 class="text-center">{{ 'dossiers'|trans|capitalize }}</h3>
                     {% set dossiers = authorization.dossiers %}
+                    {% set authorizationDeleteModal = true %}
                     {% include 'dashboard/widgets/dossier_list.html.twig' %}
                 {% else %}
                     <!-- Heading -->
