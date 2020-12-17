@@ -680,16 +680,15 @@ class DashboardController extends AbstractController
             $dossier = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $request->get('dossierID')]);
 
             // Create vrc request
-            $request['status'] = 'submitted';
-            $request['organization'] = 'url org';
-            $request['requestType'] = 'url request type';
-            $request['processType'] = 'url process type';
-            $request['properties'] = [
-                'dossier'     => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
-                'explanation' => $request->get('explanation'),
-            ];
-
-//            $request = $commonGroundService->createResource($request, ['component' => 'vrc', 'type' => 'requests']);
+//            $vrcRequest['status'] = 'submitted';
+//            $vrcRequest['organization'] = 'url org';
+//            $vrcRequest['requestType'] = 'url request type';
+//            $vrcRequest['processType'] = 'url process type';
+//            $vrcRequest['properties'] = [
+//                'dossier'     => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
+//                'explanation' => $request->get('explanation'),
+//            ];
+//            $vrcRequest = $commonGroundService->createResource($vrcRequest, ['component' => 'vrc', 'type' => 'requests']);
 
 //            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
             $this->flash->add('error', 'No objection submitted for: '.$dossier['name']);
