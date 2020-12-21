@@ -3,14 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            {#            <div class="col-12 col-md-3">#}
+            <div class="col-12 col-md-3">
 
-            {#                {% set activeItem = 'claims' %}#}
-            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+                {% set activeItem = 'dossiers' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
 
-            {#            </div>#}
-
-            {# TODO:Include the sidenavbar and have a back button? #}
+            </div>
 
             <div class="col-12 col-md-9">
 
@@ -32,7 +30,7 @@
                                 <!-- Heading -->
                                 <h4 class="mb-0">{{ 'dossier'|trans|capitalize }}</h4>
                                 <h4 class="mb-0">
-                                    {{ resource.basis }}
+                                    {{ resource.name }}
                                 </h4>
 
                             </div>
@@ -41,11 +39,11 @@
                     <div class="card-body">
                         {% if resource|default %}
 
-                            {% if resource.endDate is defined and resource.endDate is not empty %}
+                            {% if resource.expiryDate is defined and resource.expiryDate is not empty %}
                                 <!-- Dossier endDate -->
-                                <h4>{{ 'end date'|trans|capitalize }}:</h4>
+                                <h4>{{ 'expiry date'|trans|capitalize }}:</h4>
                                 <small class="text-gray-700">
-                                    {{ resource.endDate|date("d-m-Y", "Europe/Paris") }}
+                                    {{ resource.expiryDate|date("d-m-Y", "Europe/Paris") }}
                                 </small>
                             {% endif %}
 
@@ -104,12 +102,8 @@
                                         {% if resource.authorization.scopes is defined and resource.authorization.scopes is not empty %}
                                             <!-- Text -->
                                             <small class="text-gray-700">
-                                                {% for scopeItem in resource.authorization.scopes %}
-                                                    {% if loop.last %}
-                                                        {{ scopeItem }}
-                                                    {% else %}
-                                                        {{ scopeItem }},
-                                                    {% endif %}
+                                                {% for scope in resource.authorization.scopes %}
+                                                    {{ scope }}<br>
                                                 {% endfor %}
                                             </small>
                                             <br>

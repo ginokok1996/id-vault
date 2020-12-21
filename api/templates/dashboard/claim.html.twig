@@ -3,14 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            {#            <div class="col-12 col-md-3">#}
+                        <div class="col-12 col-md-3">
 
-            {#                {% set activeItem = 'claims' %}#}
-            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+                            {% set activeItem = 'claims' %}
+                            {% include 'dashboard/sidenavbar.html.twig' %}
 
-            {#            </div>#}
-
-            {# TODO:Include the sidenavbar and have a back button? #}
+                        </div>
 
             <div class="col-12 col-md-9">
 
@@ -30,8 +28,9 @@
                             <div class="col-10 text-center">
 
                                 <!-- Heading -->
+                                <h4 class="mb-0">{{ 'claim'|trans|capitalize }}</h4>
                                 <h4 class="mb-0">
-                                    {{ 'claim'|trans|capitalize~' '~'for'|trans~' '~resource.property }}
+                                    {{ resource.property }}
                                 </h4>
 
                             </div>
@@ -42,17 +41,22 @@
 
                             <!-- Claim data -->
                             <h3>{{ 'data'|trans|capitalize }}:</h3>
-                            <h4 class="mb-0">
-                                {% if resource.data is defined and resource.data is not empty %}
-                                    {% for dataItem in resource.data %}
-                                        {% if loop.last %}
-                                            {{ dataItem }}
-                                        {% else %}
-                                            {{ dataItem }},
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
-                            </h4>
+                            <div class="mb-4">
+                                <p class="mb-0 font-weight-bold">{{ 'scope' }}</p>
+                                <small class="text-gray-700">
+                                    {{ resource.property }}
+                                </small>
+                            </div>
+                            {% if resource.data is defined and resource.data is not empty %}
+                                {% for key, value in resource.data %}
+                                    <div class="mb-4">
+                                        <p class="mb-0 font-weight-bold">{{ key }}</p>
+                                        <small class="text-gray-700">
+                                            {{ value }}
+                                        </small>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
 
                         {% endif %}
                     </div>
@@ -94,6 +98,7 @@
 
             {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
                 {% for dossier in authorization.dossiers %}
+                    {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
                     {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
                 {% endfor %}
             {% endif %}

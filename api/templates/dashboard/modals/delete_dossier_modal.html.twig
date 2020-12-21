@@ -24,7 +24,7 @@
                     </h2>
                     <br>
                     <h3 class="text-center">
-                        {{ dossier.basis }}
+                        {{ dossier.name }}
                     </h3>
                     <br>
 
@@ -39,16 +39,16 @@
 
                         <!-- Yes -->
                         <button
-                                {% if claim is defined %}
-                                    name="deleteClaimAuthorizationDossier"
-                                {% elseif authorization is defined %}
-                                    name="deleteAuthorizationDossier"
-                                {% else %}
-                                    name="deleteDossier"
-                                {% endif %}
-                                style="background-color: red"
-                                value="true"
-                                class="btn btn-block btn-primary mt-3 lift">
+                            {% if claim is defined %}
+                                name="deleteClaimAuthorizationDossier"
+                            {% elseif authorization is defined %}
+                                name="deleteAuthorizationDossier"
+                            {% else %}
+                                name="deleteDossier"
+                            {% endif %}
+                            style="background-color: red"
+                            value="true"
+                            class="btn btn-block btn-primary mt-3 lift">
                             {{ 'yes'|trans|capitalize }}
                         </button>
 

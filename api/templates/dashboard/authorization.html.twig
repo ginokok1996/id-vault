@@ -3,14 +3,12 @@
 {% block pageContent %}
     <div class="container-md">
         <div class="row">
-            {#            <div class="col-12 col-md-3">#}
+            <div class="col-12 col-md-3">
 
-            {#                {% set activeItem = 'claims' %}#}
-            {#                {% include 'dashboard/sidenavbar.html.twig' %}#}
+                {% set activeItem = 'authorizations' %}
+                {% include 'dashboard/sidenavbar.html.twig' %}
 
-            {#            </div>#}
-
-            {# TODO:Include the sidenavbar and have a back button? #}
+            </div>
 
             <div class="col-12 col-md-9">
 
@@ -75,12 +73,8 @@
                                 <!-- Authorization scopes -->
                                 <h4>Scopes:</h4>
                                 <small class="text-gray-700">
-                                    {% for scopeItem in resource.scopes %}
-                                        {% if loop.last %}
-                                            {{ scopeItem }}
-                                        {% else %}
-                                            {{ scopeItem }},
-                                        {% endif %}
+                                    {% for scope in resource.scopes %}
+                                        {{ scope }}<br>
                                     {% endfor %}
                                 </small>
                                 <br>
@@ -153,6 +147,7 @@
     <!-- Modals -->
     {% if resource.dossiers is defined and resource.dossiers is not empty %}
         {% for dossier in resource.dossiers %}
+            {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
             {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
         {% endfor %}
     {% endif %}

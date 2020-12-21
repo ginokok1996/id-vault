@@ -11,21 +11,28 @@ class AccessTokenGeneratorService
     private $em;
     private $commonGroundService;
     private $params;
+    private $claimService;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
     {
         $this->em = $em;
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
+        $this->claimService = $claimService;
     }
 
     public function generateAccessToken($authorization, $application)
     {
         $user = $this->commonGroundService->getResource($authorization['userUrl']);
         $person = $this->commonGroundService->getResource($user['person']);
+        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+
+        $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $personUrl])['hydra:member'];
 
         $array = [];
 
+        $array['sub'] = $application['id'];
+        $array['name'] = $person['name'];
         foreach ($authorization['scopes'] as $scope) {
             switch ($scope) {
                 case 'schema.person.email':
@@ -40,7 +47,16 @@ class AccessTokenGeneratorService
             }
         }
 
-        $array['sub'] = $application['id'];
+        foreach ($authorization['scopes'] as $scope) {
+            if ($this->claimService->checkUserScope($personUrl, $scope)) {
+                foreach ($claims as $claim) {
+                    if ($scope == $claim['property']) {
+                        $array['claims'][$claim['property']][] = $claim['data'];
+                    }
+                }
+            }
+        }
+
         $array['iss'] = $application['id'];
         $array['aud'] = $application['authorizationUrl'];
         $array['exp'] = '3600';

@@ -30,7 +30,6 @@
     </div>
     <div class="card-body">
 
-        <!-- Form -->
         <div class="row">
             <div class="col-12">
                 <p class="font-weight-bold">app id:</p>
@@ -47,6 +46,9 @@
                 <p class="text-gray-700">{{ application.testSecret }}</p>
             </div>
         </div>
+
+        <!-- Divider -->
+        <hr class="border-gray-300 my-4">
 
         <!-- Form -->
         <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data">
@@ -65,7 +67,7 @@
                     <!-- Name -->
                     <div class="form-group">
                         <label for="description">{{ 'description'|trans|capitalize }} </label>
-                        <textarea class="form-control" name="description" id="description" cols="2" rows="2">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
+                        <textarea class="form-control" name="description" id="description" cols="2" rows="2" placeholder="{{ 'description'|trans|capitalize }}">{% if application.description is defined and application.description is not empty %}{{ application.description }}{% endif %}</textarea>
                     </div>
                 </div>
             </div>
@@ -117,6 +119,120 @@
                     </div>
                 </div>
             </div>
+            {% if users|default %}
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="gdprContact">{{ 'gdpr contact'|trans|capitalize }} </label>
+                            <select class="form-control" name="gdprContact" id="gdprContact">
+                                {% for user in users %}
+                                    {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                    <option {% if application.gdprContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="technicalContact">{{ 'technical contact'|trans|capitalize }} </label>
+                            <select class="form-control" name="technicalContact" id="technicalContact">
+                                {% for user in users %}
+                                    {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                    <option {% if application.technicalContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="privacyContact">{{ 'privacy contact'|trans|capitalize }} </label>
+                            <select class="form-control" name="privacyContact" id="privacyContact">
+                                {% for user in users %}
+                                    {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                    <option {% if application.privacyContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="billingContact">{{ 'billing contact'|trans|capitalize }} </label>
+                            <select class="form-control" name="billingContact" id="billingContact">
+                                {% for user in users %}
+                                    {% set userUrl = commonground_cleanurl({'component': 'uc', 'type': 'users', 'id': user.id}) %}
+                                    <option {% if application.billingContact == userUrl %} selected {% endif %} value="{{ user['id'] }}">{{ commonground_resource(user.person).name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <h3>{{ 'Mailgun'|trans|capitalize }}</h3>
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="mailgunApiKey">{{ 'Api Key'|trans|capitalize }} </label>
+                        <div class="d-flex">
+                            <input class="form-control" name="mailgunApiKey" id="mailgunApiKey" type="password" placeholder="{{ 'Api Key'|trans|capitalize }}"
+                                {% if application.mailgunApiKey is defined and application.mailgunApiKey is not empty %}
+                                    value="{{ application.mailgunApiKey }}"
+                                {% endif %}>
+                            <a type="button" class="ml-2" onclick="switchInputType('mailgunApiKey')">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="mailgunDomain">{{ 'Domain'|trans|capitalize }} </label>
+                        <div class="d-flex">
+                            <input class="form-control" name="mailgunDomain" id="mailgunDomain" type="password" placeholder="{{ 'Domain'|trans|capitalize }}"
+                                {% if application.mailgunDomain is defined and application.mailgunDomain is not empty %}
+                                    value="{{ application.mailgunDomain }}"
+                                {% endif %}>
+                            <a type="button" class="ml-2" onclick="switchInputType('mailgunDomain')">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>{{ 'Message Bird'|trans|capitalize }}</h3>
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="messageBirdApiKey">{{ 'Api Key'|trans|capitalize }} </label>
+                        <div class="d-flex">
+                            <input class="form-control" name="messageBirdApiKey" id="messageBirdApiKey" type="password" placeholder="{{ 'Api Key'|trans|capitalize }}"
+                                {% if application.messageBirdApiKey is defined and application.messageBirdApiKey is not empty %}
+                                    value="{{ application.messageBirdApiKey }}"
+                                {% endif %}>
+                            <a type="button" class="ml-2" onclick="switchInputType('messageBirdApiKey')">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-12 col-md-auto">
                     <!-- Button -->
@@ -129,3 +245,14 @@
 
     </div>
 </div>
+
+<script>
+    function switchInputType(elementId) {
+        element = document.getElementById(elementId);
+        if (element.type == 'password') {
+            element.type = 'text';
+        } else {
+            element.type = 'password'
+        }
+    }
+</script>

@@ -1,0 +1,31 @@
+{% if alerts is defined and alerts is not empty %}
+    <div class="list-group list-group-flush">
+        {% for alert in alerts %}
+            <div class="list-group-item d-flex align-items-center">
+
+                <!-- Text -->
+                <div class="mr-auto">
+
+                    <!-- Heading -->
+                    <p class="font-weight-bold mb-1">
+                        {{ alert.name }}
+                    </p>
+
+                    <!-- Text -->
+                    <p class="font-size-sm text-muted mb-0">
+                        {{ alert.description|capitalize }}
+                    </p>
+
+                </div>
+
+                <!-- Check -->
+                <div style="height: fit-content" class="badge badge-rounded-circle badge-{{ alert.type }}-soft ml-4">
+                    <i style="font-size: 2rem;" class="{{ alert.icon }}"></i>
+                </div>
+
+            </div>
+        {% endfor%}
+    </div>
+{% else %}
+    <p class="hint__title">{{ 'no alerts available'|trans|capitalize }}</p>
+{% endif %}
