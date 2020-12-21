@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 //use App\Service\RequestService;
+use App\Service\MailingService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
@@ -149,7 +150,7 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -237,6 +238,13 @@ class DashboardController extends AbstractController
             return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
         } elseif ($request->isMethod('POST') && $type == 'duo') {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
+        }elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
+            $data = [];
+            $data['sender'] = 'no-reply@conduction.nl';
+
+            $mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email') , 'Claim your data', $data);
+
+            return $this->redirectToRoute('app_dashboard_claimyourdata');
         } elseif (isset($backUrl)) {
             $session->remove('backUrl');
 
@@ -250,7 +258,7 @@ class DashboardController extends AbstractController
      * @Route("/general")
      * @Template
      */
-    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -346,6 +354,11 @@ class DashboardController extends AbstractController
                 $user['userGroups'] = $userGroups;
                 $user['userGroups'][] = '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c';
                 $commonGroundService->updateResource($user);
+
+                $data = [];
+                $data['sender'] = 'no-reply@conduction.nl';
+
+                $mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
 
                 return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
