@@ -21,6 +21,7 @@
 
                 <!-- Form -->
                 <form method="post" action="{{ path('app_dashboard_dossiers') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                     <input type="hidden" name="dossierID" value="{{ dossier.id }}">
 
                     <!-- Explanation -->
