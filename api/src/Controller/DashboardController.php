@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Description.
@@ -242,7 +243,8 @@ class DashboardController extends AbstractController
             $data = [];
             $data['sender'] = 'no-reply@conduction.nl';
             $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id'] ]);
+
+            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL)."?email={$request->get('email')}";
             $mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email') , 'Claim your data', $data);
 
             return $this->redirectToRoute('app_dashboard_claimyourdata');
@@ -359,7 +361,7 @@ class DashboardController extends AbstractController
                 $data = [];
                 $data['sender'] = 'no-reply@conduction.nl';
 
-                $mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
+                $mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Welcome developer', $data);
 
                 return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
@@ -397,12 +399,34 @@ class DashboardController extends AbstractController
     /**
      * @Route("/claimdata/{type}/{id}")
      * @Template
+     * @param Session $session
+     * @param Request $request
+     * @param $id
+     * @param $type
+     * @param CommonGroundService $commonGroundService
+     * @param ParameterBagInterface $params
+     * @param $claims
+     * @param string $slug
+     * @return array
      */
     public function claimdataAction(Session $session, Request $request, $id, $type, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        if ($type = 'email') {
+            $user = $commonGroundService->getResource(['component' => 'uc', 'type' => 'users', 'id' => $id]);
+            $person = $commonGroundService->getResource($user['person']);
+            $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+            $variables['email'] = $request->query->get('email');
+
+            $claims = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $person, 'property' => 'schema.person.email']);
+//
+//            if (count($claims) > 0) {
+//
+//            }
+        }
 
         return $variables;
     }
@@ -1229,13 +1253,22 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, BalanceService $balanceService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+
+        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+        $account = $balanceService->getAcount($organizationUrl);
+        if ($account !== false) {
+            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $variables['account'] = $account;
+            $variables['payments'] = $commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
         if (key_exists('contact', $variables['organization']) and !empty($variables['organization']['contact'])) {
             $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
         }
@@ -1393,4 +1426,80 @@ class DashboardController extends AbstractController
 
         return $variables;
     }
+
+    /**
+     * @Route("/transactions/{organization}")
+     * @Template
+     */
+    public function TransactionsAction(Session $session, CommonGroundService $commonGroundService, BalanceService $balanceService, Request $request, ParameterBagInterface $params, $organization)
+    {
+        // On an index route we might want to filter based on user input
+        $variables = [];
+
+        $organization = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
+        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+        $variables['organization'] = $organization;
+
+        if ($session->get('mollieCode')) {
+            $mollieCode = $session->get('mollieCode');
+            $session->remove('mollieCode');
+            $result = $balanceService->processMolliePayment($mollieCode, $organizationUrl);
+
+            if ($result['status'] == 'paid') {
+                $variables['message'] = 'Payment processed successfully! <br> €'.$result['amount'].'.00 was added to your balance. <br>  Invoice with reference: '.$result['reference'].' is created.';
+            } else {
+                $variables['message'] = 'Something went wrong, the status of the payment is: '.$result['status'].' please try again.';
+            }
+        }
+
+        $account = $balanceService->getAcount($organizationUrl);
+
+        if ($account !== false) {
+            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $variables['account'] = $account;
+            $variables['payments'] = $commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
+        if ($request->isMethod('POST')) {
+            $amount = $request->get('amount') * 1.21;
+            $amount = (number_format($amount, 2));
+
+            $payment = $balanceService->createMolliePayment($amount, $request->get('redirectUrl'));
+            $session->set('mollieCode', $payment['id']);
+
+            return $this->redirect($payment['redirectUrl']);
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/invoices")
+     * @Template
+     */
+    public function InvoicesAction(CommonGroundService $commonGroundService, Request $request, ParameterBagInterface $params)
+    {
+        $variables = [];
+
+        if (!empty($this->getUser()->getOrganization())) {
+            $organization = $commonGroundService->getResource($this->getUser()->getOrganization());
+            $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+            $variables['invoices'] = $commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices'], ['customer' => $organizationUrl])['hydra:member'];
+        }
+        return $variables;
+    }
+
+    /**
+     * @Route("/invoice/{id}")
+     * @Template
+     */
+    public function InvoiceAction(CommonGroundService $commonGroundService, Request $request, ParameterBagInterface $params, $id)
+    {
+        $variables = [];
+
+        $variables['invoice'] = $commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
+
+        return $variables;
+    }
+
 }

@@ -5,7 +5,6 @@
         <div class="row">
             <div class="col-12 col-md-3">
 
-                {% set activeItem = 'organizations' %}
                 {% include 'dashboard/sidenavbar.html.twig' %}
 
             </div>
@@ -18,25 +17,16 @@
                 <!-- list of developers for this organization -->
                 {% include 'dashboard/widgets/developer_list.html.twig' %}
 
-{#                <!-- payment methodes -->#}
-{#                {% include 'dashboard/widgets/payment_methods.html.twig' %}#}
-                <!-- wallet -->
-                {% include 'dashboard/widgets/organization_balance.html.twig' %}
+                <!-- payment methodes -->
+                {% include 'dashboard/widgets/payment_methods.html.twig' %}
 
                 <!-- applications -->
                 {% include 'dashboard/widgets/application_list.html.twig' %}
 
+                <!-- wallet -->
+                {% include 'dashboard/widgets/organization_balance.html.twig' %}
+
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
-
-    <!-- modals -->
-    {% include 'dashboard/modals/add_developer_modal.html.twig' %}
-    {% include 'dashboard/modals/add_payment_method_modal.html.twig' %}
-
-    {% include 'dashboard/modals/add_application_modal.html.twig' with{
-        'route': 'app_dashboard_organization',
-        'definedId': organization.id
-    } %}
-
 {% endblock %}
