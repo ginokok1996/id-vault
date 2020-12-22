@@ -241,7 +241,8 @@ class DashboardController extends AbstractController
         }elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
             $data = [];
             $data['sender'] = 'no-reply@conduction.nl';
-
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id'] ]);
             $mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email') , 'Claim your data', $data);
 
             return $this->redirectToRoute('app_dashboard_claimyourdata');
@@ -385,6 +386,19 @@ class DashboardController extends AbstractController
      * @Template
      */
     public function notificationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/claimdata/{type}/{id}")
+     * @Template
+     */
+    public function claimdataAction(Session $session, Request $request, $id, $type, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
