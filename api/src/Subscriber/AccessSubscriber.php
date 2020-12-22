@@ -55,13 +55,11 @@ class AccessSubscriber implements EventSubscriberInterface
                 $application = $applications[0];
 
                 $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
-//                $authorization['code'] = null;
-//                $authorization['application'] = '/applications/'.$application['id'];
-//                $authorization = $this->commonGroundService->updateResource($authorization);
 
                 $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
+                $token->setNewUser($authorization['newUser']);
                 $token->setScope(implode('+', $authorization['scopes']));
                 $authorizationLog['status'] = '200';
                 $goal = $token->getGoal();
@@ -69,6 +67,45 @@ class AccessSubscriber implements EventSubscriberInterface
                     $authorizationLog['goal'] = $goal;
                 }
                 $authorizationLog['authorization'] = '/authorizations/'.$authorization['id'];
+
+                $authorization['code'] = null;
+                $authorization['application'] = '/applications/'.$authorization['application']['id'];
+
+                if (!empty($authorization['claims'])) {
+                    foreach ($authorization['claims'] as &$claim) {
+                        $claim = '/claims/'.$claim['id'];
+                    }
+                }
+
+                if (!empty($authorization['purposeLimitation'])) {
+                    $authorization['purposeLimitation'] = '/purpose_limitations/'.$authorization['purposeLimitation']['id'];
+                }
+
+
+                if (!empty($authorization['dossiers'])) {
+                    foreach ($authorization['dossiers'] as &$dossier) {
+                        $dossier = '/dossiers/'.$dossier['id'];
+                    }
+                }
+
+                if (!empty($authorization['scopeRequests'])) {
+                    foreach ($authorization['scopeRequests'] as &$scopeRequest) {
+                        $scopeRequest = '/scopes_requests/'.$scopeRequest['id'];
+                    }
+                }
+
+                if (!empty($authorization['authorizationLogs'])) {
+                    foreach ($authorization['authorizationLogs'] as &$log) {
+                        $log = '/authorization_logs/'.$log['id'];
+                    }
+                }
+
+                if ($authorization['newUser']) {
+                    $authorization['newUser'] = false;
+                }
+
+                $authorization = $this->commonGroundService->saveResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
+
             }
             $authorizationLog['endpoint'] = 'access_tokens';
             $this->commonGroundService->createResource($authorizationLog, ['component' => 'wac', 'type' => 'authorization_logs']);
