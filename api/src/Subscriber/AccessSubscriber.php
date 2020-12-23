@@ -56,6 +56,10 @@ class AccessSubscriber implements EventSubscriberInterface
 
                 $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
 
+                if ($authorization['newUser'] == null || empty($authorization['newUser'])) {
+                    $authorization['newUser'] = false;
+                }
+
                 $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
