@@ -5865,6 +5865,9 @@ components:
         state:
           description: 'A unique validator provided by your application to check the validaty of the call'
           type: string
+        newUser:
+          description: 'Whether this user is new or not'
+          type: boolean
     AccessToken-write:
       type: object
       description: ''
@@ -5923,6 +5926,9 @@ components:
         state:
           description: 'A unique validator provided by your application to check the validaty of the call'
           type: string
+        newUser:
+          description: 'Whether this user is new or not'
+          type: boolean
     'AccessToken:jsonld-write':
       type: object
       description: ''
@@ -7115,12 +7121,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-12-22 15:34:54'
+        example: '2020-12-22 11:57:30'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-12-22 15:34:54'
+        example: '2020-12-22 11:57:30'
     required: []
   AuditTrail-write:
     properties:
@@ -7168,12 +7174,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-12-22 15:34:54'
+        example: '2020-12-22 11:57:30'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-12-22 15:34:54'
+        example: '2020-12-22 11:57:30'
     required: []
   ChangeLog-write:
     properties:
