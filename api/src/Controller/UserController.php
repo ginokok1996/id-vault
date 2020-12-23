@@ -238,7 +238,6 @@ class UserController extends AbstractController
      */
     public function linkedinAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, EventDispatcherInterface $dispatcher)
     {
-
         if ($request->query->get('error')) {
             $this->flash->add('warning', 'LinkedIn authorization has been cancelled');
             if ($session->get('backUrl')) {

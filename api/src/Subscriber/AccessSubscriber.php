@@ -81,7 +81,6 @@ class AccessSubscriber implements EventSubscriberInterface
                     $authorization['purposeLimitation'] = '/purpose_limitations/'.$authorization['purposeLimitation']['id'];
                 }
 
-
                 if (!empty($authorization['dossiers'])) {
                     foreach ($authorization['dossiers'] as &$dossier) {
                         $dossier = '/dossiers/'.$dossier['id'];
@@ -105,7 +104,6 @@ class AccessSubscriber implements EventSubscriberInterface
                 }
 
                 $authorization = $this->commonGroundService->saveResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
-
             }
             $authorizationLog['endpoint'] = 'access_tokens';
             $this->commonGroundService->createResource($authorizationLog, ['component' => 'wac', 'type' => 'authorization_logs']);
