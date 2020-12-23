@@ -1,5 +1,6 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    always_authenticate_before_granting: true
     providers:
         commongroundApplicationProvider:
             id: Conduction\CommonGroundBundle\Security\User\CommongroundApplicationProvider
@@ -36,6 +37,7 @@ security:
                     - Conduction\CommonGroundBundle\Security\CommongroundFacebookAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundGmailAuthenticator
                     - Conduction\CommonGroundBundle\Security\CommongroundGithubAuthenticator
+                    - Conduction\CommonGroundBundle\Security\CommongroundLinkedInAuthenticator
                 entry_point: Conduction\CommonGroundBundle\Security\CommongroundApplicationAuthenticator
 
             # activate different ways to authenticate

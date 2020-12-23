@@ -226,7 +226,40 @@ class UserController extends AbstractController
         }
 
         if (isset($provider['configuration']['app_id']) && isset($provider['configuration']['secret'])) {
-            return $this->redirect('https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile%20https://www.googleapis.com/auth/user.phonenumbers.read&redirect_uri='.$redirect);
+            return $this->redirect('https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri='.$redirect);
+        } else {
+            return $this->render('500.html.twig');
+        }
+    }
+
+    /**
+     * @Route("/auth/linkedin")
+     * @Template
+     */
+    public function linkedinAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, EventDispatcherInterface $dispatcher)
+    {
+        if ($request->query->get('error')) {
+            $this->flash->add('warning', 'LinkedIn authorization has been cancelled');
+            if ($session->get('backUrl')) {
+                return $this->redirect($session->get('backUrl'));
+            } else {
+                return $this->redirect($this->generateUrl('app_default_index'));
+            }
+        }
+
+        $session->set('backUrl', $request->query->get('backUrl'));
+
+        $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'linkedIn', 'application' => $params->get('app_id')])['hydra:member'];
+        $provider = $providers[0];
+
+        $redirect = $request->getUri();
+
+        if (strpos($redirect, '?') == true) {
+            $redirect = substr($redirect, 0, strpos($redirect, '?'));
+        }
+
+        if (isset($provider['configuration']['app_id']) && isset($provider['configuration']['secret'])) {
+            return $this->redirect("https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$provider['configuration']['app_id']}&redirect_uri={$redirect}&scope=r_emailaddress%20r_liteprofile");
         } else {
             return $this->render('500.html.twig');
         }

@@ -732,12 +732,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "85b3af4777d4efab42b9f6e5129084d90a75a79f"
+                "reference": "bb6aeecc3a762b462a3da76bbbda33182f7de806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/85b3af4777d4efab42b9f6e5129084d90a75a79f",
-                "reference": "85b3af4777d4efab42b9f6e5129084d90a75a79f",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/bb6aeecc3a762b462a3da76bbbda33182f7de806",
+                "reference": "bb6aeecc3a762b462a3da76bbbda33182f7de806",
                 "shasum": ""
             },
             "require": {
@@ -815,7 +815,7 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2020-11-23T11:26:38+00:00"
+            "time": "2020-12-21T15:01:03+00:00"
         },
         {
             "name": "conduction/idvaultbundle",

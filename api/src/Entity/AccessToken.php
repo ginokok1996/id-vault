@@ -155,6 +155,15 @@ class AccessToken
      */
     private $state;
 
+    /**
+     * @var bool Whether this user is new or not
+     *
+     * @example false
+     *
+     * @Groups({"read"})
+     */
+    private $newUser;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -283,6 +292,18 @@ class AccessToken
     public function setAccessToken(string $accessToken): self
     {
         $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    public function getNewUser(): ?bool
+    {
+        return $this->newUser;
+    }
+
+    public function setNewUser(bool $newUser): self
+    {
+        $this->newUser = $newUser;
 
         return $this;
     }

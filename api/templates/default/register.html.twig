@@ -23,29 +23,64 @@
                     </p>
 
                     <!-- Form -->
-                    <form method="post" action="#" name="thisForm" class="mb-6">
+                    <form method="post" id="registrationForm" action="{{ path('app_user_register') }}?backUrl={{ path('app_default_index') }}"
+                          name="thisForm" class="mb-4">
 
                         <!-- Email -->
                         <div class="form-group">
-                            <label for="email">
+                            <label class="labelSize" for="email">
                                 {{ 'email address'|trans|capitalize }}
                             </label>
-                            <input required type="email" name="username" class="form-control" id="email" placeholder="{{ 'name@address.com'|trans }}">
+                            <input required type="email" name="username" class="form-control form-control-xs" id="email"
+                                   placeholder="{{ 'name@address.com'|trans }}">
                         </div>
 
                         <!-- Password -->
                         <div class="form-group mb-5">
-                            <label for="password">
+                            <label class="labelSize" for="newPassword">
                                 {{ 'password'|trans|capitalize }}
                             </label>
-                            <input required type="password" name="password" class="form-control" id="password" placeholder="{{ 'enter your password'|trans|capitalize }}">
+                            <input required type="password" name="newPassword" class="form-control form-control-xs" id="newPassword"
+                                   placeholder="{{ 'enter your password'|trans|capitalize }}">
+                            <div class="alert alert-danger" id="passwordError" role="alert" style="display: none">
+                                {{ 'passwords dont match'|trans|capitalize }}
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group mb-5">
+                            <label class="labelSize" for="password">
+                                {{ 'repeat password'|trans|capitalize }}
+                            </label>
+                            <input required type="password" name="passwordRepeat" class="form-control form-control-xs" id="passwordRepeat"
+                                   placeholder="{{ 'enter your password again'|trans|capitalize }}">
+                        </div>
+
+                        <!-- First Name -->
+                        <div class="form-group mb-5">
+                            <label class="labelSize" for="firstName">
+                                {{ 'first name'|trans|capitalize }}
+                            </label>
+                            <input required type="text" name="firstName" class="form-control form-control-xs" id="firstName"
+                                   placeholder="{{ 'enter your first name'|trans|capitalize }}">
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="form-group mb-5">
+                            <label class="labelSize" for="lastName">
+                                {{ 'last name'|trans|capitalize }}
+                            </label>
+                            <input required type="text" name="lastName" class="form-control form-control-xs" id="lastName"
+                                   placeholder="{{ 'enter your last name'|trans|capitalize }}">
                         </div>
 
                         <!-- Submit -->
-                        <button class="btn btn-block btn-primary" type="submit">
-                            {{ 'sign up'|trans|capitalize }}
+                        <button class="btn btn-block btn-success btn-xs" type="submit">
+                            {{ 'register'|trans|capitalize }}
                         </button>
-
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
                     </form>
 
                     <!-- Text -->
@@ -57,4 +92,30 @@
             </div> <!-- / .row -->
         </div> <!-- / .container -->
     </section>
+
+
+    <script>
+        $('#registrationForm').submit(function() {
+            $('#passwordError').hide();
+            let newPass = document.getElementById('newPassword');
+            let repeatPass = document.getElementById('passwordRepeat');
+
+            console.log(newPass.value);
+            console.log(repeatPass.value);
+
+            if ( newPass.value === repeatPass.value){
+                return true;
+            } else {
+                $('#passwordError').fadeIn(500);
+                return false;
+            }
+
+        });
+    </script>
+
+    <style>
+        .labelSize {
+            font-size: 16px;
+        }
+    </style>
 {% endblock %}
