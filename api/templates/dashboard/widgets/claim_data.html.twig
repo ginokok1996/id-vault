@@ -1,0 +1,69 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'You claim the following data:'|trans|capitalize }}
+                </h4>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            <div class="list-group-item">
+                <div class="row align-items-center">
+
+                    <div class="col-12" style="margin-bottom: 20px; padding-left: 20px">
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            {{ value }}
+                        </p>
+                    </div>
+
+                    {% if claim is defined and claim is not empty %}
+                        <hr class="card-meta-divider">
+                        <div class="col-12" style="margin-bottom: 10px;">
+                            <h4 class="mb-0" style="margin-bottom: 10px">
+                                {{ 'We currently have the same claim with this data:'|trans|capitalize }}
+                            </h4>
+                            <!-- Heading -->
+                            {% if claim.data is defined and claim.data is not empty %}
+                                <p class="mb-0">
+                                    {{ claim.data['email'] }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="col-12" style="margin-bottom: 10px;">
+                        <form style="margin-top: 15px" method="post" action="{{ path('app_dashboard_claimdata', {type: type, id: id}) }}" enctype="multipart/form-data">
+                            <input type="hidden" name="value" value="{{ value }}">
+                            {% if claim is defined and claim is not empty %}
+                                <input type="hidden" name="claim" value="{{ claim.id}}">
+                            {% endif %}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <p>{{ 'Do you want to make this change?'|trans|capitalize }}</p>
+
+                            <!-- Button -->
+                            <button class="btn btn-xs btn-primary" name="validateClaim" id="yes">
+                                {{ 'yes'|trans|capitalize }}
+                            </button>
+                            <!-- Button -->
+                            <button class="btn btn-xs btn-danger">
+                                <a style="color: white" href="{{ path('app_dashboard_claimyourdata') }}">
+                                    {{ 'no'|trans|capitalize }}
+                                </a>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

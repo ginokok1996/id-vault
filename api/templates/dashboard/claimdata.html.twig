@@ -5,26 +5,15 @@
         <div class="row">
             <div class="col-12 col-md-3">
 
+                {% set activeItem = 'claimYourData' %}
                 {% include 'dashboard/sidenavbar.html.twig' %}
 
             </div>
 
             <div class="col-12 col-md-9">
 
-                <!-- edit form for organization info -->
-                {% include'dashboard/widgets/edit_organization_info.html.twig' %}
-
-                <!-- list of developers for this organization -->
-                {% include 'dashboard/widgets/developer_list.html.twig' %}
-
-                <!-- payment methodes -->
-                {% include 'dashboard/widgets/payment_methods.html.twig' %}
-
-                <!-- applications -->
-                {% include 'dashboard/widgets/application_list.html.twig' %}
-
-                <!-- wallet -->
-                {% include 'dashboard/widgets/organization_balance.html.twig' %}
+                <!-- claim your data -->
+                {% include'dashboard/widgets/claim_data.html.twig' %}
 
             </div>
         </div> <!-- / .row -->
