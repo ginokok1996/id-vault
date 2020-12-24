@@ -23,7 +23,7 @@ security:
                 check_path: app_user_login
             logout:
                 path: app_user_logout
-                target: app_default_index
+                target: app_default_login
             stateless: false
             provider: commongroundProvider
             guard:
