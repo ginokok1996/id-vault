@@ -5,6 +5,7 @@
 namespace App\Controller;
 
 //use App\Service\RequestService;
+use App\Service\MailingService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Description.
@@ -84,6 +86,57 @@ class DashboardController extends AbstractController
         $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         $variables['authorizations'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
+        $query = [];
+        $date = new \DateTime('today');
+        $query['dateCreated[after]'] = $date->format('Y-m-d');
+        $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
+        $variables['days']['monday'] = [];
+        $variables['days']['tuesday'] = [];
+        $variables['days']['wednesday'] = [];
+        $variables['days']['thursday'] = [];
+        $variables['days']['friday'] = [];
+        $variables['days']['saturday'] = [];
+        $variables['days']['sunday'] = [];
+
+        if (count($variables['logs']) > 0) {
+            foreach ($variables['logs'] as $log) {
+                $date->modify('Monday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['monday'][] = $log;
+                }
+
+                $date->modify('Tuesday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['tuesday'][] = $log;
+                }
+
+                $date->modify('Wednesday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['wednesday'][] = $log;
+                }
+
+                $date->modify('Thursday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['thursday'][] = $log;
+                }
+
+                $date->modify('Friday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['friday'][] = $log;
+                }
+
+                $date->modify('Saturday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['saturday'][] = $log;
+                }
+
+                $date->modify('Sunday this week');
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                    $variables['days']['sunday'][] = $log;
+                }
+            }
+        }
+
         foreach ($variables['authorizations'] as &$authorization) {
             if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
                 $application = $commonGroundService->isResource($authorization['application']['contact']);
@@ -149,7 +202,7 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function claimYourDataAction(Session $session, Request $request, $type = null, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -237,6 +290,15 @@ class DashboardController extends AbstractController
             return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
         } elseif ($request->isMethod('POST') && $type == 'duo') {
             return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
+        } elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
+            $data = [];
+            $data['sender'] = 'no-reply@conduction.nl';
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+
+            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL)."?email={$request->get('email')}";
+            $mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Claim your data', $data);
+
+            return $this->redirectToRoute('app_dashboard_claimyourdata');
         } elseif (isset($backUrl)) {
             $session->remove('backUrl');
 
@@ -250,7 +312,7 @@ class DashboardController extends AbstractController
      * @Route("/general")
      * @Template
      */
-    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function generalAction(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
@@ -295,7 +357,7 @@ class DashboardController extends AbstractController
             $address['locality'] = $request->get('locality');
             $person['adresses'][0] = $address;
 
-            $person = $commonGroundService->saveResource($person, ['component'=>'cc', 'type'=>'people']);
+            $person = $commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
 
             // If this user has no person the user.person should be set to this $person?
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -303,7 +365,7 @@ class DashboardController extends AbstractController
                 $user = $users[0];
 
                 if (!isset($user['person'])) {
-                    $user['person'] = $commonGroundService->cleanUrl(['component'=>'cc', 'type'=>'people', 'id'=>$person['id']]);
+                    $user['person'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
                     $commonGroundService->updateResource($user);
                 }
             }
@@ -347,6 +409,11 @@ class DashboardController extends AbstractController
                 $user['userGroups'][] = '/groups/c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c';
                 $commonGroundService->updateResource($user);
 
+                $data = [];
+                $data['sender'] = 'no-reply@conduction.nl';
+
+                $mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Welcome developer', $data);
+
                 return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
         }
@@ -376,6 +443,62 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/claimdata/{type}/{id}")
+     * @Template
+     *
+     * @param Session $session
+     * @param Request $request
+     * @param $id
+     * @param $type
+     * @param CommonGroundService   $commonGroundService
+     * @param ParameterBagInterface $params
+     * @param $claims
+     * @param string $slug
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function claimdataAction(Session $session, Request $request, $id, $type, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    {
+        $variables = [];
+
+        $variables = $this->provideCounterData($commonGroundService, $variables);
+
+        if ($type = 'email') {
+            $user = $commonGroundService->getResource(['component' => 'uc', 'type' => 'users', 'id' => $id]);
+            $person = $commonGroundService->getResource($user['person']);
+            $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+            $variables['value'] = $request->query->get('email');
+            $variables['type'] = $type;
+
+            $claims = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['property' => 'schema.person.email', 'person' => $personUrl])['hydra:member'];
+            $variables['id'] = $id;
+
+            if (count($claims) > 0) {
+                $variables['claim'] = $claims[0];
+            }
+
+            // Add a new claim or edit one
+            if ($request->isMethod('POST') && $type = 'email') {
+                if ($request->get('claim')) {
+                    $claim = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claim')]);
+                    $claim['data']['email'] = $request->get('value');
+                } else {
+                    $claim = [];
+                    $claim['property'] = 'schema.person.email';
+                    $claim['person'] = $personUrl;
+                    $claim['data']['email'] = $request->get('value');
+                }
+
+                $commonGroundService->saveResource($claim, (['component' => 'wac', 'type' => 'claims']));
+
+                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
+            }
+        }
 
         return $variables;
     }
@@ -445,10 +568,9 @@ class DashboardController extends AbstractController
 
                 $resource = $commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
-                return $this->redirect($this->generateUrl('app_dashboard_claim', ['id'=>$resource['id']]));
+                return $this->redirect($this->generateUrl('app_dashboard_claim', ['id' => $resource['id']]));
             }
-        }
-        // Delete claim if there is no authorization connected to it
+        } // Delete claim if there is no authorization connected to it
         elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
             $claim = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
             // Delete claim
@@ -481,7 +603,7 @@ class DashboardController extends AbstractController
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
-        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id'=>$id]);
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $id]);
 
         // Set the organization background-color for the icons shown with every authorization of this claim
         if (isset($variables['resource']['authorizations'])) {
@@ -590,7 +712,7 @@ class DashboardController extends AbstractController
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
-        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id'=>$id]);
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $id]);
 
         // Set this resources as authorization for each authorizationLog and set icon background-color
         foreach ($variables['resource']['authorizationLogs'] as &$log) {
@@ -720,7 +842,7 @@ class DashboardController extends AbstractController
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
-        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id'=>$id]);
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $id]);
 
         // Set the organization background-color for the icon shown with the authorization of this dossier
         if (isset($variables['resource']['authorization']['application']['contact'])) {
@@ -889,8 +1011,7 @@ class DashboardController extends AbstractController
             $application['scopes'] = $request->get('scopes');
 
             $application = $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
-        }
-        // Add a new mailing list or edit one
+        } // Add a new mailing list or edit one
         elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
             $resource = $request->request->all();
 
@@ -912,9 +1033,8 @@ class DashboardController extends AbstractController
             $application['sendLists'] = $sendLists;
             $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
-            return $this->redirect($this->generateUrl('app_dashboard_application', ['id'=>$id]).'#'.$resource['id']);
-        }
-        // Delete mailing list
+            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#'.$resource['id']);
+        } // Delete mailing list
         elseif ($request->isMethod('POST') && $request->get('deleteMailingList')) {
             $sendList = $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $request->get('mailingListID')]);
 
@@ -934,7 +1054,7 @@ class DashboardController extends AbstractController
             // Delete mailing list
             $commonGroundService->deleteResource($sendList);
 
-            return $this->redirect($this->generateUrl('app_dashboard_application', ['id'=>$id]).'#mailingLists');
+            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#mailingLists');
         }
 
         $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
@@ -1022,7 +1142,7 @@ class DashboardController extends AbstractController
         if ($this->getUser()) {
             $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             $userUrl = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-            $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
+            $variables['logs'] = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
             // Set the organization background-color for the icons shown with every log
             foreach ($variables['logs'] as &$log) {
@@ -1062,7 +1182,7 @@ class DashboardController extends AbstractController
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
-        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id'=>$id]);
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id' => $id], ['order[dateCreated]' => 'desc']);
 
         // Set the organization background-color for the icon shown with this log
         if (isset($variables['resource']['authorization']['application']['contact'])) {
@@ -1202,13 +1322,22 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, BalanceService $balanceService, ParameterBagInterface $params, string $slug = 'home')
     {
         $variables = [];
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+
+        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+        $account = $balanceService->getAcount($organizationUrl);
+        if ($account !== false) {
+            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $variables['account'] = $account;
+            $variables['payments'] = $commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
         if (key_exists('contact', $variables['organization']) and !empty($variables['organization']['contact'])) {
             $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
         }
@@ -1270,11 +1399,11 @@ class DashboardController extends AbstractController
                 if (!key_exists('sender', $message)) {
                     $message['sender'] = $receiver;
                 }
-                $message['data'] = ['sender'=>$sender, 'receiver'=>$commonGroundService->getResource($receiver)];
-                $message['content'] = $commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id'=>'61162867-9811-451c-ac41-e38cb58698af']);
+                $message['data'] = ['sender' => $sender, 'receiver' => $commonGroundService->getResource($receiver)];
+                $message['content'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'templates', 'id' => '61162867-9811-451c-ac41-e38cb58698af']);
 
                 // Send the email to this contact
-                $commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages']);
+                $commonGroundService->createResource($message, ['component' => 'bs', 'type' => 'messages']);
             }
         } elseif ($request->isMethod('POST') && $request->get('newApplication')) {
             $name = $request->get('name');
@@ -1313,7 +1442,7 @@ class DashboardController extends AbstractController
             $application['billingContact'] = $userUrl;
             $commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
-            return $this->redirect($this->generateUrl('app_dashboard_organization', ['id'=>$id]));
+            return $this->redirect($this->generateUrl('app_dashboard_organization', ['id' => $id]));
         } elseif ($request->isMethod('POST') && $request->get('updateInfo')) {
             $name = $request->get('name');
             if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
@@ -1363,6 +1492,82 @@ class DashboardController extends AbstractController
                 $variables['cc'] = $commonGroundService->getResource($variables['organization']['contact']);
             }
         }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/transactions/{organization}")
+     * @Template
+     */
+    public function TransactionsAction(Session $session, CommonGroundService $commonGroundService, BalanceService $balanceService, Request $request, ParameterBagInterface $params, $organization)
+    {
+        // On an index route we might want to filter based on user input
+        $variables = [];
+
+        $organization = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
+        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+        $variables['organization'] = $organization;
+
+        if ($session->get('mollieCode')) {
+            $mollieCode = $session->get('mollieCode');
+            $session->remove('mollieCode');
+            $result = $balanceService->processMolliePayment($mollieCode, $organizationUrl);
+
+            if ($result['status'] == 'paid') {
+                $variables['message'] = 'Payment processed successfully! <br> €'.$result['amount'].'.00 was added to your balance. <br>  Invoice with reference: '.$result['reference'].' is created.';
+            } else {
+                $variables['message'] = 'Something went wrong, the status of the payment is: '.$result['status'].' please try again.';
+            }
+        }
+
+        $account = $balanceService->getAcount($organizationUrl);
+
+        if ($account !== false) {
+            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $variables['account'] = $account;
+            $variables['payments'] = $commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+        }
+
+        if ($request->isMethod('POST')) {
+            $amount = $request->get('amount') * 1.21;
+            $amount = (number_format($amount, 2));
+
+            $payment = $balanceService->createMolliePayment($amount, $request->get('redirectUrl'));
+            $session->set('mollieCode', $payment['id']);
+
+            return $this->redirect($payment['redirectUrl']);
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/invoices")
+     * @Template
+     */
+    public function InvoicesAction(CommonGroundService $commonGroundService, Request $request, ParameterBagInterface $params)
+    {
+        $variables = [];
+
+        if (!empty($this->getUser()->getOrganization())) {
+            $organization = $commonGroundService->getResource($this->getUser()->getOrganization());
+            $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+            $variables['invoices'] = $commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices'], ['customer' => $organizationUrl])['hydra:member'];
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/invoice/{id}")
+     * @Template
+     */
+    public function InvoiceAction(CommonGroundService $commonGroundService, Request $request, ParameterBagInterface $params, $id)
+    {
+        $variables = [];
+
+        $variables['invoice'] = $commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
 
         return $variables;
     }

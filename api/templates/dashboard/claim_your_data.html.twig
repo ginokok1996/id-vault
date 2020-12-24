@@ -37,6 +37,18 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <!-- Card -->
+                                    <a style="text-decoration: none" data-toggle="modal" data-target="#emailModal">
+                                        <div class="card card-bleed shadow-light-lg mb-6 lift">
+                                            <div class="card-body text-center">
+                                                {{ 'email'|trans|capitalize }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     {% else %}
                         <div class="col-12">
@@ -44,10 +56,16 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-12">
-                                            <p class="text-center">There are currently no claim your data actions available</p>
+                                            <div class="row">
+                                                <div class="col-12 col-md-6 col-lg-4">
+                                                    <!-- Card -->
+                                                    <a class="btn btn-primary" style="text-decoration: none" data-toggle="modal" data-target="#emailModal">
+                                                        {{ 'email'|trans|capitalize }}
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -176,6 +194,7 @@
         </div> <!-- / .row -->
     </div> <!-- / .container -->
     {% include 'dashboard/modals/redirect_modal.html.twig' %}
+    {% include 'dashboard/modals/email_modal.html.twig' %}
 
     {% if showModal is defined and showModal is not empty %}
         <script type="text/javascript">

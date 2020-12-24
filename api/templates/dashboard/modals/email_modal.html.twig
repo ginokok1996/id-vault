@@ -1,0 +1,35 @@
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalTitle">
+                    {{ 'email'|trans|capitalize }}
+                </h2>
+
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_claimyourdata') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                        <input required class="form-control" name="email" id="email" type="email" placeholder="{{ 'email'|trans|capitalize }}">
+                    </div>
+
+                    <!-- Submit -->
+                    <button name="emailValidate" id="email" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'send'|trans|capitalize }}
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

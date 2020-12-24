@@ -19,6 +19,7 @@
                 {% else %}
                     {{ path(route) }}
                 {% endif %}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                     <!-- Name -->
                     <div class="form-group">

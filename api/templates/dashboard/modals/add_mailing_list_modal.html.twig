@@ -13,6 +13,8 @@
                 </h2>
                 <!-- Form -->
                 <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" enctype="multipart/form-data" style="padding-top: 1rem">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
                     <!-- Name -->
                     <div class="form-group">
                         <label for="name">{{ 'name'|trans|capitalize }} </label>
