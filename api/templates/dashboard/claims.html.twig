@@ -34,14 +34,6 @@
 
                             </div>
 
-                            <div class="col-auto">
-
-                                <!-- Button -->
-                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalAddClaim">
-                                    {{ 'add claim'|trans|capitalize }}
-                                </button>
-
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -55,7 +47,6 @@
     </div> <!-- / .container -->
 
     <!-- Modals -->
-    {% include 'dashboard/modals/add_claim_modal.html.twig' %}
     {% if claims is defined and claims is not empty %}
         {% for claim in claims %}
             {% include 'dashboard/modals/edit_claim_modal.html.twig' %}

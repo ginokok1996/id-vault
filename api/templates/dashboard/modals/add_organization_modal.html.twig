@@ -15,6 +15,7 @@
 
                 <!-- Form -->
                 <form method="post" action="{{ path('app_dashboard_organizations') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                     <!-- Name -->
                     <div class="form-group">

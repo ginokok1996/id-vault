@@ -1,0 +1,68 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'wallet'|trans|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary"><a style="color:white;"
+                                                          href="{{ path('app_dashboard_transactions', {organization: organization.id}) }}">
+                        {{ 'view'|trans|capitalize }}
+                    </a>
+                </button>
+
+{#                <!-- Button -->#}
+{#                <button type="button" data-toggle="modal" data-target="#fundsModal"#}
+{#                        class="btn btn-xs btn-primary">{{ 'add funds'|trans|capitalize }}</button>#}
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xl">
+                            <div class="icon icon-shape icon-md icon-shape-primary rounded-circle mr-3 mb-4 mb-md-0">
+                                <span style="color: #335EEA" class="fas fa-wallet"></span></div>
+                        </div>
+
+                    </div>
+                    <div class="col-6 ml-n5">
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            {{ account.balance }}
+                        </p>
+                        <!-- Text -->
+                        <a class="d-block small text-truncate text-gray-700"
+                           href="{{ path('app_dashboard_transactions', {organization: organization.id}) }}">
+                            {% if payments[0].credit is defined and payments[0].credit is not empty %}
+                                {% set amount = payments[0].credit / 100 %}
+                                <span>{{ 'last change:'|trans|capitalize }}</span><br>
+                                <span class="fas fa-angle-up text-success mr-1"></span>
+                                <span class="text-success font-weight-bold">€{{ amount }}</span>
+                            {% elseif payments[0].debit is defined and payments[0].debit is not empty %}
+                                {% set amount = payments[0].debit / 100 %}
+                                <span style="color: black">{{ 'last change:'|trans|capitalize }}</span><br>
+                                <span class="fas fa-angle-down text-danger mr-1"></span>
+                                <span class="text-danger font-weight-bold">€{{ amount }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
