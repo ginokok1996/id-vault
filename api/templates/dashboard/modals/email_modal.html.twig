@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalDeveloper" tabindex="-1" role="dialog" aria-labelledby="modalPaymentTitle" aria-hidden="true">
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -9,20 +9,13 @@
                 </button>
 
                 <!-- Heading -->
-                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
-                    {{ 'add developer'|trans|capitalize }}
+                <h2 class="font-weight-bold text-center mb-1" id="modalTitle">
+                    {{ 'email'|trans|capitalize }}
                 </h2>
 
                 <!-- Form -->
-                <form method="post" action="{{ path('app_dashboard_organization', {id: organization.id})  }}" enctype="multipart/form-data">
+                <form method="post" action="{{ path('app_dashboard_claimyourdata') }}" enctype="multipart/form-data">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                    <!-- Name -->
-                    <div class="form-group">
-                        <label for="name">{{ 'name'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
-                        <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'name'|trans|capitalize }}">
-                    </div>
-
                     <!-- Email -->
                     <div class="form-group">
                         <label for="email">{{ 'email'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
@@ -30,8 +23,8 @@
                     </div>
 
                     <!-- Submit -->
-                    <button name="newDeveloper" value="true" class="btn btn-block btn-primary mt-3 lift">
-                        {{ 'add developer'|trans|capitalize }}
+                    <button name="emailValidate" id="email" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'send'|trans|capitalize }}
                     </button>
 
                 </form>

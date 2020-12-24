@@ -46,6 +46,7 @@
 
                     <!-- Form -->
                     <form method="post" action="{{ path('app_dashboard_authorizations') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                         <input type="hidden" name="authorizationID" value="{{ authorization.id }}">
 
                         <!-- No -->
