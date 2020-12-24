@@ -271,7 +271,6 @@ class UserController extends AbstractController
      */
     public function logoutAction(Session $session, Request $request)
     {
-
         return $this->redirect($this->generateUrl('app_default_login'));
     }
 
