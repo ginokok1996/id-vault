@@ -78,6 +78,7 @@
         {% endif %}
     {% endfor %}
 {% endfor %}
+
 <!-- Content -->
 {% block content %}
 
@@ -115,6 +116,13 @@
 <!-- Theme JS -->
 <script src="/bundles/landkit/js/theme.min.js"></script>
 
+{% if app.user is defined and app.user is not empty and app_session_duration is defined and app_session_duration is not empty %}
+    <script>
+        setTimeout(function () {
+            location.href = '{{ path('app_user_logout') }}';
+        }, {{ (app_session_duration * 1000) + 5000 }});
+    </script>
+{% endif %}
 
 </body>
 </html>
