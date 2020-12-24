@@ -67,7 +67,7 @@ class DashboardController extends AbstractController
 
         //alerts
         $alerts = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
-        $variables['alertCount'] = (string)count($alerts);
+        $variables['alertCount'] = (string) count($alerts);
 
         return $variables;
     }
@@ -100,39 +100,38 @@ class DashboardController extends AbstractController
 
         if (count($variables['logs']) > 0) {
             foreach ($variables['logs'] as $log) {
-
                 $date->modify('Monday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['monday'][] = $log;
                 }
 
                 $date->modify('Tuesday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['tuesday'][] = $log;
                 }
 
                 $date->modify('Wednesday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['wednesday'][] = $log;
                 }
 
                 $date->modify('Thursday this week');
-                if ( strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['thursday'][] = $log;
                 }
 
                 $date->modify('Friday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['friday'][] = $log;
                 }
 
                 $date->modify('Saturday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['saturday'][] = $log;
                 }
 
                 $date->modify('Sunday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d'))!== false) {
+                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
                     $variables['days']['sunday'][] = $log;
                 }
             }
@@ -148,7 +147,7 @@ class DashboardController extends AbstractController
                     }
                 }
 
-                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl'] . "?code={$authorization['id']}";
+                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
             }
         }
 
@@ -248,13 +247,13 @@ class DashboardController extends AbstractController
                 if (isset($ingeschrevenPersoon['verblijfplaats'])) {
                     $person['adresses'][0] = [];
                     $person['adresses'][0]['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $person['adresses'][0]['houseNumber'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $person['adresses'][0]['houseNumberSuffix'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $person['adresses'][0]['houseNumber'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $person['adresses'][0]['houseNumberSuffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $person['adresses'][0]['postalCode'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
 
                     $variables['changedInfo']['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $variables['changedInfo']['house_number'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $variables['changedInfo']['house_number_suffix'] = (string)$ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
+                    $variables['changedInfo']['house_number'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
+                    $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
                     $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
                 }
 
@@ -288,15 +287,15 @@ class DashboardController extends AbstractController
         }
 
         if ($request->isMethod('POST') && $type == 'brp') {
-            return $this->redirect($this->generateUrl('app_dashboard_general') . '?brp=' . $request->get('bsn'));
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
         } elseif ($request->isMethod('POST') && $type == 'duo') {
-            return $this->redirect($this->generateUrl('app_dashboard_general') . '?duo=' . $request->get('bsn'));
+            return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
         } elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
             $data = [];
             $data['sender'] = 'no-reply@conduction.nl';
             $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
 
-            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL) . "?email={$request->get('email')}";
+            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL)."?email={$request->get('email')}";
             $mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Claim your data', $data);
 
             return $this->redirectToRoute('app_dashboard_claimyourdata');
@@ -344,13 +343,13 @@ class DashboardController extends AbstractController
             $person = $variables['person'];
             $person['name'] = $name;
             $person['emails'][0] = [];
-            $person['emails'][0]['name'] = 'email for ' . $name;
+            $person['emails'][0]['name'] = 'email for '.$name;
             $person['emails'][0]['email'] = $email;
             $person['telephones'][0] = [];
-            $person['telephones'][0]['name'] = 'telephone for ' . $name;
+            $person['telephones'][0]['name'] = 'telephone for '.$name;
             $person['telephones'][0]['telephone'] = $request->get('telephone');
             $address = [];
-            $address['name'] = 'address for ' . $name;
+            $address['name'] = 'address for '.$name;
             $address['street'] = $request->get('street');
             $address['houseNumber'] = $request->get('houseNumber');
             $address['houseNumberSuffix'] = $request->get('houseNumberSuffix');
@@ -381,7 +380,7 @@ class DashboardController extends AbstractController
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
                     if ($userGroup['id'] != 'ff0a0468-3b92-4222-9bca-201df1ab0f42') {
-                        array_push($userGroups, '/groups/' . $userGroup['id']);
+                        array_push($userGroups, '/groups/'.$userGroup['id']);
                     }
                 }
 
@@ -402,7 +401,7 @@ class DashboardController extends AbstractController
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
                     if ($userGroup['id'] != 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c') {
-                        array_push($userGroups, '/groups/' . $userGroup['id']);
+                        array_push($userGroups, '/groups/'.$userGroup['id']);
                     }
                 }
 
@@ -451,14 +450,16 @@ class DashboardController extends AbstractController
     /**
      * @Route("/claimdata/{type}/{id}")
      * @Template
+     *
      * @param Session $session
      * @param Request $request
      * @param $id
      * @param $type
-     * @param CommonGroundService $commonGroundService
+     * @param CommonGroundService   $commonGroundService
      * @param ParameterBagInterface $params
      * @param $claims
      * @param string $slug
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function claimdataAction(Session $session, Request $request, $id, $type, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
@@ -491,12 +492,11 @@ class DashboardController extends AbstractController
                     $claim['property'] = 'schema.person.email';
                     $claim['person'] = $personUrl;
                     $claim['data']['email'] = $request->get('value');
-
                 }
 
                 $commonGroundService->saveResource($claim, (['component' => 'wac', 'type' => 'claims']));
-                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
 
+                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
             }
         }
 
@@ -813,7 +813,7 @@ class DashboardController extends AbstractController
 //            $vrcRequest = $commonGroundService->createResource($vrcRequest, ['component' => 'vrc', 'type' => 'requests']);
 
 //            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
-            $this->flash->add('error', 'No objection submitted for: ' . $dossier['name']);
+            $this->flash->add('error', 'No objection submitted for: '.$dossier['name']);
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
@@ -929,7 +929,7 @@ class DashboardController extends AbstractController
             // Create a wRc application
             $wrcApplication['name'] = $name;
             $wrcApplication['description'] = $request->get('description');
-            $wrcApplication['organization'] = '/organizations/' . $request->get('organization');
+            $wrcApplication['organization'] = '/organizations/'.$request->get('organization');
             $wrcApplication['domain'] = $request->get('domain');
 
 //            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
@@ -999,10 +999,10 @@ class DashboardController extends AbstractController
             //wrc application
             $wrcApplication['name'] = $request->get('name');
             $wrcApplication['domain'] = $request->get('domain');
-            $wrcApplication['organization'] = '/organizations/' . $wrcApplication['organization']['id'];
+            $wrcApplication['organization'] = '/organizations/'.$wrcApplication['organization']['id'];
 
             if (isset($wrcApplication['style'])) {
-                $wrcApplication['style'] = '/styles/' . $wrcApplication['style']['id'];
+                $wrcApplication['style'] = '/styles/'.$wrcApplication['style']['id'];
             }
 
             $wrcApplication = $commonGroundService->saveResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
@@ -1033,7 +1033,7 @@ class DashboardController extends AbstractController
             $application['sendLists'] = $sendLists;
             $commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
 
-            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]) . '#' . $resource['id']);
+            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#'.$resource['id']);
         } // Delete mailing list
         elseif ($request->isMethod('POST') && $request->get('deleteMailingList')) {
             $sendList = $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $request->get('mailingListID')]);
@@ -1054,7 +1054,7 @@ class DashboardController extends AbstractController
             // Delete mailing list
             $commonGroundService->deleteResource($sendList);
 
-            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]) . '#mailingLists');
+            return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#mailingLists');
         }
 
         $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
@@ -1182,7 +1182,7 @@ class DashboardController extends AbstractController
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
-        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id' => $id],['order[dateCreated]' => 'desc']);
+        $variables['resource'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id' => $id], ['order[dateCreated]' => 'desc']);
 
         // Set the organization background-color for the icon shown with this log
         if (isset($variables['resource']['authorization']['application']['contact'])) {
@@ -1225,9 +1225,9 @@ class DashboardController extends AbstractController
             $cc = [];
             $cc['name'] = $name;
             $cc['description'] = $description;
-            $cc['emails'][0]['name'] = 'email for ' . $name;
+            $cc['emails'][0]['name'] = 'email for '.$name;
             $cc['emails'][0]['email'] = $email;
-            $cc['adresses'][0]['name'] = 'address for ' . $name;
+            $cc['adresses'][0]['name'] = 'address for '.$name;
 
             $cc = $commonGroundService->createResource($cc, ['component' => 'cc', 'type' => 'organizations']);
 
@@ -1241,12 +1241,12 @@ class DashboardController extends AbstractController
                 $path = $_FILES['logo']['tmp_name'];
                 $type = filetype($_FILES['logo']['tmp_name']);
                 $data = file_get_contents($path);
-                $wrc['style']['name'] = 'style for ' . $name;
-                $wrc['style']['description'] = 'style for ' . $name;
+                $wrc['style']['name'] = 'style for '.$name;
+                $wrc['style']['description'] = 'style for '.$name;
                 $wrc['style']['css'] = ' ';
-                $wrc['style']['favicon']['name'] = 'logo for ' . $name;
-                $wrc['style']['favicon']['description'] = 'logo for ' . $name;
-                $wrc['style']['favicon']['base64'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $wrc['style']['favicon']['name'] = 'logo for '.$name;
+                $wrc['style']['favicon']['description'] = 'logo for '.$name;
+                $wrc['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
             }
 
             $wrc = $commonGroundService->createResource($wrc, ['component' => 'wrc', 'type' => 'organizations']);
@@ -1266,9 +1266,9 @@ class DashboardController extends AbstractController
             $balanceService->addCredit(Money::EUR(1000), $organizationUrl, $wrc['name']);
 
             $userGroup = [];
-            $userGroup['name'] = 'developers-' . $name;
-            $userGroup['title'] = 'developers-' . $name;
-            $userGroup['description'] = 'developers group for ' . $name;
+            $userGroup['name'] = 'developers-'.$name;
+            $userGroup['title'] = 'developers-'.$name;
+            $userGroup['description'] = 'developers group for '.$name;
             $userGroup['organization'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $wrc['id']]);
 
             $group = $commonGroundService->createResource($userGroup, ['component' => 'uc', 'type' => 'groups']);
@@ -1280,11 +1280,11 @@ class DashboardController extends AbstractController
 
                 $userGroups = [];
                 foreach ($user['userGroups'] as $userGroup) {
-                    array_push($userGroups, '/groups/' . $userGroup['id']);
+                    array_push($userGroups, '/groups/'.$userGroup['id']);
                 }
 
                 $user['userGroups'] = $userGroups;
-                $user['userGroups'][] = '/groups/' . $group['id'];
+                $user['userGroups'][] = '/groups/'.$group['id'];
 
                 $commonGroundService->updateResource($user);
             }
@@ -1413,7 +1413,7 @@ class DashboardController extends AbstractController
             // Create a wRc application
             $wrcApplication['name'] = $name;
             $wrcApplication['description'] = $request->get('description');
-            $wrcApplication['organization'] = '/organizations/' . $id;
+            $wrcApplication['organization'] = '/organizations/'.$id;
             $wrcApplication['domain'] = $request->get('domain');
 
 //            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
@@ -1458,9 +1458,9 @@ class DashboardController extends AbstractController
                 $path = $_FILES['logo']['tmp_name'];
                 $type = filetype($_FILES['logo']['tmp_name']);
                 $data = file_get_contents($path);
-                $icon['name'] = 'logo for ' . $name;
-                $icon['description'] = 'logo for ' . $name;
-                $icon['base64'] = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $icon['name'] = 'logo for '.$name;
+                $icon['description'] = 'logo for '.$name;
+                $icon['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
                 $commonGroundService->saveResource($icon);
             }
 
@@ -1468,7 +1468,7 @@ class DashboardController extends AbstractController
             $organization['name'] = $name;
             $organization['description'] = $request->get('description');
             if (key_exists('style', $organization) and !empty($organization['style'])) {
-                $organization['style'] = '/styles/' . $organization['style']['id'];
+                $organization['style'] = '/styles/'.$organization['style']['id'];
             }
             $commonGroundService->updateResource($organization);
 
@@ -1476,10 +1476,10 @@ class DashboardController extends AbstractController
                 $cc = $variables['cc'];
                 $cc['name'] = $name;
                 $cc['emails'][0] = [];
-                $cc['emails'][0]['name'] = 'email for ' . $name;
+                $cc['emails'][0]['name'] = 'email for '.$name;
                 $cc['emails'][0]['email'] = $request->get('email');
                 $address = [];
-                $address['name'] = 'address for ' . $name;
+                $address['name'] = 'address for '.$name;
                 $address['street'] = $request->get('street');
                 $address['houseNumber'] = $request->get('houseNumber');
                 $address['houseNumberSuffix'] = $request->get('houseNumberSuffix');
@@ -1515,9 +1515,9 @@ class DashboardController extends AbstractController
             $result = $balanceService->processMolliePayment($mollieCode, $organizationUrl);
 
             if ($result['status'] == 'paid') {
-                $variables['message'] = 'Payment processed successfully! <br> €' . $result['amount'] . '.00 was added to your balance. <br>  Invoice with reference: ' . $result['reference'] . ' is created.';
+                $variables['message'] = 'Payment processed successfully! <br> €'.$result['amount'].'.00 was added to your balance. <br>  Invoice with reference: '.$result['reference'].' is created.';
             } else {
-                $variables['message'] = 'Something went wrong, the status of the payment is: ' . $result['status'] . ' please try again.';
+                $variables['message'] = 'Something went wrong, the status of the payment is: '.$result['status'].' please try again.';
             }
         }
 
@@ -1555,6 +1555,7 @@ class DashboardController extends AbstractController
             $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
             $variables['invoices'] = $commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices'], ['customer' => $organizationUrl])['hydra:member'];
         }
+
         return $variables;
     }
 
@@ -1570,5 +1571,4 @@ class DashboardController extends AbstractController
 
         return $variables;
     }
-
 }
