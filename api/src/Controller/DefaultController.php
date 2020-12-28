@@ -81,6 +81,10 @@ class DefaultController extends AbstractController
 
             $user['password'] = $password;
 
+            foreach ($user['userGroups'] as &$group) {
+                $group = '/groups/'.$group['id'];
+            }
+
             $commonGroundService->updateResource($user);
 
             $variables['reset'] = true;
