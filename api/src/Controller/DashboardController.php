@@ -10,6 +10,7 @@ use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Money\Money;
+use phpDocumentor\Reflection\Types\This;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -1329,6 +1330,7 @@ class DashboardController extends AbstractController
         $variables = $this->provideCounterData($commonGroundService, $variables);
 
         $variables['organization'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+        $variables['currentUser'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
 
         $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
         $account = $balanceService->getAcount($organizationUrl);
@@ -1359,6 +1361,20 @@ class DashboardController extends AbstractController
         if (count($groups) > 0) {
             $group = $groups[0];
             $variables['users'] = $group['users'];
+        }
+
+        // Delete current user from the group
+        if ($request->isMethod('POST') && $request->get('leaveGroup')) {
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            foreach ($user['userGroups'] as $key => &$value) {
+                if ($organizationUrl == $value['organization']) {
+                    unset($user['userGroups'][$key]);
+                } else {
+                    $value = '/groups/'.$value['id'];
+                }
+            }
+            $commonGroundService->updateResource($user);
+            return $this->redirect($this->generateUrl('app_dashboard_organizations'));
         }
 
         if ($request->isMethod('POST') && $request->get('newDeveloper')) {
