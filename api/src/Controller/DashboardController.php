@@ -1320,11 +1320,15 @@ class DashboardController extends AbstractController
 
     /**
      * @Route("/organizations/{id}")
-     * @Security("is_granted('ROLE_group.developer')")
+
      * @Template
      */
-    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, BalanceService $balanceService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationAction(Session $session, Request $request, $id, CommonGroundService $commonGroundService, BalanceService $balanceService, MailingService $mailingService, ParameterBagInterface $params, string $slug = 'home')
     {
+        if (!$this->getUser()) {
+           return $this->redirect($this->generateUrl('app_default_login').'?backUrl='.$request->getUri());
+        }
+
         $variables = [];
 
         $variables = $this->provideCounterData($commonGroundService, $variables);
@@ -1333,6 +1337,26 @@ class DashboardController extends AbstractController
         $variables['currentUser'] = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
 
         $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
+
+        if ($request->query->get('newUser')) {
+            $email = $request->query->get('newUser');
+            $user = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $email])['hydra:member'][0];
+            $newGroup = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'groups'], ['organization' => $organizationUrl])['hydra:member'][0];
+            $excitingGroup = false;
+
+            foreach ($user['userGroups'] as &$group) {
+                if ($group['id'] == $newGroup['id']) {
+                    $excitingGroup = true;
+                }
+                $group = '/groups/'.$group['id'];
+            }
+
+            if (!$excitingGroup) {
+                $user['userGroups'][] = '/groups/'.$newGroup['id'];
+            }
+            $commonGroundService->updateResource($user);
+        }
+
         $account = $balanceService->getAcount($organizationUrl);
         if ($account !== false) {
             $account['balance'] = $balanceService->getBalance($organizationUrl);
@@ -1378,49 +1402,18 @@ class DashboardController extends AbstractController
         }
 
         if ($request->isMethod('POST') && $request->get('newDeveloper')) {
-            $name = $request->get('name');
-            $email = $request->get('email');
+            $data = [];
+            $receiver = $request->get('email');
+            $data['username'] = $request->get('name');
+            $data['sender'] = $this->getUser()->getName();
+            $data['mainSender'] = 'no-reply@conduction.nl';
 
-            // Check if there is a developer user with the given email address.
-            // Get all users in the developer group
-            $group = $commonGroundService->getResource(['component' => 'uc', 'type' => 'groups', 'id' => 'c3c463b9-8d39-4cc0-b62c-826d8f5b7d8c']);
-            $users = $group['users'];
-            foreach ($users as $user) {
-                if (key_exists('person', $user) && !empty($user['person'])) {
-                    $person = $commonGroundService->getResource($user['person']);
-                    if (key_exists('emails', $person) && !empty($person['emails']) && count($person['emails']) > 0) {
-                        if ($person['emails'][0]['email'] == $email) {
-                            $receiver = $user['person']; // Needs to be url!
-                        }
-                    }
-                }
-            }
+            $data['resource'] = $this->generateUrl('app_dashboard_organization', ['id' => $variables['organization']['id']], UrlGeneratorInterface::ABSOLUTE_URL).'?newUser='.$receiver;
+            var_dump($data['resource']);
+            $mailingService->sendMail('mails/invite_developer.html.twig', 'no-reply@conduction.nl', 'sarai@conduction.nl', 'Invite organization', $data);
 
-            if (isset($receiver)) {
-                // Create the email message
-                $message = [];
-                $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
-                $message['status'] = 'queued';
+            return $this->redirect($this->generateUrl('app_dashboard_organization', ['id' => $id]));
 
-                // lets use the organization contact as sender
-                if (key_exists('cc', $variables)) {
-                    $sender = $variables['cc'];
-                    $message['sender'] = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'organization', 'id' => $variables['cc']]);
-                } else {
-                    $sender = $variables['organization'];
-                }
-
-                // if we don't have that we are going to self send te message
-                $message['reciever'] = $receiver; // reciever = typo in BS
-                if (!key_exists('sender', $message)) {
-                    $message['sender'] = $receiver;
-                }
-                $message['data'] = ['sender' => $sender, 'receiver' => $commonGroundService->getResource($receiver)];
-                $message['content'] = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'templates', 'id' => '61162867-9811-451c-ac41-e38cb58698af']);
-
-                // Send the email to this contact
-                $commonGroundService->createResource($message, ['component' => 'bs', 'type' => 'messages']);
-            }
         } elseif ($request->isMethod('POST') && $request->get('newApplication')) {
             $name = $request->get('name');
             $application['name'] = $name;
