@@ -53,6 +53,10 @@ class DefaultController extends AbstractController
     {
         $variables = [];
 
+        if ($request->query->get('backUrl')) {
+            $variables['backUrl'] = $request->query->get('backUrl');
+        }
+
         return $variables;
     }
 
