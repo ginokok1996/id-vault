@@ -78,78 +78,29 @@ class DashboardController extends AbstractController
     public function indexAction()
     {
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+        $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
 
-        $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-        $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-        $variables['authorizations'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
-
-        $query = [];
         $date = new \DateTime('today');
-        $query['dateCreated[after]'] = $date->format('Y-m-d');
         $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
-        $variables['days']['monday'] = [];
-        $variables['days']['tuesday'] = [];
-        $variables['days']['wednesday'] = [];
-        $variables['days']['thursday'] = [];
-        $variables['days']['friday'] = [];
-        $variables['days']['saturday'] = [];
-        $variables['days']['sunday'] = [];
+        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        foreach ($days as $day) {
+            $variables['days'][$day] = [];
+        }
 
         if (count($variables['logs']) > 0) {
             foreach ($variables['logs'] as $log) {
-                $date->modify('Monday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['monday'][] = $log;
-                }
-
-                $date->modify('Tuesday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['tuesday'][] = $log;
-                }
-
-                $date->modify('Wednesday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['wednesday'][] = $log;
-                }
-
-                $date->modify('Thursday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['thursday'][] = $log;
-                }
-
-                $date->modify('Friday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['friday'][] = $log;
-                }
-
-                $date->modify('Saturday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['saturday'][] = $log;
-                }
-
-                $date->modify('Sunday this week');
-                if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                    $variables['days']['sunday'][] = $log;
-                }
-            }
-        }
-
-        foreach ($variables['authorizations'] as &$authorization) {
-            if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
-                $application = $this->commonGroundService->isResource($authorization['application']['contact']);
-                if ($application) {
-                    if (isset($application['organization']['style']['css'])) {
-                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                        $authorization['backgroundColor'] = $matches;
+                foreach ($days as $day) {
+                    $date->modify(ucfirst($day).' this week');
+                    if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                        $variables['days'][$day][] = $log;
                     }
                 }
-
-                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
             }
         }
-
         return $variables;
     }
 
@@ -470,7 +421,6 @@ class DashboardController extends AbstractController
                 $variables['claim'] = $claims[0];
             }
 
-            // Add a new claim or edit one
             if ($request->isMethod('POST') && $type == 'email') {
                 if ($request->get('claim')) {
                     $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claim')]);
@@ -776,40 +726,14 @@ class DashboardController extends AbstractController
      */
     public function dossierAction($id)
     {
-        if (empty($this->getUser())) {
-            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
-
-            return $this->redirect($this->generateUrl('app_default_login'));
-        }
-        if (!$id) {
-            $this->defaultService->throwFlash('error', 'No id provided');
-
-            return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
-        }
-
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
-
         $variables['resource'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $id]);
+        $application = $this->commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
 
-        // Set the organization background-color for the icon shown with the authorization of this dossier
-        if (isset($variables['resource']['authorization']['application']['contact'])) {
-            $application = $this->commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
-            if ($application) {
-                if (isset($application['organization']['style']['css'])) {
-                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                    $variables['resource']['authorization']['backgroundColor'] = $matches;
-                }
-            }
-        }
-
-        $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-        $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
-            $this->defaultService->throwFlash('error', 'You do not have access to this dossier');
-
-            return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
+        if (isset($application['organization']['style']['css'])) {
+            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+            $variables['resource']['authorization']['backgroundColor'] = $matches;
         }
 
         return $variables;
@@ -1038,36 +962,27 @@ class DashboardController extends AbstractController
     public function conductionAction(Request $request)
     {
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
-
         $query = [];
         $date = new \DateTime('today');
-        if ($request->isMethod('POST')) {
-            $type = $request->get('type');
 
-            switch ($type) {
-                case 'day':
-                    $query['dateCreated[after]'] = $date->format('Y-m-d');
-                    break;
+        if ($request->isMethod('POST')) {
+            switch ($request->get('type')) {
                 case 'week':
                     $date->modify('Monday this week');
-                    $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
                 case 'month':
                     $date->modify('first day of this month');
-                    $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
                 case 'quarter':
                     $offset = (date('n') % 3) - 1;
                     $date->modify("first day of -$offset month midnight");
-                    $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
                 case 'year':
                     $date->modify('first day of january');
-                    $query['dateCreated[after]'] = $date->format('Y-m-d');
                     break;
             }
+            $query['dateCreated[after]'] = $date->format('Y-m-d');
         }
 
         $variables['users'] = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], $query)['hydra:member'];
@@ -1085,28 +1000,17 @@ class DashboardController extends AbstractController
     public function logsAction()
     {
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-        if ($this->getUser()) {
-            $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-            $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
-
-            // Set the organization background-color for the icons shown with every log
-            foreach ($variables['logs'] as &$log) {
-                if (isset($log['authorization']['application']['contact'])) {
-                    $application = $this->commonGroundService->isResource($log['authorization']['application']['contact']);
-                    if ($application) {
-                        if (isset($application['organization']['style']['css'])) {
-                            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                            $log['backgroundColor'] = $matches;
-                        }
-                    }
+        foreach ($variables['logs'] as &$log) {
+            $application = $this->commonGroundService->isResource($log['authorization']['application']['contact']);
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $log['backgroundColor'] = $matches;
                 }
-            }
         }
-
         return $variables;
     }
 
@@ -1116,40 +1020,15 @@ class DashboardController extends AbstractController
      */
     public function logAction($id)
     {
-        if (empty($this->getUser())) {
-            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
-
-            return $this->redirect($this->generateUrl('app_default_login'));
-        }
-        if (!$id) {
-            $this->defaultService->throwFlash('error', 'No id provided');
-
-            return $this->redirect($this->generateUrl('app_dashboard_logs'));
-        }
 
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
-
         $variables['resource'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id' => $id], ['order[dateCreated]' => 'desc']);
 
-        // Set the organization background-color for the icon shown with this log
-        if (isset($variables['resource']['authorization']['application']['contact'])) {
-            $application = $this->commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
-            if ($application) {
-                if (isset($application['organization']['style']['css'])) {
-                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                    $variables['resource']['backgroundColor'] = $matches;
-                }
-            }
-        }
-
-        $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-        $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-        if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
-            $this->defaultService->throwFlash('error', 'You do not have access to this log');
-
-            return $this->redirect($this->generateUrl('app_dashboard_logs'));
+        $application = $this->commonGroundService->isResource($variables['resource']['authorization']['application']['contact']);
+        if (isset($application['organization']['style']['css'])) {
+            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+            $variables['resource']['backgroundColor'] = $matches;
         }
 
         return $variables;
@@ -1410,7 +1289,6 @@ class DashboardController extends AbstractController
     {
         // On an index route we might want to filter based on user input
         $variables = [];
-
         $organization = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
         $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
         $variables['organization'] = $organization;
@@ -1427,11 +1305,10 @@ class DashboardController extends AbstractController
             }
         }
 
-        $account = $this->balanceService->getAcount($organizationUrl);
+        $variables['account'] = $this->balanceService->getAcount($organizationUrl);
 
-        if ($account !== false) {
+        if ($variables['account'] !== false) {
             $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-            $variables['account'] = $account;
             $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 

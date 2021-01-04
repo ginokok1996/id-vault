@@ -34,6 +34,26 @@ class DefaultService
         }
     }
 
+    public function singleSignOn($authorizations){
+        foreach ($authorizations as &$authorization) {
+            if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
+                $application = $this->commonGroundService->isResource($authorization['application']['contact']);
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $authorization['backgroundColor'] = $matches;
+                }
+
+                $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
+            }
+        }
+        return $authorizations;
+    }
+
+    public function getUserUrl($username) {
+        $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'];
+        return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
+    }
+
     public function throwFlash($type, $message)
     {
         $this->flash->add($type, $message);
