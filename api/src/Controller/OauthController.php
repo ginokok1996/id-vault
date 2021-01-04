@@ -1,15 +1,12 @@
 <?php
 
-// src/Controller/DefaultController.php
-
 namespace App\Controller;
 
+use App\Service\OauthService;
 use App\Service\ScopeService;
-//use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,171 +20,101 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OauthController extends AbstractController
 {
+    private $commonGroundService;
+    private $scopeService;
+    private $oauthService;
+
+    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService)
+    {
+        $this->commonGroundService = $commonGroundService;
+        $this->scopeService = $scopeService;
+        $this->oauthService = $oauthService;
+    }
+
     /**
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, ScopeService $scopeService, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request)
     {
         $variables = [];
 
         /*
          *  First we NEED to determine an application by public client_id (unsafe)
          */
+        try {
+            $variables['application'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'invalid client id');
+        }
 
-        if (!$request->get('client_id')) {
-            $this->addFlash('error', 'no client id provided');
+        $variables['clientId'] = $request->get('client_id');
+        $variables['state'] = $request->get('state');
+
+        //get the redirect Url
+        $redirectUrl = $this->oauthService->createRedirectUrl($request->get('redirect_uri'), $variables['application']);
+        $variables['redirectUrl'] = $redirectUrl;
+
+        if (!$request->query->get('scopes') && !$request->get('scopes')) {
+            return $this->redirect($redirectUrl.'?errorMessage=no+scopes+provided');
         } else {
-            try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
-            } catch (\Throwable $e) {
-                $this->addFlash('error', 'invalid client id');
+            if ($request->query->get('scopes')) {
+                $variables['scopes'] = explode(' ', $request->query->get('scopes'));
+            } else {
+                $variables['scopes'] = $request->get('scopes');
             }
         }
 
-        /*
-         *  Lets transport our variables to twig
-         */
+        $session->set('backUrl', $request->getRequestUri());
 
-        $clientId = $request->get('client_id');
-        $variables['clientId'] = $clientId;
+        $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);
 
-        $state = $request->get('state');
-        $variables['state'] = $state;
+        if ($this->getUser()) {
+            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
-        /*
-         *  Then we NEED to get a redirect url, for this we have several options
-         */
+            $variables['deficiencies'] = $this->scopeService->checkScopes($variables['scopes'], $user);
 
-        $redirectUrl = $request->get('redirect_uri', false);
+            $result = $this->oauthService->compareExistingScopes($userUrl, $variables['application'], $variables['scopes']);
 
-        // Als localhost dan prima -> dit us wel unsafe want ondersteund ook subdomein of path localhost
-        if ($redirectUrl && strpos($redirectUrl, 'localhost')) {
-            // $redirectUrl is al oke dus we hoeven niks te doen
-        } elseif ($redirectUrl && str_replace('http://', 'https://', $redirectUrl) != str_replace('http://', 'https://', $variables['application']['authorizationUrl'])) {
-            // $redirectUrl
-        } else {
-            $redirectUrl = $variables['application']['authorizationUrl'];
+            if ($result !== false) {
+                if ($result['authorizationNeeded']) {
+                    $variables['authorization'] = $result['id'];
+                    $variables['scopes'] = $result['newScopes'];
+                } else {
+                    return $this->redirect($redirectUrl."?code={$result['id']}&state={$variables['state']}");
+                }
+            }
         }
-
-        $variables['redirectUrl'] = $redirectUrl;
 
         /*
          * Lastly lets handle the actual post request
          */
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
-            if (strpos($request->get('redirect_uri'), 'localhost')) {
-                $redirectUrl = $request->get('redirect_uri');
-            } elseif ($request->get('redirect_uri') == $variables['application']['authorizationUrl']) {
-                $redirectUrl = $variables['application']['authorizationUrl'];
-            }
+            $redirectUrl = $request->get('redirect_uri');
 
             if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
-                $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorization')]);
-                $authorization['application'] = '/applications/'.$authorization['application']['id'];
-                $scopes = $request->get('scopes');
-
-                $authLogs = [];
-                foreach ($authorization['authorizationLogs'] as $log) {
-                    $authLogs = ['/authorization_logs/'.$log['id']];
-                }
-
-                $authorization['authorizationLogs'] = $authLogs;
-
-                foreach ($scopes as $scope) {
-                    $authorization['scopes'][] = $scope;
-                }
-
-                $commonGroundService->saveResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
-
-                if ($request->get('needScopes')) {
-                    $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
-
-                    return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
-                }
-
-                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
+                $authorization = $this->oauthService->updateAuthorization($request->get('authorization'), $request->get('scopes'));
             } elseif ($request->get('grantAccess') == 'true') {
-                $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-                if (count($users) > 0) {
-                    $user = $users[0];
-                }
-                $state = $request->get('state');
-                $authorization = [];
-                $authorization['application'] = '/applications/'.$variables['application']['id'];
-                $authorization['scopes'] = $request->get('scopes');
-                $authorization['goal'] = ' ';
-                $authorization['userUrl'] = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
-
-                $authorization = $commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
-
-                if ($request->get('needScopes')) {
-                    $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$state}");
-
-                    return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
-                }
-
-                return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$state}");
+                $authorization = $this->oauthService->createAuthorization($variables['application'], $user, $request->get('scopes'));
             } else {
                 return $this->redirect($redirectUrl.'?errorMessage=Authorization+denied+by+user');
             }
-        }
 
-        if ($this->getUser()) {
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            $user = $commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
-
-            $authorizations = $commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $user, 'application' => '/applications/'.$variables['application']['id']])['hydra:member'];
-            if (count($authorizations) > 0) {
-                $authorization = $authorizations['0'];
-
-                if ($request->query->get('scopes')) {
-                    $unAuthorizedScopes = false;
-                    $scopes = explode(' ', $request->query->get('scopes'));
-                    $newScopes = [];
-
-                    foreach ($scopes as $scope) {
-                        if (!in_array($scope, $authorization['scopes'])) {
-                            $newScopes[] = $scope;
-                            $unAuthorizedScopes = true;
-                        }
-                    }
-
-                    if ($unAuthorizedScopes) {
-                        $variables['authorization'] = $authorization['id'];
-                        $variables['scopes'] = $newScopes;
-                    } else {
-                        return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
-                    }
-                }
+            if ($request->get('needScopes')) {
+                $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
             }
+
+            return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
         }
 
         if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
             return $this->redirect($redirectUrl.'?errorMessage=invalid+response+type');
         }
 
-        if (!$request->query->get('scopes')) {
-            return $this->redirect($redirectUrl.'?errorMessage=no+scopes+provided');
-        } elseif (!isset($variables['scopes'])) {
-            $variables['scopes'] = explode(' ', $request->query->get('scopes'));
-        }
-        if ($this->getUser()) {
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0) {
-                $user = $users[0];
-            }
-            $variables['deficiencies'] = $scopeService->checkScopes($variables['scopes'], $user);
-            if ($variables['deficiencies']) {
-                $session->set('backUrl', $request->getRequestUri());
-//                var_dump($session->get('backUrl'));
-            }
-        }
-        $session->set('backUrl', $request->getUri());
-
-        $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
-
         return $variables;
     }
+
 }

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-//use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use function GuzzleHttp\Promise\all;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

@@ -124,8 +124,8 @@ class SendListService
             }
             $template['content'] = $sendListDTO->getHtml();
             $template['templateEngine'] = 'twig';
-            //$template['organization'] = '/organizations/uuid'; // TODO: connect this template to the organization of the sendList
-            //$template['templateGroups'] = '/template_groups/uuid'; // TODO: connect this template to the E-mails template group
+            // TODO: connect this template to the organization of the sendList
+            // TODO: connect this template to the E-mails template group
             $template = $this->commonGroundService->createResource($template, ['component'=>'wrc', 'type'=>'templates']);
             $content = $this->commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id' => $template['id']]);
 

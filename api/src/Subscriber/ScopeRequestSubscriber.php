@@ -80,13 +80,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
 
                 $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
 
-//                $todo = [];
-//                $todo['name'] = 'authorize new scopes';
-//                $todo['resources'][0]['name'] = 'authorize new scopes';
-//                $todo['resources'][0]['resource'] = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'scope_requests', 'id' => $scopeRequest['id']]);
-//                $todo['resource'] = $personUrl;
-//
-//                $this->commonGroundService->saveResource($todo, ['component' => 'arc', 'type' => 'todos']);
             } else {
                 throw new  Exception('Invalid authorization code');
             }

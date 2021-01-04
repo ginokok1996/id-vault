@@ -44,7 +44,6 @@ class MailService
             ->html($body)
             ->text($text);
 
-        /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
         $mailer->send($email);
     }
 }

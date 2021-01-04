@@ -1,10 +1,7 @@
 <?php
 
-// src/Controller/DefaultController.php
-
 namespace App\Controller;
 
-//use App\Service\RequestService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,7 +50,6 @@ class SendListController extends AbstractController
 
         $sendListIds = $request->get('send_lists');
         $variables['sendListIds'] = $sendListIds;
-        // $variables['sendLists'] are actually set below the Post...
 
         /*
          *  Then we NEED to get a redirect url, for this we have several options
@@ -99,7 +95,6 @@ class SendListController extends AbstractController
 
                         // Check if this user already has a subscriber object in BS
                         $subscribers = $commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['person' => $user['person']])['hydra:member'];
-                        // Set $subscriber['sendLists'] for adding Sendlists to the subscriber later
                         $subscriber['sendLists'] = [];
                         if (count($subscribers) > 0) {
                             // Set subscriber to the existing subscriber to update later

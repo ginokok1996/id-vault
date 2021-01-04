@@ -36,7 +36,6 @@ class NotificationService
     {
         $claim = $this->commonGroundService->getResource($claim['@id']);
         $requiredScope = $this->getRequiredScope($claim['property']);
-//        $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'])['hydra:member'];
         if (isset($claim['authorizations']) && !empty($claim['authorizations'])) {
             foreach ($claim['authorizations'] as $auth) {
                 if (isset($auth['application']['scopes']) && !empty($auth['application']['scopes'])) {
@@ -48,30 +47,11 @@ class NotificationService
                 }
             }
         }
-        // Check if this Claim has a token and Authorizations
-//        if (key_exists('token', $claim) && !empty($claim['token'])
-//            && key_exists('authorizations', $claim) && !empty($claim['authorizations'])) {
-//            foreach ($claim['authorizations'] as $auth) {
-//                // If so check for each Authorization if it has the notification and the correct scopes
-//                if (key_exists('scopes', $auth) && !empty($auth['scopes'])) {
-//                    // Check if the authorization has the required scope for this claim.property
-//                    if (in_array('notification', $auth['scopes']) && in_array($requiredScope, $auth['scopes'])) {
-//                        // If so notify the Organization of the updated Claim
-//
-//
-//                    }
-//                }
-//            }
-//        }
-
-        exit;
-
         return $claim;
     }
 
     public function getRequiredScope($type)
     {
-//        var_dump('scope wordt gecheckt');
         switch ($type) {
             case 'Email':
                 $requiredScope = 'claim.email';
@@ -104,20 +84,6 @@ class NotificationService
         $response = $client->request('POST', $endpoint, [
             'message' => 'The claim '.$claim['name'].' on ID-Vault has been edited by '.$user->getUsername(),
         ]);
-//        var_dump('post is gestuurd');
         exit;
     }
-
-//    public function setForwardUrl(array $resource)
-//    {
-//        if ($this->params->get('app_env') != 'prod') {
-//            $resource['forwardUrl'] = 'https://dev.'.$this->params->get('app_domain').'/irc/assents/'.$resource['id'];
-//        } else {
-//            $resource['forwardUrl'] = 'https://'.$this->params->get('app_domain').'/irc/assents/'.$resource['id'];
-//        }
-//
-//        $resource = $this->commonGroundService->saveResource($resource, ['component'=>'irc', 'type'=>'assents']);
-//
-//        return $resource;
-//    }
 }
