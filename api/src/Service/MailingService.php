@@ -8,7 +8,6 @@ use Twig\Environment;
 
 class MailingService
 {
-
     private $twig;
     private $idVaultService;
 
