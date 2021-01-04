@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\Service\MailingService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,15 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DefaultController extends AbstractController
 {
-    private $session;
-    private $request;
     private $commonGroundService;
     private $mailingService;
 
-    public function __construct(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService)
+    public function __construct(CommonGroundService $commonGroundService, MailingService $mailingService)
     {
-        $this->session = $session;
-        $this->request = $request;
         $this->commonGroundService = $commonGroundService;
         $this->mailingService = $mailingService;
     }
@@ -59,12 +54,12 @@ class DefaultController extends AbstractController
      * @Route("/login")
      * @Template
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         $variables = [];
 
-        if ($this->request->query->get('backUrl')) {
-            $variables['backUrl'] = $this->request->query->get('backUrl');
+        if ($request->query->get('backUrl')) {
+            $variables['backUrl'] = $request->query->get('backUrl');
         }
 
         return $variables;
@@ -74,7 +69,7 @@ class DefaultController extends AbstractController
      * @Route("/reset/{token}")
      * @Template
      */
-    public function resetAction(ParameterBagInterface $params, $token = null)
+    public function resetAction(ParameterBagInterface $params, Request $request, $token = null)
     {
         $variables = [];
 
@@ -89,9 +84,9 @@ class DefaultController extends AbstractController
             }
         }
 
-        if ($this->request->isMethod('POST') && $this->request->get('password')) {
-            $user = $this->commonGroundService->getResource($this->request->get('selectedUser'));
-            $password = $this->request->get('password');
+        if ($request->isMethod('POST') && $request->get('password')) {
+            $user = $this->commonGroundService->getResource($request->get('selectedUser'));
+            $password = $request->get('password');
 
             $user['password'] = $password;
 
@@ -102,15 +97,15 @@ class DefaultController extends AbstractController
             $this->commonGroundService->updateResource($user);
 
             $variables['reset'] = true;
-        } elseif ($this->request->isMethod('POST')) {
+        } elseif ($request->isMethod('POST')) {
             $variables['message'] = true;
-            $username = $this->request->get('email');
+            $username = $request->get('email');
             $users = $this->commonGroundService->getResourceList(['component'=>'uc', 'type'=>'users'], ['username'=> $username], true, false, true, false, false);
             $users = $users['hydra:member'];
 
-            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $this->params->get('app_id')]);
+            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
             $organization = $application['organization']['@id'];
-            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $this->params->get('app_id')])['hydra:member'];
+            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
 
             if (count($users) > 0) {
                 $user = $users[0];
@@ -125,7 +120,7 @@ class DefaultController extends AbstractController
                 $token['provider'] = 'providers/'.$providers[0]['id'];
                 $token = $this->commonGroundService->createResource($token, ['component' => 'uc', 'type' => 'tokens']);
 
-                $url = $this->request->getUri();
+                $url = $request->getUri();
                 $link = $url.'/'.$token['token'];
 
                 $data = [];

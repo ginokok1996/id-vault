@@ -11,7 +11,7 @@ class MailingService
     private $twig;
     private $idVaultService;
 
-    public function __construct(CommonGroundService $commonGroundService, IdVaultService $idVaultService, Environment $twig)
+    public function __construct(IdVaultService $idVaultService, Environment $twig)
     {
         $this->idVaultService = $idVaultService;
         $this->twig = $twig;
