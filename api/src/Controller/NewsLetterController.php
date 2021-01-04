@@ -24,7 +24,7 @@ class NewsLetterController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function indexAction()
     {
     }
 }

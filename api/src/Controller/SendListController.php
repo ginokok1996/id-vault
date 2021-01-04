@@ -5,7 +5,6 @@ namespace App\Controller;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,11 +18,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SendListController extends AbstractController
 {
+    private $commonGroundService;
+
+
+    public function __construct(CommonGroundService $commonGroundService)
+    {
+        $this->commonGroundService = $commonGroundService;
+    }
+
     /**
      * @Route("/authorize")
      * @Template
      */
-    public function authorizeAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function authorizeAction(Session $session, Request $request)
     {
         $variables = [];
 
@@ -35,7 +42,7 @@ class SendListController extends AbstractController
             $this->addFlash('error', 'no client id provided');
         } else {
             try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
+                $variables['application'] = $$this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $request->get('client_id')]);
             } catch (\Throwable $e) {
                 $this->addFlash('error', 'invalid client id');
             }
@@ -82,7 +89,7 @@ class SendListController extends AbstractController
 
             if ($request->get('grantAccess') == 'true') {
                 // Get user
-                $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
+                $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
                 if (count($users) > 0) {
                     $user = $users[0];
                     if (isset($user['person'])) {
@@ -90,11 +97,11 @@ class SendListController extends AbstractController
                         $sendListIds = $request->get('sendLists');
                         $sendLists = [];
                         foreach ($sendListIds as $sendListId) {
-                            array_push($sendLists, $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendListId]));
+                            array_push($sendLists, $this->commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendListId]));
                         }
 
                         // Check if this user already has a subscriber object in BS
-                        $subscribers = $commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['person' => $user['person']])['hydra:member'];
+                        $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['person' => $user['person']])['hydra:member'];
                         $subscriber['sendLists'] = [];
                         if (count($subscribers) > 0) {
                             // Set subscriber to the existing subscriber to update later
@@ -121,7 +128,7 @@ class SendListController extends AbstractController
                         }
 
                         // Update or create a subscriber in BS
-                        $commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']);
+                        $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']);
                     } else {
                         return $this->redirect($redirectUrl.'&errorMessage=User+has+no+contact');
                     }
@@ -143,14 +150,14 @@ class SendListController extends AbstractController
                 // TD: check if this user isn't already a subscriber in this sendList and if so, dont put this sendList in $variables to be shown on screen or used in the post
                 // TD: redirect or do something if the user is already a subscriber in all of these sendLists!
                 // (The post already ensures that a user is not put in a mailing list if he is already subscribed to it)
-                array_push($sendLists, $commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendListId]));
+                array_push($sendLists, $this->commonGroundService->getResource(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendListId]));
             }
             $variables['sendLists'] = $sendLists;
         }
 
         $session->set('backUrl', $request->getUri());
 
-        $variables['wrcApplication'] = $commonGroundService->getResource($variables['application']['contact']);
+        $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);
 
         return $variables;
     }

@@ -1,17 +1,13 @@
 <?php
 
-// src/Controller/DefaultController.php
-
 namespace App\Controller;
 
-//use App\Service\RequestService;
 use App\Service\MailingService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,15 +24,13 @@ class DefaultController extends AbstractController
     private $session;
     private $request;
     private $commonGroundService;
-    private $params;
     private $mailingService;
 
-    public function __construct(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, MailingService $mailingService)
+    public function __construct(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService)
     {
         $this->session = $session;
         $this->request = $request;
         $this->commonGroundService = $commonGroundService;
-        $this->params = $params;
         $this->mailingService = $mailingService;
     }
 
@@ -81,13 +75,13 @@ class DefaultController extends AbstractController
      * @Route("/reset/{token}")
      * @Template
      */
-    public function resetAction($token = null)
+    public function resetAction(ParameterBagInterface $params, $token = null)
     {
         $variables = [];
 
         if ($token) {
-            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $this->params->get('app_id')]);
-            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $this->params->get('app_id')])['hydra:member'];
+            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
+            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
             $tokens = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['token' => $token, 'provider.name' => $providers[0]['name']])['hydra:member'];
             if (count($tokens) > 0) {
                 $variables['token'] = $tokens[0];
@@ -201,48 +195,4 @@ class DefaultController extends AbstractController
         return $variables;
     }
 
-    /**
-     * @Route("/oauth")
-     * @Template
-     */
-    public function oauthAction()
-    {
-        $variables = [];
-
-        if (!$this->request->query->get('client_id')) {
-            $this->addFlash('error', 'no client id provided');
-        } else {
-            try {
-                $variables['application'] = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $this->request->query->get('client_id')]);
-            } catch (\Throwable $e) {
-                $this->addFlash('error', 'invalid client id');
-            }
-        }
-
-        if (!$this->request->query->get('response_type') || $this->request->query->get('response_type') !== 'code') {
-            $this->addFlash('error', 'invalid response type');
-        }
-
-        if (!$this->request->query->get('scopes')) {
-            $this->addFlash('error', 'no scopes provided');
-        } else {
-            $variables['scopes'] = explode(' ', $this->request->query->get('scopes'));
-        }
-
-        if (!$this->request->query->get('state')) {
-            $variables['state'] = $this->request->query->get('state');
-        }
-
-        $this->session->set('backUrl', $this->request->getUri());
-
-        if ($this->request->isMethod('POST') && $this->request->get('grantAccess')) {
-            if ($this->request->get('grantAccess') == 'true') {
-                // TD: create token & send back to authorization url defined in application
-            } else {
-                // TD:send message back that access was denied.
-            }
-        }
-
-        return $variables;
-    }
 }

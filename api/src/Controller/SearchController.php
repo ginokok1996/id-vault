@@ -22,7 +22,7 @@ class SearchController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService)
+    public function indexAction(Request $request, CommonGroundService $commonGroundService)
     {
         // Lets provide this data to the template
         $variables['query'] = array_merge($request->query->all(), $request->request->all());

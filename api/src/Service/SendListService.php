@@ -9,13 +9,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class SendListService
 {
-    private $em;
     private $commonGroundService;
     private $params;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
-        $this->em = $em;
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
     }
@@ -146,42 +144,43 @@ class SendListService
         return $sendListDTO;
     }
 
-    public function createMessage(array $data, array $sendList, $content, $receiver, $attachments = null)
-    {
-        $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id'=>"{$this->params->get('app_id')}"]);
-        if (key_exists('@id', $application['organization'])) {
-            $serviceOrganization = $application['organization']['@id'];
-        } else {
-            $serviceOrganization = $sendList['organization'];
-        }
-
-        $message = [];
-
-        // Tijdelijke oplossing voor juiste $message['service'] meegeven, was eerst dit hier onder, waar in de query op de organization check het mis gaat:
-        //$message['service'] = $this->commonGroundService->getResourceList(['component'=>'bs', 'type'=>'services'], "type=mailer&organization=$serviceOrganization")['hydra:member'][0]['@id'];
-
-        $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
-        $message['status'] = 'queued';
-
-        $organization = $this->commonGroundService->getResource($sendList['organization']);
-        // lets use the organization as sender
-        if ($organization['contact']) {
-            $message['sender'] = $organization['contact'];
-        }
-
-        // if we don't have that we are going to self send te message
-        $message['reciever'] = $receiver;
-        if (!key_exists('sender', $message)) {
-            $message['sender'] = $receiver;
-        }
-
-        $message['data'] = ['resource'=>$sendList, 'sender'=>$organization, 'receiver'=>$this->commonGroundService->getResource($message['reciever'])];
-        $message['data'] = array_merge($message['data'], $data);  // lets accept contextual data from de bl
-        $message['content'] = $content;
-        if ($attachments) {
-            $message['attachments'] = $attachments;
-        }
-
-        return $message;
-    }
+    //TODO: Dit moet via de mailservice
+//    public function createMessage(array $data, array $sendList, $content, $receiver, $attachments = null)
+//    {
+//        $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id'=>"{$this->params->get('app_id')}"]);
+//        if (key_exists('@id', $application['organization'])) {
+//            $serviceOrganization = $application['organization']['@id'];
+//        } else {
+//            $serviceOrganization = $sendList['organization'];
+//        }
+//
+//        $message = [];
+//
+//        // Tijdelijke oplossing voor juiste $message['service'] meegeven, was eerst dit hier onder, waar in de query op de organization check het mis gaat:
+//        //$message['service'] = $this->commonGroundService->getResourceList(['component'=>'bs', 'type'=>'services'], "type=mailer&organization=$serviceOrganization")['hydra:member'][0]['@id'];
+//
+//        $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
+//        $message['status'] = 'queued';
+//
+//        $organization = $this->commonGroundService->getResource($sendList['organization']);
+//        // lets use the organization as sender
+//        if ($organization['contact']) {
+//            $message['sender'] = $organization['contact'];
+//        }
+//
+//        // if we don't have that we are going to self send te message
+//        $message['reciever'] = $receiver;
+//        if (!key_exists('sender', $message)) {
+//            $message['sender'] = $receiver;
+//        }
+//
+//        $message['data'] = ['resource'=>$sendList, 'sender'=>$organization, 'receiver'=>$this->commonGroundService->getResource($message['reciever'])];
+//        $message['data'] = array_merge($message['data'], $data);  // lets accept contextual data from de bl
+//        $message['content'] = $content;
+//        if ($attachments) {
+//            $message['attachments'] = $attachments;
+//        }
+//
+//        return $message;
+//    }
 }

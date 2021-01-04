@@ -9,13 +9,11 @@ use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class UserController.
@@ -24,19 +22,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class UserController extends AbstractController
 {
-    /**
-     * @var FlashBagInterface
-     */
-    private $flash;
-    private $translator;
+
     private $session;
     private $request;
     private $commonGroundService;
     private $params;
 
-    public function __construct(FlashBagInterface $flash, Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params)
     {
-        $this->flash = $flash;
         $this->session = $session;
         $this->request = $request;
         $this->commonGroundService = $commonGroundService;
@@ -142,10 +135,10 @@ class UserController extends AbstractController
      * @Route("/auth/linkedin")
      * @Template
      */
-    public function linkedinAction()
+    public function linkedinAction(FlashBagInterface $flash)
     {
         if ($this->request->query->get('error')) {
-            $this->flash->add('warning', 'LinkedIn authorization has been cancelled');
+            $flash->add('warning', 'LinkedIn authorization has been cancelled');
             if ($this->session->get('backUrl')) {
                 return $this->redirect($this->session->get('backUrl'));
             } else {
@@ -184,15 +177,15 @@ class UserController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Request $request, CommonGroundService $commonGroundService)
+    public function registerAction(FlashBagInterface $flash)
     {
-        if ($request->isMethod('POST')) {
-            $backUrl = $request->query->get('backUrl');
+        if ($this->request->isMethod('POST')) {
+            $backUrl = $this->request->query->get('backUrl');
 
             //lets check if there is already a user with this email
-            $users = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $request->get('username')])['hydra:member'];
+            $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->request->get('username')])['hydra:member'];
             if (count($users) > 0) {
-                $this->flash->add('error', 'Email address is already registered with us');
+                $flash->add('error', 'Email address is already registered with us');
 
                 return $this->redirect($backUrl);
             } else {
@@ -200,19 +193,19 @@ class UserController extends AbstractController
                 $person = [];
 
                 //create person
-                $person['givenName'] = $request->get('firstName');
-                $person['familyName'] = $request->get('lastName');
-                $person['emails'][0]['email'] = $request->get('username');
+                $person['givenName'] = $this->request->get('firstName');
+                $person['familyName'] = $this->request->get('lastName');
+                $person['emails'][0]['email'] = $this->request->get('username');
 
-                $person = $commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
-                $personUrl = $commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+                $person = $this->commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
+                $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
                 //create user
-                $user['username'] = $request->get('username');
-                $user['password'] = $request->get('newPassword');
+                $user['username'] = $this->request->get('username');
+                $user['password'] = $this->request->get('newPassword');
                 $user['person'] = $personUrl;
 
-                $user = $commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+                $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
 
                 // given name claim
                 $claimFirstName = [];
@@ -220,7 +213,7 @@ class UserController extends AbstractController
                 $claimFirstName['property'] = 'schema.person.given_name';
                 $claimFirstName['data']['given_name'] = $person['givenName'];
 
-                $commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
 
                 // family name claim
                 $claimLastName = [];
@@ -228,15 +221,15 @@ class UserController extends AbstractController
                 $claimLastName['property'] = 'schema.person.family_name';
                 $claimLastName['data']['family_name'] = $person['familyName'];
 
-                $commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
 
                 // email claim
                 $claimEmail = [];
                 $claimEmail['person'] = $personUrl;
                 $claimEmail['property'] = 'schema.person.email';
-                $claimEmail['data']['email'] = $request->get('username');
+                $claimEmail['data']['email'] = $this->request->get('username');
 
-                $commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
 
                 //calendar for the user
                 $calendar = [];
@@ -244,15 +237,15 @@ class UserController extends AbstractController
                 $calendar['resource'] = $personUrl;
                 $calendar['timeZone'] = 'CET';
 
-                $commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
+                $this->commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
 
-                $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
+                $userObject = new CommongroundUser($user['username'], $this->request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
 
                 $token = new UsernamePasswordToken($userObject, null, 'main', $userObject->getRoles());
                 $this->container->get('security.token_storage')->setToken($token);
                 $this->container->get('session')->set('_security_main', serialize($token));
 
-                $this->flash->add('success', 'Account created');
+                $flash->add('success', 'Account created');
 
                 return $this->redirect($backUrl);
             }

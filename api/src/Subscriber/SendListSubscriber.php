@@ -17,21 +17,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 // TODO: Make a service for this subscriber?
 class SendListSubscriber implements EventSubscriberInterface
 {
-    private $params;
-    private $em;
-    private $sendListService;
-    private $serializer;
-    private $commonGroundService;
-    private $accessTokenGeneratorService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SendListService $sendListService, SerializerInterface $serializer, CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
+    private $sendListService;
+    private $commonGroundService;
+
+    public function __construct(SendListService $sendListService, CommongroundService $commonGroundService)
     {
-        $this->params = $params;
         $this->sendListService = $sendListService;
         $this->commonGroundService = $commonGroundService;
-        $this->serializer = $serializer;
-        $this->em = $em;
-        $this->accessTokenGeneratorService = $accessTokenGeneratorService;
     }
 
     public static function getSubscribedEvents()

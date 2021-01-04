@@ -19,10 +19,9 @@ class NotificationService
 
     private $commonGroundService;
 
-    public function __construct(CommonGroundService $commonGroundService, ParameterBagInterface $params, Security $security)
+    public function __construct(CommonGroundService $commonGroundService, Security $security)
     {
         $this->commonGroundService = $commonGroundService;
-        $this->params = $params;
         $this->security = $security;
     }
 
@@ -41,7 +40,7 @@ class NotificationService
                 if (isset($auth['application']['scopes']) && !empty($auth['application']['scopes'])) {
                     if (in_array($requiredScope, $auth['application']['scopes']) && in_array('notification', $auth['application']['scopes'])) {
                         if (isset($auth['application']['notificationEndpoint']) && !empty($auth['application']['notificationEndpoint'])) {
-                            $this->sendNotification($auth['application']['notificationEndpoint'], $claim, );
+                            $this->sendNotification($auth['application']['notificationEndpoint'], $claim);
                         }
                     }
                 }

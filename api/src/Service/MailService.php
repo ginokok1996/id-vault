@@ -2,28 +2,18 @@
 
 namespace App\Service;
 
-use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 
 class MailService
 {
-    private $em;
-    private $commonGroundService;
-    private $params;
-    private $claimService;
+
     private $client;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
+    public function __construct()
     {
-        $this->em = $em;
-        $this->commonGroundService = $commonGroundService;
-        $this->params = $params;
-        $this->claimService = $claimService;
 
         $this->client = new Client();
     }

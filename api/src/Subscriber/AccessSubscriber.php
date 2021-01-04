@@ -15,18 +15,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class AccessSubscriber implements EventSubscriberInterface
 {
-    private $params;
-    private $em;
-    private $serializer;
     private $commonGroundService;
     private $accessTokenGeneratorService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
+    public function __construct(CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
     {
-        $this->params = $params;
         $this->commonGroundService = $commonGroundService;
-        $this->serializer = $serializer;
-        $this->em = $em;
         $this->accessTokenGeneratorService = $accessTokenGeneratorService;
     }
 

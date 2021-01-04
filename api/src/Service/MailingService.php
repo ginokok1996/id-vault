@@ -1,31 +1,20 @@
 <?php
 
-// App\Service\NotificationService.php
-
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Conduction\IdVaultBundle\Service\IdVaultService;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 
 class MailingService
 {
-    /**
-     * @var Security
-     */
-    private $security;
-    private $commonGroundService;
+
     private $twig;
     private $idVaultService;
 
-    public function __construct(CommonGroundService $commonGroundService, IdVaultService $idVaultService, ParameterBagInterface $params, Security $security, Environment $twig)
+    public function __construct(CommonGroundService $commonGroundService, IdVaultService $idVaultService, Environment $twig)
     {
-        $this->commonGroundService = $commonGroundService;
         $this->idVaultService = $idVaultService;
-        $this->params = $params;
-        $this->security = $security;
         $this->twig = $twig;
     }
 
@@ -44,8 +33,6 @@ class MailingService
     {
         $body = $this->twig->render($template, $data);
 
-        $response = $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $receiver, $sender);
-
-        return $response;
+        return $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $receiver, $sender);
     }
 }

@@ -3,19 +3,16 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ScopeService
 {
-    private $em;
     private $commonGroundService;
     private $params;
     private $claimService;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
+    public function __construct(CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
     {
-        $this->em = $em;
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
         $this->claimService = $claimService;
