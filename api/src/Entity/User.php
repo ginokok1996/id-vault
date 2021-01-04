@@ -42,4 +42,13 @@ class User
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
+
+    /**
+     * @var string username
+     *
+     * @example test@user.nl
+     *
+     * @Groups({"write"})
+     */
+    private $username;
 }

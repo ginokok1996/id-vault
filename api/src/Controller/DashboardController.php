@@ -562,24 +562,10 @@ class DashboardController extends AbstractController
      */
     public function claimAction($id)
     {
-        if (empty($this->getUser())) {
-            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
-
-            return $this->redirect($this->generateUrl('app_default_login'));
-        }
-        if (!$id) {
-            $this->defaultService->throwFlash('error', 'No id provided');
-
-            return $this->redirect($this->generateUrl('app_dashboard_claims'));
-        }
-
         $variables = [];
-
         $variables = $this->provideCounterData($variables);
-
         $variables['resource'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $id]);
 
-        // Set the organization background-color for the icons shown with every authorization of this claim
         if (isset($variables['resource']['authorizations'])) {
             foreach ($variables['resource']['authorizations'] as &$authorization) {
                 $application = $this->commonGroundService->isResource($authorization['application']['contact']);
@@ -589,13 +575,6 @@ class DashboardController extends AbstractController
                 }
             }
         }
-
-        if ($variables['resource']['person'] != $this->getUser()->getPerson()) {
-            $this->defaultService->throwFlash('error', 'You do not have access to this claim');
-
-            return $this->redirect($this->generateUrl('app_dashboard_claims'));
-        }
-
         return $variables;
     }
 
