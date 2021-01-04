@@ -41,7 +41,8 @@ class UserController extends AbstractController
      * @Route("/login/{loggedOut}", name="loggedOut")
      * @Template
      */
-    public function login() {
+    public function login()
+    {
         $application = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $this->params->get('app_id')]);
 
         if ($this->getUser()) {
