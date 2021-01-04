@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\DefaultService;
 use App\Service\MailingService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
@@ -12,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -26,17 +26,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class DashboardController extends AbstractController
 {
-    /**
-     * @var FlashBagInterface
-     */
-    private $flash;
+    private $defaultService;
     private $mailingService;
     private $session;
     private $commonGroundService;
 
-    public function __construct(FlashBagInterface $flash, MailingService $mailingService, SessionInterface $session, CommonGroundService $commonGroundService)
+    public function __construct(DefaultService $defaultService, MailingService $mailingService, SessionInterface $session, CommonGroundService $commonGroundService)
     {
-        $this->flash = $flash;
+        $this->defaultService = $defaultService;
         $this->mailingService = $mailingService;
         $this->session = $session;
         $this->commonGroundService = $commonGroundService;
@@ -77,7 +74,7 @@ class DashboardController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $variables = [];
 
@@ -579,12 +576,12 @@ class DashboardController extends AbstractController
     public function claimAction($id)
     {
         if (empty($this->getUser())) {
-            $this->addFlash('error', 'This page requires you to be logged in');
+            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
 
             return $this->redirect($this->generateUrl('app_default_login'));
         }
         if (!$id) {
-            $this->addFlash('error', 'No id provided');
+            $this->defaultService->throwFlash('error', 'No id provided');
 
             return $this->redirect($this->generateUrl('app_dashboard_claims'));
         }
@@ -611,7 +608,7 @@ class DashboardController extends AbstractController
         }
 
         if ($variables['resource']['person'] != $this->getUser()->getPerson()) {
-            $this->addFlash('error', 'You do not have access to this claim');
+            $this->defaultService->throwFlash('error', 'You do not have access to this claim');
 
             return $this->redirect($this->generateUrl('app_dashboard_claims'));
         }
@@ -688,12 +685,12 @@ class DashboardController extends AbstractController
     public function authorizationAction($id)
     {
         if (empty($this->getUser())) {
-            $this->addFlash('error', 'This page requires you to be logged in');
+            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
 
             return $this->redirect($this->generateUrl('app_default_login'));
         }
         if (!$id) {
-            $this->addFlash('error', 'No id provided');
+            $this->defaultService->throwFlash('error', 'No id provided');
 
             return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
         }
@@ -750,7 +747,7 @@ class DashboardController extends AbstractController
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         if ($variables['resource']['userUrl'] != $userUrl) {
-            $this->addFlash('error', 'You do not have access to this authorization');
+            $this->defaultService->throwFlash('error', 'You do not have access to this authorization');
 
             return $this->redirect($this->generateUrl('app_dashboard_authorizations'));
         }
@@ -803,7 +800,7 @@ class DashboardController extends AbstractController
 //            $vrcRequest = $commonGroundService->createResource($vrcRequest, ['component' => 'vrc', 'type' => 'requests']);
 
 //            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
-            $this->flash->add('error', 'No objection submitted for: '.$dossier['name']);
+            $this->defaultService->throwFlash('error', 'No objection submitted for: '.$dossier['name']);
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
@@ -818,12 +815,12 @@ class DashboardController extends AbstractController
     public function dossierAction($id)
     {
         if (empty($this->getUser())) {
-            $this->addFlash('error', 'This page requires you to be logged in');
+            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
 
             return $this->redirect($this->generateUrl('app_default_login'));
         }
         if (!$id) {
-            $this->addFlash('error', 'No id provided');
+            $this->defaultService->throwFlash('error', 'No id provided');
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
@@ -848,7 +845,7 @@ class DashboardController extends AbstractController
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
-            $this->addFlash('error', 'You do not have access to this dossier');
+            $this->defaultService->throwFlash('error', 'You do not have access to this dossier');
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
         }
@@ -861,7 +858,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function applicationsAction(Request $request, ParameterBagInterface $params)
+    public function applicationsAction(Request $request)
     {
         $variables = [];
 
@@ -870,7 +867,7 @@ class DashboardController extends AbstractController
         $applications = [];
 
         if ($this->getUser()) {
-            $application = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
+            $application = $this->defaultService->getApplication();
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             if (count($users) > 0) {
                 $organizations = [];
@@ -1158,12 +1155,12 @@ class DashboardController extends AbstractController
     public function logAction($id)
     {
         if (empty($this->getUser())) {
-            $this->addFlash('error', 'This page requires you to be logged in');
+            $this->defaultService->throwFlash('error', 'This page requires you to be logged in');
 
             return $this->redirect($this->generateUrl('app_default_login'));
         }
         if (!$id) {
-            $this->addFlash('error', 'No id provided');
+            $this->defaultService->throwFlash('error', 'No id provided');
 
             return $this->redirect($this->generateUrl('app_dashboard_logs'));
         }
@@ -1188,7 +1185,7 @@ class DashboardController extends AbstractController
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
         $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
         if ($variables['resource']['authorization']['userUrl'] != $userUrl) {
-            $this->addFlash('error', 'You do not have access to this log');
+            $this->defaultService->throwFlash('error', 'You do not have access to this log');
 
             return $this->redirect($this->generateUrl('app_dashboard_logs'));
         }
@@ -1201,7 +1198,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationsAction(BalanceService $balanceService, Request $request, ParameterBagInterface $params)
+    public function organizationsAction(BalanceService $balanceService, Request $request)
     {
         $variables = [];
 
@@ -1281,7 +1278,7 @@ class DashboardController extends AbstractController
         }
 
         if ($this->getUser()) {
-            $application = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $params->get('app_id')]);
+            $application = $this->defaultService->getApplication();
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
             if (count($users) > 0) {
                 $organizations = [];
@@ -1447,13 +1444,13 @@ class DashboardController extends AbstractController
      * @Route("/transactions/{organization}")
      * @Template
      */
-    public function TransactionsAction(CommonGroundService $commonGroundService, BalanceService $balanceService, $organization)
+    public function TransactionsAction(Request $request, BalanceService $balanceService, $organization)
     {
         // On an index route we might want to filter based on user input
         $variables = [];
 
-        $organization = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
-        $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+        $organization = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
+        $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
         $variables['organization'] = $organization;
 
         if ($this->session->get('mollieCode')) {
@@ -1473,7 +1470,7 @@ class DashboardController extends AbstractController
         if ($account !== false) {
             $account['balance'] = $balanceService->getBalance($organizationUrl);
             $variables['account'] = $account;
-            $variables['payments'] = $commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         if ($request->isMethod('POST')) {
@@ -1493,14 +1490,14 @@ class DashboardController extends AbstractController
      * @Route("/invoices")
      * @Template
      */
-    public function InvoicesAction(CommonGroundService $commonGroundService)
+    public function InvoicesAction()
     {
         $variables = [];
 
         if (!empty($this->getUser()->getOrganization())) {
-            $organization = $commonGroundService->getResource($this->getUser()->getOrganization());
-            $organizationUrl = $commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
-            $variables['invoices'] = $commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices'], ['customer' => $organizationUrl])['hydra:member'];
+            $organization = $this->commonGroundService->getResource($this->getUser()->getOrganization());
+            $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+            $variables['invoices'] = $this->commonGroundService->getResourceList(['component' => 'bc', 'type' => 'invoices'], ['customer' => $organizationUrl])['hydra:member'];
         }
 
         return $variables;
@@ -1510,11 +1507,11 @@ class DashboardController extends AbstractController
      * @Route("/invoice/{id}")
      * @Template
      */
-    public function InvoiceAction(CommonGroundService $commonGroundService, $id)
+    public function InvoiceAction($id)
     {
         $variables = [];
 
-        $variables['invoice'] = $commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
+        $variables['invoice'] = $this->commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
 
         return $variables;
     }
