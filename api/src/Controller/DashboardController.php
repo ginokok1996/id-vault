@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller;
 
 use App\Service\MailingService;
@@ -1353,7 +1352,6 @@ class DashboardController extends AbstractController
         }
 
         if ($this->request->isMethod('POST') && $this->request->get('newDeveloper')) {
-
         } elseif ($this->request->isMethod('POST') && $this->request->get('newApplication')) {
             $name = $this->request->get('name');
             $application['name'] = $name;

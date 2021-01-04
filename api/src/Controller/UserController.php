@@ -22,7 +22,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class UserController extends AbstractController
 {
-
     private $session;
     private $request;
     private $commonGroundService;

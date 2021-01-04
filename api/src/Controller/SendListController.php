@@ -20,7 +20,6 @@ class SendListController extends AbstractController
 {
     private $commonGroundService;
 
-
     public function __construct(CommonGroundService $commonGroundService)
     {
         $this->commonGroundService = $commonGroundService;

@@ -193,5 +193,4 @@ class DefaultController extends AbstractController
 
         return $variables;
     }
-
 }

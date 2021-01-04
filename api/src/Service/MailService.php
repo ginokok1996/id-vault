@@ -9,12 +9,10 @@ use Symfony\Component\Mime\Email;
 
 class MailService
 {
-
     private $client;
 
     public function __construct()
     {
-
         $this->client = new Client();
     }
 

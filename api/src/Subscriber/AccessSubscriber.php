@@ -6,12 +6,9 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\AccessToken;
 use App\Service\AccessTokenGeneratorService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class AccessSubscriber implements EventSubscriberInterface
 {

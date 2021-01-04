@@ -7,7 +7,6 @@ namespace App\Service;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\Security;
 
 class NotificationService
