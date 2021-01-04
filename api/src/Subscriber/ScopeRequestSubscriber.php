@@ -79,7 +79,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
                 $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
                 $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
-
             } else {
                 throw new  Exception('Invalid authorization code');
             }

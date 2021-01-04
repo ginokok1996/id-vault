@@ -14,14 +14,15 @@ class OauthService
     }
 
     /**
-     * This function handles the redirect url logic
+     * This function handles the redirect url logic.
      *
      * @param $url string the redirect url provided in query
      * @param $application object application object from wac
      *
      * @return string return the redirect url
      */
-    public function createRedirectUrl($url, $application) {
+    public function createRedirectUrl($url, $application)
+    {
 
         // Als localhost dan prima -> dit us wel unsafe want ondersteund ook subdomein of path localhost
         if ($url && strpos($url, 'localhost')) {
@@ -36,7 +37,7 @@ class OauthService
     }
 
     /**
-     * This function handles the creation of the authorization
+     * This function handles the creation of the authorization.
      *
      * @param $user object user object from uc
      * @param $application object application object from wac
@@ -44,7 +45,8 @@ class OauthService
      *
      * @return object|false returns authorization object or false if failed to create
      */
-    public function createAuthorization($application, $user, $scopes) {
+    public function createAuthorization($application, $user, $scopes)
+    {
         $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
 
         $authorization = [];
@@ -57,14 +59,15 @@ class OauthService
     }
 
     /**
-     * This function handles the update of the authorization
+     * This function handles the update of the authorization.
      *
      * @param $id string id of the authorization
      * @param $scopes array the scopes requested for this authorization
      *
      * @return object|false returns authorization object or false if failed to create
      */
-    public function updateAuthorization($id, $scopes) {
+    public function updateAuthorization($id, $scopes)
+    {
         $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $id]);
         $authorization['application'] = '/applications/'.$authorization['application']['id'];
 
@@ -80,7 +83,7 @@ class OauthService
     }
 
     /**
-     * This function handles the comparison between requested and existing scopes
+     * This function handles the comparison between requested and existing scopes.
      *
      * @param $userUrl string clean url of user from uc
      * @param $application object application object from wac
@@ -88,7 +91,8 @@ class OauthService
      *
      * @return object|false returns object or false if failed to create
      */
-    public function compareExistingScopes($userUrl, $application, $scopes) {
+    public function compareExistingScopes($userUrl, $application, $scopes)
+    {
         $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'application' => '/applications/'.$application['id']])['hydra:member'];
         if (count($authorizations) > 0) {
             $authorization = $authorizations[0];
@@ -101,6 +105,7 @@ class OauthService
                     $object['authorizationNeeded'] = true;
                 }
             }
+
             return $object;
         } else {
             return false;
