@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Conduction\IdVaultBundle\Service\IdVaultService;
 use Twig\Environment;
 
