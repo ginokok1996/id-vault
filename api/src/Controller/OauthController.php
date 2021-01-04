@@ -104,6 +104,7 @@ class OauthController extends AbstractController
 
             if ($request->get('needScopes')) {
                 $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+
                 return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
             }
 
@@ -116,5 +117,4 @@ class OauthController extends AbstractController
 
         return $variables;
     }
-
 }
