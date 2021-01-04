@@ -500,48 +500,37 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
+        $variables['claims'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
 
-        if ($this->getUser()) {
-            $variables['claims'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['person' => $this->getUser()->getPerson(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+        // Set icon background colors and dossiers per claim
+        foreach ($variables['claims'] as &$claim) {
+            $claim['dossiers'] = [];
 
-            // Set icon background colors and dossiers per claim
-            foreach ($variables['claims'] as &$claim) {
-                $claim['dossiers'] = [];
+            // Set the organization background-color for the authorization icons shown with every claim
+            if (isset($claim['authorizations'])) {
+                foreach ($claim['authorizations'] as &$authorization) {
+                    $application = $this->commonGroundService->isResource($authorization['application']['contact']);
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $authorization['iconBackgroundColor'] = $matches;
+                    }
 
-                // Set the organization background-color for the authorization icons shown with every claim
-                if (isset($claim['authorizations'])) {
-                    foreach ($claim['authorizations'] as &$authorization) {
-                        if (isset($authorization['application']['contact'])) {
-                            $application = $this->commonGroundService->isResource($authorization['application']['contact']);
-                            if ($application) {
-                                if (isset($application['organization']['style']['css'])) {
-                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                                    $authorization['iconBackgroundColor'] = $matches;
-                                }
-                            }
-                        }
-
-                        // Put all dossiers connected to this claim in claim.dossiers
-                        if (isset($authorization['dossiers'])) {
-                            foreach ($authorization['dossiers'] as $dossier) {
-                                array_push($claim['dossiers'], $dossier);
-                            }
+                    // Put all dossiers connected to this claim in claim.dossiers
+                    if (isset($authorization['dossiers'])) {
+                        foreach ($authorization['dossiers'] as $dossier) {
+                            array_push($claim['dossiers'], $dossier);
                         }
                     }
                 }
+            }
 
-                // Set the organization background-color for the proof icons shown with every claim
-                if (isset($claim['proofs'])) {
-                    foreach ($claim['proofs'] as &$proof) {
-                        if (isset($proof['application']['contact'])) {
-                            $application = $this->commonGroundService->isResource($proof['application']['contact']);
-                            if ($application) {
-                                if (isset($application['organization']['style']['css'])) {
-                                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                                    $proof['iconBackgroundColor'] = $matches;
-                                }
-                            }
-                        }
+            // Set the organization background-color for the proof icons shown with every claim
+            if (isset($claim['proofs'])) {
+                foreach ($claim['proofs'] as &$proof) {
+                    $application = $this->commonGroundService->isResource($proof['application']['contact']);
+                    if (isset($application['organization']['style']['css'])) {
+                        preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                        $proof['iconBackgroundColor'] = $matches;
                     }
                 }
             }
@@ -550,14 +539,11 @@ class DashboardController extends AbstractController
         // Add a new claim or edit one
         if ($request->isMethod('POST') && ($request->get('addClaim') || $request->get('editClaim'))) {
             $resource = $request->request->all();
+            $resource['person'] = $this->getUser()->getPerson();
 
-            if ($this->getUser()) {
-                $resource['person'] = $this->getUser()->getPerson();
+            $resource = $this->commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
 
-                $resource = $this->commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
-
-                return $this->redirect($this->generateUrl('app_dashboard_claim', ['id' => $resource['id']]));
-            }
+            return $this->redirect($this->generateUrl('app_dashboard_claim', ['id' => $resource['id']]));
         } // Delete claim if there is no authorization connected to it
         elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
             $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
@@ -596,14 +582,10 @@ class DashboardController extends AbstractController
         // Set the organization background-color for the icons shown with every authorization of this claim
         if (isset($variables['resource']['authorizations'])) {
             foreach ($variables['resource']['authorizations'] as &$authorization) {
-                if (isset($authorization['application']['contact'])) {
-                    $application = $this->commonGroundService->isResource($authorization['application']['contact']);
-                    if ($application) {
-                        if (isset($application['organization']['style']['css'])) {
-                            preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                            $authorization['backgroundColor'] = $matches;
-                        }
-                    }
+                $application = $this->commonGroundService->isResource($authorization['application']['contact']);
+                if (isset($application['organization']['style']['css'])) {
+                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                    $authorization['backgroundColor'] = $matches;
                 }
             }
         }
