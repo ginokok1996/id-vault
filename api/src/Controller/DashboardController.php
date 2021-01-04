@@ -30,13 +30,15 @@ class DashboardController extends AbstractController
     private $mailingService;
     private $session;
     private $commonGroundService;
+    private $balanceService;
 
-    public function __construct(DefaultService $defaultService, MailingService $mailingService, SessionInterface $session, CommonGroundService $commonGroundService)
+    public function __construct(DefaultService $defaultService, MailingService $mailingService, SessionInterface $session, CommonGroundService $commonGroundService, BalanceService $balanceService)
     {
         $this->defaultService = $defaultService;
         $this->mailingService = $mailingService;
         $this->session = $session;
         $this->commonGroundService = $commonGroundService;
+        $this->balanceService = $balanceService;
     }
 
     public function provideCounterData($variables)
@@ -1198,7 +1200,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationsAction(BalanceService $balanceService, Request $request)
+    public function organizationsAction(Request $request)
     {
         $variables = [];
 
@@ -1250,7 +1252,7 @@ class DashboardController extends AbstractController
 
             $account = $this->commonGroundService->createResource($account, ['component' => 'bare', 'type' => 'acounts']);
 
-            $balanceService->addCredit(Money::EUR(1000), $organizationUrl, $wrc['name']);
+            $this->balanceService->addCredit(Money::EUR(1000), $organizationUrl, $wrc['name']);
 
             $userGroup = [];
             $userGroup['name'] = 'developers-'.$name;
@@ -1309,7 +1311,7 @@ class DashboardController extends AbstractController
      * @Security("is_granted('ROLE_group.developer')")
      * @Template
      */
-    public function organizationAction($id, Request $request, BalanceService $balanceService)
+    public function organizationAction($id, Request $request)
     {
         $variables = [];
 
@@ -1318,9 +1320,9 @@ class DashboardController extends AbstractController
         $variables['organization'] = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
 
         $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $id]);
-        $account = $balanceService->getAcount($organizationUrl);
+        $account = $this->balanceService->getAcount($organizationUrl);
         if ($account !== false) {
-            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $account['balance'] = $this->balanceService->getBalance($organizationUrl);
             $variables['account'] = $account;
             $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
@@ -1444,7 +1446,7 @@ class DashboardController extends AbstractController
      * @Route("/transactions/{organization}")
      * @Template
      */
-    public function TransactionsAction(Request $request, BalanceService $balanceService, $organization)
+    public function TransactionsAction(Request $request, $organization)
     {
         // On an index route we might want to filter based on user input
         $variables = [];
@@ -1456,7 +1458,7 @@ class DashboardController extends AbstractController
         if ($this->session->get('mollieCode')) {
             $mollieCode = $this->session->get('mollieCode');
             $this->session->remove('mollieCode');
-            $result = $balanceService->processMolliePayment($mollieCode, $organizationUrl);
+            $result = $this->balanceService->processMolliePayment($mollieCode, $organizationUrl);
 
             if ($result['status'] == 'paid') {
                 $variables['message'] = 'Payment processed successfully! <br> €'.$result['amount'].'.00 was added to your balance. <br>  Invoice with reference: '.$result['reference'].' is created.';
@@ -1465,10 +1467,10 @@ class DashboardController extends AbstractController
             }
         }
 
-        $account = $balanceService->getAcount($organizationUrl);
+        $account = $this->balanceService->getAcount($organizationUrl);
 
         if ($account !== false) {
-            $account['balance'] = $balanceService->getBalance($organizationUrl);
+            $account['balance'] = $this->balanceService->getBalance($organizationUrl);
             $variables['account'] = $account;
             $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
@@ -1477,7 +1479,7 @@ class DashboardController extends AbstractController
             $amount = $request->get('amount') * 1.21;
             $amount = (number_format($amount, 2));
 
-            $payment = $balanceService->createMolliePayment($amount, $request->get('redirectUrl'));
+            $payment = $this->balanceService->createMolliePayment($amount, $request->get('redirectUrl'));
             $this->session->set('mollieCode', $payment['id']);
 
             return $this->redirect($payment['redirectUrl']);
