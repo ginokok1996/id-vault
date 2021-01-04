@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,11 +24,27 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DefaultController extends AbstractController
 {
+
+    private $session;
+    private $request;
+    private $commonGroundService;
+    private $params;
+    private $mailingService;
+
+    public function __construct(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, MailingService $mailingService)
+    {
+        $this->session = $session;
+        $this->request = $request;
+        $this->commonGroundService = $commonGroundService;
+        $this->params = $params;
+        $this->mailingService = $mailingService;
+    }
+
     /**
      * @Route("/")
      * @Template
      */
-    public function indexAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function indexAction()
     {
         $variables = [];
 
@@ -38,7 +55,7 @@ class DefaultController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function registerAction()
     {
         $variables = [];
 
@@ -49,12 +66,12 @@ class DefaultController extends AbstractController
      * @Route("/login")
      * @Template
      */
-    public function loginAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function loginAction()
     {
         $variables = [];
 
-        if ($request->query->get('backUrl')) {
-            $variables['backUrl'] = $request->query->get('backUrl');
+        if ($this->request->query->get('backUrl')) {
+            $variables['backUrl'] = $this->request->query->get('backUrl');
         }
 
         return $variables;
@@ -64,24 +81,24 @@ class DefaultController extends AbstractController
      * @Route("/reset/{token}")
      * @Template
      */
-    public function resetAction(Session $session, Request $request, CommonGroundService $commonGroundService, MailingService $mailingService, ParameterBagInterface $params, $token = null)
+    public function resetAction($token = null)
     {
         $variables = [];
 
         if ($token) {
-            $application = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
-            $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
-            $tokens = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['token' => $token, 'provider.name' => $providers[0]['name']])['hydra:member'];
+            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $this->params->get('app_id')]);
+            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $this->params->get('app_id')])['hydra:member'];
+            $tokens = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['token' => $token, 'provider.name' => $providers[0]['name']])['hydra:member'];
             if (count($tokens) > 0) {
                 $variables['token'] = $tokens[0];
-                $userUlr = $commonGroundService->cleanUrl(['component'=>'uc', 'type'=>'users', 'id'=>$tokens[0]['user']['id']]);
+                $userUlr = $this->commonGroundService->cleanUrl(['component'=>'uc', 'type'=>'users', 'id'=>$tokens[0]['user']['id']]);
                 $variables['selectedUser'] = $userUlr;
             }
         }
 
-        if ($request->isMethod('POST') && $request->get('password')) {
-            $user = $commonGroundService->getResource($request->get('selectedUser'));
-            $password = $request->get('password');
+        if ($this->request->isMethod('POST') && $this->request->get('password')) {
+            $user = $this->commonGroundService->getResource($this->request->get('selectedUser'));
+            $password = $this->request->get('password');
 
             $user['password'] = $password;
 
@@ -89,22 +106,22 @@ class DefaultController extends AbstractController
                 $group = '/groups/'.$group['id'];
             }
 
-            $commonGroundService->updateResource($user);
+            $this->commonGroundService->updateResource($user);
 
             $variables['reset'] = true;
-        } elseif ($request->isMethod('POST')) {
+        } elseif ($this->request->isMethod('POST')) {
             $variables['message'] = true;
-            $username = $request->get('email');
-            $users = $commonGroundService->getResourceList(['component'=>'uc', 'type'=>'users'], ['username'=> $username], true, false, true, false, false);
+            $username = $this->request->get('email');
+            $users = $this->commonGroundService->getResourceList(['component'=>'uc', 'type'=>'users'], ['username'=> $username], true, false, true, false, false);
             $users = $users['hydra:member'];
 
-            $application = $commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $params->get('app_id')]);
+            $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id' => $this->params->get('app_id')]);
             $organization = $application['organization']['@id'];
-            $providers = $commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $params->get('app_id')])['hydra:member'];
+            $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => 'token', 'application' => $this->params->get('app_id')])['hydra:member'];
 
             if (count($users) > 0) {
                 $user = $users[0];
-                $person = $commonGroundService->getResource($user['person']);
+                $person = $this->commonGroundService->getResource($user['person']);
 
                 $validChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 $code = substr(str_shuffle(str_repeat($validChars, ceil(3 / strlen($validChars)))), 1, 5);
@@ -113,16 +130,16 @@ class DefaultController extends AbstractController
                 $token['token'] = $code;
                 $token['user'] = 'users/'.$user['id'];
                 $token['provider'] = 'providers/'.$providers[0]['id'];
-                $token = $commonGroundService->createResource($token, ['component' => 'uc', 'type' => 'tokens']);
+                $token = $this->commonGroundService->createResource($token, ['component' => 'uc', 'type' => 'tokens']);
 
-                $url = $request->getUri();
+                $url = $this->request->getUri();
                 $link = $url.'/'.$token['token'];
 
                 $data = [];
                 $data['resource'] = $link;
                 $data['sender'] = 'no-reply@conduction.nl';
 
-                $mailingService->sendMail('mails/password_reset.html.twig', 'no-reply@conduction.nl', $user['username'], 'Password reset', $data);
+                $this->mailingService->sendMail('mails/password_reset.html.twig', 'no-reply@conduction.nl', $user['username'], 'Password reset', $data);
             }
         }
 
@@ -133,7 +150,7 @@ class DefaultController extends AbstractController
      * @Route("/error")
      * @Template
      */
-    public function errorAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function errorAction()
     {
         $variables = [];
 
@@ -144,7 +161,7 @@ class DefaultController extends AbstractController
      * @Route("/users")
      * @Template
      */
-    public function usersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function usersAction()
     {
         $variables = [];
 
@@ -155,7 +172,7 @@ class DefaultController extends AbstractController
      * @Route("/organizations")
      * @Template
      */
-    public function organizationsAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function organizationsAction()
     {
         $variables = [];
 
@@ -166,7 +183,7 @@ class DefaultController extends AbstractController
      * @Route("/developers")
      * @Template
      */
-    public function developersAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function developersAction()
     {
         $variables = [];
 
@@ -177,7 +194,7 @@ class DefaultController extends AbstractController
      * @Route("/pricing")
      * @Template
      */
-    public function pricingAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function pricingAction()
     {
         $variables = [];
 
@@ -188,38 +205,38 @@ class DefaultController extends AbstractController
      * @Route("/oauth")
      * @Template
      */
-    public function oauthAction(Session $session, Request $request, CommonGroundService $commonGroundService, ParameterBagInterface $params, string $slug = 'home')
+    public function oauthAction()
     {
         $variables = [];
 
-        if (!$request->query->get('client_id')) {
+        if (!$this->request->query->get('client_id')) {
             $this->addFlash('error', 'no client id provided');
         } else {
             try {
-                $variables['application'] = $commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $request->query->get('client_id')]);
+                $variables['application'] = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'applications', 'id' => $this->request->query->get('client_id')]);
             } catch (\Throwable $e) {
                 $this->addFlash('error', 'invalid client id');
             }
         }
 
-        if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
+        if (!$this->request->query->get('response_type') || $this->request->query->get('response_type') !== 'code') {
             $this->addFlash('error', 'invalid response type');
         }
 
-        if (!$request->query->get('scopes')) {
+        if (!$this->request->query->get('scopes')) {
             $this->addFlash('error', 'no scopes provided');
         } else {
-            $variables['scopes'] = explode(' ', $request->query->get('scopes'));
+            $variables['scopes'] = explode(' ', $this->request->query->get('scopes'));
         }
 
-        if (!$request->query->get('state')) {
-            $variables['state'] = $request->query->get('state');
+        if (!$this->request->query->get('state')) {
+            $variables['state'] = $this->request->query->get('state');
         }
 
-        $session->set('backUrl', $request->getUri());
+        $this->session->set('backUrl', $this->request->getUri());
 
-        if ($request->isMethod('POST') && $request->get('grantAccess')) {
-            if ($request->get('grantAccess') == 'true') {
+        if ($this->request->isMethod('POST') && $this->request->get('grantAccess')) {
+            if ($this->request->get('grantAccess') == 'true') {
                 // TD: create token & send back to authorization url defined in application
             } else {
                 // TD:send message back that access was denied.
