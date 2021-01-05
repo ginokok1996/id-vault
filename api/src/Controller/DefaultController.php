@@ -127,7 +127,7 @@ class DefaultController extends AbstractController
                 $data['resource'] = $link;
                 $data['sender'] = 'no-reply@conduction.nl';
 
-                $this->mailingService->sendMail('mails/password_reset.html.twig', 'no-reply@conduction.nl', $user['username'], 'Password reset', $data);
+                $this->mailingService->sendMail('mails/password_reset.html.twig', 'no-reply@id-vault.com', $user['username'], 'Password reset', $data);
             }
         }
 

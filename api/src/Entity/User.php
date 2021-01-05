@@ -51,4 +51,69 @@ class User
      * @Groups({"write"})
      */
     private $username;
+
+    /**
+     * @var string return message
+     *
+     * @example mail sent to mailgun
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read"})
+     */
+    private $message;
+
+    /**
+     * @var string uri of the created user
+     *
+     * @example https://test.nl/user
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read"})
+     */
+    private $user;
+
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getUser(): ?string
+    {
+        return $this->user;
+    }
+
+    public function setUser(string $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }

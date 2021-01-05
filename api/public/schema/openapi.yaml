@@ -7698,9 +7698,27 @@ components:
     User-read:
       type: object
       description: ''
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        message:
+          description: 'return message'
+          type: string
+        user:
+          description: 'uri of the created user'
+          type: string
     User-write:
       type: object
       description: ''
+      properties:
+        username:
+          description: username
+          type: string
     'User:jsonld-read':
       type: object
       description: ''
@@ -7714,6 +7732,19 @@ components:
         '@type':
           readOnly: true
           type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        message:
+          description: 'return message'
+          type: string
+        user:
+          description: 'uri of the created user'
+          type: string
     'User:jsonld-write':
       type: object
       description: ''
@@ -7726,6 +7757,9 @@ components:
           type: string
         '@type':
           readOnly: true
+          type: string
+        username:
+          description: username
           type: string
 definitions:
   AccessToken-read:
@@ -7893,12 +7927,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-04 20:08:08'
+        example: '2021-01-05 09:57:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-04 20:08:08'
+        example: '2021-01-05 09:57:00'
     required: []
   AuditTrail-write:
     properties:
@@ -7946,12 +7980,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-04 20:08:08'
+        example: '2021-01-05 09:57:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-04 20:08:08'
+        example: '2021-01-05 09:57:00'
     required: []
   ChangeLog-write:
     properties:
