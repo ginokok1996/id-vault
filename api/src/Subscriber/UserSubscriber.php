@@ -44,6 +44,7 @@ class UserSubscriber implements EventSubscriberInterface
                 $user->setMessage('Email address is invalid');
             }
         }
+
         return $user;
     }
 }
