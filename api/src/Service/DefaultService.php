@@ -34,7 +34,8 @@ class DefaultService
         }
     }
 
-    public function singleSignOn($authorizations){
+    public function singleSignOn($authorizations)
+    {
         foreach ($authorizations as &$authorization) {
             if (isset($authorization['application']['singleSignOnUrl']) && in_array('single_sign_on', $authorization['scopes'])) {
                 $application = $this->commonGroundService->isResource($authorization['application']['contact']);
@@ -46,11 +47,14 @@ class DefaultService
                 $authorization['singleSignOnUrl'] = $authorization['application']['singleSignOnUrl']."?code={$authorization['id']}";
             }
         }
+
         return $authorizations;
     }
 
-    public function getUserUrl($username) {
+    public function getUserUrl($username)
+    {
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'];
+
         return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
     }
 
