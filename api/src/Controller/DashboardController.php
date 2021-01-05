@@ -101,6 +101,7 @@ class DashboardController extends AbstractController
                 }
             }
         }
+
         return $variables;
     }
 
@@ -525,6 +526,7 @@ class DashboardController extends AbstractController
                 }
             }
         }
+
         return $variables;
     }
 
@@ -1006,11 +1008,12 @@ class DashboardController extends AbstractController
 
         foreach ($variables['logs'] as &$log) {
             $application = $this->commonGroundService->isResource($log['authorization']['application']['contact']);
-                if (isset($application['organization']['style']['css'])) {
-                    preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
-                    $log['backgroundColor'] = $matches;
-                }
+            if (isset($application['organization']['style']['css'])) {
+                preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
+                $log['backgroundColor'] = $matches;
+            }
         }
+
         return $variables;
     }
 
@@ -1020,7 +1023,6 @@ class DashboardController extends AbstractController
      */
     public function logAction($id)
     {
-
         $variables = [];
         $variables = $this->provideCounterData($variables);
         $variables['resource'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorization_logs', 'id' => $id], ['order[dateCreated]' => 'desc']);
