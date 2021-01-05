@@ -19,6 +19,9 @@
     "api-platform/schema-generator": {
         "version": "v2.1.0"
     },
+    "bacon/bacon-qr-code": {
+        "version": "2.0.3"
+    },
     "beberlei/doctrineextensions": {
         "version": "v1.2.7"
     },
@@ -28,14 +31,32 @@
     "composer/ca-bundle": {
         "version": "1.2.6"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.1"
+    },
     "composer/semver": {
         "version": "1.5.0"
     },
     "composer/xdebug-handler": {
         "version": "1.3.3"
     },
+    "conduction/balancebundle": {
+        "version": "dev-master"
+    },
     "conduction/commongroundbundle": {
         "version": "dev-master"
+    },
+    "conduction/id-vault-php": {
+        "version": "dev-main"
+    },
+    "conduction/idvaultbundle": {
+        "version": "dev-master"
+    },
+    "conduction/landkitbundle": {
+        "version": "dev-main"
+    },
+    "dasprid/enum": {
+        "version": "1.0.3"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -137,6 +158,18 @@
     "easyrdf/easyrdf": {
         "version": "0.9.1"
     },
+    "egulias/email-validator": {
+        "version": "2.1.25"
+    },
+    "endroid/installer": {
+        "version": "1.3.2"
+    },
+    "endroid/qr-code": {
+        "version": "3.9.6"
+    },
+    "endroid/qr-code-bundle": {
+        "version": "3.4.3"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },
@@ -152,6 +185,9 @@
             ".php_cs.dist"
         ]
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.1"
+    },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.37"
     },
@@ -163,6 +199,9 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.5.2"
+    },
+    "khanamiryan/qrcode-detector-decoder": {
+        "version": "1.0.4"
     },
     "knplabs/knp-markdown-bundle": {
         "version": "1.8.1"
@@ -190,6 +229,9 @@
     },
     "myclabs/deep-copy": {
         "version": "1.10.2"
+    },
+    "myclabs/php-enum": {
+        "version": "1.7.7"
     },
     "nelmio/cors-bundle": {
         "version": "1.5",
@@ -492,6 +534,27 @@
     "symfony/intl": {
         "version": "v4.3.4"
     },
+    "symfony/mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "15658c2a0176cda2e7dba66276a2030b52bd81b2"
+        },
+        "files": [
+            "config/packages/mailer.yaml"
+        ]
+    },
+    "symfony/mailgun-mailer": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "addcb559b32d9dbb4843826b063565e1b15a2a57"
+        }
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -560,6 +623,9 @@
     },
     "symfony/property-info": {
         "version": "v4.3.1"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.1.10"
     },
     "symfony/routing": {
         "version": "4.2",
