@@ -1409,7 +1409,6 @@ class DashboardController extends AbstractController
             $data['mainSender'] = 'no-reply@conduction.nl';
 
             $data['resource'] = $this->generateUrl('app_dashboard_organization', ['id' => $variables['organization']['id']], UrlGeneratorInterface::ABSOLUTE_URL).'?newUser='.$receiver;
-            var_dump($data['resource']);
             $mailingService->sendMail('mails/invite_developer.html.twig', 'no-reply@conduction.nl', 'sarai@conduction.nl', 'Invite organization', $data);
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id' => $id]));
