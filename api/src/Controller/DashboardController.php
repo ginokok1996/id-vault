@@ -1245,7 +1245,6 @@ class DashboardController extends AbstractController
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id' => $id]));
 
-        if ($request->isMethod('POST') && $request->get('newDeveloper')) {
         } elseif ($request->isMethod('POST') && $request->get('newApplication')) {
             $name = $request->get('name');
             $application['name'] = $name;
