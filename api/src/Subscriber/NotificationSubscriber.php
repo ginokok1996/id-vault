@@ -27,14 +27,12 @@ class NotificationSubscriber implements EventSubscriberInterface
 
     public function save(CommongroundUpdateEvent $event)
     {
-//        var_dump('subscriber gaat af');
 
         // Lets make sure that we are dealing with a Claim resource from the WAC
         $url = $event->getUrl();
         if (!$url || !is_array($url) || $url['component'] != 'wac' || $url['type'] != 'claims') {
             return;
         }
-//        var_dump('check op claim gaat goed');
 
         // Lets see if we need to do anything with the resource
         $resource = $event->getResource();

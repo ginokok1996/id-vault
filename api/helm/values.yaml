@@ -31,7 +31,7 @@ settings:
   debug: 1
   cache: 1
   url: http://localhost
-  sessionDuration: 900
+  sessionDuration: 1209600
   replicaCount: 1
   corsAllowOrigin: ['*']
   trustedHosts: '^.+$'
