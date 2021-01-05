@@ -52,7 +52,11 @@ class OauthController extends AbstractController
         $variables['state'] = $request->get('state');
 
         //get the redirect Url
-        $redirectUrl = $this->oauthService->createRedirectUrl($request->get('redirect_uri'), $variables['application']);
+        if ($request->query->get('redirect_uri')) {
+            $redirectUrl = $this->oauthService->createRedirectUrl($request->query->get('redirect_uri'), $variables['application']);
+        } elseif ($request->get('redirect_uri')) {
+            $redirectUrl = $this->oauthService->createRedirectUrl($request->get('redirect_uri'), $variables['application']);
+        }
         $variables['redirectUrl'] = $redirectUrl;
 
         if (!$request->query->get('scopes') && !$request->get('scopes')) {
