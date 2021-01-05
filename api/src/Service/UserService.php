@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -31,9 +29,11 @@ class UserService
         $user['person'] = $this->createPerson($username);
         $user['username'] = $username;
         $user['password'] = substr(str_shuffle(str_repeat($validChars, ceil(3 / strlen($validChars)))), 1, 5);
+
         try {
             $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
             $this->passwordMail($user);
+
             return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
         } catch (\Throwable $e) {
             return false;
@@ -47,6 +47,7 @@ class UserService
         $person = [];
         $person['givenName'] = $names[0];
         $person = $this->commonGroundService->createResource($person, ['component' => 'cc', 'type' => 'people']);
+
         return $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
     }
 
@@ -67,5 +68,4 @@ class UserService
 
         $this->mailService->sendMail('mails/newUserPassword.html.twig', 'no-reply@id-vault.com', $user['username'], 'Welcome', $data);
     }
-
 }
