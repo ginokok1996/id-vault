@@ -18,7 +18,7 @@ You can install docker-desktop from [the docker website](https://hub.docker.com/
 ## Generating your component (repository/codebase)
 Starting up your first Common Ground component is extremely easy, al you need is a GitHub account and go the link below and fill in the form, press create and press to we have a component!
 
-[https://github.com/ConductionNL/Proto-application-NLDesign/generate](https://github.com/ConductionNL/Proto-application-NLDesign/generate) 
+[https://github.com/ConductionNL/Proto-component-commonground/generate](https://github.com/ConductionNL/Proto-component-commonground/generate) 
 
 After that you should be redirected to your own brand new repository. 
 
@@ -85,31 +85,25 @@ Best practice is to fetch the Conduction Common Ground component into a local up
 __Please make sure the you have committed al your changes to your current codebase and pushed a backup copy to your Git repo before continuing__
 
 ```CLI
-$ git remote add upstream https://github.com/ConductionNL/Proto-application-NLDesign.git
-$ git fetch upstream
-$ git branch upstream upstream/master
+git remote add upstream https://github.com/ConductionNL/Proto-component-commonground.git
+git fetch upstream
+git branch upstream upstream/master
 ```
 
 You can then use your favorite Git tool to merge this branch into your normal working branch without the danger of overwriting your local code. Or alternatively you can use your GIT CLI (not  recommended)
 
 ```CLI
-$ git checkout master
-$ git pull upstream master --allow-unrelated-histories
-```
-
-If you are feeling particulary lazy you can do all the above with
-
-```CLI
-$ git remote add upstream https://github.com/ConductionNL/Proto-application-NLDesign.git && git fetch upstream && git branch upstream upstream/master && git checkout master && git pull upstream master --allow-unrelated-histories
+git checkout master
+git pull upstream master --allow-unrelated-histories
 ```
 
 You might get an error at this point in the lines of 'refusing to merge unrelated histories', that basically means that you lost your history connection with the original repository. This can happen for several reasons, but is easily fixable.
 
 ```CLI
-$ git checkout upstream
-$ git pull upstream master --allow-unrelated-histories
-$ git checkout master
-$ git merge upstream --allow-unrelated-histories
+git checkout upstream
+git pull upstream master --allow-unrelated-histories
+git checkout master
+git merge upstream --allow-unrelated-histories
 ``` 
 
 Keep in mind that you wil need to make sure to stay up to date about changes on the Common Ground component repository.

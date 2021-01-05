@@ -9,5 +9,3 @@ services:
     #Twig\Extensions\DateExtension: null
     #Twig\Extensions\IntlExtension: null
     #Twig\Extensions\TextExtension: null
-    Twig\Extension\StringLoaderExtension: null
-

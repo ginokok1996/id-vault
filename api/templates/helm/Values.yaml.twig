@@ -27,11 +27,8 @@ settings:
   unit: {{ organization_unit }}
   env: {{ app_env }}
   web: {{ app_web }}
-  internal: {{ app_internal }}
   debug: {{ app_debug }}
   cache: {{ app_debug }}
-  url: {{ app_url }}
-  sessionDuration: {{ app_session_duration }}
   replicaCount: 1
   corsAllowOrigin: ['*']
   trustedHosts: '{{ trusted_hosts }}'
@@ -112,15 +109,6 @@ mercure:
     type: NodePort
     port: 80
 
-redis:
-    port: 6379
-    version: 5.0
-    memory: 100Mi
-    cpu: 100m
-    limits:
-        memory: 200Mi
-        cpu: 250m
-
 ingress:
   annotations:
     # kubernetes.io/ingress.global-static-ip-name: chart-ip
@@ -150,9 +138,3 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
-
-commonground:
-    eherkenning:
-        location: https://{{ app_domain }}/eherkenning
-    digispoof:
-        location: https://{{ app_domain }}/digispoof
