@@ -48,22 +48,6 @@ class DashboardController extends AbstractController
         $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
         $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
-//        //tasks
-//        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
-//
-//        if (!count($calendars) > 0) {
-//            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
-//        }
-//
-//        if (count($calendars) > 0) {
-//            $calendar = $calendars[0];
-//            if (count($calendar['todos']) > 0) {
-//                $variables['taskCount'] = (string) count($calendar['todos']);
-//            } else {
-//                $variables['taskCount'] = '0';
-//            }
-//        }
-
         //alerts
         $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
         $variables['alertCount'] = (string) count($alerts);
@@ -701,19 +685,6 @@ class DashboardController extends AbstractController
             }
         } elseif ($request->isMethod('POST') && ($request->get('dossierObjection'))) {
             $dossier = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $request->get('dossierID')]);
-
-            // Create vrc request
-//            $vrcRequest['status'] = 'submitted';
-//            $vrcRequest['organization'] = 'url org';
-//            $vrcRequest['requestType'] = 'url request type';
-//            $vrcRequest['processType'] = 'url process type';
-//            $vrcRequest['properties'] = [
-//                'dossier'     => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
-//                'explanation' => $request->get('explanation'),
-//            ];
-//            $vrcRequest = $commonGroundService->createResource($vrcRequest, ['component' => 'vrc', 'type' => 'requests']);
-
-//            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
             $this->defaultService->throwFlash('error', 'No objection submitted for: '.$dossier['name']);
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
@@ -807,17 +778,6 @@ class DashboardController extends AbstractController
             $wrcApplication['organization'] = '/organizations/'.$request->get('organization');
             $wrcApplication['domain'] = $request->get('domain');
 
-//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
-//                $path = $_FILES['applicationLogo']['tmp_name'];
-//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
-//                $data = file_get_contents($path);
-//                $wrcApplication['style']['name'] = 'style for '.$name;
-//                $wrcApplication['style']['description'] = 'style for '.$name;
-//                $wrcApplication['style']['css'] = ' ';
-//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-//            }
             $wrcApplication = $this->commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
@@ -1208,17 +1168,6 @@ class DashboardController extends AbstractController
             $wrcApplication['organization'] = '/organizations/'.$id;
             $wrcApplication['domain'] = $request->get('domain');
 
-//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
-//                $path = $_FILES['applicationLogo']['tmp_name'];
-//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
-//                $data = file_get_contents($path);
-//                $wrcApplication['style']['name'] = 'style for '.$name;
-//                $wrcApplication['style']['description'] = 'style for '.$name;
-//                $wrcApplication['style']['css'] = ' ';
-//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-//            }
             $wrcApplication = $this->commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
