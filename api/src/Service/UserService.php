@@ -31,12 +31,13 @@ class UserService
         $user['password'] = substr(str_shuffle(str_repeat($validChars, ceil(3 / strlen($validChars)))), 1, 5);
 
         try {
-            $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+            $newUser = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
             $this->passwordMail($user);
 
-            return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+            return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $newUser['id']]);
         } catch (\Throwable $e) {
-            return false;
+            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'][0];
+            return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
         }
     }
 
@@ -67,5 +68,22 @@ class UserService
         $data['resource'] = $url;
 
         $this->mailService->sendMail('mails/newUserPassword.html.twig', 'no-reply@id-vault.com', $user['username'], 'Welcome', $data);
+    }
+
+    public function createAuthorization($user, $application, $scopes) {
+
+        $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $user, 'application' => '/applications/'.$application['id']])['hydra:member'];
+
+        if (count($authorizations) > 0) {
+            return $authorizations[0];
+        } else {
+            $authorization = [];
+            $authorization['userUrl'] = $user;
+            $authorization['application'] = '/applications/'.$application['id'];
+            $authorization['goal'] = ' ';
+            $authorization['scopes'] = $scopes;
+
+            return $this->commonGroundService->createResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
+        }
     }
 }

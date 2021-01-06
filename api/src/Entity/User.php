@@ -53,28 +53,35 @@ class User
     private $username;
 
     /**
-     * @var string return message
+     * @var string client id
      *
-     * @example mail sent to mailgun
+     * @example test@user.nl
      *
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read"})
+     * @Groups({"write"})
      */
-    private $message;
+    private $clientId;
 
     /**
-     * @var string uri of the created user
+     * @var array array of scopes
      *
-     * @example https://test.nl/user
+     * @example
+     *
+     * @Groups({"write"})
+     * @ORM\Column(type="json")
+     */
+    private $scopes = [];
+
+    /**
+     * @var string created authorization
+     *
+     * @example
      *
      * @Assert\Length(
      *      max = 255
      * )
      * @Groups({"read"})
      */
-    private $user;
+    private $authorization;
 
     public function getId(): Uuid
     {
@@ -93,26 +100,38 @@ class User
         return $this;
     }
 
-    public function getMessage(): ?string
+    public function getClientId(): ?string
     {
-        return $this->message;
+        return $this->clientId;
     }
 
-    public function setMessage(string $message): self
+    public function setClientId(string $clientId): self
     {
-        $this->message = $message;
+        $this->clientId = $clientId;
 
         return $this;
     }
 
-    public function getUser(): ?string
+    public function getAuthorization(): ?string
     {
-        return $this->user;
+        return $this->authorization;
     }
 
-    public function setUser(string $user): self
+    public function setAuthorization(string $authorization): self
     {
-        $this->user = $user;
+        $this->authorization = $authorization;
+
+        return $this;
+    }
+
+    public function getScopes(): ?array
+    {
+        return $this->scopes;
+    }
+
+    public function setScopes(?array $scopes): self
+    {
+        $this->scopes = $scopes;
 
         return $this;
     }

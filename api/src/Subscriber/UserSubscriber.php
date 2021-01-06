@@ -9,6 +9,8 @@ use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 
 class UserSubscriber implements EventSubscriberInterface
 {
@@ -31,15 +33,26 @@ class UserSubscriber implements EventSubscriberInterface
     public function createUser(ViewEvent $event)
     {
         $user = $event->getControllerResult();
+
         if ($user instanceof User && $event->getRequest()->getMethod() == 'POST') {
+            if (!$user->getScopes()) {
+                throw new Exception('no scopes provided');
+            }
+
+            if (!$user->getClientId()) {
+                throw new Exception('no clientId provided');
+            } else {
+                try {
+                    $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $user->getClientId()]);
+                } catch (\Throwable $e) {
+                    throw new  Exception('Invalid clientId');
+                }
+            }
+
             if (filter_var($user->getUsername(), FILTER_VALIDATE_EMAIL)) {
                 $result = $this->userService->createUser($user->getUsername());
-                if ($result !== false) {
-                    $user->setUser($result);
-                    $user->setMessage('User has been created');
-                } else {
-                    $user->setMessage('Email address is already taken');
-                }
+                    $authorization = $this->userService->createAuthorization($result, $application, $user->getScopes());
+                    $user->setAuthorization($authorization['id']);
             } else {
                 $user->setMessage('Email address is invalid');
             }

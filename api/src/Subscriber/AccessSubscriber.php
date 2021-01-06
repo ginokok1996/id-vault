@@ -66,7 +66,7 @@ class AccessSubscriber implements EventSubscriberInterface
                 $authorization['code'] = null;
                 $authorization['application'] = '/applications/'.$authorization['application']['id'];
 
-                if (!empty($authorization['claims'])) {
+                if ($authorization['claims']) {
                     foreach ($authorization['claims'] as &$claim) {
                         $claim = '/claims/'.$claim['id'];
                     }
@@ -76,19 +76,19 @@ class AccessSubscriber implements EventSubscriberInterface
                     $authorization['purposeLimitation'] = '/purpose_limitations/'.$authorization['purposeLimitation']['id'];
                 }
 
-                if (!empty($authorization['dossiers'])) {
+                if ($authorization['dossiers']) {
                     foreach ($authorization['dossiers'] as &$dossier) {
                         $dossier = '/dossiers/'.$dossier['id'];
                     }
                 }
 
-                if (!empty($authorization['scopeRequests'])) {
+                if ($authorization['scopeRequests']) {
                     foreach ($authorization['scopeRequests'] as &$scopeRequest) {
                         $scopeRequest = '/scopes_requests/'.$scopeRequest['id'];
                     }
                 }
 
-                if (!empty($authorization['authorizationLogs'])) {
+                if ($authorization['authorizationLogs']) {
                     foreach ($authorization['authorizationLogs'] as &$log) {
                         $log = '/authorization_logs/'.$log['id'];
                     }
@@ -100,12 +100,13 @@ class AccessSubscriber implements EventSubscriberInterface
 
                 $authorization = $this->commonGroundService->saveResource($authorization, ['component' => 'wac', 'type' => 'authorizations']);
             }
+
             $authorizationLog['endpoint'] = 'access_tokens';
             $this->commonGroundService->createResource($authorizationLog, ['component' => 'wac', 'type' => 'authorization_logs']);
 
             $alert = [];
             $alert['name'] = 'Information requested';
-            $alert['description'] = 'Information requested by'.$authorization['application']['name'];
+            $alert['description'] = 'Information requested by '.$authorization['application']['name'];
             $alert['link'] = $authorization['userUrl'];
             $alert['icon'] = 'fas fa-bell';
             $alert['type'] = 'info';

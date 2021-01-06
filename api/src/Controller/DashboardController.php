@@ -886,8 +886,13 @@ class DashboardController extends AbstractController
             $application['scopes'] = $request->get('scopes');
 
             $application = $this->commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
-        } // Add a new mailing list or edit one
-        elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
+        } elseif ($request->isMethod('POST') && $request->get('addGroup')) {
+            $resource = $request->request->all();
+            $resource['application'] = '/applications/'.$id;
+
+            $group = $this->commonGroundService->createResource($resource, ['component' => 'wac' , 'type' => 'groups']);
+
+        } elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
             $resource = $request->request->all();
 
             // Save mailing list
@@ -1353,6 +1358,64 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables['invoice'] = $this->commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/groups")
+     * @Template
+     */
+    public function groupsAction(Request $request)
+    {
+        $variables = [];
+
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+
+        $variables['groups'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl])['hydra:member'];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/groups/{id}")
+     * @Template
+     */
+    public function groupAction($id, Request $request)
+    {
+        $variables = [];
+
+        $variables['group'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $id]);
+
+        if ($request->query->get('newUser')) {
+            if (!$this->getUser()) {
+                return $this->redirect($this->generateUrl('app_default_login').'?backUrl='.$request->getUri());
+            }
+
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+            if (!in_array($userUrl, $variables['group']['users'])) {
+                $variables['group']['application'] = '/applications/'.$variables['group']['application']['id'];
+                $variables['group']['users'][] = $userUrl;
+                $variables['group'] = $this->commonGroundService->updateResource($variables['group']);
+                $this->defaultService->throwFlash('success', "{$this->getUser()->getUsername()} has been added to the group");
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('updateInfo')) {
+            $resource = $variables['group'];
+            $resource['application'] = '/applications/'.$resource['application']['id'];
+            $resource['name'] = $request->get('name');
+            $resource['organization'] = $request->get('organization');
+            $resource['description'] = $request->get('description');
+            $variables['group'] = $this->commonGroundService->updateResource($resource);
+        } elseif ($request->isMethod('POST') && $request->get('inviteUser')) {
+            $email = $request->get('email');
+            $data['link'] = $this->generateUrl('app_dashboard_group', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL).'?newUser=true';
+            $data['group'] = $variables['group'];
+
+            $this->mailingService->sendMail('mails/groupInvite.html.twig', 'no-reply@id-vault.com', $email, 'group invite', $data);
+            $this->defaultService->throwFlash('success', 'Invite sent');
+        }
 
         return $variables;
     }

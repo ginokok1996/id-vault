@@ -38,7 +38,7 @@ class UserController extends AbstractController
     public function login(Session $session, Request $request)
     {
         if ($this->getUser()) {
-            $this->defaultService->throwFlash('succes', 'Welcome '.ucwords($this->getUser()->getName()));
+            $this->defaultService->throwFlash('success', 'Welcome '.ucwords($this->getUser()->getName()));
 
             return $this->redirect($this->generateUrl('app_dashboard_index'));
         }
@@ -159,10 +159,16 @@ class UserController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request, Session $session)
     {
         if ($request->isMethod('POST')) {
-            $backUrl = $request->query->get('backUrl');
+            if ($request->query->get('backUrl')) {
+                $backUrl = $request->query->get('backUrl');
+            } elseif ($session->get('backUrl')) {
+                $backUrl = $session->get('backUrl');
+            } else {
+                $backUrl = $this->generateUrl('app_default_index');
+            }
 
             //lets check if there is already a user with this email
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $request->get('username')])['hydra:member'];

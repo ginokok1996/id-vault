@@ -1,0 +1,47 @@
+<div class="modal fade" id="modalAddApplicationGroup" tabindex="-1" role="dialog" aria-labelledby="modalAddApplicationGroup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalAddApplicationGroup">
+                    {{ 'add a new group'|trans|capitalize }}
+                </h2>
+                <!-- Form -->
+                <form method="post" action="{{ path('app_dashboard_application', {id: application.id})  }}" style="padding-top: 1rem">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">{{ 'name'|trans|capitalize }} <span style="color: red; font-weight: bold">*</span></label>
+                        <input required class="form-control" name="name" id="name" type="text" placeholder="{{ 'group'|trans|capitalize }}">
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">{{ 'organization'|trans|capitalize }}</label>
+                        <input class="form-control" name="organization" id="organization" type="text" placeholder="{{ 'organization uri'|trans|capitalize }}">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">{{ 'description'|trans|capitalize }} </label>
+                        <textarea class="form-control" name="description" id="description"
+                                  cols="2" rows="1" style="max-height: 8rem; min-height: 3.5rem"
+                                  placeholder="{{ 'description'|trans|capitalize }}"
+                        ></textarea>
+                    </div>
+
+                    <!-- Submit -->
+                    <button name="addGroup" value="true" class="btn btn-block btn-primary mt-3 lift">
+                        {{ 'add'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

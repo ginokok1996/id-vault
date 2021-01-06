@@ -1,0 +1,32 @@
+{% if groups is defined and groups is not empty %}
+    <div class="list-group list-group-flush">
+        {% for group in groups %}
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col">
+
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            {{ group.name }}
+                        </p>
+
+                        <!-- Text -->
+                        <small class="text-gray-700">
+                            {% if group.description is defined and group.description is not empty %}
+                                {{ group.description }}
+                            {% endif %}
+                        </small>
+
+                    </div>
+                    <div class="col-auto">
+                        <a href="{{ path('app_dashboard_group', {id: group.id}) }}" class="d-block btn btn-xs btn-primary">
+                            {{ 'open'|trans|capitalize }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor%}
+    </div>
+{% else %}
+    <p class="small text-gray-700">{{ 'no groups available'|trans|capitalize }}</p>
+{% endif %}

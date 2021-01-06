@@ -6077,6 +6077,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[scopes]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: id
           in: query
           required: false
@@ -6084,6 +6093,22 @@ paths:
             type: string
         -
           name: 'id[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        -
+          name: scopes
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'scopes[]'
           in: query
           required: false
           schema:
@@ -7877,8 +7902,8 @@ components:
         message:
           description: 'return message'
           type: string
-        user:
-          description: 'uri of the created user'
+        authorization:
+          description: 'created authorization'
           type: string
     User-write:
       type: object
@@ -7887,6 +7912,14 @@ components:
         username:
           description: username
           type: string
+        clientId:
+          description: 'client id'
+          type: string
+        scopes:
+          description: 'array of scopes'
+          type: array
+          items:
+            type: string
     'User:jsonld-read':
       type: object
       description: ''
@@ -7910,8 +7943,8 @@ components:
         message:
           description: 'return message'
           type: string
-        user:
-          description: 'uri of the created user'
+        authorization:
+          description: 'created authorization'
           type: string
     'User:jsonld-write':
       type: object
@@ -7929,6 +7962,14 @@ components:
         username:
           description: username
           type: string
+        clientId:
+          description: 'client id'
+          type: string
+        scopes:
+          description: 'array of scopes'
+          type: array
+          items:
+            type: string
 definitions:
   AccessToken-read:
     properties:
@@ -7990,6 +8031,13 @@ definitions:
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
+    required: []
+  User-write:
+    properties:
+      scopes:
+        description: 'array of scopes'
+        type: array
+        example: ''
     required: []
   AuditTrail-read:
     properties:
@@ -8095,12 +8143,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-05 13:42:23'
+        example: '2021-01-06 14:00:08'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-05 13:42:23'
+        example: '2021-01-06 14:00:08'
     required: []
   AuditTrail-write:
     properties:
@@ -8148,12 +8196,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-05 13:42:23'
+        example: '2021-01-06 14:00:08'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-05 13:42:23'
+        example: '2021-01-06 14:00:08'
     required: []
   ChangeLog-write:
     properties:
