@@ -22,14 +22,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "post"
  *     }
  * )
- * @ORM\Entity(repositoryClass="App\Repository\GetScopesRepository")
+ *
+ * @ORM\Entity(repositoryClass="App\Repository\AcceptInviteRepository")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class)
  */
-class GetScopes
+class AcceptInvite
 {
     /**
      * @var UuidInterface The UUID identifier of this resource
@@ -46,76 +47,70 @@ class GetScopes
     private $id;
 
     /**
-     * @var array scopes this authorization has access to
-     *
-     * @Assert\NotNull
-     *
-     * @Groups({"read","write"})
-     */
-    private $scopes = [];
-
-    /**
-     * @var string uuid of authorization
+     * @var string group id
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      */
-    private $authorization;
+    private $groupId;
 
     /**
-     * @var string uuid of authorization
+     * @var string client id
      *
-     * @example request has been send to user
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read"})
+     * @Groups({"write"})
      */
-    private $status;
+    private $clientId;
+
+    /**
+     * @var string username
+     *
+     * @example test@user.nl
+     *
+     * @Groups({"write"})
+     */
+    private $username;
+
 
     public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getScopes(): ?array
+    public function getClientId(): ?string
     {
-        return $this->scopes;
+        return $this->clientId;
     }
 
-    public function setScopes(?array $scopes): self
+    public function setClientId(string $clientId): self
     {
-        $this->scopes = $scopes;
+        $this->clientId = $clientId;
 
         return $this;
     }
 
-    public function getAuthorization(): ?string
+    public function getGroupId(): ?string
     {
-        return $this->authorization;
+        return $this->groupId;
     }
 
-    public function setAuthorization(string $authorization): self
+    public function setGroupId(string $groupId): self
     {
-        $this->authorization = $authorization;
+        $this->groupId = $groupId;
 
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getUsername(): ?string
     {
-        return $this->status;
+        return $this->username;
     }
 
-    public function setStatus(string $status): self
+    public function setUsername(string $username): self
     {
-        $this->status = $status;
+        $this->username = $username;
 
         return $this;
     }

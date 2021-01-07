@@ -548,7 +548,7 @@ class DashboardController extends AbstractController
 
                 // Set the organization background-color for the icons shown with every authorization
                 if (isset($authorization['application']['contact'])) {
-                    $application = $commonGroundService->isResource($authorization['application']['contact']);
+                    $application = $this->commonGroundService->isResource($authorization['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
                             preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
@@ -561,9 +561,9 @@ class DashboardController extends AbstractController
 
         // Delete authorization if there is no dossier connected to it and redirect
         if ($request->isMethod('POST') && ($request->get('endAuthorization') || $request->get('endClaimAuthorization'))) {
-            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
+            $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
             // Delete authorization
-            $commonGroundService->deleteResource($authorization);
+            $this->commonGroundService->deleteResource($authorization);
 
             // Redirect correctly
             if ($request->get('endClaimAuthorization')) {

@@ -51,6 +51,19 @@ class AccessTokenGeneratorService
             }
         }
 
+        $array['groups'] = [];
+        if (count($application['userGroups']) > 0) {
+            foreach ($application['userGroups'] as $group) {
+                if (count($group['memberships']) > 0) {
+                    foreach ($group['memberships'] as $membership) {
+                        if ($membership['userUrl'] == $authorization['userUrl'] && !empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
+                            $array['groups'][] = $group['name'];
+                        }
+                    }
+                }
+            }
+        }
+
         $array['iss'] = $application['id'];
         $array['aud'] = $application['authorizationUrl'];
         $array['exp'] = '3600';

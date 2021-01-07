@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     attributes={"pagination_items_per_page"=30},
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
+ *     collectionOperations={
+ *          "post"
+ *     },
  *     itemOperations={
  *          "get",
  *          "put",
