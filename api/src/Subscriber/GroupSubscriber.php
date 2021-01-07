@@ -4,14 +4,12 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Group;
-use App\Entity\User;
 use App\Service\UserService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Config\Definition\Exception\Exception;
-
 
 class GroupSubscriber implements EventSubscriberInterface
 {
@@ -67,6 +65,7 @@ class GroupSubscriber implements EventSubscriberInterface
                 }
             }
         }
+
         return $group;
     }
 }

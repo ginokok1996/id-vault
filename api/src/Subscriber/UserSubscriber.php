@@ -6,11 +6,10 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Service\UserService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Config\Definition\Exception\Exception;
-
 
 class UserSubscriber implements EventSubscriberInterface
 {
@@ -51,8 +50,8 @@ class UserSubscriber implements EventSubscriberInterface
 
             if (filter_var($user->getUsername(), FILTER_VALIDATE_EMAIL)) {
                 $result = $this->userService->createUser($user->getUsername());
-                    $authorization = $this->userService->createAuthorization($result, $application, $user->getScopes());
-                    $user->setAuthorization($authorization['id']);
+                $authorization = $this->userService->createAuthorization($result, $application, $user->getScopes());
+                $user->setAuthorization($authorization['id']);
             } else {
                 $user->setMessage('Email address is invalid');
             }

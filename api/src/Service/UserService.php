@@ -37,6 +37,7 @@ class UserService
             return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $newUser['id']]);
         } catch (\Throwable $e) {
             $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'][0];
+
             return $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
         }
     }
@@ -70,8 +71,8 @@ class UserService
         $this->mailService->sendMail('mails/newUserPassword.html.twig', 'no-reply@id-vault.com', $user['username'], 'Welcome', $data);
     }
 
-    public function createAuthorization($user, $application, $scopes) {
-
+    public function createAuthorization($user, $application, $scopes)
+    {
         $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $user, 'application' => '/applications/'.$application['id']])['hydra:member'];
 
         if (count($authorizations) > 0) {

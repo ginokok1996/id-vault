@@ -850,8 +850,7 @@ class DashboardController extends AbstractController
             $resource = $request->request->all();
             $resource['application'] = '/applications/'.$id;
 
-            $group = $this->commonGroundService->createResource($resource, ['component' => 'wac' , 'type' => 'groups']);
-
+            $group = $this->commonGroundService->createResource($resource, ['component' => 'wac', 'type' => 'groups']);
         } elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
             $resource = $request->request->all();
 
