@@ -48,22 +48,6 @@ class DashboardController extends AbstractController
         $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
         $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
-//        //tasks
-//        $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
-//
-//        if (!count($calendars) > 0) {
-//            $calendars = $commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
-//        }
-//
-//        if (count($calendars) > 0) {
-//            $calendar = $calendars[0];
-//            if (count($calendar['todos']) > 0) {
-//                $variables['taskCount'] = (string) count($calendar['todos']);
-//            } else {
-//                $variables['taskCount'] = '0';
-//            }
-//        }
-
         //alerts
         $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
         $variables['alertCount'] = (string) count($alerts);
@@ -564,7 +548,7 @@ class DashboardController extends AbstractController
 
                 // Set the organization background-color for the icons shown with every authorization
                 if (isset($authorization['application']['contact'])) {
-                    $application = $commonGroundService->isResource($authorization['application']['contact']);
+                    $application = $this->commonGroundService->isResource($authorization['application']['contact']);
                     if ($application) {
                         if (isset($application['organization']['style']['css'])) {
                             preg_match('/background-color: ([#A-Za-z0-9]+)/', $application['organization']['style']['css'], $matches);
@@ -577,9 +561,9 @@ class DashboardController extends AbstractController
 
         // Delete authorization if there is no dossier connected to it and redirect
         if ($request->isMethod('POST') && ($request->get('endAuthorization') || $request->get('endClaimAuthorization'))) {
-            $authorization = $commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
+            $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->get('authorizationID')]);
             // Delete authorization
-            $commonGroundService->deleteResource($authorization);
+            $this->commonGroundService->deleteResource($authorization);
 
             // Redirect correctly
             if ($request->get('endClaimAuthorization')) {
@@ -701,19 +685,6 @@ class DashboardController extends AbstractController
             }
         } elseif ($request->isMethod('POST') && ($request->get('dossierObjection'))) {
             $dossier = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'dossiers', 'id' => $request->get('dossierID')]);
-
-            // Create vrc request
-//            $vrcRequest['status'] = 'submitted';
-//            $vrcRequest['organization'] = 'url org';
-//            $vrcRequest['requestType'] = 'url request type';
-//            $vrcRequest['processType'] = 'url process type';
-//            $vrcRequest['properties'] = [
-//                'dossier'     => $commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'dossiers', 'id' => $dossier['id']]),
-//                'explanation' => $request->get('explanation'),
-//            ];
-//            $vrcRequest = $commonGroundService->createResource($vrcRequest, ['component' => 'vrc', 'type' => 'requests']);
-
-//            $this->flash->add('success', 'Objection submitted for: '.$dossier['name']);
             $this->defaultService->throwFlash('error', 'No objection submitted for: '.$dossier['name']);
 
             return $this->redirect($this->generateUrl('app_dashboard_dossiers'));
@@ -807,17 +778,6 @@ class DashboardController extends AbstractController
             $wrcApplication['organization'] = '/organizations/'.$request->get('organization');
             $wrcApplication['domain'] = $request->get('domain');
 
-//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
-//                $path = $_FILES['applicationLogo']['tmp_name'];
-//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
-//                $data = file_get_contents($path);
-//                $wrcApplication['style']['name'] = 'style for '.$name;
-//                $wrcApplication['style']['description'] = 'style for '.$name;
-//                $wrcApplication['style']['css'] = ' ';
-//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-//            }
             $wrcApplication = $this->commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
@@ -886,8 +846,12 @@ class DashboardController extends AbstractController
             $application['scopes'] = $request->get('scopes');
 
             $application = $this->commonGroundService->saveResource($application, ['component' => 'wac', 'type' => 'applications']);
-        } // Add a new mailing list or edit one
-        elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
+        } elseif ($request->isMethod('POST') && $request->get('addGroup')) {
+            $resource = $request->request->all();
+            $resource['application'] = '/applications/'.$id;
+
+            $group = $this->commonGroundService->createResource($resource, ['component' => 'wac', 'type' => 'groups']);
+        } elseif ($request->isMethod('POST') && ($request->get('addMailingList') || $request->get('editMailingList'))) {
             $resource = $request->request->all();
 
             // Save mailing list
@@ -1203,17 +1167,6 @@ class DashboardController extends AbstractController
             $wrcApplication['organization'] = '/organizations/'.$id;
             $wrcApplication['domain'] = $request->get('domain');
 
-//            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
-//                $path = $_FILES['applicationLogo']['tmp_name'];
-//                $type = filetype($_FILES['applicationLogo']['tmp_name']);
-//                $data = file_get_contents($path);
-//                $wrcApplication['style']['name'] = 'style for '.$name;
-//                $wrcApplication['style']['description'] = 'style for '.$name;
-//                $wrcApplication['style']['css'] = ' ';
-//                $wrcApplication['style']['favicon']['name'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['description'] = 'logo for '.$name;
-//                $wrcApplication['style']['favicon']['base64'] = 'data:image/'.$type.';base64,'.base64_encode($data);
-//            }
             $wrcApplication = $this->commonGroundService->createResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
 
             // Create a wAc application
@@ -1353,6 +1306,64 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables['invoice'] = $this->commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/groups")
+     * @Template
+     */
+    public function groupsAction(Request $request)
+    {
+        $variables = [];
+
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+
+        $variables['groups'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl])['hydra:member'];
+
+        return $variables;
+    }
+
+    /**
+     * @Route("/groups/{id}")
+     * @Template
+     */
+    public function groupAction($id, Request $request)
+    {
+        $variables = [];
+
+        $variables['group'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $id]);
+
+        if ($request->query->get('newUser')) {
+            if (!$this->getUser()) {
+                return $this->redirect($this->generateUrl('app_default_login').'?backUrl='.$request->getUri());
+            }
+
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+            if (!in_array($userUrl, $variables['group']['users'])) {
+                $variables['group']['application'] = '/applications/'.$variables['group']['application']['id'];
+                $variables['group']['users'][] = $userUrl;
+                $variables['group'] = $this->commonGroundService->updateResource($variables['group']);
+                $this->defaultService->throwFlash('success', "{$this->getUser()->getUsername()} has been added to the group");
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('updateInfo')) {
+            $resource = $variables['group'];
+            $resource['application'] = '/applications/'.$resource['application']['id'];
+            $resource['name'] = $request->get('name');
+            $resource['organization'] = $request->get('organization');
+            $resource['description'] = $request->get('description');
+            $variables['group'] = $this->commonGroundService->updateResource($resource);
+        } elseif ($request->isMethod('POST') && $request->get('inviteUser')) {
+            $email = $request->get('email');
+            $data['link'] = $this->generateUrl('app_dashboard_group', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL).'?newUser=true';
+            $data['group'] = $variables['group'];
+
+            $this->mailingService->sendMail('mails/groupInvite.html.twig', 'no-reply@id-vault.com', $email, 'group invite', $data);
+            $this->defaultService->throwFlash('success', 'Invite sent');
+        }
 
         return $variables;
     }

@@ -27,10 +27,8 @@ settings:
   unit: Common-Ground
   env: dev
   web: false
-  internal: false
   debug: 1
   cache: 1
-  url: http://localhost
   sessionDuration: 1209600
   replicaCount: 1
   corsAllowOrigin: ['*']
@@ -112,15 +110,6 @@ mercure:
     type: NodePort
     port: 80
 
-redis:
-    port: 6379
-    version: 5.0
-    memory: 100Mi
-    cpu: 100m
-    limits:
-        memory: 200Mi
-        cpu: 250m
-
 ingress:
   annotations:
     # kubernetes.io/ingress.global-static-ip-name: chart-ip
@@ -150,9 +139,3 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
-
-commonground:
-    eherkenning:
-        location: https://zuid-drecht.nl/eherkenning
-    digispoof:
-        location: https://zuid-drecht.nl/digispoof
