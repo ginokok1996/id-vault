@@ -20,15 +20,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true}
  * )
  *
- * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CreateGroupRepository")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class)
- * @ORM\Table(name="`group`")
  */
-class Group
+class CreateGroup
 {
     /**
      * @var UuidInterface The UUID identifier of this resource
@@ -54,14 +53,79 @@ class Group
     private $clientId;
 
     /**
-     * @var array array of groups
+     * @var string client id
      *
-     * @example
+     * @example test@user.nl
      *
-     * @Groups({"read"})
-     * @ORM\Column(type="json")
+     * @Groups({"write"})
      */
-    private $groups = [];
+    private $name;
+
+    /**
+     * @var string client id
+     *
+     * @example test@user.nl
+     *
+     * @Groups({"write"})
+     */
+    private $description;
+
+    /**
+     * @var string client id
+     *
+     * @example test@user.nl
+     *
+     * @Groups({"write"})
+     */
+    private $organization;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganization(): ?string
+    {
+        return $this->organization;
+    }
+
+    /**
+     * @param string $organization
+     */
+    public function setOrganization(?string $organization): void
+    {
+        $this->organization = $organization;
+    }
 
     public function getId(): Uuid
     {
@@ -76,18 +140,6 @@ class Group
     public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
-
-        return $this;
-    }
-
-    public function getGroups(): ?array
-    {
-        return $this->groups;
-    }
-
-    public function setGroups(?array $groups): self
-    {
-        $this->groups = $groups;
 
         return $this;
     }
