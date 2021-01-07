@@ -73,7 +73,6 @@ class AcceptInvite
      */
     private $username;
 
-
     public function getId(): Uuid
     {
         return $this->id;

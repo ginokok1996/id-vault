@@ -5,7 +5,6 @@ namespace App\Service;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-
 class GroupService
 {
     private $commonGroundService;
@@ -17,7 +16,8 @@ class GroupService
         $this->userService = $userService;
     }
 
-    public function inviteUser($username, $group, $accepted) {
+    public function inviteUser($username, $group, $accepted)
+    {
         $membership = [];
         $membership['userGroup'] = '/groups/'.$group['id'];
         $membership['userUrl'] = $this->userService->createUser($username);
@@ -28,7 +28,8 @@ class GroupService
         $this->commonGroundService->createResource($membership, ['component' => 'wac', 'type' => 'memberships']);
     }
 
-    public function acceptInvite($username, $group) {
+    public function acceptInvite($username, $group)
+    {
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'];
 
         if (!count($users) > 0) {
@@ -52,7 +53,5 @@ class GroupService
         if (!$exist) {
             throw new Exception('No membership found');
         }
-
     }
-
 }
