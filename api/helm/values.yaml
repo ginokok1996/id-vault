@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 settings:
-  registryBase: docker.io/conduction
+  registryBase: ghcr.io/conductionnl
   projectName: id-vault
   name: id-vault
   title: ID Vault
