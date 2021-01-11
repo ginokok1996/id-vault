@@ -59,7 +59,8 @@ class SendListService
 
     // TODO:updateList/saveList + deleteList
 
-    public function getLists(SendList $sendListDTO) {
+    public function getLists(SendList $sendListDTO)
+    {
         $results = [];
 
         // Get organization to filter with, if given.
