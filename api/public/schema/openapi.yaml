@@ -7506,6 +7506,9 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        action:
+          description: 'The action type'
+          type: string
         resource:
           description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
@@ -7550,10 +7553,17 @@ components:
           type: string
           format: date-time
           nullable: true
+      required:
+        - action
     SendList-write:
       type: object
       description: ''
+      required:
+        - action
       properties:
+        action:
+          description: 'The action type'
+          type: string
         resource:
           description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
@@ -7606,6 +7616,9 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        action:
+          description: 'The action type'
+          type: string
         resource:
           description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
           externalDocs:
@@ -7650,9 +7663,13 @@ components:
           type: string
           format: date-time
           nullable: true
+      required:
+        - action
     'SendList:jsonld-write':
       type: object
       description: ''
+      required:
+        - action
       properties:
         '@context':
           readOnly: true
@@ -7662,6 +7679,9 @@ components:
           type: string
         '@type':
           readOnly: true
+          type: string
+        action:
+          description: 'The action type'
           type: string
         resource:
           description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
@@ -7927,12 +7947,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-05 09:57:00'
+        example: '2021-01-11 15:16:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-05 09:57:00'
+        example: '2021-01-11 15:16:19'
     required: []
   AuditTrail-write:
     properties:
@@ -7980,12 +8000,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-05 09:57:00'
+        example: '2021-01-11 15:16:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-05 09:57:00'
+        example: '2021-01-11 15:16:19'
     required: []
   ChangeLog-write:
     properties:
