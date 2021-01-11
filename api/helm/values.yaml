@@ -29,9 +29,8 @@ settings:
   web: false
   internal: false
   debug: 1
-  cache: 1
-  url: http://localhost
-  sessionDuration: 900
+  cache: false
+  sessionDuration: 1800
   replicaCount: 1
   corsAllowOrigin: ['*']
   trustedHosts: '^.+$'

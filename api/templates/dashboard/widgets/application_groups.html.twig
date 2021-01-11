@@ -1,0 +1,57 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'Groups'|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Button -->
+                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalAddApplicationGroup">
+                    {{ 'add new'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            {% if application.userGroups is defined and application.userGroups is not empty %}
+                {% for group in application.userGroups %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col">
+
+                                <!-- Heading -->
+                                <p class="mb-0">
+                                    {{ group.name }}
+                                </p>
+
+                                <!-- Text -->
+                                <small class="text-gray-700">
+                                    {% if group.description is defined and group.description is not empty %}
+                                        {{ group.description }}
+                                    {% endif %}
+                                </small>
+
+                            </div>
+                            <div class="col-auto">
+                                <a href="{{ path('app_dashboard_group', {id: group.id}) }}" class="d-block btn btn-xs btn-primary">
+                                    {{ 'open'|trans|capitalize }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

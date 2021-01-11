@@ -13,23 +13,29 @@
             <div class="col-12 col-md-9">
 
                 <!-- edit form for organization info -->
-                {% include'dashboard/widgets/edit_application_info.html.twig' %}
+                {% include 'dashboard/widgets/edit_application_info.html.twig' %}
 
                 <!-- edit form for mailing list info -->
-                {% include'dashboard/widgets/application_mailing_lists.html.twig' %}
+                {% include 'dashboard/widgets/application_mailing_lists.html.twig' %}
+
+                <!-- Groups -->
+                {% include 'dashboard/widgets/application_groups.html.twig' %}
 
                 <!-- edit form for scopes info -->
-                {% include'dashboard/widgets/application_scopes.html.twig' %}
+                {% include 'dashboard/widgets/application_scopes.html.twig' %}
 
                 <!-- edit form for styles info -->
-                {% include'dashboard/widgets/application_style.html.twig' %}
+                {% include 'dashboard/widgets/application_style.html.twig' %}
 
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 
     <!-- Modals -->
+    {% include 'dashboard/modals/add_application_group_modal.html.twig' %}
+
     {% include 'dashboard/modals/add_mailing_list_modal.html.twig' %}
+
     {% if sendLists is defined and sendLists is not empty %}
         {% for sendList in sendLists %}
             {% include 'dashboard/modals/edit_mailing_list_modal.html.twig' %}

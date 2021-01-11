@@ -11,7 +11,7 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
         gc_maxlifetime: '%env(APP_SESSION_DURATION)%'
-
+        
     #esi: true
     #fragments: true
     php_errors:

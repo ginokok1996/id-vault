@@ -3,21 +3,15 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AccessTokenGeneratorService
 {
-    private $em;
     private $commonGroundService;
-    private $params;
     private $claimService;
 
-    public function __construct(EntityManagerInterface $em, CommonGroundService $commonGroundService, ParameterBagInterface $params, ClaimService $claimService)
+    public function __construct(CommonGroundService $commonGroundService, ClaimService $claimService)
     {
-        $this->em = $em;
         $this->commonGroundService = $commonGroundService;
-        $this->params = $params;
         $this->claimService = $claimService;
     }
 
@@ -52,6 +46,19 @@ class AccessTokenGeneratorService
                 foreach ($claims as $claim) {
                     if ($scope == $claim['property']) {
                         $array['claims'][$claim['property']][] = $claim['data'];
+                    }
+                }
+            }
+        }
+
+        $array['groups'] = [];
+        if (count($application['userGroups']) > 0) {
+            foreach ($application['userGroups'] as $group) {
+                if (count($group['memberships']) > 0) {
+                    foreach ($group['memberships'] as $membership) {
+                        if ($membership['userUrl'] == $authorization['userUrl'] && !empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
+                            $array['groups'][] = $group['name'];
+                        }
                     }
                 }
             }
