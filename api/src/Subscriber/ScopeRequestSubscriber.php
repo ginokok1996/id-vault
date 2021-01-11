@@ -4,31 +4,19 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\GetScopes;
-use App\Service\AccessTokenGeneratorService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class ScopeRequestSubscriber implements EventSubscriberInterface
 {
-    private $params;
-    private $em;
-    private $serializer;
     private $commonGroundService;
-    private $accessTokenGeneratorService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, CommongroundService $commonGroundService, AccessTokenGeneratorService $accessTokenGeneratorService)
+    public function __construct(CommongroundService $commonGroundService)
     {
-        $this->params = $params;
         $this->commonGroundService = $commonGroundService;
-        $this->serializer = $serializer;
-        $this->em = $em;
-        $this->accessTokenGeneratorService = $accessTokenGeneratorService;
     }
 
     public static function getSubscribedEvents()
@@ -79,14 +67,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
                 $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
 
                 $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
-
-//                $todo = [];
-//                $todo['name'] = 'authorize new scopes';
-//                $todo['resources'][0]['name'] = 'authorize new scopes';
-//                $todo['resources'][0]['resource'] = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'scope_requests', 'id' => $scopeRequest['id']]);
-//                $todo['resource'] = $personUrl;
-//
-//                $this->commonGroundService->saveResource($todo, ['component' => 'arc', 'type' => 'todos']);
             } else {
                 throw new  Exception('Invalid authorization code');
             }

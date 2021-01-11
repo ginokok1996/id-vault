@@ -64,6 +64,7 @@
 
                     <!-- Form -->
                     <form method="post" action="{{ path('app_dashboard_claims') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                         <input type="hidden" name="claimID" value="{{ claim.id }}">
 
                         <!-- No -->
