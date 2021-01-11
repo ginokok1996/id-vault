@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -54,12 +55,12 @@ class DefaultController extends AbstractController
      * @Route("/login")
      * @Template
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request, Session $session)
     {
         $variables = [];
 
         if ($request->query->get('backUrl')) {
-            $variables['backUrl'] = $request->query->get('backUrl');
+            $session->set('backUrl', $request->query->get('backUrl'));
         }
 
         return $variables;

@@ -73,7 +73,7 @@
                                     plugins: {
                                         title: {
                                             display: true,
-                                            text: 'Chart.js Line Chart'
+                                            text: '{{ 'data requests'|trans|capitalize }}'
                                         },
                                         tooltip: {
                                             mode: 'index',
@@ -89,7 +89,7 @@
                                             display: true,
                                             scaleLabel: {
                                                 display: true,
-                                                labelString: 'Month'
+                                                labelString: 'Day'
                                             }
                                         },
                                         y: {
@@ -98,7 +98,12 @@
                                                 display: true,
                                                 labelString: 'Value'
                                             }
-                                        }
+                                        },
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
                                     }
                                 }
                             });
