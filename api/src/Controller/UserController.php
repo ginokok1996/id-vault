@@ -59,7 +59,9 @@ class UserController extends AbstractController
      */
     public function FacebookAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('facebook');
         $redirect = $request->getUri();
 
@@ -80,7 +82,9 @@ class UserController extends AbstractController
      */
     public function githubAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('github');
         $redirect = $request->getUri();
 
@@ -101,7 +105,9 @@ class UserController extends AbstractController
      */
     public function gmailAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('gmail');
         $redirect = $request->getUri();
 
@@ -131,7 +137,10 @@ class UserController extends AbstractController
             }
         }
 
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
+
         $provider = $this->defaultService->getProvider('linkedIn');
         $redirect = $request->getUri();
 
