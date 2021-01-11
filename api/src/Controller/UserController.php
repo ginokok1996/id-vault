@@ -61,7 +61,8 @@ class UserController extends AbstractController
     {
         if ($request->query->get('backUrl')) {
             $session->set('backUrl', $request->query->get('backUrl'));
-        }        $provider = $this->defaultService->getProvider('facebook');
+        }
+        $provider = $this->defaultService->getProvider('facebook');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
@@ -83,7 +84,8 @@ class UserController extends AbstractController
     {
         if ($request->query->get('backUrl')) {
             $session->set('backUrl', $request->query->get('backUrl'));
-        }        $provider = $this->defaultService->getProvider('github');
+        }
+        $provider = $this->defaultService->getProvider('github');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
@@ -105,7 +107,8 @@ class UserController extends AbstractController
     {
         if ($request->query->get('backUrl')) {
             $session->set('backUrl', $request->query->get('backUrl'));
-        }        $provider = $this->defaultService->getProvider('gmail');
+        }
+        $provider = $this->defaultService->getProvider('gmail');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
