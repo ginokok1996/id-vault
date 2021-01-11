@@ -26,6 +26,7 @@ class SendListService
         $newSendList['description'] = $sendListDTO->getDescription();
         $newSendList['mail'] = $sendListDTO->getMail();
         $newSendList['phone'] = $sendListDTO->getPhone();
+        $newSendList['resource'] = $sendListDTO->getResource();
 
         // Get organization for this new SendList
         $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendListDTO->getClientSecret()])['hydra:member'];
@@ -49,6 +50,50 @@ class SendListService
 
             // Create a new sendList in BS
             array_push($results, $this->commonGroundService->createResource($newSendList, ['component' => 'bs', 'type' => 'send_lists']));
+        }
+
+        $sendListDTO->setResult($results);
+
+        return $sendListDTO;
+    }
+
+    // TODO:updateList/saveList + deleteList
+
+    public function getLists(SendList $sendListDTO)
+    {
+        $results = [];
+
+        // Get organization to filter with, if given.
+        if ($sendListDTO->getClientSecret()) {
+            $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendListDTO->getClientSecret()])['hydra:member'];
+            if (count($applications) < 1) {
+                array_push($results, 'No applications found with this client secret!');
+                array_push($results, $sendListDTO->getClientSecret());
+            } else {
+                $application = $applications[0];
+                if (isset($application['contact'])) {
+                    $applicationContact = $this->commonGroundService->getResource($application['contact']);
+                    if (isset($applicationContact['organization']['id'])) {
+                        $organization = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
+                    } else {
+                        array_push($results, 'No organization found in this application contact!');
+                        array_push($results, $applicationContact);
+                    }
+                } else {
+                    array_push($results, 'No contact found in this application!');
+                    array_push($results, $application);
+                }
+
+                // Get all SendLists with this organization
+                // If resource is set also filter with that
+                if ($sendListDTO->getResource()) {
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'resource' => $sendListDTO->getResource()])['hydra:member'];
+                } else {
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization])['hydra:member'];
+                }
+            }
+        } else {
+            $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'])['hydra:member'];
         }
 
         $sendListDTO->setResult($results);
