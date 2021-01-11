@@ -59,8 +59,9 @@ class UserController extends AbstractController
      */
     public function FacebookAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
-        $provider = $this->defaultService->getProvider('facebook');
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }        $provider = $this->defaultService->getProvider('facebook');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
@@ -80,8 +81,9 @@ class UserController extends AbstractController
      */
     public function githubAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
-        $provider = $this->defaultService->getProvider('github');
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }        $provider = $this->defaultService->getProvider('github');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
@@ -101,8 +103,9 @@ class UserController extends AbstractController
      */
     public function gmailAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
-        $provider = $this->defaultService->getProvider('gmail');
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }        $provider = $this->defaultService->getProvider('gmail');
         $redirect = $request->getUri();
 
         if (strpos($redirect, '?') == true) {
@@ -131,7 +134,10 @@ class UserController extends AbstractController
             }
         }
 
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
+
         $provider = $this->defaultService->getProvider('linkedIn');
         $redirect = $request->getUri();
 

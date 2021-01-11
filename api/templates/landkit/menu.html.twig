@@ -22,7 +22,7 @@
             </button>
 
             <!-- Navigation -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_default_users') }}">{{ 'for users'|trans|capitalize }}</a>
                 </li>
@@ -178,14 +178,19 @@
 
             <!-- Button -->
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_dashboard_index') }}">
+                {% if 'dashboard' not in app.request.get('_route') %}
+                    <a class="navbar-btn btn btn-xs btn-danger lift ml-auto" href="{{ path('app_user_logout') }}">
+                        {{ 'logout'|trans|capitalize }}
+                    </a>
+                {% endif %}
+                <a style="" class="navbar-btn btn btn-xs btn-primary ml-lg-2 mt-4 mt-lg-0 lift ml-auto" href="{{ path('app_dashboard_index') }}">
                     {{ 'dashboard'|trans|capitalize }}
                 </a>
             {% else %}
-                <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="{{ path('app_default_register') }}">
+                <a class="navbar-btn btn btn-xs btn-primary lift ml-auto" href="{{ path('app_default_register') }}">
                     {{ 'register'|trans|capitalize }}
                 </a>
-                <a style="" class="navbar-btn btn btn-sm btn-success ml-lg-2 mt-4 mt-lg-0 lift ml-auto" href="{{ path('app_default_login') }}">
+                <a style="" class="navbar-btn btn btn-xs btn-success ml-lg-2 mt-4 mt-lg-0 lift ml-auto" href="{{ path('app_default_login') }}">
                     {{ 'login'|trans|capitalize }}
                 </a>
             {% endif %}
