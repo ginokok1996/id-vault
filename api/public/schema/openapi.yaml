@@ -9185,6 +9185,9 @@ components:
         html:
           description: 'The html for sending an email to all BS/SendList->Subscribers.'
           type: string
+        sender:
+          description: 'the sender of the mail'
+          type: string
         result:
           description: 'The result'
           type: array
@@ -9202,11 +9205,13 @@ components:
           nullable: true
       required:
         - action
+        - sender
     SendList-write:
       type: object
       description: ''
       required:
         - action
+        - sender
       properties:
         action:
           description: 'The action type'
@@ -9242,6 +9247,9 @@ components:
           type: string
         html:
           description: 'The html for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        sender:
+          description: 'the sender of the mail'
           type: string
     'SendList:jsonld-read':
       type: object
@@ -9295,6 +9303,9 @@ components:
         html:
           description: 'The html for sending an email to all BS/SendList->Subscribers.'
           type: string
+        sender:
+          description: 'the sender of the mail'
+          type: string
         result:
           description: 'The result'
           type: array
@@ -9312,11 +9323,13 @@ components:
           nullable: true
       required:
         - action
+        - sender
     'SendList:jsonld-write':
       type: object
       description: ''
       required:
         - action
+        - sender
       properties:
         '@context':
           readOnly: true
@@ -9361,6 +9374,9 @@ components:
           type: string
         html:
           description: 'The html for sending an email to all BS/SendList->Subscribers.'
+          type: string
+        sender:
+          description: 'the sender of the mail'
           type: string
     User-read:
       type: object
@@ -9647,12 +9663,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 10:52:50'
+        example: '2021-01-12 14:32:12'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 10:52:50'
+        example: '2021-01-12 14:32:12'
     required: []
   AuditTrail-write:
     properties:
@@ -9700,12 +9716,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 10:52:50'
+        example: '2021-01-12 14:32:12'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 10:52:50'
+        example: '2021-01-12 14:32:12'
     required: []
   ChangeLog-write:
     properties:

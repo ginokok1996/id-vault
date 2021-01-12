@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\SendList;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Conduction\IdVaultBundle\Service\IdVaultService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -11,11 +12,13 @@ class SendListService
 {
     private $commonGroundService;
     private $params;
+    private $idVaultService;
 
-    public function __construct(CommonGroundService $commonGroundService, ParameterBagInterface $params)
+    public function __construct(CommonGroundService $commonGroundService, ParameterBagInterface $params, IdVaultService $idVaultService)
     {
         $this->commonGroundService = $commonGroundService;
         $this->params = $params;
+        $this->idVaultService = $idVaultService;
     }
 
     public function createList(SendList $sendListDTO)
@@ -144,31 +147,22 @@ class SendListService
 
         $sendList = $this->commonGroundService->getResource($sendListDTO->getResource());
         if (!empty($sendList['subscribers'])) {
+            $body = $sendListDTO->getHtml();
+            $subject = $sendListDTO->getTitle();
+            $sender = $sendListDTO->getSender();
 
-            // Get data from the DTO object to be able to use these in email content (html)
-            $data['title'] = $sendListDTO->getTitle();
-            $data['message'] = $sendListDTO->getMessage();
-            $data['text'] = $sendListDTO->getText();
-
-            // Create a wrc template to use for email content
-            $template['name'] = $data['title'];
-            $template['title'] = $data['title'];
-            if ($data['message']) {
-                $template['description'] = $data['message'];
-            }
-            $template['content'] = $sendListDTO->getHtml();
-            $template['templateEngine'] = 'twig';
-            // TODO: connect this template to the organization of the sendList
-            // TODO: connect this template to the E-mails template group
-            $template = $this->commonGroundService->createResource($template, ['component'=>'wrc', 'type'=>'templates']);
-            $content = $this->commonGroundService->cleanUrl(['component'=>'wrc', 'type'=>'templates', 'id' => $template['id']]);
-
+            // Loop through all subscribers
             foreach ($sendList['subscribers'] as $subscriber) {
-                // Loading the message
-                $message = $this->createMessage($data, $sendList, $content, $subscriber['person']);
+                if ($this->commonGroundService->isResource($subscriber['person'])) {
+                    // Get the person of this subscriber
+                    $person = $this->commonGroundService->getResource($subscriber['person']);
 
-                // Send email to this subscriber
-                array_push($results, $this->commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages'])['@id']);
+                    // If this person has an email continue
+                    if (isset($person['emails'][0]['email'])) {
+                        // Send email to this subscriber
+                        array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $person['emails'][0]['email'], $sender)['@id']);
+                    }
+                }
             }
         } else {
             throw new  Exception('This sendList has no subscribers! '.$sendList);
@@ -178,44 +172,4 @@ class SendListService
 
         return $sendListDTO;
     }
-
-    //TODO: Dit moet via de mailservice
-//    public function createMessage(array $data, array $sendList, $content, $receiver, $attachments = null)
-//    {
-//        $application = $this->commonGroundService->getResource(['component'=>'wrc', 'type'=>'applications', 'id'=>"{$this->params->get('app_id')}"]);
-//        if (key_exists('@id', $application['organization'])) {
-//            $serviceOrganization = $application['organization']['@id'];
-//        } else {
-//            $serviceOrganization = $sendList['organization'];
-//        }
-//
-//        $message = [];
-//
-//        // Tijdelijke oplossing voor juiste $message['service'] meegeven, was eerst dit hier onder, waar in de query op de organization check het mis gaat:
-//        //$message['service'] = $this->commonGroundService->getResourceList(['component'=>'bs', 'type'=>'services'], "type=mailer&organization=$serviceOrganization")['hydra:member'][0]['@id'];
-//
-//        $message['service'] = '/services/1541d15b-7de3-4a1a-a437-80079e4a14e0';
-//        $message['status'] = 'queued';
-//
-//        $organization = $this->commonGroundService->getResource($sendList['organization']);
-//        // lets use the organization as sender
-//        if ($organization['contact']) {
-//            $message['sender'] = $organization['contact'];
-//        }
-//
-//        // if we don't have that we are going to self send te message
-//        $message['reciever'] = $receiver;
-//        if (!key_exists('sender', $message)) {
-//            $message['sender'] = $receiver;
-//        }
-//
-//        $message['data'] = ['resource'=>$sendList, 'sender'=>$organization, 'receiver'=>$this->commonGroundService->getResource($message['reciever'])];
-//        $message['data'] = array_merge($message['data'], $data);  // lets accept contextual data from de bl
-//        $message['content'] = $content;
-//        if ($attachments) {
-//            $message['attachments'] = $attachments;
-//        }
-//
-//        return $message;
-//    }
 }
