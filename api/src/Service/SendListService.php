@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\SendList;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class SendListService
@@ -26,12 +27,12 @@ class SendListService
         $newSendList['description'] = $sendListDTO->getDescription();
         $newSendList['mail'] = $sendListDTO->getMail();
         $newSendList['phone'] = $sendListDTO->getPhone();
+        $newSendList['resource'] = $sendListDTO->getResource();
 
         // Get organization for this new SendList
         $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendListDTO->getClientSecret()])['hydra:member'];
         if (count($applications) < 1) {
-            array_push($results, 'No applications found with this client secret!');
-            array_push($results, $sendListDTO->getClientSecret());
+            throw new  Exception('No applications found with this client secret! '.$sendListDTO->getClientSecret());
         } else {
             $application = $applications[0];
             if (isset($application['contact'])) {
@@ -39,16 +40,53 @@ class SendListService
                 if (isset($applicationContact['organization']['id'])) {
                     $newSendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
                 } else {
-                    array_push($results, 'No organization found in this application contact!');
-                    array_push($results, $applicationContact);
+                    throw new  Exception('No organization found in this application contact! '.$applicationContact);
                 }
             } else {
-                array_push($results, 'No contact found in this application!');
-                array_push($results, $application);
+                throw new  Exception('No contact found in this application! '.$application);
             }
 
             // Create a new sendList in BS
             array_push($results, $this->commonGroundService->createResource($newSendList, ['component' => 'bs', 'type' => 'send_lists']));
+        }
+
+        $sendListDTO->setResult($results);
+
+        return $sendListDTO;
+    }
+
+    // TODO:updateList/saveList + deleteList
+
+    public function getLists(SendList $sendListDTO)
+    {
+        $results = [];
+
+        // Get organization to filter with, if given.
+        if ($sendListDTO->getClientSecret()) {
+            $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendListDTO->getClientSecret()])['hydra:member'];
+            if (count($applications) >= 1) {
+                $application = $applications[0];
+                if (isset($application['contact'])) {
+                    $applicationContact = $this->commonGroundService->getResource($application['contact']);
+                    if (isset($applicationContact['organization']['id'])) {
+                        $organization = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
+                    } else {
+                        throw new  Exception('No organization found in this application contact! '.$applicationContact);
+                    }
+                } else {
+                    throw new  Exception('No contact found in this application! '.$application);
+                }
+
+                // Get all SendLists with this organization
+                // If resource is set also filter with that
+                if ($sendListDTO->getResource()) {
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'resource' => $sendListDTO->getResource(), 'order[dateCreated]' => 'desc'])['hydra:member'];
+                } else {
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'order[dateCreated]' => 'desc'])['hydra:member'];
+                }
+            }
+        } else {
+            $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         $sendListDTO->setResult($results);
@@ -92,8 +130,7 @@ class SendListService
             // Update or create a subscriber in BS
             array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']));
         } else {
-            array_push($results, 'This user has no person!');
-            array_push($results, $user);
+            throw new  Exception('This user has no person! '.$user);
         }
 
         $sendListDTO->setResult($results);
@@ -134,8 +171,7 @@ class SendListService
                 array_push($results, $this->commonGroundService->createResource($message, ['component'=>'bs', 'type'=>'messages'])['@id']);
             }
         } else {
-            array_push($results, 'This sendList has no subscribers!');
-            array_push($results, $sendList);
+            throw new  Exception('This sendList has no subscribers! '.$sendList);
         }
 
         $sendListDTO->setResult($results);

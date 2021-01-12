@@ -57,6 +57,15 @@ class Group
     private $clientId;
 
     /**
+     * @var string organization uri
+     *
+     * @example test@user.nl
+     *
+     * @Groups({"write"})
+     */
+    private $organization;
+
+    /**
      * @var array array of groups
      *
      * @example
@@ -79,6 +88,18 @@ class Group
     public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    public function getOrganization(): ?string
+    {
+        return $this->organization;
+    }
+
+    public function setOrganization(string $organization): self
+    {
+        $this->organization = $organization;
 
         return $this;
     }

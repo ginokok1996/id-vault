@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     collectionOperations={
+ *          "get",
  *          "post"
  *     }
  * )
@@ -45,6 +46,21 @@ class SendList
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
+
+    /**
+     * @var string The action type
+     *
+     * @example getLists
+     *
+     * @Assert\Choice({"getLists", "createList", "addUserToList", "sendToList"})
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Assert\NotNull
+     *
+     * @Groups({"read","write"})
+     */
+    private $action = 'getLists';
 
     /**
      * @var string A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
@@ -184,6 +200,18 @@ class SendList
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): self
+    {
+        $this->action = $action;
+
+        return $this;
     }
 
     public function getResource(): ?string
