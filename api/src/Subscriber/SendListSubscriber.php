@@ -53,7 +53,8 @@ class SendListSubscriber implements EventSubscriberInterface
                         break;
                     case 'sendToList':
                         if ($this->commonGroundService->isResource($resource->getResource())) {
-                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getTitle() and !empty($resource->getHtml()))) {
+                            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
+                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getTitle() and !empty($resource->getHtml()) and !empty($resource->getSender()))) {
                                 $this->sendListService->sendToList($resource);
                             }
                         }
