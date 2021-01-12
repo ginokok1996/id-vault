@@ -8595,6 +8595,9 @@ components:
         clientId:
           description: 'client id'
           type: string
+        organization:
+          description: 'organization uri'
+          type: string
     'Group:jsonld-read':
       type: object
       description: ''
@@ -8635,6 +8638,9 @@ components:
           type: string
         clientId:
           description: 'client id'
+          type: string
+        organization:
+          description: 'organization uri'
           type: string
     GroupInvite-read:
       type: object
@@ -9351,12 +9357,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 09:21:14'
+        example: '2021-01-12 08:23:54'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 09:21:14'
+        example: '2021-01-12 08:23:54'
     required: []
   AuditTrail-write:
     properties:
@@ -9404,12 +9410,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 09:21:14'
+        example: '2021-01-12 08:23:54'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 09:21:14'
+        example: '2021-01-12 08:23:54'
     required: []
   ChangeLog-write:
     properties:
