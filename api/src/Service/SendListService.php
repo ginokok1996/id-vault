@@ -80,13 +80,13 @@ class SendListService
                 // Get all SendLists with this organization
                 // If resource is set also filter with that
                 if ($sendListDTO->getResource()) {
-                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'resource' => $sendListDTO->getResource()])['hydra:member'];
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'resource' => $sendListDTO->getResource(), 'order[dateCreated]' => 'desc'])['hydra:member'];
                 } else {
-                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization])['hydra:member'];
+                    $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['organization' => $organization, 'order[dateCreated]' => 'desc'])['hydra:member'];
                 }
             }
         } else {
-            $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'])['hydra:member'];
+            $results = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'send_lists'], ['order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         $sendListDTO->setResult($results);
