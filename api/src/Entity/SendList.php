@@ -177,7 +177,6 @@ class SendList
      *
      * @example email adres
      *
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
