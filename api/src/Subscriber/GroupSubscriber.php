@@ -34,8 +34,8 @@ class GroupSubscriber implements EventSubscriberInterface
         $group = $event->getControllerResult();
 
         if ($group instanceof Group && $event->getRequest()->getMethod() == 'POST') {
-            if (!$group->getClientId()) {
-                throw new Exception('no clientId provided');
+            if (!$group->getClientId() || !$group->getOrganization()) {
+                throw new Exception('no clientId and/or organization provided');
             } else {
                 try {
                     $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $group->getClientId()]);
@@ -46,6 +46,9 @@ class GroupSubscriber implements EventSubscriberInterface
                             $newGroup = [];
                             $newGroup['name'] = $oldGroup['name'];
                             $newGroup['id'] = $oldGroup['id'];
+                            if (isset($oldGroup['description'])) {
+                                $newGroup['description'] = $oldGroup['description'];
+                            }
                             $newGroup['users'] = [];
                             if (count($oldGroup['memberships']) > 0) {
                                 foreach ($oldGroup['memberships'] as $membership) {
@@ -56,6 +59,7 @@ class GroupSubscriber implements EventSubscriberInterface
                                 }
                             }
                             if (!empty($oldGroup['organization']) && $oldGroup['organization'] == $group->getOrganization()) {
+                                $newGroup['organization'] = $oldGroup['organization'];
                                 $groupList[] = $newGroup;
                             }
                         }

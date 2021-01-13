@@ -52,12 +52,26 @@ class AccessTokenGeneratorService
         }
 
         $array['groups'] = [];
+        $array['organizations'] = [];
         if (count($application['userGroups']) > 0) {
             foreach ($application['userGroups'] as $group) {
                 if (count($group['memberships']) > 0) {
                     foreach ($group['memberships'] as $membership) {
                         if ($membership['userUrl'] == $authorization['userUrl'] && !empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
-                            $array['groups'][] = $group['name'];
+                            $result = [];
+                            $result['id'] = $group['id'];
+                            $result['name'] = $group['name'];
+                            if (isset($membership['dateAcceptedGroup'])) {
+                                $result['dateJoined'] = $membership['dateAcceptedGroup'];
+                            } elseif (isset($membership['dateAcceptedUser'])) {
+                                $result['dateJoined'] = $membership['dateAcceptedUser'];
+                            }
+
+                            if (isset($group['organization'])) {
+                                $array['organizations'][] = $group['organization'];
+                                $result['organization'] = $group['organization'];
+                            }
+                            $array['groups'][] = $result;
                         }
                     }
                 }
