@@ -37,9 +37,6 @@ class SendListSubscriber implements EventSubscriberInterface
 
         if ($resource instanceof SendList) {
             if ($method == 'POST' && $route == 'api_send_lists_post_collection') {
-                if ($this->commonGroundService->isResource($resource->getResource())) {
-                    $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
-                }
                 switch ($resource->getAction()) {
                     case 'createList':
                         if (!empty($resource->getName())) {
@@ -47,13 +44,19 @@ class SendListSubscriber implements EventSubscriberInterface
                         }
                         break;
                     case 'addUserToList':
-                        if (isset($sendList) and $sendList['@type'] == 'SendList' and $event->getRequest()->headers->get('user-authorization')) {
-                            $this->sendListService->addUserToList($resource, $event->getRequest()->headers->get('user-authorization'));
+                        if ($this->commonGroundService->isResource($resource->getResource())) {
+                            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
+                            if (isset($sendList) and $sendList['@type'] == 'SendList' and $event->getRequest()->headers->get('user-authorization')) {
+                                $this->sendListService->addUserToList($resource, $event->getRequest()->headers->get('user-authorization'));
+                            }
                         }
                         break;
                     case 'sendToList':
-                        if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getTitle() and !empty($resource->getHtml()))) {
-                            $this->sendListService->sendToList($resource);
+                        if ($this->commonGroundService->isResource($resource->getResource())) {
+                            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
+                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getTitle() and !empty($resource->getHtml()) and !empty($resource->getSender()))) {
+                                $this->sendListService->sendToList($resource);
+                            }
                         }
                         break;
                     case 'getLists':

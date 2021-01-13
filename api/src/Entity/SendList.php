@@ -173,6 +173,18 @@ class SendList
     private $html;
 
     /**
+     * @var string the sender of the mail
+     *
+     * @example email adres
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     */
+    private $sender;
+
+    /**
      * @var array The result
      *
      * @Groups({"read"})
@@ -330,6 +342,18 @@ class SendList
     public function setHtml(?string $html): self
     {
         $this->html = $html;
+
+        return $this;
+    }
+
+    public function getSender(): ?string
+    {
+        return $this->sender;
+    }
+
+    public function setSender(string $sender): self
+    {
+        $this->sender = $sender;
 
         return $this;
     }
