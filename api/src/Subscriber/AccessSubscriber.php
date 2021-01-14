@@ -66,34 +66,6 @@ class AccessSubscriber implements EventSubscriberInterface
                 $authorization['code'] = null;
                 $authorization['application'] = '/applications/'.$authorization['application']['id'];
 
-                if ($authorization['claims']) {
-                    foreach ($authorization['claims'] as &$claim) {
-                        $claim = '/claims/'.$claim['id'];
-                    }
-                }
-
-                if (!empty($authorization['purposeLimitation'])) {
-                    $authorization['purposeLimitation'] = '/purpose_limitations/'.$authorization['purposeLimitation']['id'];
-                }
-
-                if ($authorization['dossiers']) {
-                    foreach ($authorization['dossiers'] as &$dossier) {
-                        $dossier = '/dossiers/'.$dossier['id'];
-                    }
-                }
-
-                if ($authorization['scopeRequests']) {
-                    foreach ($authorization['scopeRequests'] as &$scopeRequest) {
-                        $scopeRequest = '/scopes_requests/'.$scopeRequest['id'];
-                    }
-                }
-
-                if ($authorization['authorizationLogs']) {
-                    foreach ($authorization['authorizationLogs'] as &$log) {
-                        $log = '/authorization_logs/'.$log['id'];
-                    }
-                }
-
                 if ($authorization['newUser']) {
                     $authorization['newUser'] = false;
                 }

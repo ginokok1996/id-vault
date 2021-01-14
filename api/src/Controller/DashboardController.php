@@ -347,7 +347,7 @@ class DashboardController extends AbstractController
                 $data = [];
                 $data['sender'] = 'no-reply@conduction.nl';
 
-                $this->mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Welcome developer', $data);
+                $this->mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
 
                 return $this->redirect($this->generateUrl('app_dashboard_general'));
             }
