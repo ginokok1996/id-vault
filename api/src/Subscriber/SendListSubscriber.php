@@ -39,10 +39,10 @@ class SendListSubscriber implements EventSubscriberInterface
         if ($resource instanceof SendList) {
             if ($method == 'POST' && $route == 'api_send_lists_post_collection') {
                 if ($resource->getSendList()) {
-                    if ($this->commonGroundService->isResource($resource->getSendList() )) {
+                    if ($this->commonGroundService->isResource($resource->getSendList())) {
                         $sendList = $this->commonGroundService->getResource($resource->getSendList(), [], false); // don't cashe here
                         if (!isset($sendList) or $sendList['@type'] != 'SendList') {
-                            throw new  Exception('This sendList resource is not of the type SendList! ' . $sendListDTO->getSendList());
+                            throw new  Exception('This sendList resource is not of the type SendList! '.$sendListDTO->getSendList());
                         }
                     } else {
                         throw new  Exception('This sendList resource is no commonground resource! '.$sendListDTO->getSendList());
