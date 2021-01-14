@@ -83,6 +83,15 @@ class CreateGroup
     private $organization;
 
     /**
+     * @var array created group
+     *
+     * @example array
+     *
+     * @Groups({"read"})
+     */
+    private $group;
+
+    /**
      * @return string
      */
     public function getName(): string
@@ -143,6 +152,18 @@ class CreateGroup
     public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    public function getGroup(): ?array
+    {
+        return $this->group;
+    }
+
+    public function setGroup(array $group): self
+    {
+        $this->group = $group;
 
         return $this;
     }

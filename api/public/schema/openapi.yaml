@@ -5422,6 +5422,562 @@ paths:
             schema:
               $ref: '#/components/schemas/GroupInvite-write'
         description: 'The updated GroupInvite resource'
+  /api/group_remove_users:
+    post:
+      tags:
+        - GroupRemoveUser
+      operationId: postGroupRemoveUserCollection
+      summary: 'Creates a GroupRemoveUser resource.'
+      responses:
+        201:
+          description: 'GroupRemoveUser resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+          links:
+            GetGroupRemoveUserItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getGroupRemoveUserItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/group_remove_users/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+        description: 'The new GroupRemoveUser resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/api/group_remove_users/{id}':
+    get:
+      tags:
+        - GroupRemoveUser
+      operationId: getGroupRemoveUserItem
+      summary: 'Retrieves a GroupRemoveUser resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'GroupRemoveUser resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - GroupRemoveUser
+      operationId: deleteGroupRemoveUserItem
+      summary: 'Removes the GroupRemoveUser resource.'
+      responses:
+        204:
+          description: 'GroupRemoveUser resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - GroupRemoveUser
+      operationId: putGroupRemoveUserItem
+      summary: 'Replaces the GroupRemoveUser resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'GroupRemoveUser resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+        description: 'The updated GroupRemoveUser resource'
+    patch:
+      tags:
+        - GroupRemoveUser
+      operationId: patchGroupRemoveUserItem
+      summary: 'Updates the GroupRemoveUser resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'GroupRemoveUser resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/GroupRemoveUser-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser:jsonld-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/GroupRemoveUser-write'
+        description: 'The updated GroupRemoveUser resource'
   /api/groups:
     post:
       tags:
@@ -9083,6 +9639,11 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        group:
+          description: 'created group'
+          type: array
+          items:
+            type: string
     CreateGroup-write:
       type: object
       description: ''
@@ -9119,6 +9680,11 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
+        group:
+          description: 'created group'
+          type: array
+          items:
+            type: string
     'CreateGroup:jsonld-write':
       type: object
       description: ''
@@ -9560,6 +10126,72 @@ components:
         accepted:
           description: 'if user has already accepted invite'
           type: boolean
+    GroupRemoveUser-read:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+    GroupRemoveUser-write:
+      type: object
+      description: ''
+      properties:
+        groupId:
+          description: 'group id'
+          type: string
+        clientId:
+          description: 'client id'
+          type: string
+        username:
+          description: username
+          type: string
+    'GroupRemoveUser:jsonld-read':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+    'GroupRemoveUser:jsonld-write':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        groupId:
+          description: 'group id'
+          type: string
+        clientId:
+          description: 'client id'
+          type: string
+        username:
+          description: username
+          type: string
     Mail-read:
       type: object
       description: ''
@@ -9712,8 +10344,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9744,6 +10381,11 @@ components:
         sender:
           description: 'the sender of the mail'
           type: string
+        emails:
+          description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
         result:
           description: 'The result'
           type: array
@@ -9770,8 +10412,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9805,6 +10452,11 @@ components:
         sender:
           description: 'the sender of the mail'
           type: string
+        emails:
+          description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
     'SendList:jsonld-read':
       type: object
       description: ''
@@ -9828,8 +10480,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9860,6 +10517,11 @@ components:
         sender:
           description: 'the sender of the mail'
           type: string
+        emails:
+          description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
         result:
           description: 'The result'
           type: array
@@ -9895,8 +10557,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9930,6 +10597,11 @@ components:
         sender:
           description: 'the sender of the mail'
           type: string
+        emails:
+          description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
     User-read:
       type: object
       description: ''
@@ -10144,6 +10816,14 @@ definitions:
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
     required: []
+  GroupRemoveUser-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+    required: []
   Mail-read:
     properties:
       id:
@@ -10297,12 +10977,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 12:37:00'
+        example: '2021-01-14 15:01:41'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 12:37:00'
+        example: '2021-01-14 15:01:41'
     required: []
   AuditTrail-write:
     properties:
@@ -10350,12 +11030,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 12:37:00'
+        example: '2021-01-14 15:01:41'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 12:37:00'
+        example: '2021-01-14 15:01:41'
     required: []
   ChangeLog-write:
     properties:
@@ -10404,6 +11084,12 @@ tags:
       
   -
     name: GroupInvite
+    description: |
+      
+      
+      
+  -
+    name: GroupRemoveUser
     description: |
       
       
