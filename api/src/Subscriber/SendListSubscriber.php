@@ -43,11 +43,11 @@ class SendListSubscriber implements EventSubscriberInterface
                             $this->sendListService->createList($resource);
                         }
                         break;
-                    case 'addUserToList':
-                        if ($this->commonGroundService->isResource($resource->getResource())) {
+                    case 'addSubscribersToList':
+                        if ($this->commonGroundService->isResource($resource->getResource() )) {
                             $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
-                            if (isset($sendList) and $sendList['@type'] == 'SendList' and $event->getRequest()->headers->get('user-authorization')) {
-                                $this->sendListService->addUserToList($resource, $event->getRequest()->headers->get('user-authorization'));
+                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getEmails())) {
+                                $this->sendListService->addSubscribersToList($resource);
                             }
                         }
                         break;

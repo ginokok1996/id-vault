@@ -52,7 +52,7 @@ class SendList
      *
      * @example getLists
      *
-     * @Assert\Choice({"getLists", "createList", "addUserToList", "sendToList"})
+     * @Assert\Choice({"getLists", "createList", "addSubscribersToList", "sendToList"})
      * @Assert\Length(
      *      max = 255
      * )
@@ -183,6 +183,13 @@ class SendList
      * @Groups({"read","write"})
      */
     private $sender;
+
+    /**
+     * @var array The email adresses used to add subscribers to a BS/sendList
+     *
+     * @Groups({"read","write"})
+     */
+    private $emails = [];
 
     /**
      * @var array The result
@@ -354,6 +361,18 @@ class SendList
     public function setSender(string $sender): self
     {
         $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getEmails(): ?array
+    {
+        return $this->emails;
+    }
+
+    public function setEmails(?array $emails): self
+    {
+        $this->emails = $emails;
 
         return $this;
     }

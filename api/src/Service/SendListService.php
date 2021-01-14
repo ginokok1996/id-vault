@@ -43,10 +43,10 @@ class SendListService
                 if (isset($applicationContact['organization']['id'])) {
                     $newSendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
                 } else {
-                    throw new  Exception('No organization found in this application contact! '.$applicationContact);
+                    throw new  Exception('No organization found in this application contact! '.$applicationContact['id']);
                 }
             } else {
-                throw new  Exception('No contact found in this application! '.$application);
+                throw new  Exception('No contact found in this application! '.$application['id']);
             }
 
             // Create a new sendList in BS
@@ -74,10 +74,10 @@ class SendListService
                     if (isset($applicationContact['organization']['id'])) {
                         $organization = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
                     } else {
-                        throw new  Exception('No organization found in this application contact! '.$applicationContact);
+                        throw new  Exception('No organization found in this application contact! '.$applicationContact['id']);
                     }
                 } else {
-                    throw new  Exception('No contact found in this application! '.$application);
+                    throw new  Exception('No contact found in this application! '.$application['id']);
                 }
 
                 // Get all SendLists with this organization
@@ -97,17 +97,16 @@ class SendListService
         return $sendListDTO;
     }
 
-    public function addUserToList(SendList $sendListDTO, $userAuthorization)
+    public function addSubscribersToList(SendList $sendListDTO)
     {
         $results = [];
 
         $sendList = $this->commonGroundService->getResource($sendListDTO->getResource());
+        $emails = $sendListDTO->getEmails();
 
-        // Get user
-        $user = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'users', 'id' => $userAuthorization]);
-        if (isset($user['person'])) {
-            // Check if this user already has a subscriber object in BS
-            $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['person' => $user['person']])['hydra:member'];
+        foreach ($emails as $email) {
+            // Check if this email has already a subscriber object in BS
+            $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['email' => $email])['hydra:member'];
             if (count($subscribers) > 0) {
                 // Set subscriber to the existing subscriber to update later
                 $subscriber = $subscribers[0];
@@ -123,17 +122,15 @@ class SendListService
                 $subscriber['sendLists'] = $subscriberSendLists;
                 $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
             } else {
-                // Set person to create a new subscriber
-                $subscriber['person'] = $user['person'];
+                // Set email to create a new subscriber
+                $subscriber['email'] = $email;
 
                 // Get sendList from the DTO
                 $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
             }
 
             // Update or create a subscriber in BS
-            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers']));
-        } else {
-            throw new  Exception('This user has no person! '.$user);
+            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
         }
 
         $sendListDTO->setResult($results);
@@ -153,19 +150,10 @@ class SendListService
 
             // Loop through all subscribers
             foreach ($sendList['subscribers'] as $subscriber) {
-                if ($this->commonGroundService->isResource($subscriber['person'])) {
-                    // Get the person of this subscriber
-                    $person = $this->commonGroundService->getResource($subscriber['person']);
-
-                    // If this person has an email continue
-                    if (isset($person['emails'][0]['email'])) {
-                        // Send email to this subscriber
-                        array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $person['emails'][0]['email'], $sender)['@id']);
-                    }
-                }
+                array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $subscriber['email'], $sender)['@id']);
             }
         } else {
-            throw new  Exception('This sendList has no subscribers! '.$sendList);
+            throw new  Exception('This sendList has no subscribers! '.$sendList['id']);
         }
 
         $sendListDTO->setResult($results);
