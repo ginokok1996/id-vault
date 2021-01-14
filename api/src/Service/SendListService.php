@@ -21,18 +21,39 @@ class SendListService
         $this->idVaultService = $idVaultService;
     }
 
-    public function createList(SendList $sendListDTO)
+    public function saveList(SendList $sendListDTO)
     {
         $results = [];
 
-        // Get info from the DTO SendList
-        $newSendList['name'] = $sendListDTO->getName();
-        $newSendList['description'] = $sendListDTO->getDescription();
-        $newSendList['mail'] = $sendListDTO->getMail();
-        $newSendList['phone'] = $sendListDTO->getPhone();
-        $newSendList['resource'] = $sendListDTO->getResource();
+        // if sendList is set we are going to update a existing BS/sendlist
+        if ($sendListDTO->getSendList()) {
+            $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
 
-        // Get organization for this new SendList
+            $subscribers = [];
+            foreach ($sendList['subscribers'] as $subscriber) {
+                array_push($subscribers, '/subscribers/'.$subscriber['id']);
+            }
+            $sendList['subscribers'] = $subscribers;
+        } elseif (empty($sendListDTO->getName())) {
+            throw new  Exception('No name given!');
+        }
+
+        // Get info from the DTO SendList
+        if ($sendListDTO->getName()) {
+            $sendList['name'] = $sendListDTO->getName();
+        }
+        if ($sendListDTO->getDescription()) {
+            $sendList['description'] = $sendListDTO->getDescription();
+        }
+        if ($sendListDTO->getMail() == true || $sendListDTO->getPhone() == true) {
+            $sendList['mail'] = $sendListDTO->getMail();
+            $sendList['phone'] = $sendListDTO->getPhone();
+        }
+        if ($sendListDTO->getResource()) {
+            $sendList['resource'] = $sendListDTO->getResource();
+        }
+
+        // Get organization for this SendList
         $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $sendListDTO->getClientSecret()])['hydra:member'];
         if (count($applications) < 1) {
             throw new  Exception('No applications found with this client secret! '.$sendListDTO->getClientSecret());
@@ -41,7 +62,7 @@ class SendListService
             if (isset($application['contact'])) {
                 $applicationContact = $this->commonGroundService->getResource($application['contact']);
                 if (isset($applicationContact['organization']['id'])) {
-                    $newSendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
+                    $sendList['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
                 } else {
                     throw new  Exception('No organization found in this application contact! '.$applicationContact['id']);
                 }
@@ -49,8 +70,8 @@ class SendListService
                 throw new  Exception('No contact found in this application! '.$application['id']);
             }
 
-            // Create a new sendList in BS
-            array_push($results, $this->commonGroundService->createResource($newSendList, ['component' => 'bs', 'type' => 'send_lists']));
+            // Create a new sendList in BS or update an existing one
+            array_push($results, $this->commonGroundService->saveResource($sendList, ['component' => 'bs', 'type' => 'send_lists']));
         }
 
         $sendListDTO->setResult($results);
@@ -58,7 +79,35 @@ class SendListService
         return $sendListDTO;
     }
 
-    // TODO:updateList/saveList + deleteList
+    public function deleteList(SendList $sendListDTO)
+    {
+        $results = [];
+
+        // get the sendlist
+        $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
+
+        // loop through all subscribers and remove the sendlist from them
+        foreach ($sendList['subscribers'] as $subscriber) {
+            // remove sendList from this subscriber
+            $subscriberSendLists = [];
+            foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                if ($subscriberSendList != '/send_lists/'.$sendList['id']) {
+                    array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                }
+            }
+            $subscriber['sendLists'] = $subscriberSendLists;
+
+            // save the subscriber
+            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+        }
+
+        // delete the sendlist
+        array_push($results, $this->commonGroundService->deleteResource($sendList));
+
+        $sendListDTO->setResult($results);
+
+        return $sendListDTO;
+    }
 
     public function getLists(SendList $sendListDTO)
     {
@@ -101,7 +150,7 @@ class SendListService
     {
         $results = [];
 
-        $sendList = $this->commonGroundService->getResource($sendListDTO->getResource());
+        $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
         $emails = $sendListDTO->getEmails();
 
         foreach ($emails as $email) {
@@ -142,7 +191,7 @@ class SendListService
     {
         $results = [];
 
-        $sendList = $this->commonGroundService->getResource($sendListDTO->getResource());
+        $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
         if (!empty($sendList['subscribers'])) {
             $body = $sendListDTO->getHtml();
             $subject = $sendListDTO->getTitle();

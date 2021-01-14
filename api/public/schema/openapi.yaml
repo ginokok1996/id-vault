@@ -9156,8 +9156,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9219,8 +9224,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9282,8 +9292,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9354,8 +9369,13 @@ components:
         action:
           description: 'The action type'
           type: string
+        sendList:
+          description: 'A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
         resource:
-          description: 'A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.'
+          description: 'The resource of a new SendList. Used for creating a BS/SendList.'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
@@ -9679,12 +9699,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 10:49:51'
+        example: '2021-01-14 13:10:15'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 10:49:51'
+        example: '2021-01-14 13:10:15'
     required: []
   AuditTrail-write:
     properties:
@@ -9732,12 +9752,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 10:49:51'
+        example: '2021-01-14 13:10:15'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 10:49:51'
+        example: '2021-01-14 13:10:15'
     required: []
   ChangeLog-write:
     properties:

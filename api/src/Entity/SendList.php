@@ -52,7 +52,7 @@ class SendList
      *
      * @example getLists
      *
-     * @Assert\Choice({"getLists", "createList", "addSubscribersToList", "sendToList"})
+     * @Assert\Choice({"getLists", "saveList", "deleteList", "addSubscribersToList", "sendToList"})
      * @Assert\Length(
      *      max = 255
      * )
@@ -63,7 +63,18 @@ class SendList
     private $action = 'getLists';
 
     /**
-     * @var string A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
+     * @var string A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
+     *
+     * @Groups({"read", "write"})
+     * @Assert\Url
+     * @Assert\Length(
+     *     max=255
+     * )
+     */
+    private $sendList;
+
+    /**
+     * @var string The resource of a new SendList. Used for creating a BS/SendList.
      *
      * @Groups({"read", "write"})
      * @Assert\Url
@@ -163,7 +174,7 @@ class SendList
     /**
      * @var string The html for sending an email to all BS/SendList->Subscribers.
      *
-     * @example <p>HTML content of the mail</p><p>{% if title is defined and title is not empty %}Title: {{ title }}{% endif %}</p><p>{% if message is defined and message is not empty %}Message: {{ message }}{% endif %}</p><p>{% if text is defined and text is not empty %}Text: {{ text }}{% endif %}</p><p>{% if resource.name is defined and resource.name is not empty %}(resource/)Sendlist name: {{ resource.name }}{% endif %}</p><p>{% if receiver.givenName is defined and receiver.givenName is not empty %}Receiver: {{ receiver.givenName }}{% endif %}</p><p>{% if sender.name is defined and sender.name is not empty %}Sender: {{ sender.name }}{% endif %}</p>
+     * @example <p>HTML content of the mail</p>
      *
      * @Assert\Length(
      *      max = 2550
@@ -229,6 +240,18 @@ class SendList
     public function setAction(string $action): self
     {
         $this->action = $action;
+
+        return $this;
+    }
+
+    public function getSendList(): ?string
+    {
+        return $this->sendList;
+    }
+
+    public function setSendList(string $sendList): self
+    {
+        $this->sendList = $sendList;
 
         return $this;
     }

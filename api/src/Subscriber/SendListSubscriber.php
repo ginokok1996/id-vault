@@ -6,6 +6,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\SendList;
 use App\Service\SendListService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -37,30 +38,43 @@ class SendListSubscriber implements EventSubscriberInterface
 
         if ($resource instanceof SendList) {
             if ($method == 'POST' && $route == 'api_send_lists_post_collection') {
-                switch ($resource->getAction()) {
-                    case 'createList':
-                        if (!empty($resource->getName())) {
-                            $this->sendListService->createList($resource);
+                if ($resource->getSendList()) {
+                    if ($this->commonGroundService->isResource($resource->getSendList() )) {
+                        $sendList = $this->commonGroundService->getResource($resource->getSendList(), [], false); // don't cashe here
+                        if (!isset($sendList) or $sendList['@type'] != 'SendList') {
+                            throw new  Exception('This sendList resource is not of the type SendList! ' . $sendListDTO->getSendList());
                         }
+                    } else {
+                        throw new  Exception('This sendList resource is no commonground resource! '.$sendListDTO->getSendList());
+                    }
+                }
+                switch ($resource->getAction()) {
+                    case 'saveList':
+                        $this->sendListService->saveList($resource);
                         break;
                     case 'addSubscribersToList':
-                        if ($this->commonGroundService->isResource($resource->getResource() )) {
-                            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
-                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getEmails())) {
-                                $this->sendListService->addSubscribersToList($resource);
-                            }
+                        if (empty($resource->getEmails())) {
+                            throw new  Exception('No emails given!');
                         }
+                        $this->sendListService->addSubscribersToList($resource);
                         break;
                     case 'sendToList':
-                        if ($this->commonGroundService->isResource($resource->getResource())) {
-                            $sendList = $this->commonGroundService->getResource($resource->getResource(), [], false); // don't cashe here
-                            if (isset($sendList) and $sendList['@type'] == 'SendList' and !empty($resource->getTitle() and !empty($resource->getHtml()) and !empty($resource->getSender()))) {
-                                $this->sendListService->sendToList($resource);
-                            }
+                        if (empty($resource->getTitle())) {
+                            throw new  Exception('No title given!');
                         }
+                        if (empty($resource->getHtml())) {
+                            throw new  Exception('No html given!');
+                        }
+                        if (empty($resource->getSender())) {
+                            throw new  Exception('No sender given!');
+                        }
+                        $this->sendListService->sendToList($resource);
                         break;
                     case 'getLists':
                         $this->sendListService->getLists($resource);
+                        break;
+                    case 'deleteList':
+                        $this->sendListService->deleteList($resource);
                         break;
                     default: return;
                 }
