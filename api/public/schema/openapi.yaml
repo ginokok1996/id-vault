@@ -9205,13 +9205,11 @@ components:
           nullable: true
       required:
         - action
-        - sender
     SendList-write:
       type: object
       description: ''
       required:
         - action
-        - sender
       properties:
         action:
           description: 'The action type'
@@ -9323,13 +9321,11 @@ components:
           nullable: true
       required:
         - action
-        - sender
     'SendList:jsonld-write':
       type: object
       description: ''
       required:
         - action
-        - sender
       properties:
         '@context':
           readOnly: true
@@ -9663,12 +9659,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 14:32:12'
+        example: '2021-01-13 09:27:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 14:32:12'
+        example: '2021-01-13 09:27:36'
     required: []
   AuditTrail-write:
     properties:
@@ -9716,12 +9712,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-12 14:32:12'
+        example: '2021-01-13 09:27:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-12 14:32:12'
+        example: '2021-01-13 09:27:36'
     required: []
   ChangeLog-write:
     properties:
