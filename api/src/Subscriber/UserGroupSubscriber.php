@@ -58,14 +58,13 @@ class UserGroupSubscriber implements EventSubscriberInterface
                                         } elseif (isset($membership['dateAcceptedUser'])) {
                                             $newGroup['dateJoined'] = $membership['dateAcceptedUser'];
                                         }
-                                        if (!empty($oldGroup['organization']) && $user['username'] == $group->getUsername() ) {
+                                        if (!empty($oldGroup['organization']) && $user['username'] == $group->getUsername()) {
                                             $newGroup['organization'] = $oldGroup['organization'];
                                             $groupList[] = $newGroup;
                                         }
                                     }
                                 }
                             }
-
                         }
                     }
 
