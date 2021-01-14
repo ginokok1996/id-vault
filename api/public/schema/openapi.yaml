@@ -7380,6 +7380,562 @@ paths:
             schema:
               $ref: '#/components/schemas/SendList-write'
         description: 'The updated SendList resource'
+  /api/user_groups:
+    post:
+      tags:
+        - UserGroup
+      operationId: postUserGroupCollection
+      summary: 'Creates a UserGroup resource.'
+      responses:
+        201:
+          description: 'UserGroup resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+          links:
+            GetUserGroupItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getUserGroupItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/user_groups/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/UserGroup:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+        description: 'The new UserGroup resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/api/user_groups/{id}':
+    get:
+      tags:
+        - UserGroup
+      operationId: getUserGroupItem
+      summary: 'Retrieves a UserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'UserGroup resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - UserGroup
+      operationId: deleteUserGroupItem
+      summary: 'Removes the UserGroup resource.'
+      responses:
+        204:
+          description: 'UserGroup resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - UserGroup
+      operationId: putUserGroupItem
+      summary: 'Replaces the UserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'UserGroup resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/UserGroup:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+        description: 'The updated UserGroup resource'
+    patch:
+      tags:
+        - UserGroup
+      operationId: patchUserGroupItem
+      summary: 'Updates the UserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'UserGroup resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/UserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserGroup-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup:jsonld-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserGroup-write'
+        description: 'The updated UserGroup resource'
   /api/users:
     post:
       tags:
@@ -9490,6 +10046,76 @@ components:
           type: array
           items:
             type: string
+    UserGroup-read:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        groups:
+          description: 'array of groups'
+          type: array
+          items:
+            type: string
+    UserGroup-write:
+      type: object
+      description: ''
+      properties:
+        clientId:
+          description: 'client id'
+          type: string
+        username:
+          description: username
+          type: string
+    'UserGroup:jsonld-read':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        groups:
+          description: 'array of groups'
+          type: array
+          items:
+            type: string
+    'UserGroup:jsonld-write':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        clientId:
+          description: 'client id'
+          type: string
+        username:
+          description: username
+          type: string
 definitions:
   AcceptInvite-read:
     properties:
@@ -9592,6 +10218,18 @@ definitions:
     properties:
       scopes:
         description: 'array of scopes'
+        type: array
+        example: ''
+    required: []
+  UserGroup-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      groups:
+        description: 'array of groups'
         type: array
         example: ''
     required: []
@@ -9699,12 +10337,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 13:10:15'
+        example: '2021-01-14 13:14:27'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 13:10:15'
+        example: '2021-01-14 13:14:27'
     required: []
   AuditTrail-write:
     properties:
@@ -9752,12 +10390,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 13:10:15'
+        example: '2021-01-14 13:14:27'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 13:10:15'
+        example: '2021-01-14 13:14:27'
     required: []
   ChangeLog-write:
     properties:
@@ -9824,6 +10462,12 @@ tags:
       
   -
     name: User
+    description: |
+      
+      
+      
+  -
+    name: UserGroup
     description: |
       
       
