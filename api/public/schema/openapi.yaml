@@ -10386,6 +10386,11 @@ components:
           type: array
           items:
             type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
         result:
           description: 'The result'
           type: array
@@ -10457,6 +10462,11 @@ components:
           type: array
           items:
             type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
     'SendList:jsonld-read':
       type: object
       description: ''
@@ -10519,6 +10529,11 @@ components:
           type: string
         emails:
           description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
           type: array
           items:
             type: string
@@ -10599,6 +10614,11 @@ components:
           type: string
         emails:
           description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
           type: array
           items:
             type: string
@@ -10977,12 +10997,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-15 18:23:10'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-15 18:23:10'
     required: []
   AuditTrail-write:
     properties:
@@ -11030,12 +11050,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-15 18:23:10'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-15 18:23:10'
     required: []
   ChangeLog-write:
     properties:
