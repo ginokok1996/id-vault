@@ -40,7 +40,8 @@ class SendListService
         return $sendListDTO;
     }
 
-    private function getListData(SendList $sendListDTO) {
+    private function getListData(SendList $sendListDTO)
+    {
         // if sendList is set we are going to update a existing BS/sendlist
         if ($sendListDTO->getSendList()) {
             $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
@@ -75,7 +76,8 @@ class SendListService
         return $sendList;
     }
 
-    private function getListOrganization(string $clientSecret) {
+    private function getListOrganization(string $clientSecret)
+    {
         // Get organization for a sendList
         $applications = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'applications'], ['secret' => $clientSecret])['hydra:member'];
         if (count($applications) < 1) {
@@ -87,15 +89,16 @@ class SendListService
                 if (isset($applicationContact['organization']['id'])) {
                     return $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $applicationContact['organization']['id']]);
                 } else {
-                    throw new  Exception('No organization found in this application contact! ' . $applicationContact['id']);
+                    throw new  Exception('No organization found in this application contact! '.$applicationContact['id']);
                 }
             } else {
-                throw new  Exception('No contact found in this application! ' . $application['id']);
+                throw new  Exception('No contact found in this application! '.$application['id']);
             }
         }
     }
 
-    private function updateListGroups(array $results, SendList $sendListDTO, array $sendList) {
+    private function updateListGroups(array $results, SendList $sendListDTO, array $sendList)
+    {
         // Create subscribers for the given groups
         if ($sendListDTO->getGroups()) {
             $results = $this->addGroupsToList($results, $sendListDTO->getGroups(), $sendList['id']);
@@ -150,7 +153,8 @@ class SendListService
         return $sendListDTO;
     }
 
-    private function removeListFromSubscriber(array $subscriber, string $sendListId) {
+    private function removeListFromSubscriber(array $subscriber, string $sendListId)
+    {
         // remove sendList from this subscriber
         $subscriberSendLists = [];
         foreach ($subscriber['sendLists'] as $subscriberSendList) {
@@ -247,7 +251,8 @@ class SendListService
         return $results;
     }
 
-    private function saveSubscriber(array $results, string $sendListId, string $subscriber, string $type = 'email') {
+    private function saveSubscriber(array $results, string $sendListId, string $subscriber, string $type = 'email')
+    {
         // Check if this group has already a subscriber object in BS
         if ($type == 'resource') {
             $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $subscriber])['hydra:member'];
@@ -287,6 +292,7 @@ class SendListService
 
         // Update or create a subscriber in BS and add them to the result.
         array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+
         return $results;
     }
 
@@ -320,7 +326,8 @@ class SendListService
         return $sendListDTO;
     }
 
-    private function sendToResource(array $results, string $resource, array $email) {
+    private function sendToResource(array $results, string $resource, array $email)
+    {
         if ($this->commonGroundService->isResource($resource)) {
             $resource = $this->commonGroundService->getResource($resource);
 
