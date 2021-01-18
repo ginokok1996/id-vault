@@ -4,6 +4,7 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\CreateGroup;
+use App\Service\GroupService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -13,10 +14,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class CreateGroupSubscriber implements EventSubscriberInterface
 {
     private $commonGroundService;
+    private $groupService;
 
-    public function __construct(CommongroundService $commonGroundService)
+    public function __construct(CommongroundService $commonGroundService, GroupService $groupService)
     {
         $this->commonGroundService = $commonGroundService;
+        $this->groupService = $groupService;
     }
 
     public static function getSubscribedEvents()
@@ -29,27 +32,16 @@ class CreateGroupSubscriber implements EventSubscriberInterface
     public function createGroup(ViewEvent $event)
     {
         $group = $event->getControllerResult();
-
         if ($group instanceof CreateGroup && $event->getRequest()->getMethod() == 'POST') {
-            if (!$group->getClientId()) {
-                throw new Exception('no clientId provided');
+            if (!$group->getClientId() || !$group->getOrganization() || !$group->getDescription() || !$group->getName()) {
+                throw new Exception('Please provide all required properties');
             } else {
                 try {
                     $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $group->getClientId()]);
-
-                    $newGroup = [];
-                    $newGroup['name'] = $group->getName();
-                    if ($group->getDescription() !== null) {
-                        $newGroup['description'] = $group->getDescription();
-                    }
-                    $newGroup['application'] = '/applications/'.$application['id'];
-                    if ($group->getOrganization() !== null) {
-                        $newGroup['organization'] = $group->getOrganization();
-                    }
-                    $this->commonGroundService->createResource($newGroup, ['component' => 'wac', 'type' => 'groups']);
                 } catch (\Throwable $e) {
                     throw new  Exception('Invalid clientId');
                 }
+                $group->setGroup($this->groupService->createGroup($group, $application));
             }
         }
 

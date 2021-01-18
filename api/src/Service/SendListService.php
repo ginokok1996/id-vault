@@ -71,7 +71,93 @@ class SendListService
             }
 
             // Create a new sendList in BS or update an existing one
-            array_push($results, $this->commonGroundService->saveResource($sendList, ['component' => 'bs', 'type' => 'send_lists']));
+            $sendList = $this->commonGroundService->saveResource($sendList, ['component' => 'bs', 'type' => 'send_lists']);
+
+            // If everything so far didn't throw any exceptions, create subscribers for the given groups
+            if ($sendListDTO->getGroups()) {
+                $groupIds = $sendListDTO->getGroups();
+
+                foreach ($groupIds as $groupId) {
+                    // Creat Url with group id
+                    $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
+
+                    // Check if this is an existing resource
+                    if ($this->commonGroundService->isResource($groupUrl)) {
+                        // Get the resource
+                        $group = $this->commonGroundService->getResource($groupUrl, [], false);
+                        //...and make sure it is a group resource
+                        if (isset($group) and $group['@type'] == 'Group') {
+                            // Check if this group has already a subscriber object in BS
+                            $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $groupUrl])['hydra:member'];
+                            if (count($subscribers) > 0) {
+                                // Set subscriber to the existing subscriber to update later
+                                $subscriber = $subscribers[0];
+
+                                // Set sendLists of this subscriber
+                                $subscriberSendLists = [];
+                                foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                                    if ($subscriberSendList['id'] != $sendList['id']) {
+                                        array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                                    }
+                                }
+
+                                // Add the the sendList to this subscriber
+                                $subscriber['sendLists'] = $subscriberSendLists;
+                                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                            } else {
+                                // Set resource to groupUrl to create a new subscriber
+                                $subscriber['resource'] = $groupUrl;
+
+                                // Add the sendList to it
+                                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                            }
+
+                            // Update or create a subscriber in BS and add them to the result.
+                            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+                        } else {
+                            throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
+                        }
+                    } else {
+                        throw new  Exception('This group resource is no commonground resource! '.$groupUrl);
+                    }
+                }
+            }
+
+            // Make sure to get the up to date sendlist with correct subscribers (might be added above here^)
+            $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
+
+            // Now make sure to remove any wac/groups from the sendList if this is needed.
+            $subscribers = [];
+            foreach ($sendList['subscribers'] as $subscriber) {
+                // If this subscriber has a resource that is a wac/group
+                if (isset($subscriber['resource']) and strpos($subscriber['resource'], '/wac/groups/')) {
+                    $remove = true;
+                    // Check if it is still needed to add this to this sendList
+                    if ($sendListDTO->getGroups()) {
+                        $groupIds = $sendListDTO->getGroups();
+                        foreach ($groupIds as $groupId) {
+                            if (strpos($subscriber['resource'], $groupId)) {
+                                $remove = false;
+                            }
+                        }
+                    }
+                    if ($remove) {
+                        // remove sendList from this subscriber
+                        $subscriberSendLists = [];
+                        foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                            if ($subscriberSendList != '/send_lists/'.$sendList['id']) {
+                                array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                            }
+                        }
+                        $subscriber['sendLists'] = $subscriberSendLists;
+
+                        // save the subscriber
+                        array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+                    }
+                }
+            }
+
+            array_push($results, $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false));
         }
 
         $sendListDTO->setResult($results);
@@ -146,40 +232,93 @@ class SendListService
         return $sendListDTO;
     }
 
+    // TODO: make a removeSubscribersFromList
     public function addSubscribersToList(SendList $sendListDTO)
     {
         $results = [];
 
         $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
-        $emails = $sendListDTO->getEmails();
 
-        foreach ($emails as $email) {
-            // Check if this email has already a subscriber object in BS
-            $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['email' => $email])['hydra:member'];
-            if (count($subscribers) > 0) {
-                // Set subscriber to the existing subscriber to update later
-                $subscriber = $subscribers[0];
+        if ($sendListDTO->getEmails()) {
+            $emails = $sendListDTO->getEmails();
 
-                // Add sendList to this subscriber
-                $subscriberSendLists = [];
-                foreach ($subscriber['sendLists'] as $subscriberSendList) {
-                    if ($subscriberSendList['id'] != $sendList['id']) {
-                        array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+            foreach ($emails as $email) {
+                // Check if this email has already a subscriber object in BS
+                $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['email' => $email])['hydra:member'];
+                if (count($subscribers) > 0) {
+                    // Set subscriber to the existing subscriber to update later
+                    $subscriber = $subscribers[0];
+
+                    // Set sendLists of this subscriber
+                    $subscriberSendLists = [];
+                    foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                        if ($subscriberSendList['id'] != $sendList['id']) {
+                            array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                        }
                     }
+
+                    // Add the the sendList to this subscriber
+                    $subscriber['sendLists'] = $subscriberSendLists;
+                    $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                } else {
+                    // Set email to create a new subscriber
+                    $subscriber['email'] = $email;
+
+                    // Get sendList from the DTO
+                    $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
                 }
 
-                $subscriber['sendLists'] = $subscriberSendLists;
-                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
-            } else {
-                // Set email to create a new subscriber
-                $subscriber['email'] = $email;
-
-                // Get sendList from the DTO
-                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                // Update or create a subscriber in BS
+                array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
             }
+        }
 
-            // Update or create a subscriber in BS
-            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+        if ($sendListDTO->getGroups()) {
+            $groupIds = $sendListDTO->getGroups();
+
+            foreach ($groupIds as $groupId) {
+                // Creat Url with group id
+                $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
+
+                // Check if this is an existing resource
+                if ($this->commonGroundService->isResource($groupUrl)) {
+                    // Get the resource
+                    $group = $this->commonGroundService->getResource($groupUrl, [], false);
+                    //...and make sure it is a group resource
+                    if (isset($group) and $group['@type'] == 'Group') {
+                        // Check if this group has already a subscriber object in BS
+                        $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $groupUrl])['hydra:member'];
+                        if (count($subscribers) > 0) {
+                            // Set subscriber to the existing subscriber to update later
+                            $subscriber = $subscribers[0];
+
+                            // Add sendList to this subscriber
+                            $subscriberSendLists = [];
+                            foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                                if ($subscriberSendList['id'] != $sendList['id']) {
+                                    array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                                }
+                            }
+
+                            $subscriber['sendLists'] = $subscriberSendLists;
+                            $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                        } else {
+                            // Set resource to groupUrl to create a new subscriber
+                            $subscriber['resource'] = $groupUrl;
+
+                            // Add the sendList to it
+                            $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
+                        }
+
+                        // Update or create a subscriber in BS
+                        array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+                    } else {
+                        throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
+                    }
+                } else {
+                    throw new  Exception('This group resource is no commonground resource! '.$groupUrl);
+                }
+            }
         }
 
         $sendListDTO->setResult($results);
@@ -199,7 +338,54 @@ class SendListService
 
             // Loop through all subscribers
             foreach ($sendList['subscribers'] as $subscriber) {
-                array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $subscriber['email'], $sender)['@id']);
+                // if this subscriber has an email set send the mail to that email
+                if (isset($subscriber['email'])) {
+                    array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $subscriber['email'], $sender)['@id']);
+                }
+                // if this subscriber has a resource set, check what kind of resource it is and handle accordingly
+                if (isset($subscriber['resource'])) {
+                    if ($this->commonGroundService->isResource($subscriber['resource'])) {
+                        $resource = $this->commonGroundService->getResource($subscriber['resource']);
+
+                        // Check the resource type
+                        switch ($resource['@type']) {
+                            case 'Group':
+                                // If it is an (wac/)group resource loop through all memberships
+                                foreach ($resource['memberships'] as $membership) {
+                                    // If this membership is accepted
+                                    if (isset($membership['dateAcceptedGroup']) or isset($membership['dateAcceptedUser'])) {
+                                        // Get the user if it exists
+                                        if ($this->commonGroundService->isResource($membership['userUrl'])) {
+                                            $user = $this->commonGroundService->getResource($membership['userUrl']);
+                                            // Get CC/contact of the user if it exists
+                                            if (isset($user['person']) and $this->commonGroundService->isResource($user['person'])) {
+                                                $person = $this->commonGroundService->getResource($user['person']);
+                                                // Get email of the contact and send email to it
+                                                if (isset($person['emails'][0]['email'])) {
+                                                    array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $person['emails'][0]['email'], $sender)['@id']);
+                                                } elseif (strpos($user['username'], '@') and strpos($user['username'], '.')) {
+                                                    array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $user['username'], $sender)['@id']);
+                                                } else {
+                                                    throw new  Exception('This person ['.$user['person'].'] of User ['.$membership['userUrl'].'] has no email! ');
+                                                }
+                                            } elseif (strpos($user['username'], '@') and strpos($user['username'], '.')) {
+                                                array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $body, $subject, $user['username'], $sender)['@id']);
+                                            } else {
+                                                throw new  Exception('This user ['.$membership['userUrl'].'] of Membership ['.$membership['@id'].'] has no person! ');
+                                            }
+                                        } else {
+                                            throw new  Exception('This membership ['.$membership['@id'].'] of Group ['.$subscriber['resource'].'] has no userUrl! ');
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                throw new  Exception('This resource is of a type that cannot be used to send emails to! '.$subscriber['resource']);
+                        }
+                    } else {
+                        throw new  Exception('This resource is no commonground resource! '.$subscriber['resource']);
+                    }
+                }
             }
         } else {
             throw new  Exception('This sendList has no subscribers! '.$sendList['id']);
