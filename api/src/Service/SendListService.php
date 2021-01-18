@@ -21,6 +21,7 @@ class SendListService
         $this->idVaultService = $idVaultService;
     }
 
+    // TODO: make this cleaner, split into more smaller functions, remove duplicate code and use less if else and for where possible.
     public function saveList(SendList $sendListDTO)
     {
         $results = [];
@@ -77,52 +78,7 @@ class SendListService
             if ($sendListDTO->getGroups()) {
                 $groupIds = $sendListDTO->getGroups();
 
-                foreach ($groupIds as $groupId) {
-                    // Creat Url with group id
-                    $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
-
-                    // Check if this is an existing resource
-                    if ($this->commonGroundService->isResource($groupUrl)) {
-                        // Get the resource
-                        $group = $this->commonGroundService->getResource($groupUrl, [], false);
-                        //...and make sure it is a group resource
-                        if (isset($group) and $group['@type'] == 'Group') {
-                            // Check if this group has already a subscriber object in BS
-                            $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $groupUrl])['hydra:member'];
-                            if (count($subscribers) > 0) {
-                                // Set subscriber to the existing subscriber to update later
-                                $subscriber = $subscribers[0];
-
-                                // Set sendLists of this subscriber
-                                $subscriberSendLists = [];
-                                foreach ($subscriber['sendLists'] as $subscriberSendList) {
-                                    if ($subscriberSendList['id'] != $sendList['id']) {
-                                        array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
-                                    }
-                                }
-
-                                // Add the the sendList to this subscriber
-                                $subscriber['sendLists'] = $subscriberSendLists;
-                                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
-                            } else {
-                                // Set resource to groupUrl to create a new subscriber
-                                // Make sure to create a new subscriber and not use data already in this $subscriber:
-                                $subscriber = [];
-                                $subscriber['resource'] = $groupUrl;
-
-                                // Add the sendList to it
-                                $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
-                            }
-
-                            // Update or create a subscriber in BS and add them to the result.
-                            array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
-                        } else {
-                            throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
-                        }
-                    } else {
-                        throw new  Exception('This group resource is no commonground resource! '.$groupUrl);
-                    }
-                }
+                $this->addGroupsToList($groupIds, $sendList['id']);
             }
 
             // Make sure to get the up to date sendlist with correct subscribers (might be added above here^)
@@ -278,54 +234,61 @@ class SendListService
         if ($sendListDTO->getGroups()) {
             $groupIds = $sendListDTO->getGroups();
 
-            foreach ($groupIds as $groupId) {
-                // Creat Url with group id
-                $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
-
-                // Check if this is an existing resource
-                if ($this->commonGroundService->isResource($groupUrl)) {
-                    // Get the resource
-                    $group = $this->commonGroundService->getResource($groupUrl, [], false);
-                    //...and make sure it is a group resource
-                    if (isset($group) and $group['@type'] == 'Group') {
-                        // Check if this group has already a subscriber object in BS
-                        $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $groupUrl])['hydra:member'];
-                        if (count($subscribers) > 0) {
-                            // Set subscriber to the existing subscriber to update later
-                            $subscriber = $subscribers[0];
-
-                            // Add sendList to this subscriber
-                            $subscriberSendLists = [];
-                            foreach ($subscriber['sendLists'] as $subscriberSendList) {
-                                if ($subscriberSendList['id'] != $sendList['id']) {
-                                    array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
-                                }
-                            }
-
-                            $subscriber['sendLists'] = $subscriberSendLists;
-                            $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
-                        } else {
-                            // Set resource to groupUrl to create a new subscriber
-                            $subscriber['resource'] = $groupUrl;
-
-                            // Add the sendList to it
-                            $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
-                        }
-
-                        // Update or create a subscriber in BS
-                        array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
-                    } else {
-                        throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
-                    }
-                } else {
-                    throw new  Exception('This group resource is no commonground resource! '.$groupUrl);
-                }
-            }
+            $this->addGroupsToList($groupIds, $sendList['id']);
         }
 
         $sendListDTO->setResult($results);
 
         return $sendListDTO;
+    }
+
+    public function addGroupsToList(array $groupIds, string $sendListId) {
+        foreach ($groupIds as $groupId) {
+            // Creat Url with group id
+            $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
+
+            // Check if this is an existing resource
+            if ($this->commonGroundService->isResource($groupUrl)) {
+                // Get the resource
+                $group = $this->commonGroundService->getResource($groupUrl, [], false);
+                //...and make sure it is a group resource
+                if (isset($group) and $group['@type'] == 'Group') {
+                    // Check if this group has already a subscriber object in BS
+                    $subscribers = $this->commonGroundService->getResourceList(['component' => 'bs', 'type' => 'subscribers'], ['resource' => $groupUrl])['hydra:member'];
+                    if (count($subscribers) > 0) {
+                        // Set subscriber to the existing subscriber to update later
+                        $subscriber = $subscribers[0];
+
+                        // Set sendLists of this subscriber
+                        $subscriberSendLists = [];
+                        foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                            if ($subscriberSendList['id'] != $sendListId) {
+                                array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                            }
+                        }
+
+                        // Add the the sendList to this subscriber
+                        $subscriber['sendLists'] = $subscriberSendLists;
+                        $subscriber['sendLists'][] = '/send_lists/'.$sendListId;
+                    } else {
+                        // Set resource to groupUrl to create a new subscriber
+                        // Make sure to create a new subscriber and not use data already in this $subscriber:
+                        $subscriber = [];
+                        $subscriber['resource'] = $groupUrl;
+
+                        // Add the sendList to it
+                        $subscriber['sendLists'][] = '/send_lists/'.$sendListId;
+                    }
+
+                    // Update or create a subscriber in BS and add them to the result.
+                    array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+                } else {
+                    throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
+                }
+            } else {
+                throw new  Exception('This group resource is no commonground resource! '.$groupUrl);
+            }
+        }
     }
 
     public function sendToList(SendList $sendListDTO)
