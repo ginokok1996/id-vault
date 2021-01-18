@@ -103,8 +103,7 @@ class SendListService
         }
 
         // Make sure to get the up to date sendlist with correct subscribers (might be added above here^)
-        $sendListUrl = $this->commonGroundService->cleanUrl(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendList['id']]);
-        $sendList = $this->commonGroundService->getResource($sendListUrl, [], false);
+        $sendList = $this->commonGroundService->getResource($this->commonGroundService->cleanUrl(['component' => 'bs', 'type' => 'send_lists', 'id' => $sendList['id']]), [], false);
 
         // Now make sure to remove any wac/groups from the sendList if this is needed.
         $subscribers = [];
@@ -369,8 +368,6 @@ class SendListService
                     // Get email of the contact and send email to it
                     if (isset($person['emails'][0]['email'])) {
                         array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $email['body'], $email['subject'], $person['emails'][0]['email'], $email['sender'])['@id']);
-                    } elseif (strpos($user['username'], '@') and strpos($user['username'], '.')) {
-                        array_push($results, $this->idVaultService->sendMail('dd100c45-2814-41d6-bb17-7b95f062f784', $email['body'], $email['subject'], $user['username'], $email['sender'])['@id']);
                     } else {
                         throw new  Exception('This person ['.$user['person'].'] of User ['.$membership['userUrl'].'] has no email! ');
                     }
