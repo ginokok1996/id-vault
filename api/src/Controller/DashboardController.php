@@ -7,11 +7,15 @@ use App\Service\MailingService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Jose\Component\Core\Util\RSAKey;
+use Jose\Component\KeyManagement\JWKFactory;
 use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -894,7 +898,49 @@ class DashboardController extends AbstractController
             $this->commonGroundService->deleteResource($sendList);
 
             return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#mailingLists');
-        }
+        } elseif ($request->isMethod('POST') && $request->get('privateKey')) {
+            $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+            if (isset($application['userGroups'])) {
+                foreach ($application['userGroups'] as &$group) {
+                    $group = '/groups/'.$group['id'];
+                }
+            }
+            if (isset($application['proofs'])) {
+                foreach ($application['proofs'] as &$proof) {
+                    $proof = '/proofs/'.$proof['id'];
+                }
+            }
+
+            $jwk = JWKFactory::createRSAKey(
+                4096, // Size in bits of the key. We recommend at least 2048 bits.
+                [
+                    'alg' => 'RSA-512',
+                    'use' => 'alg'
+                ]);
+
+            $application['publicKey'] = RSAKey::createFromJWK($jwk->toPublic())->toPEM();
+            $application['privateKey'] = RSAKey::createFromJWK($jwk)->toPEM();
+
+            $this->commonGroundService->updateResource($application);
+
+        } elseif ($request->isMethod('POST') && $request->get('downloadPrivateKey')) {
+
+            $filename = 'privateKey.pem';
+
+            $key = $request->get('privateKeyValue');
+
+            $response = new Response($key);
+            // Create the disposition of the file
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $filename
+            );
+
+            // Set the content disposition
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+    }
 
         $variables['application'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
         $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);

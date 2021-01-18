@@ -36,6 +36,10 @@
 
     {% include 'dashboard/modals/add_mailing_list_modal.html.twig' %}
 
+    {% include 'dashboard/modals/application_public_key.html.twig' %}
+
+    {% include 'dashboard/modals/application_private_key.html.twig' %}
+
     {% if sendLists is defined and sendLists is not empty %}
         {% for sendList in sendLists %}
             {% include 'dashboard/modals/edit_mailing_list_modal.html.twig' %}

@@ -3198,6 +3198,562 @@ paths:
             schema:
               $ref: '#/components/schemas/ChangeLog-write'
         description: 'The updated ChangeLog resource'
+  /api/convert_user_groups:
+    post:
+      tags:
+        - ConvertUserGroup
+      operationId: postConvertUserGroupCollection
+      summary: 'Creates a ConvertUserGroup resource.'
+      responses:
+        201:
+          description: 'ConvertUserGroup resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+          links:
+            GetConvertUserGroupItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getConvertUserGroupItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /api/convert_user_groups/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+        description: 'The new ConvertUserGroup resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/api/convert_user_groups/{id}':
+    get:
+      tags:
+        - ConvertUserGroup
+      operationId: getConvertUserGroupItem
+      summary: 'Retrieves a ConvertUserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'ConvertUserGroup resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - ConvertUserGroup
+      operationId: deleteConvertUserGroupItem
+      summary: 'Removes the ConvertUserGroup resource.'
+      responses:
+        204:
+          description: 'ConvertUserGroup resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - ConvertUserGroup
+      operationId: putConvertUserGroupItem
+      summary: 'Replaces the ConvertUserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'ConvertUserGroup resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup:jsonld-write'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup:jsonld-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+        description: 'The updated ConvertUserGroup resource'
+    patch:
+      tags:
+        - ConvertUserGroup
+      operationId: patchConvertUserGroupItem
+      summary: 'Updates the ConvertUserGroup resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'ConvertUserGroup resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ConvertUserGroup-read'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup:jsonld-write'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/ConvertUserGroup-write'
+        description: 'The updated ConvertUserGroup resource'
   /api/create_groups:
     post:
       tags:
@@ -9628,6 +10184,60 @@ components:
         '@type':
           readOnly: true
           type: string
+    ConvertUserGroup-read:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+    ConvertUserGroup-write:
+      type: object
+      description: ''
+      properties:
+        clientId:
+          description: 'client id'
+          type: string
+    'ConvertUserGroup:jsonld-read':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+    'ConvertUserGroup:jsonld-write':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        clientId:
+          description: 'client id'
+          type: string
     CreateGroup-read:
       type: object
       description: ''
@@ -10772,6 +11382,14 @@ definitions:
         type: string
         example: 'log in to commonground'
     required: []
+  ConvertUserGroup-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+    required: []
   CreateGroup-read:
     properties:
       id:
@@ -10977,12 +11595,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-18 13:40:53'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-18 13:40:53'
     required: []
   AuditTrail-write:
     properties:
@@ -11030,12 +11648,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-18 13:40:53'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-14 15:01:41'
+        example: '2021-01-18 13:40:53'
     required: []
   ChangeLog-write:
     properties:
@@ -11054,6 +11672,12 @@ tags:
       
   -
     name: AccessToken
+    description: |
+      
+      
+      
+  -
+    name: ConvertUserGroup
     description: |
       
       
