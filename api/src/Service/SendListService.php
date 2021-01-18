@@ -72,7 +72,6 @@ class SendListService
 
             // Create a new sendList in BS or update an existing one
             $sendList = $this->commonGroundService->saveResource($sendList, ['component' => 'bs', 'type' => 'send_lists']);
-            array_push($results, $sendList);
 
             // If everything so far didn't throw any exceptions, create subscribers for the given groups
             if ($sendListDTO->getGroups()) {
@@ -113,7 +112,7 @@ class SendListService
                                 $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
                             }
 
-                            // Update or create a subscriber in BS
+                            // Update or create a subscriber in BS and add them to the result.
                             array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
                         } else {
                             throw new  Exception('This group resource is not of the type Group! '.$groupUrl);
@@ -123,6 +122,42 @@ class SendListService
                     }
                 }
             }
+
+            // Make sure to get the up to date sendlist with correct subscribers (might be added above here^)
+            $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
+
+            // Now make sure to remove any wac/groups from the sendList if this is needed.
+            $subscribers = [];
+            foreach ($sendList['subscribers'] as $subscriber) {
+                // If this subscriber has a resource that is a wac/group
+                if (isset($subscriber['resource']) and strpos($subscriber['resource'], '/wac/groups/')) {
+                    $remove = true;
+                    // Check if it is still needed to add this to this sendList
+                    if ($sendListDTO->getGroups()) {
+                        $groupIds = $sendListDTO->getGroups();
+                        foreach ($groupIds as $groupId) {
+                            if (strpos($subscriber['resource'], $groupId)) {
+                                $remove = false;
+                            }
+                        }
+                    }
+                    if ($remove) {
+                        // remove sendList from this subscriber
+                        $subscriberSendLists = [];
+                        foreach ($subscriber['sendLists'] as $subscriberSendList) {
+                            if ($subscriberSendList != '/send_lists/'.$sendList['id']) {
+                                array_push($subscriberSendLists, '/send_lists/'.$subscriberSendList['id']);
+                            }
+                        }
+                        $subscriber['sendLists'] = $subscriberSendLists;
+
+                        // save the subscriber
+                        array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+                    }
+                }
+            }
+
+            array_push($results, $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false));
         }
 
         $sendListDTO->setResult($results);
@@ -197,6 +232,7 @@ class SendListService
         return $sendListDTO;
     }
 
+    // TODO: make a removeSubscribersFromList
     public function addSubscribersToList(SendList $sendListDTO)
     {
         $results = [];

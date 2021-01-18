@@ -203,7 +203,7 @@ class SendList
     private $emails = [];
 
     /**
-     * @var array The groups used to add subscribers to a BS/sendList
+     * @var array The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!
      *
      * @Groups({"read","write"})
      */
