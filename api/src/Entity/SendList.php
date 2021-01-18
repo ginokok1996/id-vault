@@ -203,6 +203,13 @@ class SendList
     private $emails = [];
 
     /**
+     * @var array The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!
+     *
+     * @Groups({"read","write"})
+     */
+    private $groups = [];
+
+    /**
      * @var array The result
      *
      * @Groups({"read"})
@@ -396,6 +403,18 @@ class SendList
     public function setEmails(?array $emails): self
     {
         $this->emails = $emails;
+
+        return $this;
+    }
+
+    public function getGroups(): ?array
+    {
+        return $this->groups;
+    }
+
+    public function setGroups(?array $groups): self
+    {
+        $this->groups = $groups;
 
         return $this;
     }

@@ -44,6 +44,7 @@ class CreateGroupSubscriber implements EventSubscriberInterface
                 $group->setGroup($this->groupService->createGroup($group, $application));
             }
         }
+
         return $group;
     }
 }
