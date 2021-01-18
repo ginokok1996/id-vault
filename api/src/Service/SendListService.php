@@ -106,6 +106,8 @@ class SendListService
                                 $subscriber['sendLists'][] = '/send_lists/'.$sendList['id'];
                             } else {
                                 // Set resource to groupUrl to create a new subscriber
+                                // Make sure to create a new subscriber and not use data already in this $subscriber:
+                                $subscriber = [];
                                 $subscriber['resource'] = $groupUrl;
 
                                 // Add the sendList to it
