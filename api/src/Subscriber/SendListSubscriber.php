@@ -53,7 +53,7 @@ class SendListSubscriber implements EventSubscriberInterface
                         $this->sendListService->saveList($resource);
                         break;
                     case 'addSubscribersToList':
-                        if (empty($resource->getEmails() && empty($resource->getGroups()))) {
+                        if (empty($resource->getEmails()) && empty($resource->getGroups())) {
                             throw new  Exception('No emails or groups given!');
                         }
                         $this->sendListService->addSubscribersToList($resource);
