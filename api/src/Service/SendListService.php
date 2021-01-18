@@ -242,7 +242,8 @@ class SendListService
         return $sendListDTO;
     }
 
-    public function addGroupsToList(array $groupIds, string $sendListId) {
+    public function addGroupsToList(array $groupIds, string $sendListId)
+    {
         foreach ($groupIds as $groupId) {
             // Creat Url with group id
             $groupUrl = $this->commonGroundService->cleanUrl(['component' => 'wac', 'type' => 'groups', 'id' => $groupId]);
