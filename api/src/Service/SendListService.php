@@ -40,7 +40,8 @@ class SendListService
         return $sendListDTO;
     }
 
-    private function getListData(SendList $sendListDTO) {
+    private function getListData(SendList $sendListDTO)
+    {
         // if sendList is set we are going to update an existing BS/sendlist
         if ($sendListDTO->getSendList()) {
             $sendList = $this->commonGroundService->getResource($sendListDTO->getSendList(), [], false);
@@ -266,10 +267,12 @@ class SendListService
 
         // Update or create a subscriber in BS and add them to the result.
         array_push($results, $this->commonGroundService->saveResource($subscriber, ['component' => 'bs', 'type' => 'subscribers'])['@id']);
+
         return $results;
     }
 
-    private function setUpdateSubscriberData(array $subscriber, string $sendListId) {
+    private function setUpdateSubscriberData(array $subscriber, string $sendListId)
+    {
         // Set sendLists of this subscriber
         $subscriberSendLists = [];
         foreach ($subscriber['sendLists'] as $subscriberSendList) {
@@ -285,7 +288,8 @@ class SendListService
         return $subscriber;
     }
 
-    private function setCreateSubscriberData(string $type, string $sendListId) {
+    private function setCreateSubscriberData(string $type, string $sendListId)
+    {
         $subscriber = [];
 
         if ($type == 'resource') {
@@ -353,7 +357,8 @@ class SendListService
         return $results;
     }
 
-    private function sendToGroup(array $results, string $resource, array $email) {
+    private function sendToGroup(array $results, string $resource, array $email)
+    {
         foreach ($resource['memberships'] as $membership) {
             // If this membership is accepted
             if (isset($membership['dateAcceptedGroup']) or isset($membership['dateAcceptedUser'])) {
@@ -376,6 +381,7 @@ class SendListService
                 }
             }
         }
+
         return $results;
     }
 }
