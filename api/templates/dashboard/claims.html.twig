@@ -28,9 +28,9 @@
                             <div class="col-auto">
 
                                 <!-- Link -->
-                                <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#claim">
-                                    {{ 'what is a claim?'|trans|capitalize }}
-                                </a>
+                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalUploadClaim">
+                                    {{ 'upload'|trans|capitalize }}
+                                </button>
 
                             </div>
 
@@ -47,6 +47,8 @@
     </div> <!-- / .container -->
 
     <!-- Modals -->
+    {% include 'dashboard/modals/upload_claim.html.twig' %}
+
     {% if claims is defined and claims is not empty %}
         {% for claim in claims %}
             {% include 'dashboard/modals/edit_claim_modal.html.twig' %}
