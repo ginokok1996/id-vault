@@ -10996,6 +10996,11 @@ components:
           type: array
           items:
             type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
         result:
           description: 'The result'
           type: array
@@ -11067,6 +11072,11 @@ components:
           type: array
           items:
             type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
     'SendList:jsonld-read':
       type: object
       description: ''
@@ -11129,6 +11139,11 @@ components:
           type: string
         emails:
           description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
           type: array
           items:
             type: string
@@ -11209,6 +11224,11 @@ components:
           type: string
         emails:
           description: 'The email adresses used to add subscribers to a BS/sendList'
+          type: array
+          items:
+            type: string
+        groups:
+          description: 'The groups used to add subscribers to a BS/sendList'
           type: array
           items:
             type: string

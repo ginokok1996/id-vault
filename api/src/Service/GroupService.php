@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\CreateGroup;
-use App\Entity\Group;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
@@ -18,22 +17,26 @@ class GroupService
         $this->userService = $userService;
     }
 
-    public function createGroup(CreateGroup $group, $application) {
+    public function createGroup(CreateGroup $group, $application)
+    {
         $newGroup = [];
         $newGroup['name'] = $group->getName();
         $newGroup['description'] = $group->getDescription();
         $newGroup['application'] = '/applications/'.$application['id'];
         $newGroup['organization'] = $group->getOrganization();
         $newGroup = $this->commonGroundService->createResource($newGroup, ['component' => 'wac', 'type' => 'groups']);
+
         return $this->groupResponse($newGroup);
     }
 
-    public function groupResponse($group) {
+    public function groupResponse($group)
+    {
         $result = [];
         $result['id'] = $group['id'];
         $result['name'] = $group['name'];
         $result['description'] = $group['description'];
         $result['organization'] = $group['organization'];
+
         return $result;
     }
 

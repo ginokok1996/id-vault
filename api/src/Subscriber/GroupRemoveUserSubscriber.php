@@ -3,7 +3,6 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\GroupInvite;
 use App\Entity\GroupRemoveUser;
 use App\Service\GroupService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
@@ -38,6 +37,7 @@ class GroupRemoveUserSubscriber implements EventSubscriberInterface
             if (!$group->getGroupId() || !$group->getClientId()) {
                 throw new Exception('no group or client id provided');
             }
+
             try {
                 $selectedGroup = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $group->getGroupId()]);
             } catch (\Throwable $e) {

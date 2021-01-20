@@ -36,6 +36,7 @@ class GroupInviteSubscriber implements EventSubscriberInterface
             if (!$group->getGroupId() || !$group->getClientId()) {
                 throw new Exception('no group or client id provided');
             }
+
             try {
                 $selectedGroup = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $group->getGroupId()]);
             } catch (\Throwable $e) {
@@ -46,6 +47,7 @@ class GroupInviteSubscriber implements EventSubscriberInterface
             }
             $this->groupService->inviteUser($group->getUsername(), $selectedGroup, $group->getAccepted());
         }
+
         return $group;
     }
 }
