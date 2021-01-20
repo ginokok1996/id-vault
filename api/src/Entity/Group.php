@@ -19,16 +19,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     collectionOperations={
- *          "post"
+ *          "post",
+ *     		"get"={
+ *     			"method"="GET",
+ *     			"path"="/groups"
+ *     		},
+ *     		"get_group"={
+ *     			"method"="GET",
+ *     			"path"="/groups/{id}",
+ *     		}
+ *     },
+ *     itemOperations={
+ *     		"get"={
+ *     			"method"="GET",
+ *     			"path"="/groups/uuid/{id}"
+ *     		}
  *     }
  * )
  *
+ *
+ *
  * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
  *
- * @ApiFilter(BooleanFilter::class)
- * @ApiFilter(OrderFilter::class)
- * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
  * @ORM\Table(name="`group`")
  */
 class Group

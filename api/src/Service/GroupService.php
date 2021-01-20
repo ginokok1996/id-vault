@@ -33,6 +33,7 @@ class GroupService
     {
         $result = [];
         $result['id'] = $group['id'];
+        $result['@id'] = $group['@id'];
         $result['name'] = $group['name'];
         $result['description'] = $group['description'];
         $result['organization'] = $group['organization'];

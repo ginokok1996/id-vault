@@ -13,22 +13,19 @@
                     {{ 'upload claim'|trans|capitalize }}
                 </h2>
 
-                <form action=""
-                      class="dropzone"
-                      id="dropzone"></form>
+                <form action="{{ path('app_dashboard_claims') }}" method="post" enctype="multipart/form-data">
 
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="projectCoverUploads">
+                        <label class="custom-file-label" for="projectCoverUploads">Choose file</label>
+                    </div>
+
+                    <button class="btn btn-success btn-xs mt-2">upload</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 
-<script>
-    Dropzone.options.dropzone = {
-        paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: 2, // MB
-        accept: function(file, done) {
-            done();
-        }
-    };
-</script>
+

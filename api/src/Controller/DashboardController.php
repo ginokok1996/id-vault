@@ -474,23 +474,14 @@ class DashboardController extends AbstractController
                 }
             }
         }
-
-        // Add a new claim or edit one
-        if ($request->isMethod('POST') && ($request->get('addClaim') || $request->get('editClaim'))) {
-            $resource = $request->request->all();
-            $resource['person'] = $this->getUser()->getPerson();
-
-            $resource = $this->commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
-
-            return $this->redirect($this->generateUrl('app_dashboard_claim', ['id' => $resource['id']]));
-        } // Delete claim if there is no authorization connected to it
-        elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
-            $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
-            // Delete claim
-            $this->commonGroundService->deleteResource($claim);
-
-            return $this->redirect($this->generateUrl('app_dashboard_claims'));
+        if ($request->isMethod('POST')) {
+            if ($_FILES['file']['type'] !== 'application/json') {
+                $this->defaultService->throwFlash('error', 'File is not in JSON format');
+                return $variables;
+            }
+            $json = json_decode(file_get_contents($_FILES['file']['tmp_name']), true);
         }
+
 
         return $variables;
     }

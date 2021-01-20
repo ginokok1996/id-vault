@@ -8,18 +8,22 @@ use App\Service\UserService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class GroupSubscriber implements EventSubscriberInterface
 {
     private $commonGroundService;
     private $userService;
+    private $serializer;
 
-    public function __construct(CommongroundService $commonGroundService, UserService $userService)
+    public function __construct(CommongroundService $commonGroundService, UserService $userService, SerializerInterface $serializer)
     {
         $this->commonGroundService = $commonGroundService;
         $this->userService = $userService;
+        $this->serializer = $serializer;
     }
 
     public static function getSubscribedEvents()
@@ -46,6 +50,7 @@ class GroupSubscriber implements EventSubscriberInterface
                             $newGroup = [];
                             $newGroup['name'] = $oldGroup['name'];
                             $newGroup['id'] = $oldGroup['id'];
+                            $newGroup['@id'] = $oldGroup['@id'];
                             if (isset($oldGroup['description'])) {
                                 $newGroup['description'] = $oldGroup['description'];
                             }
@@ -70,6 +75,39 @@ class GroupSubscriber implements EventSubscriberInterface
                     throw new  Exception('Invalid clientId');
                 }
             }
+        } elseif ($event->getRequest()->getMethod() == 'GET') {
+
+            $id = $event->getRequest()->attributes->get('id');
+
+            try {
+                $group = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $id]);
+            } catch (\Throwable $e) {
+                throw new  Exception('Invalid group id');
+            }
+            $result = [];
+            $result['id'] = $group['id'];
+            $result['@id'] = $group['@id'];
+            $result['name'] = $group['name'];
+            $result['description'] = $group['description'];
+            $result['organization'] = $group['organization'];
+            $result['users'] = [];
+            foreach ($group['memberships'] as $membership) {
+                $user = $this->commonGroundService->getResource($membership['userUrl']);
+                $result['users'][] = $user['username'];
+            }
+
+            $json = $this->serializer->serialize(
+                $result,
+                'json'
+            );
+
+            $response = new Response(
+                $json,
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+
+            $event->setResponse($response);
         }
 
         return $group;

@@ -10997,7 +10997,7 @@ components:
           items:
             type: string
         groups:
-          description: 'The groups used to add subscribers to a BS/sendList'
+          description: 'The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!'
           type: array
           items:
             type: string
@@ -11073,7 +11073,7 @@ components:
           items:
             type: string
         groups:
-          description: 'The groups used to add subscribers to a BS/sendList'
+          description: 'The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!'
           type: array
           items:
             type: string
@@ -11143,7 +11143,7 @@ components:
           items:
             type: string
         groups:
-          description: 'The groups used to add subscribers to a BS/sendList'
+          description: 'The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!'
           type: array
           items:
             type: string
@@ -11228,7 +11228,7 @@ components:
           items:
             type: string
         groups:
-          description: 'The groups used to add subscribers to a BS/sendList'
+          description: 'The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!'
           type: array
           items:
             type: string
@@ -11615,12 +11615,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-20 08:41:58'
+        example: '2021-01-20 13:06:13'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-20 08:41:58'
+        example: '2021-01-20 13:06:13'
     required: []
   AuditTrail-write:
     properties:
@@ -11668,12 +11668,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2021-01-20 08:41:58'
+        example: '2021-01-20 13:06:13'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2021-01-20 08:41:58'
+        example: '2021-01-20 13:06:13'
     required: []
   ChangeLog-write:
     properties:
