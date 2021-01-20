@@ -5,16 +5,19 @@ namespace App\Service;
 use App\Entity\CreateGroup;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class GroupService
 {
     private $commonGroundService;
     private $userService;
+    private $requestStack;
 
-    public function __construct(CommonGroundService $commonGroundService, UserService $userService)
+    public function __construct(CommonGroundService $commonGroundService, UserService $userService, RequestStack $requestStack)
     {
         $this->commonGroundService = $commonGroundService;
         $this->userService = $userService;
+        $this->requestStack = $requestStack;
     }
 
     public function createGroup(CreateGroup $group, $application)
@@ -33,7 +36,7 @@ class GroupService
     {
         $result = [];
         $result['id'] = $group['id'];
-        $result['@id'] = $group['@id'];
+        $result['@id'] = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().'/api/groups/'.$group['id'];
         $result['name'] = $group['name'];
         $result['description'] = $group['description'];
         $result['organization'] = $group['organization'];

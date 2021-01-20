@@ -50,7 +50,7 @@ class GroupSubscriber implements EventSubscriberInterface
                             $newGroup = [];
                             $newGroup['name'] = $oldGroup['name'];
                             $newGroup['id'] = $oldGroup['id'];
-                            $newGroup['@id'] = $oldGroup['@id'];
+                            $newGroup['@id'] = $event->getRequest()->getSchemeAndHttpHost().'/api/groups/'.$oldGroup['id'];
                             if (isset($oldGroup['description'])) {
                                 $newGroup['description'] = $oldGroup['description'];
                             }
@@ -75,7 +75,7 @@ class GroupSubscriber implements EventSubscriberInterface
                     throw new  Exception('Invalid clientId');
                 }
             }
-        } elseif ($event->getRequest()->getMethod() == 'GET') {
+        } elseif ($event->getRequest()->getMethod() == 'GET' && $event->getRequest()->get('_route') == 'api_groups_get_group_collection') {
 
             $id = $event->getRequest()->attributes->get('id');
 
@@ -86,7 +86,7 @@ class GroupSubscriber implements EventSubscriberInterface
             }
             $result = [];
             $result['id'] = $group['id'];
-            $result['@id'] = $group['@id'];
+            $result['@id'] = $event->getRequest()->getSchemeAndHttpHost().'/api/groups/'.$id;
             $result['name'] = $group['name'];
             $result['description'] = $group['description'];
             $result['organization'] = $group['organization'];
