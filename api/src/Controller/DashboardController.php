@@ -477,6 +477,7 @@ class DashboardController extends AbstractController
         if ($request->isMethod('POST')) {
             if ($_FILES['file']['type'] !== 'application/json') {
                 $this->defaultService->throwFlash('error', 'File is not in JSON format');
+
                 return $variables;
             }
             $json = json_decode(file_get_contents($_FILES['file']['tmp_name']), true);
@@ -494,6 +495,7 @@ class DashboardController extends AbstractController
                 $this->defaultService->throwFlash('error', 'Claim is not in w3c format');
             }
         }
+
         return $variables;
     }
 
@@ -876,7 +878,6 @@ class DashboardController extends AbstractController
                 $application['configuration']['logo'] = 'data:image/'.$type.';base64,'.base64_encode($data);
             }
             $this->commonGroundService->updateResource($application);
-
         } elseif ($request->isMethod('POST') && $request->get('updateScopes')) {
             $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $application['scopes'] = $request->get('scopes');
@@ -947,16 +948,15 @@ class DashboardController extends AbstractController
                 4096, // Size in bits of the key. We recommend at least 2048 bits.
                 [
                     'alg' => 'RS512',
-                    'use' => 'alg'
-                ]);
+                    'use' => 'alg',
+                ]
+            );
 
             $application['publicKey'] = RSAKey::createFromJWK($jwk->toPublic())->toPEM();
             $application['privateKey'] = RSAKey::createFromJWK($jwk)->toPEM();
 
             $this->commonGroundService->updateResource($application);
-
         } elseif ($request->isMethod('POST') && $request->get('downloadPrivateKey')) {
-
             $filename = 'privateKey.pem';
 
             $key = $request->get('privateKeyValue');
@@ -972,7 +972,7 @@ class DashboardController extends AbstractController
             $response->headers->set('Content-Disposition', $disposition);
 
             return $response;
-    }
+        }
 
         $variables['application'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
         $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);

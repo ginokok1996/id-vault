@@ -76,7 +76,6 @@ class GroupSubscriber implements EventSubscriberInterface
                 }
             }
         } elseif ($event->getRequest()->getMethod() == 'GET' && $event->getRequest()->get('_route') == 'api_groups_get_group_collection') {
-
             $id = $event->getRequest()->attributes->get('id');
 
             try {
