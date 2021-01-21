@@ -46,6 +46,33 @@
                 <p class="text-gray-700">{{ application.testSecret }}</p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">{{ 'public key'|trans|capitalize }}:</p>
+                {% if application.publicKey is defined and application.publicKey is not empty %}
+                    <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalPublicKey">
+                        {{ 'show'|trans|capitalize }}
+                    </button>
+                {% endif %}
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <p class="font-weight-bold">{{ 'private key'|trans|capitalize }}:</p>
+
+                    {% if application.publicKey is not defined or application.publicKey is empty %}
+                        <form action="{{ path('app_dashboard_application', {id: application.id}) }}" method="post">
+                                <button name="privateKey" value="true" class="btn btn-xs btn-success">{{ 'generate'|trans|capitalize }}</button>
+                        </form>
+                    {% else %}
+                    <form action="{{ path('app_dashboard_application', {id: application.id}) }}" method="post">
+                        <input type="hidden" name="privateKeyValue" value="{{ application.privateKey }}">
+                        <button name="downloadPrivateKey" value="true" class="btn btn-xs btn-success">{{ 'download'|trans|capitalize }}</button>
+                        <button type="button" data-toggle="modal" data-target="#modalPrivateKey" class="btn btn-xs btn-danger">{{ 'generate new'|trans|capitalize }}</button>
+                    </form>
+                    {% endif %}
+
+            </div>
+        </div>
+
 
         <!-- Divider -->
         <hr class="border-gray-300 my-4">
