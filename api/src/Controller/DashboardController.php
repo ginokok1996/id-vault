@@ -7,11 +7,15 @@ use App\Service\MailingService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Jose\Component\Core\Util\RSAKey;
+use Jose\Component\KeyManagement\JWKFactory;
 use Money\Money;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -470,22 +474,26 @@ class DashboardController extends AbstractController
                 }
             }
         }
+        if ($request->isMethod('POST')) {
+            if ($_FILES['file']['type'] !== 'application/json') {
+                $this->defaultService->throwFlash('error', 'File is not in JSON format');
 
-        // Add a new claim or edit one
-        if ($request->isMethod('POST') && ($request->get('addClaim') || $request->get('editClaim'))) {
-            $resource = $request->request->all();
-            $resource['person'] = $this->getUser()->getPerson();
+                return $variables;
+            }
+            $json = json_decode(file_get_contents($_FILES['file']['tmp_name']), true);
+            if (isset($json['@context']) && $json['@context'][0] = 'https://www.w3.org/2018/credentials/v1') {
+                $claim = [];
+                $claim['person'] = $this->getUser()->getPerson();
+                $claim['property'] = $json['type'][1];
+                $claim['data'] = $json;
+                $claim['token'] = $json['proof']['jws'];
 
-            $resource = $this->commonGroundService->saveResource($resource, (['component' => 'wac', 'type' => 'claims']));
+                $this->commonGroundService->createResource($claim, ['component' => 'wac', 'type' => 'claims']);
 
-            return $this->redirect($this->generateUrl('app_dashboard_claim', ['id' => $resource['id']]));
-        } // Delete claim if there is no authorization connected to it
-        elseif ($request->isMethod('POST') && $request->get('deleteClaim')) {
-            $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claimID')]);
-            // Delete claim
-            $this->commonGroundService->deleteResource($claim);
-
-            return $this->redirect($this->generateUrl('app_dashboard_claims'));
+                return $this->redirect($this->generateUrl('app_dashboard_claims'));
+            } else {
+                $this->defaultService->throwFlash('error', 'Claim is not in w3c format');
+            }
         }
 
         return $variables;
@@ -791,6 +799,14 @@ class DashboardController extends AbstractController
             $application['technicalContact'] = $userUrl;
             $application['privacyContact'] = $userUrl;
             $application['billingContact'] = $userUrl;
+            $application['configuration']['fontColor'] = $request->get('fontColor');
+            $application['configuration']['backgroundColor'] = $request->get('backgroundColor');
+            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
+                $path = $_FILES['applicationLogo']['tmp_name'];
+                $type = filetype($_FILES['applicationLogo']['tmp_name']);
+                $data = file_get_contents($path);
+                $application['configuration']['logo'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+            }
             $this->commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_applications'));
@@ -814,6 +830,11 @@ class DashboardController extends AbstractController
             $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $wrcApplication = $this->commonGroundService->getResource($application['contact']);
 
+            if (isset($application['userGroups'])) {
+                foreach ($application['userGroups'] as &$userGroup) {
+                    $userGroup = '/groups/'.$userGroup['id'];
+                }
+            }
             //application
             $application['name'] = $request->get('name');
             $application['description'] = $request->get('description');
@@ -841,6 +862,22 @@ class DashboardController extends AbstractController
             }
 
             $wrcApplication = $this->commonGroundService->saveResource($wrcApplication, ['component' => 'wrc', 'type' => 'applications']);
+        } elseif ($request->isMethod('POST') && $request->get('updateStyle')) {
+            $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+            if (isset($application['userGroups'])) {
+                foreach ($application['userGroups'] as &$userGroup) {
+                    $userGroup = '/groups/'.$userGroup['id'];
+                }
+            }
+            $application['configuration']['fontColor'] = $request->get('fontColor');
+            $application['configuration']['backgroundColor'] = $request->get('backgroundColor');
+            if (isset($_FILES['logo']) && $_FILES['logo']['error'] !== 4) {
+                $path = $_FILES['logo']['tmp_name'];
+                $type = filetype($_FILES['logo']['tmp_name']);
+                $data = file_get_contents($path);
+                $application['configuration']['logo'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+            }
+            $this->commonGroundService->updateResource($application);
         } elseif ($request->isMethod('POST') && $request->get('updateScopes')) {
             $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
             $application['scopes'] = $request->get('scopes');
@@ -894,6 +931,47 @@ class DashboardController extends AbstractController
             $this->commonGroundService->deleteResource($sendList);
 
             return $this->redirect($this->generateUrl('app_dashboard_application', ['id' => $id]).'#mailingLists');
+        } elseif ($request->isMethod('POST') && $request->get('privateKey')) {
+            $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
+            if (isset($application['userGroups'])) {
+                foreach ($application['userGroups'] as &$group) {
+                    $group = '/groups/'.$group['id'];
+                }
+            }
+            if (isset($application['proofs'])) {
+                foreach ($application['proofs'] as &$proof) {
+                    $proof = '/proofs/'.$proof['id'];
+                }
+            }
+
+            $jwk = JWKFactory::createRSAKey(
+                4096, // Size in bits of the key. We recommend at least 2048 bits.
+                [
+                    'alg' => 'RS512',
+                    'use' => 'alg',
+                ]
+            );
+
+            $application['publicKey'] = RSAKey::createFromJWK($jwk->toPublic())->toPEM();
+            $application['privateKey'] = RSAKey::createFromJWK($jwk)->toPEM();
+
+            $this->commonGroundService->updateResource($application);
+        } elseif ($request->isMethod('POST') && $request->get('downloadPrivateKey')) {
+            $filename = 'privateKey.pem';
+
+            $key = $request->get('privateKeyValue');
+
+            $response = new Response($key);
+            // Create the disposition of the file
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $filename
+            );
+
+            // Set the content disposition
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
         }
 
         $variables['application'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $id]);
@@ -1180,6 +1258,16 @@ class DashboardController extends AbstractController
             $application['technicalContact'] = $userUrl;
             $application['privacyContact'] = $userUrl;
             $application['billingContact'] = $userUrl;
+
+            $application['configuration']['fontColor'] = $request->get('fontColor');
+            $application['configuration']['backgroundColor'] = $request->get('backgroundColor');
+            if (isset($_FILES['applicationLogo']) && $_FILES['applicationLogo']['error'] !== 4) {
+                $path = $_FILES['applicationLogo']['tmp_name'];
+                $type = filetype($_FILES['applicationLogo']['tmp_name']);
+                $data = file_get_contents($path);
+                $application['configuration']['logo'] = 'data:image/'.$type.';base64,'.base64_encode($data);
+            }
+
             $this->commonGroundService->createResource($application, ['component' => 'wac', 'type' => 'applications']);
 
             return $this->redirect($this->generateUrl('app_dashboard_organization', ['id' => $id]));

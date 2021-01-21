@@ -15,6 +15,62 @@
 
     </div>
     <div class="card-body">
-
+        <form action="{{ path('app_dashboard_application', {id: application.id}) }}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12">
+                    <div class="custom-file">
+                        <input onchange="showLogo()" type="file" name="logo" class="custom-file-input" id="logo">
+                        <label class="custom-file-label" for="customFile">{{ 'choose logo'|trans|capitalize }}</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div id="logoHolder" style="text-align: center" class="align-items-center mt-4 mb-4 bg-gray-200" >
+                        {% if application.configuration.logo is defined %}
+                            <img style="height: 100px;" src="{{ application.configuration.logo }}" alt="...">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="backgroundColor">{{ 'background color' }}</label>
+                        <input id="backgroundColor" name="backgroundColor" type="color" class="form-control"
+                               {% if application.configuration.backgroundColor is defined %}value="{{ application.configuration.backgroundColor }}" {% else %}value="#ffffff"{% endif %}>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="fontColor">{{ 'font color' }}</label>
+                        <input id="fontColor" name="fontColor" type="color" class="form-control"
+                            {% if application.configuration.fontColor is defined %}value="{{ application.configuration.fontColor }}" {% else %}value="#000000"{% endif %}>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button name="updateStyle" value="true" class="btn btn-primary">{{ 'update'|trans|capitalize }}</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    function showLogo(){
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function Main() {
+            let file = document.querySelector('#logo').files[0];
+            let logoHolder = document.querySelector('#logoHolder');
+            logoHolder.innerHTML = '';
+            let logo = document.createElement('img');
+            let base64 = await toBase64(file);
+            logo.setAttribute('style', 'height: 100px;');
+            logo.setAttribute('src', base64);
+            logoHolder.appendChild(logo);
+        }
+        Main();
+    }
+</script>

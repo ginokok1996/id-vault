@@ -8,6 +8,17 @@
         <style>
             {{ wrcApplication.style.css|raw }}
         </style>
+    {% elseif application.configuration is defined and application.configuration is not empty %}
+        <style>
+            body {
+                background-color: {{ application.configuration.backgroundColor }} !important;
+                font-family: "Nunito Sans", sans-serif;
+                color: {{ application.configuration.fontColor }} !important;
+            }
+            a {
+                color: {{ application.configuration.fontColor }} !important;
+            }
+        </style>
     {% endif %}
 <section class="section border-primary">
     <div class="container d-flex flex-column">
@@ -21,6 +32,10 @@
                         <div class="text-center">
                             <img class="" style="width: 100px;" src="{{ wrcApplication.style.favicon.base64 }}" alt="...">
                         </div>
+                    {% elseif application.configuration.logo is defined %}
+                        <div class="text-center">
+                            <img class="" style="width: 100px;" src="{{ application.configuration.logo }}" alt="...">
+                        </div>
                     {% endif %}
 
                     <h1 class="mb-0 font-weight-bold text-center">
@@ -28,7 +43,7 @@
                     </h1>
 
                     <!-- Text -->
-                    <p class="mb-4 text-center text-muted">
+                    <p class="mb-4 text-center">
                         {% if application.description is defined and application.description is not empty %}
                             {{ application.description }}
                         {% endif %}
@@ -47,7 +62,7 @@
                     <ul class="text-center list-group list-group-flush mb-2">
                         {% if scopes is defined and scopes is not empty %}
                             {% for scope in scopes %}
-                                <li style="list-style: none;" class=" text-muted">
+                                <li style="list-style: none;" class="">
                                     {{ scope|trans }}
                                 </li>
                             {% endfor %}
@@ -67,7 +82,7 @@
                                     <ul class="text-center list-group list-group-flush mb-2"></ul>
                                     {% for deficiency in deficiencies %}
                                         <li style="list-style: none;" class=" text-muted">
-                                            <span class=" text-muted" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope|trans }}</span>
+                                            <span class="" href="{{ path('app_dashboard_claimyourdata') }}">{{ deficiency.scope|trans }}</span>
                                         </li>
                                     {% endfor %}
                                 </p>
