@@ -26,24 +26,7 @@
                                 </div>
                             </div>
                             {% if claim.data is defined and claim.data is not empty %}
-                                {% for key, value in claim.data %}
-                                    <div style="border: none" class="list-group-item pb-0">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                            </div>
-                                            <div class="col-11 ml-n5">
-                                                <!-- Heading -->
-                                                <p class="mb-0 font-weight-bold">
-                                                    {{ key }}
-                                                </p>
-                                                <!-- Text -->
-                                                <p class="text-gray-700">
-                                                    {{ value }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
+
                             {% endif %}
                         </div>
 
