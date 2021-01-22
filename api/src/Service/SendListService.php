@@ -356,7 +356,7 @@ class SendListService
         return $results;
     }
 
-    private function sendToGroup(array $results, string $resource, array $email)
+    private function sendToGroup(array $results, array $resource, array $email)
     {
         foreach ($resource['memberships'] as $membership) {
             // If this membership is accepted
