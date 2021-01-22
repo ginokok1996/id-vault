@@ -28,9 +28,9 @@
                             <div class="col-auto">
 
                                 <!-- Link -->
-                                <a class="small text-gray-700" target="_blank" href="{{ path('app_documentation_glossary') }}#claim">
-                                    {{ 'what is a claim?'|trans|capitalize }}
-                                </a>
+                                <button class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modalUploadClaim">
+                                    {{ 'upload'|trans|capitalize }}
+                                </button>
 
                             </div>
 
@@ -47,28 +47,7 @@
     </div> <!-- / .container -->
 
     <!-- Modals -->
-    {% if claims is defined and claims is not empty %}
-        {% for claim in claims %}
-            {% include 'dashboard/modals/edit_claim_modal.html.twig' %}
-            {% include 'dashboard/modals/view_authorizations_modal.html.twig' %}
-            {% include 'dashboard/modals/view_dossiers_modal.html.twig' %}
-            {% include 'dashboard/modals/delete_claim_modal.html.twig' %}
-
-            {% if claim.authorizations is defined and claim.authorizations is not empty %}
-                {% for authorization in claim.authorizations %}
-                    {% set application = commonground_resource(authorization.application.contact) %}
-                    {% include 'dashboard/modals/view_dossiers_modal.html.twig' %}
-                    {% include 'dashboard/modals/delete_authorization_modal.html.twig' %}
-
-                    {% if authorization.dossiers is defined and authorization.dossiers is not empty %}
-                        {% for dossier in authorization.dossiers %}
-                            {% include 'dashboard/modals/object_dossier_modal.html.twig' %}
-                            {% include 'dashboard/modals/delete_dossier_modal.html.twig' %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+    {% include 'dashboard/modals/upload_claim.html.twig' %}
+    
 
 {% endblock %}
