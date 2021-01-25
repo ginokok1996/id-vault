@@ -46,15 +46,15 @@ class DashboardController extends AbstractController
 
     public function provideCounterData($variables)
     {
-        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-        $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
-
-        $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
         //alerts
         $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
         $variables['alertCount'] = (string) count($alerts);
+
+        //tasks
+        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
+        $variables['taskCount'] = (string) count($tasks);
 
         return $variables;
     }
@@ -71,6 +71,37 @@ class DashboardController extends AbstractController
         $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
         $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
 
+        $application = $this->defaultService->getApplication();
+        $organizations = [];
+        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        foreach ($user['userGroups'] as $group) {
+            $organization = $this->commonGroundService->getResource($group['organization']);
+            if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                $organizations[] = $organization;
+            }
+        }
+        if (count($organizations) > 0) {
+            foreach ($organizations as &$organization) {
+                $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+                $account = $this->balanceService->getAcount($organizationUrl);
+                if ($account !== false) {
+                    $account['calculate'] = $account['balance'];
+                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                    $organization['account'] = $account;
+                } else {
+                    $this->balanceService->createAccount($organizationUrl, 1000);
+                    $account = $this->balanceService->getAcount($organizationUrl);
+                    $account['calculate'] = $account['balance'];
+                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                    $organization['account'] = $account;
+                }
+                $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
+                $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
+            }
+            $variables['organizations'] = $organizations;
+        }
+
+        // getting graph info
         $date = new \DateTime('today');
         $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -120,18 +151,11 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
 
-        $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-        $calendars = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
-
-        if (!count($calendars) > 0) {
-            $calendars = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
-        }
-
-        if (count($calendars) > 0) {
-            $calendar = $calendars[0];
-            $variables['tasks'] = $calendar['todos'];
+        if (count($tasks) > 0) {
+            $variables['tasks'] = $tasks;
         }
 
         return $variables;
@@ -1332,6 +1356,7 @@ class DashboardController extends AbstractController
     {
         // On an index route we might want to filter based on user input
         $variables = [];
+        $variables = $this->provideCounterData($variables);
         $organization = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
         $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
         $variables['organization'] = $organization;
@@ -1351,8 +1376,8 @@ class DashboardController extends AbstractController
         $variables['account'] = $this->balanceService->getAcount($organizationUrl);
 
         if ($variables['account'] !== false) {
-            $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-            $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $variables['account']['balance'] = $this->balanceService->getBalance($organizationUrl);
+            $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $variables['account']['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         if ($request->isMethod('POST')) {
@@ -1376,6 +1401,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($variables);
+
         if (!empty($this->getUser()->getOrganization())) {
             $organization = $this->commonGroundService->getResource($this->getUser()->getOrganization());
             $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
@@ -1393,6 +1420,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($variables);
+
         $variables['invoice'] = $this->commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
 
         return $variables;
@@ -1405,6 +1434,8 @@ class DashboardController extends AbstractController
     public function groupsAction(Request $request)
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($variables);
 
         $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
@@ -1420,6 +1451,8 @@ class DashboardController extends AbstractController
     public function groupAction($id, Request $request)
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($variables);
 
         $variables['group'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $id]);
 
