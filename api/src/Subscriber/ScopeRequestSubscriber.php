@@ -67,7 +67,6 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
                 $now->modify('+1 week');
                 $todo['startDate'] = $now->format('Y-m-d');
                 $this->commonGroundService->createResource($todo, ['component' => 'arc', 'type' => 'todos']);
-
             } else {
                 throw new  Exception('Invalid authorization code');
             }
