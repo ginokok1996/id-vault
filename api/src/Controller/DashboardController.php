@@ -70,6 +70,37 @@ class DashboardController extends AbstractController
         $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
         $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
 
+        $application = $this->defaultService->getApplication();
+        $organizations = [];
+        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+        foreach ($user['userGroups'] as $group) {
+            $organization = $this->commonGroundService->getResource($group['organization']);
+            if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                $organizations[] = $organization;
+            }
+        }
+        if (count($organizations) > 0) {
+            foreach ($organizations as &$organization) {
+                $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+                $account = $this->balanceService->getAcount($organizationUrl);
+                if ($account !== false) {
+                    $account['calculate'] = $account['balance'];
+                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                    $organization['account'] = $account;
+                } else {
+                    $this->balanceService->createAccount($organizationUrl, 1000);
+                    $account = $this->balanceService->getAcount($organizationUrl);
+                    $account['calculate'] = $account['balance'];
+                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                    $organization['account'] = $account;
+                }
+                $organization['margin'] = $this->defaultService->calculateMargin((int)$this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
+                $organization['cost'] = (int)$this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
+            }
+            $variables['organizations'] = $organizations;
+        }
+
+        // getting graph info
         $date = new \DateTime('today');
         $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -1344,8 +1375,8 @@ class DashboardController extends AbstractController
         $variables['account'] = $this->balanceService->getAcount($organizationUrl);
 
         if ($variables['account'] !== false) {
-            $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-            $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $account['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $variables['account']['balance'] = $this->balanceService->getBalance($organizationUrl);
+            $variables['payments'] = $this->commonGroundService->getResourceList(['component' => 'bare', 'type' => 'payments'], ['acount.id' => $variables['account']['id'], 'order[dateCreated]' => 'desc'])['hydra:member'];
         }
 
         if ($request->isMethod('POST')) {

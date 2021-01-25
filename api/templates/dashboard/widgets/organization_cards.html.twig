@@ -1,0 +1,26 @@
+<div class="col-12 mb-4 p-0">
+    <div class="row">
+        {% if organizations is defined and organizations is not empty %}
+            {% for organization in organizations %}
+                <div class="col-12 col-lg-6 mb-4">
+                    <!-- Card -->
+                    <a class="card card-bleed shadow-light-lg" href="{{ path('app_dashboard_transactions', {organization: organization.id}) }}"
+                    {% if organization.margin > 0 and organization.margin < 25 %}
+                        style="background-color: yellow"
+                    {% elseif organization.margin < 0 %}
+                        style="background-color: red"
+                    {% endif %}>
+                        <!-- Body -->
+                        <div class="card-body text-center">
+                            <h3 class="mb-5" style="font-weight: bold">
+                                {{ organization.name|capitalize }}
+                            </h3>
+                            <p>{{ 'current balance'|trans|capitalize }}: {{ organization.account.balance }}</p>
+                            <p>{{ 'costs this month'|trans|capitalize }}: €{{ organization.cost }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

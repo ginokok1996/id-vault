@@ -10,111 +10,22 @@
             </div>
             <div class="col-12 col-md-9">
                 <div class="row">
-                    <div class="col-12 mb-6">
+                    <div class="col-12 mb-4">
                         <a href="{{ path('app_dashboard_claimyourdata') }}"
                            class="btn btn-primary btn-block shadow lift">
                             Let us help you claim your data back from external parties, lets go!
                         </a>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="row">
-                        {% for authorization in authorizations %}
-                            {% if authorization.singleSignOnUrl is defined %}
-                                <div class="col-12 col-md-6 col-lg-4">
-                                    <!-- Card -->
-                                    <a target="_blank" style="text-decoration: none"
-                                       href="{{ authorization.singleSignOnUrl }}">
-                                        <div class="card card-bleed shadow-light-lg mb-6 lift">
-                                            {% set wrcApplication = commonground_resource(authorization.application.contact) %}
-                                            {% if wrcApplication.style.favicon is defined %}
-                                                <img alt="" style="
-                                                {% if authorization.backgroundColor is defined and authorization.backgroundColor|length > 0 %}
-                                                    background-color: {{ authorization.backgroundColor[1] }};
-                                                {% endif %}
-                                                    width: 100px; height: 100px; margin-left: auto; margin-right: auto"
-                                                     src="{{ wrcApplication.style.favicon.base64 }}"/>
-                                            {% endif %}
-                                            <div class="card-body text-center pl-2 pr-2">
-                                                {{ authorization.application.name }}
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
 
-                <div class="col-12">
-                    <div class="row">
-                        <canvas id="myChart" width="400" height="200"
-                                style="display: block; width: 500px; height: 200px"></canvas>
-                        <script>
-                            var ctx = document.getElementById('myChart').getContext('2d');
-                            var chart = new Chart(ctx, {
-                                // The type of chart we want to create
-                                type: 'line',
+                <!-- Single sign on list -->
+                {% include 'dashboard/widgets/single_sign_on_list.html.twig' %}
 
-                                // The data for our dataset
-                                data: {
-                                    labels: ['{{ 'monday'|trans|capitalize }}', '{{ 'tuesday'|trans|capitalize }}', '{{ 'wednesday'|trans|capitalize }}', '{{ 'thursday'|trans|capitalize }}', '{{ 'friday'|trans|capitalize }}', '{{ 'saturday'|trans|capitalize }}', '{{ 'sunday'|trans|capitalize }}'],
-                                    datasets: [{
-                                        label: '{{ 'data queries'|trans|capitalize }}',
-                                        data: ['{{ days.monday|length }}', '{{ days.tuesday|length }}', '{{ days.wednesday|length }}', '{{ days.thursday|length }}', '{{ days.friday|length }}', '{{ days.saturday|length }}', '{{ days.sunday|length }}'],
-                                        backgroundColor: 'rgb(255, 99, 132)',
-                                        borderColor: 'rgb(255, 99, 132)',
-                                        fill: false,
-                                    }],
-                                },
-                                // Configuration options go here
-                                options: {
-                                    responsive: true,
-                                    plugins: {
-                                        title: {
-                                            display: true,
-                                            text: '{{ 'data requests'|trans|capitalize }}'
-                                        },
-                                        tooltip: {
-                                            mode: 'index',
-                                            intersect: false,
-                                        }
-                                    },
-                                    hover: {
-                                        mode: 'nearest',
-                                        intersect: true
-                                    },
-                                    scales: {
-                                        x: {
-                                            display: true,
-                                            scaleLabel: {
-                                                display: true,
-                                                labelString: 'Day'
-                                            }
-                                        },
-                                        y: {
-                                            display: true,
-                                            scaleLabel: {
-                                                display: true,
-                                                labelString: 'Value'
-                                            }
-                                        },
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true,
-                                                stepSize: 1
-                                            }
-                                        }]
-                                    }
-                                }
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-            <!-- tasks -->
-            <div class=" col-md-3">
+                <!-- Data queries graph -->
+                {% include 'dashboard/widgets/data_queries_graph.html.twig' %}
 
+                <!-- Organization cards -->
+                {% include 'dashboard/widgets/organization_cards.html.twig' %}
 
             </div>
         </div> <!-- / .row -->
