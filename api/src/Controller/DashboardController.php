@@ -55,6 +55,7 @@ class DashboardController extends AbstractController
         //tasks
         $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
         $variables['taskCount'] = (string) count($tasks);
+
         return $variables;
     }
 
@@ -94,8 +95,8 @@ class DashboardController extends AbstractController
                     $account['balance'] = $this->balanceService->getBalance($organizationUrl);
                     $organization['account'] = $account;
                 }
-                $organization['margin'] = $this->defaultService->calculateMargin((int)$this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
-                $organization['cost'] = (int)$this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
+                $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
+                $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
             }
             $variables['organizations'] = $organizations;
         }
