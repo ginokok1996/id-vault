@@ -1,0 +1,71 @@
+<div class="col-12 mb-4">
+    <div class="row">
+        <div class="card shadow-light-lg">
+
+            <!-- Body -->
+            <div class="card-body">
+                <canvas id="myChart" width="400" height="200"
+                        style="display: block; width: 500px; height: 200px"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'line',
+
+                        // The data for our dataset
+                        data: {
+                            labels: ['{{ 'monday'|trans|capitalize }}', '{{ 'tuesday'|trans|capitalize }}', '{{ 'wednesday'|trans|capitalize }}', '{{ 'thursday'|trans|capitalize }}', '{{ 'friday'|trans|capitalize }}', '{{ 'saturday'|trans|capitalize }}', '{{ 'sunday'|trans|capitalize }}'],
+                            datasets: [{
+                                label: '{{ 'data queries'|trans|capitalize }}',
+                                data: ['{{ days.monday|length }}', '{{ days.tuesday|length }}', '{{ days.wednesday|length }}', '{{ days.thursday|length }}', '{{ days.friday|length }}', '{{ days.saturday|length }}', '{{ days.sunday|length }}'],
+                                backgroundColor: 'rgb(255, 99, 132)',
+                                borderColor: 'rgb(255, 99, 132)',
+                                fill: false,
+                            }],
+                        },
+                        // Configuration options go here
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: '{{ 'data requests'|trans|capitalize }}'
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false,
+                                }
+                            },
+                            hover: {
+                                mode: 'nearest',
+                                intersect: true
+                            },
+                            scales: {
+                                x: {
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Day'
+                                    }
+                                },
+                                y: {
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Value'
+                                    }
+                                },
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        stepSize: 1
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

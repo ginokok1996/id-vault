@@ -62,4 +62,9 @@ class DefaultService
     {
         $this->flash->add($type, $message);
     }
+
+    public function calculateMargin($cost, $balance)
+    {
+        return (1 - $cost / $balance) * 100;
+    }
 }
