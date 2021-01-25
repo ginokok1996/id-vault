@@ -7,7 +7,7 @@
                     <a class="card card-bleed shadow-light-lg" href="{{ path('app_dashboard_transactions', {organization: organization.id}) }}"
                     {% if organization.margin > 0 and organization.margin < 25 %}
                         style="background-color: yellow"
-                    {% elseif organization.margin < 0 %}
+                    {% elseif organization.margin <= 0 %}
                         style="background-color: red"
                     {% endif %}>
                         <!-- Body -->
