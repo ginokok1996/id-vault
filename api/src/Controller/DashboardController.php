@@ -46,16 +46,15 @@ class DashboardController extends AbstractController
 
     public function provideCounterData($variables)
     {
-        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-        $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
-
-        $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
         //alerts
         $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
         $variables['alertCount'] = (string) count($alerts);
 
+        //tasks
+        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
+        $variables['taskCount'] = (string) count($tasks);
         return $variables;
     }
 
@@ -120,18 +119,11 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
+        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
 
-        $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-        $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-        $calendars = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $personUrl])['hydra:member'];
-
-        if (!count($calendars) > 0) {
-            $calendars = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'calendars'], ['resource' => $this->getUser()->getPerson()])['hydra:member'];
-        }
-
-        if (count($calendars) > 0) {
-            $calendar = $calendars[0];
-            $variables['tasks'] = $calendar['todos'];
+        if (count($tasks) > 0) {
+            $variables['tasks'] = $tasks;
         }
 
         return $variables;
@@ -1332,6 +1324,7 @@ class DashboardController extends AbstractController
     {
         // On an index route we might want to filter based on user input
         $variables = [];
+        $variables = $this->provideCounterData($variables);
         $organization = $this->commonGroundService->getResource(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization]);
         $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
         $variables['organization'] = $organization;
@@ -1376,6 +1369,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($variables);
+
         if (!empty($this->getUser()->getOrganization())) {
             $organization = $this->commonGroundService->getResource($this->getUser()->getOrganization());
             $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
@@ -1393,6 +1388,8 @@ class DashboardController extends AbstractController
     {
         $variables = [];
 
+        $variables = $this->provideCounterData($variables);
+
         $variables['invoice'] = $this->commonGroundService->getResource(['component' => 'bc', 'type' => 'invoices', 'id' => $id]);
 
         return $variables;
@@ -1405,6 +1402,8 @@ class DashboardController extends AbstractController
     public function groupsAction(Request $request)
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($variables);
 
         $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
@@ -1420,6 +1419,8 @@ class DashboardController extends AbstractController
     public function groupAction($id, Request $request)
     {
         $variables = [];
+
+        $variables = $this->provideCounterData($variables);
 
         $variables['group'] = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $id]);
 

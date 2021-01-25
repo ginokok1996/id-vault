@@ -49,9 +49,7 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
                 $newRequest = [];
                 $newRequest['scopes'] = $scopeRequest->getScopes();
                 $newRequest['authorization'] = '/authorizations/'.$authorization['id'];
-
-                $newRequest = $this->commonGroundService->createResource($newRequest, ['component' => 'wac', 'type' => 'scope_requests']);
-
+                $this->commonGroundService->createResource($newRequest, ['component' => 'wac', 'type' => 'scope_requests']);
                 $scopeRequest->setStatus('request for scopes submitted');
 
                 $alert = [];
@@ -60,13 +58,16 @@ class ScopeRequestSubscriber implements EventSubscriberInterface
                 $alert['link'] = $authorization['userUrl'];
                 $alert['icon'] = 'fas fa-bell';
                 $alert['type'] = 'info';
-
-                $user = $this->commonGroundService->getResource($authorization['userUrl']);
-
-                $person = $this->commonGroundService->getResource($user['person']);
-                $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-
                 $this->commonGroundService->createResource($alert, ['component' => 'uc', 'type' => 'alerts']);
+
+                $now = new \DateTime('now');
+                $todo = [];
+                $todo['name'] = 'Authorize requested scopes';
+                $todo['startDate'] = $now->format('Y-m-d');
+                $now->modify('+1 week');
+                $todo['startDate'] = $now->format('Y-m-d');
+                $this->commonGroundService->createResource($todo, ['component' => 'arc', 'type' => 'todos']);
+
             } else {
                 throw new  Exception('Invalid authorization code');
             }
