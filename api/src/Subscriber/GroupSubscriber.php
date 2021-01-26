@@ -44,44 +44,7 @@ class GroupSubscriber implements EventSubscriberInterface
                 try {
                     $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $group->getClientId()]);
                     $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
-                    $groupList = [];
-                    if (count($groups) > 0) {
-                        foreach ($groups as $oldGroup) {
-                            $newGroup = [];
-                            $newGroup['name'] = $oldGroup['name'];
-                            $newGroup['id'] = $oldGroup['id'];
-                            $newGroup['@id'] = $event->getRequest()->getSchemeAndHttpHost().'/api/groups/'.$oldGroup['id'];
-                            if (isset($oldGroup['description'])) {
-                                $newGroup['description'] = $oldGroup['description'];
-                            }
-                            $newGroup['users'] = [];
-                            if (count($oldGroup['memberships']) > 0) {
-                                foreach ($oldGroup['memberships'] as $membership) {
-                                    if (!empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
-                                        $user = $this->commonGroundService->getResource($membership['userUrl']);
-                                        $userInfo = [];
-                                        $userInfo['username'] = $user['username'];
-                                        $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
-                                        if (isset($membership['dateAcceptedGroup'])) {
-                                            $dateAcceptedGroup = new \DateTime($membership['dateAcceptedGroup']);
-                                            $dateAcceptedUser = new \DateTime($membership['dateAcceptedUser']);
-                                            if (!isset($membership['dateAcceptedUser']) or (isset($membership['dateAcceptedUser'])
-                                                    && $dateAcceptedGroup->format('Y-m-d') < $dateAcceptedUser->format('Y-m-d'))) {
-                                                $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
-                                            }
-                                        }
-                                        $newGroup['users'][] = $userInfo;
-                                    }
-                                }
-                            }
-                            if (!empty($oldGroup['organization']) && $oldGroup['organization'] == $group->getOrganization()) {
-                                $newGroup['organization'] = $oldGroup['organization'];
-                                $groupList[] = $newGroup;
-                            }
-                        }
-                    }
-
-                    $group->setGroups($groupList);
+                    $group->setGroups($this->getGroupList($groups, $event, $group));
                 } catch (\Throwable $e) {
                     throw new  Exception('Invalid clientId');
                 }
@@ -103,18 +66,7 @@ class GroupSubscriber implements EventSubscriberInterface
             $result['users'] = [];
             foreach ($group['memberships'] as $membership) {
                 $user = $this->commonGroundService->getResource($membership['userUrl']);
-                $userInfo = [];
-                $userInfo['username'] = $user['username'];
-                $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
-                if (isset($membership['dateAcceptedGroup'])) {
-                    $dateAcceptedGroup = new \DateTime($membership['dateAcceptedGroup']);
-                    $dateAcceptedUser = new \DateTime($membership['dateAcceptedUser']);
-                    if (!isset($membership['dateAcceptedUser']) or (isset($membership['dateAcceptedUser'])
-                            && $dateAcceptedGroup->format('Y-m-d') < $dateAcceptedUser->format('Y-m-d'))) {
-                        $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
-                    }
-                }
-                $result['users'][] = $userInfo;
+                $result['users'][] = $this->setUserInfo($user, $membership);;
             }
 
             $json = $this->serializer->serialize(
@@ -132,5 +84,49 @@ class GroupSubscriber implements EventSubscriberInterface
         }
 
         return $group;
+    }
+
+    private function getGroupList(array $groups, ViewEvent $event, Group $group) {
+        $groupList = [];
+        if (count($groups) > 0) {
+            foreach ($groups as $oldGroup) {
+                $newGroup = [];
+                $newGroup['name'] = $oldGroup['name'];
+                $newGroup['id'] = $oldGroup['id'];
+                $newGroup['@id'] = $event->getRequest()->getSchemeAndHttpHost().'/api/groups/'.$oldGroup['id'];
+                if (isset($oldGroup['description'])) {
+                    $newGroup['description'] = $oldGroup['description'];
+                }
+                $newGroup['users'] = [];
+                if (count($oldGroup['memberships']) > 0) {
+                    foreach ($oldGroup['memberships'] as $membership) {
+                        if (!empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
+                            $user = $this->commonGroundService->getResource($membership['userUrl']);
+                            $newGroup['users'][] = $this->setUserInfo($user, $membership);
+                        }
+                    }
+                }
+                if (!empty($oldGroup['organization']) && $oldGroup['organization'] == $group->getOrganization()) {
+                    $newGroup['organization'] = $oldGroup['organization'];
+                    $groupList[] = $newGroup;
+                }
+            }
+        }
+        return $groupList;
+    }
+
+    private function setUserInfo(array $user, array $membership) {
+        $userInfo = [];
+        $userInfo['username'] = $user['username'];
+        $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
+        if (isset($membership['dateAcceptedGroup'])) {
+            $dateAcceptedGroup = new \DateTime($membership['dateAcceptedGroup']);
+            $dateAcceptedUser = new \DateTime($membership['dateAcceptedUser']);
+            if (!isset($membership['dateAcceptedUser']) or (isset($membership['dateAcceptedUser'])
+                    && $dateAcceptedGroup->format('Y-m-d') < $dateAcceptedUser->format('Y-m-d'))) {
+                $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
+            }
+        }
+        return $userInfo;
     }
 }
