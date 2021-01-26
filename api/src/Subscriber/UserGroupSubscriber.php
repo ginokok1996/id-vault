@@ -8,6 +8,7 @@ use App\Service\UserService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -15,11 +16,13 @@ class UserGroupSubscriber implements EventSubscriberInterface
 {
     private $commonGroundService;
     private $userService;
+    private $requestStack;
 
-    public function __construct(CommongroundService $commonGroundService, UserService $userService)
+    public function __construct(CommongroundService $commonGroundService, UserService $userService, RequestStack $requestStack)
     {
         $this->commonGroundService = $commonGroundService;
         $this->userService = $userService;
+        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()
@@ -39,42 +42,41 @@ class UserGroupSubscriber implements EventSubscriberInterface
             } else {
                 try {
                     $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $group->getClientId()]);
-                    $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
-                    $groupList = [];
-                    if (count($groups) > 0) {
-                        foreach ($groups as $oldGroup) {
-                            $newGroup = [];
-                            $newGroup['name'] = $oldGroup['name'];
+                    $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $group->getUsername()])['hydra:member'][0];
+                    $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
+                } catch (\Throwable $e) {
+                    throw new  Exception('Invalid clientId or username');
+                }
+                $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id'], 'memberships.userUrl' => $userUrl])['hydra:member'];
+                $groupList = [];
+                if (count($groups) > 0) {
+                    foreach ($groups as $oldGroup) {
+                        $newGroup = [];
+
+                        $result = array_filter($oldGroup['memberships'], function ($var) use ($userUrl) {
+                           return ($var['userUrl'] == $userUrl);
+                        })[0];
+
+                        if (!empty($result['dateAcceptedUser']) || !empty($result['dateAcceptedGroup'])) {
                             $newGroup['id'] = $oldGroup['id'];
+                            $newGroup['@id'] = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().'/api/groups/'.$oldGroup['id'];
+                            $newGroup['name'] = $oldGroup['name'];
                             if (isset($oldGroup['description'])) {
                                 $newGroup['description'] = $oldGroup['description'];
                             }
-                            if (count($oldGroup['memberships']) > 0) {
-                                foreach ($oldGroup['memberships'] as $membership) {
-                                    if (!empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
-                                        $user = $this->commonGroundService->getResource($membership['userUrl']);
-                                        if (isset($membership['dateAcceptedGroup'])) {
-                                            $newGroup['dateJoined'] = $membership['dateAcceptedGroup'];
-                                        } elseif (isset($membership['dateAcceptedUser'])) {
-                                            $newGroup['dateJoined'] = $membership['dateAcceptedUser'];
-                                        }
-                                        if (!empty($oldGroup['organization']) && $user['username'] == $group->getUsername()) {
-                                            $newGroup['organization'] = $oldGroup['organization'];
-                                            $groupList[] = $newGroup;
-                                        }
-                                    }
-                                }
-                            }
+                            isset($result['dateAcceptedUser']) ? $newGroup['dateJoined'] = $result['dateAcceptedUser'] : $newGroup['dateJoined'] = $result['dateAcceptedGroup'];
+                            $newGroup['organization'] = $oldGroup['organization'];
+                            $groupList[] = $newGroup;
                         }
-                    }
 
-                    $group->setGroups($groupList);
-                } catch (\Throwable $e) {
-                    throw new  Exception('Invalid clientId');
+                    }
                 }
+                $group->setGroups($groupList);
+
             }
         }
 
         return $group;
     }
+
 }
