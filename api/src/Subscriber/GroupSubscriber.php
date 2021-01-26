@@ -59,7 +59,18 @@ class GroupSubscriber implements EventSubscriberInterface
                                 foreach ($oldGroup['memberships'] as $membership) {
                                     if (!empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
                                         $user = $this->commonGroundService->getResource($membership['userUrl']);
-                                        $newGroup['users'][] = $user['username'];
+                                        $userInfo = [];
+                                        $userInfo['username'] = $user['username'];
+                                        $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
+                                        if (isset($membership['dateAcceptedGroup'])) {
+                                            $dateAcceptedGroup = new \DateTime($membership['dateAcceptedGroup']);
+                                            $dateAcceptedUser = new \DateTime($membership['dateAcceptedUser']);
+                                            if (!isset($membership['dateAcceptedUser']) or (isset($membership['dateAcceptedUser'])
+                                                    && $dateAcceptedGroup->format('Y-m-d') < $dateAcceptedUser->format('Y-m-d'))) {
+                                                $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
+                                            }
+                                        }
+                                        $newGroup['users'][] = $userInfo;
                                     }
                                 }
                             }
@@ -92,7 +103,18 @@ class GroupSubscriber implements EventSubscriberInterface
             $result['users'] = [];
             foreach ($group['memberships'] as $membership) {
                 $user = $this->commonGroundService->getResource($membership['userUrl']);
-                $result['users'][] = $user['username'];
+                $userInfo = [];
+                $userInfo['username'] = $user['username'];
+                $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
+                if (isset($membership['dateAcceptedGroup'])) {
+                    $dateAcceptedGroup = new \DateTime($membership['dateAcceptedGroup']);
+                    $dateAcceptedUser = new \DateTime($membership['dateAcceptedUser']);
+                    if (!isset($membership['dateAcceptedUser']) or (isset($membership['dateAcceptedUser'])
+                            && $dateAcceptedGroup->format('Y-m-d') < $dateAcceptedUser->format('Y-m-d'))) {
+                        $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
+                    }
+                }
+                $result['users'][] = $userInfo;
             }
 
             $json = $this->serializer->serialize(
