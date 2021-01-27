@@ -110,7 +110,7 @@ class OauthController extends AbstractController
                 return $this->redirect($redirectUrl.'?errorMessage=Cant+process+authorization');
             }
 
-            die;
+            exit;
 
             if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
                 $authorization = $this->oauthService->updateAuthorization($request->get('authorization'), $request->get('scopes'));

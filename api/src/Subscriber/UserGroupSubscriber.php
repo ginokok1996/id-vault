@@ -54,7 +54,7 @@ class UserGroupSubscriber implements EventSubscriberInterface
                         $newGroup = [];
 
                         $result = array_filter($oldGroup['memberships'], function ($var) use ($userUrl) {
-                           return ($var['userUrl'] == $userUrl);
+                            return $var['userUrl'] == $userUrl;
                         })[0];
 
                         if (!empty($result['dateAcceptedUser']) || !empty($result['dateAcceptedGroup'])) {
@@ -68,15 +68,12 @@ class UserGroupSubscriber implements EventSubscriberInterface
                             $newGroup['organization'] = $oldGroup['organization'];
                             $groupList[] = $newGroup;
                         }
-
                     }
                 }
                 $group->setGroups($groupList);
-
             }
         }
 
         return $group;
     }
-
 }

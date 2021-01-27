@@ -66,7 +66,7 @@ class GroupSubscriber implements EventSubscriberInterface
             $result['users'] = [];
             foreach ($group['memberships'] as $membership) {
                 $user = $this->commonGroundService->getResource($membership['userUrl']);
-                $result['users'][] = $this->setUserInfo($user, $membership);;
+                $result['users'][] = $this->setUserInfo($user, $membership);
             }
 
             $json = $this->serializer->serialize(
@@ -86,7 +86,8 @@ class GroupSubscriber implements EventSubscriberInterface
         return $group;
     }
 
-    private function getGroupList(array $groups, ViewEvent $event, Group $group) {
+    private function getGroupList(array $groups, ViewEvent $event, Group $group)
+    {
         $groupList = [];
         if (count($groups) > 0) {
             foreach ($groups as $oldGroup) {
@@ -112,10 +113,12 @@ class GroupSubscriber implements EventSubscriberInterface
                 }
             }
         }
+
         return $groupList;
     }
 
-    private function setUserInfo(array $user, array $membership) {
+    private function setUserInfo(array $user, array $membership)
+    {
         $userInfo = [];
         $userInfo['username'] = $user['username'];
         $userInfo['dateAccepted'] = $membership['dateAcceptedUser'];
@@ -127,6 +130,7 @@ class GroupSubscriber implements EventSubscriberInterface
                 $userInfo['dateAccepted'] = $membership['dateAcceptedGroup'];
             }
         }
+
         return $userInfo;
     }
 }

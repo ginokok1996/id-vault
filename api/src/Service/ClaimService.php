@@ -18,10 +18,11 @@ class ClaimService
     }
 
     /**
-     * This function checks if the scope exists for the given person
+     * This function checks if the scope exists for the given person.
      *
      * @param string $person person uri
-     * @param string $scope name of scope
+     * @param string $scope  name of scope
+     *
      * @return bool true or false depending if scope exists for user
      */
     public function checkUserScope(string $person, string $scope): bool
@@ -37,9 +38,10 @@ class ClaimService
     }
 
     /**
-     * This function gets the claims associated with the user
+     * This function gets the claims associated with the user.
      *
      * @param string $person person uri
+     *
      * @return array array of the scopes
      */
     public function getUserScopes(string $person): array
@@ -55,9 +57,10 @@ class ClaimService
     }
 
     /**
-     * This function creates an guzzle client with the provided url
+     * This function creates an guzzle client with the provided url.
      *
      * @param string $url url this client needs to send requests to
+     *
      * @return Client created client
      */
     public function createClient(string $url): Client
@@ -117,7 +120,7 @@ class ClaimService
         $accessToken = json_decode($response->getBody()->getContents(), true);
         $json = json_decode(base64_decode(explode('.', $accessToken['id_token'])[1]), true);
 
-        $this->createWacClaim(array('email' => $json['email']), $person, 'gmail');
+        $this->createWacClaim(['email' => $json['email']], $person, 'gmail');
 
         return true;
     }

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Service\ClaimService;
 use App\Service\DefaultService;
 use App\Service\MailingService;
-use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Jose\Component\Core\Util\RSAKey;
