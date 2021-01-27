@@ -272,10 +272,10 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/general")
+     * @Route("/settings")
      * @Template
      */
-    public function generalAction(Request $request)
+    public function settingsAction(Request $request)
     {
         $variables = [];
 
@@ -333,7 +333,7 @@ class DashboardController extends AbstractController
                 }
             }
 
-            return $this->redirect($this->generateUrl('app_dashboard_general'));
+            return $this->redirect($this->generateUrl('app_dashboard_settings'));
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
             // Add current user to userGroup developer.view if switch is on, else remove it instead.
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -353,7 +353,7 @@ class DashboardController extends AbstractController
                 }
                 $this->commonGroundService->updateResource($user);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         } elseif ($request->isMethod('POST') && $request->get('becomeDeveloper')) {
             // Add current user to userGroup developer
@@ -377,7 +377,7 @@ class DashboardController extends AbstractController
 
                 $this->mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         }
 
