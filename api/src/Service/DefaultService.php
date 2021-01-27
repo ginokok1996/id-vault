@@ -26,7 +26,8 @@ class DefaultService
 
     public function getProvider($type)
     {
-        $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => $type, 'application' => $this->params->get('app_id')])['hydra:member'];
+        $application = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $this->params->get('app_id')]);
+        $providers = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'providers'], ['type' => $type, 'application' => $application])['hydra:member'];
         if (count($providers) > 0) {
             return $providers[0];
         } else {
