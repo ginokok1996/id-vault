@@ -7,10 +7,12 @@ use Conduction\CommonGroundBundle\Service\CommonGroundService;
 class OauthService
 {
     private $commonGroundService;
+    private $mailingService;
 
-    public function __construct(CommonGroundService $commonGroundService)
+    public function __construct(CommonGroundService $commonGroundService, MailingService $mailingService)
     {
         $this->commonGroundService = $commonGroundService;
+        $this->mailingService = $mailingService;
     }
 
     /**
@@ -89,7 +91,7 @@ class OauthService
      * @param $application object application object from wac
      * @param $scopes array array of requested scopes
      *
-     * @return object|false returns object or false if failed to create
+     * @return array|false returns object or false if failed to create
      */
     public function compareExistingScopes($userUrl, $application, $scopes)
     {
@@ -109,6 +111,28 @@ class OauthService
             return $object;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * @param array $account account array
+     * @return bool true or false whether the authorisation can be processed.
+     */
+    public function checkBalance(array $account): bool
+    {
+        $organization = $this->commonGroundService->getResource($account['resource']);
+        $cc = $this->commonGroundService->getResource($organization['contact']);
+        $cost = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'];
+        $margin = (1 - $cost / $account['balance']) * 100;
+
+        if ($margin > 0 && $margin < 25) {
+            $this->mailingService->sendMail('mails/balance_warning.html.twig', 'no-reply@id-vault.com', $cc['emails'][0]['email'], 'Balance warning');
+            return true;
+        } elseif ($margin <= 0) {
+            $this->mailingService->sendMail('mails/authorization_declined.html.twig', 'no-reply@id-vault.com', $cc['emails'][0]['email'], 'Authorisation declined');
+            return false;
+        } else {
+            return true;
         }
     }
 }

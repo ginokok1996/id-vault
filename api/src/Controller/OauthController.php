@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\OauthService;
 use App\Service\ScopeService;
+use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,12 +24,14 @@ class OauthController extends AbstractController
     private $commonGroundService;
     private $scopeService;
     private $oauthService;
+    private $balanceService;
 
-    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService)
+    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService, BalanceService $balanceService)
     {
         $this->commonGroundService = $commonGroundService;
         $this->scopeService = $scopeService;
         $this->oauthService = $oauthService;
+        $this->balanceService = $balanceService;
     }
 
     /**
@@ -73,6 +76,7 @@ class OauthController extends AbstractController
 
         $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);
 
+        //lets see if there are new scopes requested from the user
         if ($this->getUser()) {
             $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
             $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
@@ -97,6 +101,16 @@ class OauthController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
             $redirectUrl = $request->get('redirect_uri');
+
+            //lets see if we have enough balance to process this request
+            $account = $this->balanceService->getAcount($variables['application']['organization']);
+            $ableToProcess = $this->oauthService->checkBalance($account);
+
+            if (!$ableToProcess) {
+                return $this->redirect($redirectUrl.'?errorMessage=Cant+process+authorization');
+            }
+
+            die;
 
             if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
                 $authorization = $this->oauthService->updateAuthorization($request->get('authorization'), $request->get('scopes'));
