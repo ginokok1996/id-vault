@@ -64,8 +64,8 @@
                         </a>
                     </li>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <li>
-                        <a href="{{ path('app_dashboard_general') }}" class="text-reset">
+                    <li class="mb-3">
+                        <a href="{{ path('app_dashboard_index') }}" class="text-reset">
                             {{ 'dashboard'|trans|capitalize }}
                         </a>
                     </li>

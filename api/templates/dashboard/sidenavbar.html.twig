@@ -18,6 +18,11 @@
                         {{ 'dashboard'|trans|capitalize }}
                     </a>
                 </li>
+                <li class="list-item {% if activeItem == 'settings' %}active{% endif %}">
+                    <a class="list-link text-reset" href="{{ path('app_dashboard_settings') }}">
+                        {{ 'settings'|trans|capitalize }}
+                    </a>
+                </li>
                 <li class="list-item {% if activeItem == 'claimYourData' %}active{% endif %}">
                     <a class="list-link text-reset" href="{{ path('app_dashboard_claimyourdata') }}">
                         {{ 'claim your data'|trans|capitalize }}
@@ -31,11 +36,6 @@
                 <li class="list-item {% if activeItem == 'tasks' %}active{% endif %}">
                     <a class="list-link text-reset" href="{{ path('app_dashboard_tasks') }}">
                         {{ 'tasks'|trans|capitalize }} <span class="badge badge-pill badge-danger-soft ml-auto align-self-center">{% if taskCount is defined %}{{ taskCount }}{% endif %}</span>
-                    </a>
-                </li>
-                <li class="list-item {% if activeItem == 'general' %}active{% endif %}">
-                    <a class="list-link text-reset" href="{{ path('app_dashboard_general') }}">
-                        {{ 'general'|trans|capitalize }}
                     </a>
                 </li>
                 <li class="list-item {% if activeItem == 'security' %}active{% endif %}">
@@ -53,7 +53,7 @@
                         {{ 'groups'|trans|capitalize }}
                     </a>
                 </li>
-                {% if 'group.conduction' in app.user.roles %}
+                {% if 'group.developers-conduction' in app.user.roles %}
                     <li class="list-item {% if activeItem == 'conduction' %}active{% endif %}">
                         <a class="list-link text-reset" href="{{ path('app_dashboard_conduction') }}">
                             {{ 'conduction'|trans|capitalize }}

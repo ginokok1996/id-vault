@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Service\ClaimService;
 use App\Service\DefaultService;
 use App\Service\MailingService;
-use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Jose\Component\Core\Util\RSAKey;
@@ -165,117 +165,29 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Request $request, ScopeService $scopeService, $type = null)
+    public function claimYourDataAction(Request $request, ClaimService $claimService, $type = null)
     {
         $variables = [];
 
-        $variables = $this->provideCounterData($variables);
+        //google
+        $provider = $this->defaultService->getProvider('gmail');
+        $variables['googleUrl'] = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri=http://id-vault.com/dashboard/claim-your-data/google';
 
-        if ($request->query->get('authorization')) {
-            $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
-            $scopes = $authorization['scopes'];
-
-            $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0) {
-                $user = $users[0];
+        if ($type == 'google' && $request->get('code')) {
+            $completed = $claimService->googleClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'google claim is aangemaakt';
             }
-            $variables['deficiencies'] = $scopeService->checkScopes($scopes, $user);
-        }
-
-        if ($this->session->get('brp') && $type = 'brp') {
-            $bsn = $this->session->get('brp');
-            if ($this->session->get('backUrl')) {
-                $backUrl = $this->session->get('backUrl');
-            }
-            $this->session->remove('brp');
-            $variables['changedInfo'] = [];
-            $ingeschrevenPersonen = $this->commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
-            $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-            $person = $this->commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-            if (count($ingeschrevenPersonen) > 0) {
-                $ingeschrevenPersoon = $ingeschrevenPersonen[0];
-                $person['taxID'] = $ingeschrevenPersoon['burgerservicenummer'];
-                $variables['changedInfo']['bsn'] = $ingeschrevenPersoon['burgerservicenummer'];
-
-                if (isset($ingeschrevenPersoon['geboorte']['plaats']['omschrijving'])) {
-                    $person['birthPlace'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
-                    $variables['changedInfo']['birth_place'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
-                }
-
-                if (isset($ingeschrevenPersoon['geboorte']['datum']['datum'])) {
-                    $person['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
-                    $variables['changedInfo']['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
-                }
-
-                if (isset($ingeschrevenPersoon['verblijfplaats'])) {
-                    $person['adresses'][0] = [];
-                    $person['adresses'][0]['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $person['adresses'][0]['houseNumber'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $person['adresses'][0]['houseNumberSuffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
-                    $person['adresses'][0]['postalCode'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
-
-                    $variables['changedInfo']['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $variables['changedInfo']['house_number'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
-                    $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
-                }
-
-                $this->commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
-            }
-        }
-
-        if ($this->session->get('duo') && $type = 'duo') {
-            $this->session->remove('duo');
-            $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-            $person = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-
-            $claim = [];
-            $claim['person'] = $person;
-            $claim['property'] = 'schema.person.educationalCredential';
-            $claim['data']['credentialCategory'] = 'diploma';
-            $claim['data']['name'] = 'Verpleegkundige';
-            $claim['data']['description'] = 'De Mbo-Verpleegkundige werkt met mensen die door ziekte, ouderdom of een beperking specialistische hulp of verzorging nodig hebben. De begeleiding varieert per zorgvrager. Je kan te maken krijgen met situaties waarbij de (psychische) gezondheidstoestand van de zorgvrager snel wisselt. Het gaat dan om situaties waarbij intensieve behandeling, therapie of medicatie wordt toegepast. Je werkt zelfstandig en je bent medeverantwoordelijk voor het opstellen van zorgplannen.';
-            $claim['data']['educationLevel'] = 'MBO 4';
-            $claim['data']['recognizedBy'] = 'https://www.nvao.net/';
-
-            $claim = $this->commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
-
-            $variables['newClaim'] = $claim;
-
-            if ($this->session->get('backUrl')) {
-                $variables['backUrl'] = $this->session->get('backUrl');
-                $variables['showModal'] = true;
-                $this->session->remove('backUrl');
-            }
-        }
-
-        if ($request->isMethod('POST') && $type == 'brp') {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
-        } elseif ($request->isMethod('POST') && $type == 'duo') {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
-        } elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
-            $data = [];
-            $data['sender'] = 'no-reply@conduction.nl';
-            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-
-            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL)."?email={$request->get('email')}";
-            $this->mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Claim your data', $data);
-
-            return $this->redirectToRoute('app_dashboard_claimyourdata');
-        } elseif (isset($backUrl)) {
-            $this->session->remove('backUrl');
-
-            return $this->redirect($backUrl);
         }
 
         return $variables;
     }
 
     /**
-     * @Route("/general")
+     * @Route("/settings")
      * @Template
      */
-    public function generalAction(Request $request)
+    public function settingsAction(Request $request)
     {
         $variables = [];
 
@@ -333,7 +245,7 @@ class DashboardController extends AbstractController
                 }
             }
 
-            return $this->redirect($this->generateUrl('app_dashboard_general'));
+            return $this->redirect($this->generateUrl('app_dashboard_settings'));
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
             // Add current user to userGroup developer.view if switch is on, else remove it instead.
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -353,7 +265,7 @@ class DashboardController extends AbstractController
                 }
                 $this->commonGroundService->updateResource($user);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         } elseif ($request->isMethod('POST') && $request->get('becomeDeveloper')) {
             // Add current user to userGroup developer
@@ -377,7 +289,7 @@ class DashboardController extends AbstractController
 
                 $this->mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         }
 
@@ -406,50 +318,6 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
-        return $variables;
-    }
-
-    /**
-     * @Route("/claimdata/{type}/{id}")
-     * @Template
-     */
-    public function claimdataAction($id, $type, Request $request)
-    {
-        $variables = [];
-
-        $variables = $this->provideCounterData($variables);
-
-        if ($type == 'email') {
-            $user = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'users', 'id' => $id]);
-            $person = $this->commonGroundService->getResource($user['person']);
-            $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-            $variables['value'] = $request->query->get('email');
-            $variables['type'] = $type;
-
-            $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['property' => 'schema.person.email', 'person' => $personUrl])['hydra:member'];
-            $variables['id'] = $id;
-
-            if (count($claims) > 0) {
-                $variables['claim'] = $claims[0];
-            }
-
-            if ($request->isMethod('POST') && $type == 'email') {
-                if ($request->get('claim')) {
-                    $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claim')]);
-                    $claim['data']['email'] = $request->get('value');
-                } else {
-                    $claim = [];
-                    $claim['property'] = 'schema.person.email';
-                    $claim['person'] = $personUrl;
-                    $claim['data']['email'] = $request->get('value');
-                }
-
-                $this->commonGroundService->saveResource($claim, (['component' => 'wac', 'type' => 'claims']));
-
-                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
-            }
-        }
 
         return $variables;
     }
