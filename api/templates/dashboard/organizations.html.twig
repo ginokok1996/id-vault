@@ -50,7 +50,7 @@
                                                         class="avatar-img"
                                                         src="{{ resource.style.favicon.base64 }}"
                                                         alt="..."
-                                                        style="object-fit: fill;
+                                                        style="object-fit: scale-down;
                                                         {% if resource.backgroundColor is defined and resource.backgroundColor|length > 0 %}
                                                             background-color: {{ resource.backgroundColor[1] }};
                                                         {% endif %}"
