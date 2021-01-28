@@ -136,7 +136,7 @@ class ClaimService
         $response = $client->request('GET', '/me?&fields=id,name,email&access_token='.$accessToken['access_token']);
         $json = json_decode($response->getBody()->getContents(), true);
 
-        $this->createWacClaim(array('email' => $json['email']), $person, 'facebook');
+        $this->createWacClaim(['email' => $json['email']], $person, 'facebook');
 
         return true;
     }
@@ -174,18 +174,20 @@ class ClaimService
 
         $json = json_decode($response->getBody()->getContents(), true);
 
-        $this->createWacClaim(array('email' => $json['email']), $person, 'github');
+        $this->createWacClaim(['email' => $json['email']], $person, 'github');
 
         return true;
     }
 
     /**
-     * This function creates an claim for linkedIn
+     * This function creates an claim for linkedIn.
      *
-     * @param string $code code received from linkedIn
+     * @param string $code   code received from linkedIn
      * @param string $person person uri
-     * @return bool true when finished
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return bool true when finished
      */
     public function linkedinClaim(string $code, string $person): bool
     {
@@ -220,7 +222,7 @@ class ClaimService
 
         $email = json_decode($response->getBody()->getContents(), true);
 
-        $this->createWacClaim(array('email' => $email['elements'][0]['handle~']['emailAddress']), $person, 'linkedIn');
+        $this->createWacClaim(['email' => $email['elements'][0]['handle~']['emailAddress']], $person, 'linkedIn');
 
         return true;
     }
