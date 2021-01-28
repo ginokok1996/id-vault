@@ -1,0 +1,52 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'authenticators'|trans|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Link -->
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalAddAuth">
+                    {{ 'add'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if tokens is defined and tokens is not empty %}
+            <div class="list-group list-group-flush">
+                {% for token in tokens %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <!-- Heading -->
+                                <p class="mb-0">{{ token.provider.name|capitalize }}</p>
+                            </div>
+                            <form action="{{ path('app_dashboard_security') }}" method="post">
+                            <div class="col-auto">
+                                {% if token.dateAccepted is empty %}
+                                    <button name="activate" value="true" class="btn btn-xs btn-success mr-2">Activate</button>
+                                    <input type="hidden" name="token" value="{{ token.id }}">
+                                {% endif %}
+                                <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modalRemoveAuth-{{ token.id }}">Delete</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mb-0 pb-0">{{ 'no authenticators found'|trans|capitalize }}</p>
+        {% endif %}
+    </div>
+</div>
+
+

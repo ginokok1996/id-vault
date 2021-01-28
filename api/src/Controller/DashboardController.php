@@ -46,15 +46,20 @@ class DashboardController extends AbstractController
 
     public function provideCounterData($variables)
     {
-        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        if ($this->getUser()) {
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
-        //alerts
-        $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
-        $variables['alertCount'] = (string) count($alerts);
+            //alerts
+            $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
+            $variables['alertCount'] = (string) count($alerts);
 
-        //tasks
-        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
-        $variables['taskCount'] = (string) count($tasks);
+            //tasks
+            $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
+            $variables['taskCount'] = (string) count($tasks);
+        } else {
+            $variables['alertCount'] = (string) 0;
+            $variables['taskCount'] = (string) 0;
+        }
 
         return $variables;
     }
@@ -63,59 +68,72 @@ class DashboardController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        if ($this->session->get('notAllowed')) {
+            $data = [];
+            $data['url'] = $this->generateUrl('app_dashboard_security', [],UrlGeneratorInterface::ABSOLUTE_URL).'?code='.$this->session->get('tokenId');
+            $this->mailingService->sendMail('mails/authenticators.html.twig', 'no-reply@id-vault.com', $this->session->get('username'), 'authenticator activation', $data);
+            $this->session->remove('notAllowed');
+            $this->session->remove('tokenId');
+            $this->session->remove('username');
+        }
+
         $variables = [];
         $variables = $this->provideCounterData($variables);
-        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
-        $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
-        $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
+        if ($this->getUser()) {
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+            $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
 
-        $application = $this->defaultService->getApplication();
-        $organizations = [];
-        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-        foreach ($user['userGroups'] as $group) {
-            $organization = $this->commonGroundService->getResource($group['organization']);
-            if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
-                $organizations[] = $organization;
-            }
-        }
-        if (count($organizations) > 0) {
-            foreach ($organizations as &$organization) {
-                $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
-                $account = $this->balanceService->getAcount($organizationUrl);
-                if ($account !== false) {
-                    $account['calculate'] = $account['balance'];
-                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-                    $organization['account'] = $account;
-                } else {
-                    $this->balanceService->createAccount($organizationUrl, 1000);
-                    $account = $this->balanceService->getAcount($organizationUrl);
-                    $account['calculate'] = $account['balance'];
-                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-                    $organization['account'] = $account;
+            $application = $this->defaultService->getApplication();
+            $organizations = [];
+            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            foreach ($user['userGroups'] as $group) {
+                $organization = $this->commonGroundService->getResource($group['organization']);
+                if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                    $organizations[] = $organization;
                 }
-                $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
-                $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
             }
-            $variables['organizations'] = $organizations;
-        }
+            if (count($organizations) > 0) {
+                foreach ($organizations as &$organization) {
+                    $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+                    $account = $this->balanceService->getAcount($organizationUrl);
+                    if ($account !== false) {
+                        $account['calculate'] = $account['balance'];
+                        $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                        $organization['account'] = $account;
+                    } else {
+                        $this->balanceService->createAccount($organizationUrl, 1000);
+                        $account = $this->balanceService->getAcount($organizationUrl);
+                        $account['calculate'] = $account['balance'];
+                        $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                        $organization['account'] = $account;
+                    }
+                    $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
+                    $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
+                }
+                $variables['organizations'] = $organizations;
+            }
 
-        // getting graph info
-        $date = new \DateTime('today');
-        $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc', 'limit' => 200])['hydra:member'];
-        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            // getting graph info
+            $date = new \DateTime('today');
+            $queryDate = $date->modify('monday this week');
+            $queryDate->modify('-1 day');
+            $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc', 'limit' => 200, 'dateCreated[after]' => $queryDate->format('Y-m-d')])['hydra:member'];
+            $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
-        foreach ($days as $day) {
-            $variables['days'][$day] = [];
-        }
+            foreach ($days as $day) {
+                $variables['days'][$day] = [];
+            }
 
-        if (count($variables['logs']) > 0) {
-            foreach ($variables['logs'] as $log) {
-                foreach ($days as $day) {
-                    $date->modify(ucfirst($day).' this week');
-                    if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                        $variables['days'][$day][] = $log;
+            if (count($variables['logs']) > 0) {
+                foreach ($variables['logs'] as $log) {
+                    foreach ($days as $day) {
+                        $date->modify(ucfirst($day).' this week');
+                        if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                            $variables['days'][$day][] = $log;
+                        }
                     }
                 }
             }
@@ -312,14 +330,94 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/security")
+     * @Route("/security/{type}")
      * @Template
      */
-    public function securityAction()
+    public function securityAction(Request $request, $type = null)
     {
+        if (!$this->getUser()){
+            $this->session->set('backUrl', $request->getUri());
+        }
+
+        if ($type == 'google' && $request->get('code')) {
+            $status = $this->defaultService->authGoogle($request->get('code'), $this->getUser()->getUsername());
+            if ($status == true) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'facebook' && $request->get('code')) {
+            $status = $this->defaultService->authFacebook($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'github' && $request->get('code')) {
+            $status = $this->defaultService->authGithub($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'linkedIn' && $request->get('code')) {
+            $status = $this->defaultService->authLinkedIn($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        }
+
+        if ($request->query->get('code') && $type == null) {
+            try {
+                $now = new \DateTime('now');
+                $id = $request->query->get('code');
+                $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $id]);
+                $this->defaultService->throwFlash('success', $token['provider']['type'].' authenticator activated');
+                $token['provider'] = '/providers/'.$token['provider']['id'];
+                $token['user'] = '/users/'.$token['user']['id'];
+                $token['dateAccepted'] = $now->format('Y-m-d');
+                $this->commonGroundService->updateResource($token);
+
+            }catch (\Throwable $e){
+                $this->defaultService->throwFlash('error', 'invalid code provided');
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('activate')) {
+            $now = new \DateTime('now');
+            $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $request->get('token')]);
+            $this->defaultService->throwFlash('success', $token['provider']['type'].' authenticator activated');
+            $token['provider'] = '/providers/'.$token['provider']['id'];
+            $token['user'] = '/users/'.$token['user']['id'];
+            $token['dateAccepted'] = $now->format('Y-m-d');
+            $this->commonGroundService->updateResource($token);
+        } elseif ($request->isMethod('POST') && $request->get('delete')) {
+            $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $request->get('token')]);
+            $this->commonGroundService->deleteResource($token);
+        }
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
+        $variables['tokens'] = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['user.username' => $this->getUser()->getUsername()])['hydra:member'];
+
+        //google
+        $provider = $this->defaultService->getProvider('gmail');
+        $variables['googleUrl'] = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri=http://id-vault.com/dashboard/security/google';
+
+        //facebook
+        $provider = $this->defaultService->getProvider('facebook');
+        $variables['facebookUrl'] = 'https://www.facebook.com/v8.0/dialog/oauth?client_id='.str_replace('"', '', $provider['configuration']['app_id']).'&scope=email&redirect_uri=https://id-vault.com/dashboard/security/facebook&state={st=state123abc,ds=123456789}';
+
+        //github
+        $provider = $this->defaultService->getProvider('github auth');
+        $variables['githubUrl'] = 'https://github.com/login/oauth/authorize?redirect_uri=https://id-vault.com/dashboard/security/github&client_id='.$provider['configuration']['app_id'];
+
+        //linkedIn
+        $provider = $this->defaultService->getProvider('linkedIn');
+        $variables['linkedInUrl'] = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$provider['configuration']['app_id']}&redirect_uri=http://id-vault.com/dashboard/security/linkedIn&scope=r_emailaddress%20r_liteprofile";
+
 
         return $variables;
     }

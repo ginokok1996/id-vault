@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MailingService;
 use App\Service\OauthService;
 use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * The DefaultController test handles any calls that have not been picked up by another test, and wel try to handle the slug based against the wrc.
@@ -25,13 +27,15 @@ class OauthController extends AbstractController
     private $scopeService;
     private $oauthService;
     private $balanceService;
+    private $mailingService;
 
-    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService, BalanceService $balanceService)
+    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService, BalanceService $balanceService, MailingService $mailingService)
     {
         $this->commonGroundService = $commonGroundService;
         $this->scopeService = $scopeService;
         $this->oauthService = $oauthService;
         $this->balanceService = $balanceService;
+        $this->mailingService =$mailingService;
     }
 
     /**
@@ -41,6 +45,15 @@ class OauthController extends AbstractController
     public function authorizeAction(Session $session, Request $request)
     {
         $variables = [];
+
+        if ($session->get('notAllowed')) {
+            $data = [];
+            $data['url'] = $this->generateUrl('app_dashboard_security', [],UrlGeneratorInterface::ABSOLUTE_URL).'?code='.$session->get('tokenId');
+            $this->mailingService->sendMail('mails/authenticators.html.twig', 'no-reply@id-vault.com', $session->get('username'), 'authenticator activation', $data);
+            $session->remove('notAllowed');
+            $session->remove('tokenId');
+            $session->remove('username');
+        }
 
         if ($session->get('wrongPassword')) {
             $session->remove('wrongPassword');

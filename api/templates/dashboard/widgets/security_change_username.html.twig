@@ -1,0 +1,50 @@
+<!-- Card -->
+<div class="card card-bleed shadow-light-lg mb-6">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+
+                <!-- Heading -->
+                <h4 class="mb-0">
+                    {{ 'username'|trans|capitalize }}
+                </h4>
+
+            </div>
+            <div class="col-auto">
+
+                <!-- Link -->
+                <a class="small text-gray-700" href="#!">
+                    {{ 'forgot your password?'|trans|capitalize }}
+                </a>
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <!-- New username -->
+        <div class="form-group">
+            <label for="newUsername">{{ 'username'|trans|capitalize }}</label>
+            <input class="form-control" id="newUsername" type="text" value="{{ app.user.username }}" placeholder="{{ app.user.username }}">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">{{ 'password'|trans|capitalize }}</label>
+            <input class="form-control" id="password" type="password">
+        </div>
+
+
+        <div class="row">
+            <div class="col-12 col-md-auto">
+
+                <!-- Button -->
+                <button class="btn btn-block btn-primary" type="submit">
+                    {{ 'update username'|trans|capitalize }}
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
