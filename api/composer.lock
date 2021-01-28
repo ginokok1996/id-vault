@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f8fbff1e2b7c2d120c8b6a8c80eb532",
+    "content-hash": "bf7223e228e4c4d0397cece7e6169002",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -775,12 +775,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "a1507eac8d2a523f55e263ceeb829c47d6c08d2e"
+                "reference": "b1dde1bfdc9c967114ad65bc4dddda96f3725425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/a1507eac8d2a523f55e263ceeb829c47d6c08d2e",
-                "reference": "a1507eac8d2a523f55e263ceeb829c47d6c08d2e",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/b1dde1bfdc9c967114ad65bc4dddda96f3725425",
+                "reference": "b1dde1bfdc9c967114ad65bc4dddda96f3725425",
                 "shasum": ""
             },
             "require": {
@@ -858,7 +858,7 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2021-01-05T13:22:35+00:00"
+            "time": "2021-01-28T10:31:56+00:00"
         },
         {
             "name": "conduction/id-vault-php",
@@ -11269,12 +11269,12 @@
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
@@ -13116,8 +13116,7 @@
         "conduction/balancebundle": 20,
         "conduction/commongroundbundle": 20,
         "conduction/idvaultbundle": 20,
-        "conduction/landkitbundle": 20,
-        "web-token/jwt-framework": 20
+        "conduction/landkitbundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

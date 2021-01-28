@@ -168,6 +168,11 @@
                                     </label>
                                     <input required type="password" name="password" class="form-control form-control-xs" id="password"
                                            placeholder="{{ 'enter your password'|trans|capitalize }}">
+                                    {% if passwordError is defined %}
+                                    <p class="text-sm mt-0 pt-0 text-danger ml-1" style="font-weight: bold; font-size: 0.85rem">
+                                        {{ 'wrong password'|trans|capitalize }}
+                                    </p>
+                                    {% endif %}
                                     <p class="font-size-sm text-muted mt-2 float-right">
                                         <a class="cardColor" href="{{ path('app_default_reset') }}">{{ 'forgot your password?' }}</a>.
                                     </p>
