@@ -59,7 +59,7 @@ class DefaultController extends AbstractController
     {
         $variables = [];
 
-        if ($request->query->get('backUrl')) {
+        if ($request->query->get('backUrl') && !$session->get('backUrl')) {
             $session->set('backUrl', $request->query->get('backUrl'));
         }
 
