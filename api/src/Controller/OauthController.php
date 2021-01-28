@@ -42,6 +42,11 @@ class OauthController extends AbstractController
     {
         $variables = [];
 
+        if ($session->get('wrongPassword')) {
+            $session->remove('wrongPassword');
+            $variables['passwordError'] = true;
+        }
+
         /*
          *  First we NEED to determine an application by public client_id (unsafe)
          */
@@ -109,8 +114,6 @@ class OauthController extends AbstractController
             if (!$ableToProcess) {
                 return $this->redirect($redirectUrl.'?errorMessage=Cant+process+authorization');
             }
-
-            exit;
 
             if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
                 $authorization = $this->oauthService->updateAuthorization($request->get('authorization'), $request->get('scopes'));

@@ -103,7 +103,7 @@ class DashboardController extends AbstractController
 
         // getting graph info
         $date = new \DateTime('today');
-        $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
+        $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc', 'limit' => 200])['hydra:member'];
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
         foreach ($days as $day) {
@@ -173,10 +173,37 @@ class DashboardController extends AbstractController
         $provider = $this->defaultService->getProvider('gmail');
         $variables['googleUrl'] = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri=http://id-vault.com/dashboard/claim-your-data/google';
 
+        //facebook
+        $provider = $this->defaultService->getProvider('facebook');
+        $variables['facebookUrl'] = 'https://www.facebook.com/v8.0/dialog/oauth?client_id='.str_replace('"', '', $provider['configuration']['app_id']).'&scope=email&redirect_uri=https://id-vault.com/dashboard/claim-your-data/facebook&state={st=state123abc,ds=123456789}';
+
+        //github
+        $provider = $this->defaultService->getProvider('github claim');
+        $variables['githubUrl'] = 'https://github.com/login/oauth/authorize?redirect_uri=https://id-vault.com/dashboard/claim-your-data/github&client_id='.$provider['configuration']['app_id'];
+
+        //linkedIn
+        $provider = $this->defaultService->getProvider('linkedIn');
+        $variables['linkedInUrl'] = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$provider['configuration']['app_id']}&redirect_uri=http://id-vault.com/dashboard/claim-your-data/linkedIn&scope=r_emailaddress%20r_liteprofile";
+
         if ($type == 'google' && $request->get('code')) {
             $completed = $claimService->googleClaim($request->get('code'), $this->getUser()->getPerson());
             if ($completed) {
-                $variables['message'] = 'google claim is aangemaakt';
+                $variables['message'] = 'Google claim is aangemaakt';
+            }
+        } elseif ($type == 'facebook' && $request->get('code')) {
+            $completed = $claimService->facebookClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'Facebook claim is aangemaakt';
+            }
+        } elseif ($type == 'github' && $request->get('code')) {
+            $completed = $claimService->githubClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'Github claim is aangemaakt';
+            }
+        } elseif ($type == 'linkedIn' && $request->get('code')) {
+            $completed = $claimService->linkedInClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'LinkedIn claim is aangemaakt';
             }
         }
 
@@ -192,18 +219,6 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
-        if ($request->query->get('brp')) {
-            $this->session->set('brp', $request->query->get('brp'));
-
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'brp']));
-        }
-
-        if ($request->query->get('duo')) {
-            $this->session->set('duo', $request->query->get('duo'));
-
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'duo']));
-        }
 
         if ($this->getUser()) {
             $variables['person'] = $this->commonGroundService->getResource($this->getUser()->getPerson());

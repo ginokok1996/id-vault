@@ -124,4 +124,106 @@ class ClaimService
 
         return true;
     }
+
+    public function facebookClaim(string $code, string $person): bool
+    {
+        $provider = $this->defaultService->getProvider('facebook');
+        $client = $this->createClient('https://graph.facebook.com');
+
+        $response = $client->request('GET', '/v8.0/oauth/access_token?client_id='.str_replace('"', '', $provider['configuration']['app_id']).'&redirect_uri=https://id-vault.com/dashboard/claim-your-data/facebook&client_secret='.$provider['configuration']['secret'].'&code='.$code);
+        $accessToken = json_decode($response->getBody()->getContents(), true);
+
+        $response = $client->request('GET', '/me?&fields=id,name,email&access_token='.$accessToken['access_token']);
+        $json = json_decode($response->getBody()->getContents(), true);
+
+        $this->createWacClaim(['email' => $json['email']], $person, 'facebook');
+
+        return true;
+    }
+
+    public function githubClaim(string $code, string $person): bool
+    {
+        $provider = $this->defaultService->getProvider('github claim');
+        $client = $this->createClient('https://github.com');
+
+        $body = [
+            'client_id'         => $provider['configuration']['app_id'],
+            'client_secret'     => $provider['configuration']['secret'],
+            'code'              => $code,
+        ];
+
+        $response = $client->request('POST', '/login/oauth/access_token', [
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
+            'form_params'  => $body,
+        ]);
+
+        $token = json_decode($response->getBody()->getContents(), true);
+
+        $headers = [
+            'Authorization' => 'token '.$token['access_token'],
+            'Accept'        => 'application/json',
+        ];
+
+        $client = $this->createClient('https://api.github.com');
+
+        $response = $client->request('GET', '/user', [
+            'headers' => $headers,
+        ]);
+
+        $json = json_decode($response->getBody()->getContents(), true);
+
+        $this->createWacClaim(['email' => $json['email']], $person, 'github');
+
+        return true;
+    }
+
+    /**
+     * This function creates an claim for linkedIn.
+     *
+     * @param string $code   code received from linkedIn
+     * @param string $person person uri
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return bool true when finished
+     */
+    public function linkedinClaim(string $code, string $person): bool
+    {
+        $provider = $this->defaultService->getProvider('linkedIn');
+        $client = $this->createClient('https://www.linkedin.com');
+
+        $body = [
+            'client_id'         => $provider['configuration']['app_id'],
+            'client_secret'     => $provider['configuration']['secret'],
+            'redirect_uri'      => 'http://id-vault.com/dashboard/claim-your-data/linkedIn',
+            'code'              => $code,
+            'grant_type'        => 'authorization_code',
+        ];
+
+        $response = $client->request('POST', '/oauth/v2/accessToken', [
+            'form_params'  => $body,
+            'content_type' => 'application/x-www-form-urlencoded',
+        ]);
+
+        $accessToken = json_decode($response->getBody()->getContents(), true);
+
+        $headers = [
+            'Authorization' => 'Bearer '.$accessToken['access_token'],
+            'Accept'        => 'application/json',
+        ];
+
+        $client = $this->createClient('https://api.linkedin.com');
+
+        $response = $client->request('GET', '/v2/emailAddress?q=members&projection=(elements*(handle~))', [
+            'headers' => $headers,
+        ]);
+
+        $email = json_decode($response->getBody()->getContents(), true);
+
+        $this->createWacClaim(['email' => $email['elements'][0]['handle~']['emailAddress']], $person, 'linkedIn');
+
+        return true;
+    }
 }

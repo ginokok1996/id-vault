@@ -171,10 +171,10 @@ class UserController extends AbstractController
     public function registerAction(Request $request, Session $session)
     {
         if ($request->isMethod('POST')) {
-            if ($request->query->get('backUrl')) {
-                $backUrl = $request->query->get('backUrl');
-            } elseif ($session->get('backUrl')) {
+            if ($session->get('backUrl')) {
                 $backUrl = $session->get('backUrl');
+            } elseif ($request->query->get('backUrl')) {
+                $backUrl = $request->query->get('backUrl');
             } else {
                 $backUrl = $this->generateUrl('app_default_index');
             }
@@ -202,7 +202,7 @@ class UserController extends AbstractController
                 $user['password'] = $request->get('newPassword');
                 $user['person'] = $personUrl;
 
-                $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+                $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users'], [], [], false, false);
 
                 // given name claim
                 $claimFirstName = [];
@@ -210,7 +210,7 @@ class UserController extends AbstractController
                 $claimFirstName['property'] = 'schema.person.given_name';
                 $claimFirstName['data']['given_name'] = $person['givenName'];
 
-                $this->commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 // family name claim
                 $claimLastName = [];
@@ -218,7 +218,7 @@ class UserController extends AbstractController
                 $claimLastName['property'] = 'schema.person.family_name';
                 $claimLastName['data']['family_name'] = $person['familyName'];
 
-                $this->commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 // email claim
                 $claimEmail = [];
@@ -226,7 +226,7 @@ class UserController extends AbstractController
                 $claimEmail['property'] = 'schema.person.email';
                 $claimEmail['data']['email'] = $request->get('username');
 
-                $this->commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 //calendar for the user
                 $calendar = [];
@@ -234,7 +234,7 @@ class UserController extends AbstractController
                 $calendar['resource'] = $personUrl;
                 $calendar['timeZone'] = 'CET';
 
-                $this->commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
+                $this->commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars'], [], [], false, false);
 
                 $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
 
