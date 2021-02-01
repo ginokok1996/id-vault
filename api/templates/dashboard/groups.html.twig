@@ -44,4 +44,11 @@
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 
+    <!-- modals -->
+    {% if memberships is defined and memberships is not empty %}
+        {% for membership in memberships %}
+            {% include 'dashboard/modals/leave_group_modal.html.twig' with {item: membership} %}
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}

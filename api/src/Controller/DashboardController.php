@@ -1417,10 +1417,22 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
         $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
-        $variables['groups'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl])['hydra:member'];
+        if ($request->isMethod('POST') && $request->get('acceptInvite')) {
+            $membership = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'memberships', 'id' => $request->get('membership')]);
+            $now = new \DateTime('now', new \DateTimeZone('Europe/Amsterdam'));
+            $membership['userGroup'] = '/groups/'.$membership['userGroup']['id'];
+            $membership['dateAcceptedUser'] = $now->format('Y-m-d H:i:s');
+            $membership = $this->commonGroundService->updateResource($membership);
+            $this->defaultService->throwFlash('success', 'Invite accepted for group '.$membership['userGroup']['name']);
+        } elseif ($request->isMethod('POST') && $request->get('removeGroup')) {
+            $membership = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'memberships', 'id' => $request->get('membership')]);
+            $this->defaultService->throwFlash('success', 'you left the group '.$membership['userGroup']['name']);
+            $this->commonGroundService->deleteResource($membership);
+        }
+
+        $variables['memberships'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         return $variables;
     }
