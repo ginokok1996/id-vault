@@ -1,28 +1,34 @@
-{% if groups is defined and groups is not empty %}
+{% if memberships is defined and memberships is not empty %}
     <div class="list-group list-group-flush">
-        {% for group in groups %}
+        {% for membership in memberships %}
             <div class="list-group-item">
                 <div class="row align-items-center">
                     <div class="col">
 
                         <!-- Heading -->
                         <p class="mb-0">
-                            {{ group.name }}
+                            {{ membership.userGroup.name }}
                         </p>
 
                         <!-- Text -->
                         <small class="text-gray-700">
-                            {% if group.description is defined and group.description is not empty %}
-                                {{ group.description }}
+                            {% if membership.userGroup.description is defined and membership.userGroup.description is not empty %}
+                                {{ membership.userGroup.description }}
                             {% endif %}
                         </small>
 
                     </div>
-                    <div class="col-auto">
-                        <a href="{{ path('app_dashboard_group', {id: group.id}) }}" class="d-block btn btn-xs btn-primary">
-                            {{ 'open'|trans|capitalize }}
-                        </a>
-                    </div>
+                    <form action="{{ path('app_dashboard_groups') }}" method="post">
+                        <div class="col-auto">
+                            {% if membership.dateAcceptedUser is empty %}
+                                <button name="acceptInvite" value="true" class="btn btn-xs btn-success mr-2">{{ 'accept'|trans|capitalize }}</button>
+                                <input type="hidden" name="membership" value="{{ membership.id }}">
+                                <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#leaveGroup-{{ membership.id }}">Decline</button>
+                            {% else %}
+                                <button name="removeGroup" value="true" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#leaveGroup-{{ membership.id }}">Leave</button>
+                            {% endif %}
+                        </div>
+                    </form>
                 </div>
             </div>
         {% endfor%}
