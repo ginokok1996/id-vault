@@ -3,10 +3,10 @@ entries:
   id-vault:
   - apiVersion: v1
     appVersion: V1.0
-    created: "2021-02-02T21:09:16.8092078Z"
+    created: "2021-02-04T11:15:46.6637798Z"
     description: Naast deze JSON rest API is er ook een [graphql](/graphql) interface
       beschikbaar.
-    digest: 22266ab472b4747289664062ebe9bcddd6ae361d35811dce9dea667b2d5e5508
+    digest: 85c9589af645c43ab9d674bf028b82f5f9326c75ff2454b850fd24bf3d88ac9a
     home: www.id-vault.com
     icon: www.id-vault.com
     name: id-vault
@@ -18,7 +18,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 11.10.0
-    created: "2021-02-02T21:09:16.8234329Z"
+    created: "2021-02-04T11:15:46.6797505Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -47,4 +47,4 @@ entries:
     urls:
     - charts/postgresql-10.1.1.tgz
     version: 10.1.1
-generated: "2021-02-02T21:09:16.8013105Z"
+generated: "2021-02-04T11:15:46.6566121Z"

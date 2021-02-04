@@ -1,0 +1,17 @@
+{
+    "issuer": "https://id-vault.com/api/v1/wac/applications/453fa296-5f49-4918-a874-c916a368d4bb",
+    "authorization_endpoint": "https://id-vault.com/api/access_tokens",
+    "jwks_uri": "https://id-vault.com/cert/cert.json",
+    "response_types_supported" : [
+        "code"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "grant_types_supported": [
+        "authorization_code"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "none"
+    ]
+}
