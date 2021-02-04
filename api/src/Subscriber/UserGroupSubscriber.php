@@ -53,9 +53,12 @@ class UserGroupSubscriber implements EventSubscriberInterface
                     foreach ($groups as $oldGroup) {
                         $newGroup = [];
 
-                        $result = array_filter($oldGroup['memberships'], function ($var) use ($userUrl) {
+                        $results = array_filter($oldGroup['memberships'], function ($var) use ($userUrl) {
                             return $var['userUrl'] == $userUrl;
-                        })[0];
+                        });
+                        if (count($results) > 0) {
+                            $result = $results[array_key_first($results)];
+                        }
 
                         if (!empty($result['dateAcceptedUser']) || !empty($result['dateAcceptedGroup'])) {
                             $newGroup['id'] = $oldGroup['id'];
