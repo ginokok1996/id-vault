@@ -44,8 +44,7 @@ class GroupService
             throw new Exception('No group found with these properties');
         }
 
-        // TODO: Delete all memberships of this group (new function)
-
+        $this->removeUsersFromGroup($group);
         $this->commonGroundService->deleteResource($group);
         return $group['@id'];
     }
@@ -53,18 +52,33 @@ class GroupService
     public function deleteGroups(DeleteGroup $deleteGroup, $application)
     {
         $groupList = [];
-        $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
-        if (count($groups) > 0) {
-            foreach ($groups as $group) {
-                if ($group['organization'] == $deleteGroup->getOrganization()) {
-                    // TODO: Delete all memberships of this group (new function)
-                    $this->commonGroundService->deleteResource($group);
-                    array_push($groupList, $group['@id']);
-                }
+
+        if ($deleteGroup->getGroupId()){
+            if ($this->commonGroundService->isResource(['component' => 'wac', 'type' => 'groups', 'id' => $deleteGroup->getGroupId()])) {
+                return [$this->deleteGroup($deleteGroup->getGroupId(), $deleteGroup, $application)];
+            } else {
+                throw new  Exception('No group exists with this groupId');
             }
-            return $groupList;
         } else {
-            throw new Exception('No group found with these properties');
+            $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
+            if (count($groups) > 0) {
+                foreach ($groups as $group) {
+                    if ($group['organization'] == $deleteGroup->getOrganization()) {
+                        $this->removeUsersFromGroup($group);
+                        $this->commonGroundService->deleteResource($group);
+                        array_push($groupList, $group['@id']);
+                    }
+                }
+                return $groupList;
+            } else {
+                throw new Exception('No group found with these properties');
+            }
+        }
+    }
+
+    private function removeUsersFromGroup(array $group) {
+        foreach ($group['memberships'] as $membership) {
+            $this->commonGroundService->deleteResource($membership);
         }
     }
 
@@ -92,7 +106,8 @@ class GroupService
         $this->commonGroundService->createResource($membership, ['component' => 'wac', 'type' => 'memberships']);
     }
 
-    public function removeUser($username, $group)
+    // Has an option for group = null, if used that way: removes all memberships of this user.
+    public function removeUser($username, $group = null)
     {
         $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $username])['hydra:member'];
         if (!count($users) > 0) {
@@ -100,14 +115,17 @@ class GroupService
         }
         $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $users[0]['id']]);
 
-        $exist = false;
-        foreach ($group['memberships'] as $membership) {
-            if ($membership['userUrl'] == $userUrl) {
-                $this->commonGroundService->deleteResource($membership);
-                $exist = true;
-            }
+        $userMemberships = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl])['hydra:member'];
+        if (isset($group)) {
+            $userMemberships = array_filter($userMemberships, function ($membership)use($group){
+                return $group['id'] == $membership['userGroup']['id'];
+            });
         }
-        if (!$exist) {
+        if (count($userMemberships) > 0) {
+            foreach ($userMemberships as $membership){
+                $this->commonGroundService->deleteResource($membership);
+            }
+        } else {
             throw new Exception('No membership found');
         }
     }

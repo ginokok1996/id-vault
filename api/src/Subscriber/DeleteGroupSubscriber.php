@@ -42,15 +42,7 @@ class DeleteGroupSubscriber implements EventSubscriberInterface
                 } catch (\Throwable $e) {
                     throw new  Exception('Invalid clientId');
                 }
-                if ($group->getGroupId()) {
-                    if ($this->commonGroundService->isResource(['component' => 'wac', 'type' => 'groups', 'id' => $group->getGroupId()])) {
-                        $group->setGroups([$this->groupService->deleteGroup($group->getGroupId(), $group, $application)]);
-                    } else {
-                        throw new  Exception('No group exists with this groupId');
-                    }
-                } else {
-                    $group->setGroups($this->groupService->deleteGroups($group, $application));
-                }
+                $group->setGroups($this->groupService->deleteGroups($group, $application));
             }
         }
 
