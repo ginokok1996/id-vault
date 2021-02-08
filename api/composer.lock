@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf7223e228e4c4d0397cece7e6169002",
+    "content-hash": "4f8fbff1e2b7c2d120c8b6a8c80eb532",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -11087,12 +11087,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "c7aee71783b19803f5ceeb7b2e3bff6846d7f40f"
+                "reference": "04d348ab7fb1eacec054b251ae9b09de9536696e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/c7aee71783b19803f5ceeb7b2e3bff6846d7f40f",
-                "reference": "c7aee71783b19803f5ceeb7b2e3bff6846d7f40f",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/04d348ab7fb1eacec054b251ae9b09de9536696e",
+                "reference": "04d348ab7fb1eacec054b251ae9b09de9536696e",
                 "shasum": ""
             },
             "require": {
@@ -11262,7 +11262,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-09T13:16:23+00:00"
+            "time": "2021-01-29T21:38:31+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -13116,7 +13116,8 @@
         "conduction/balancebundle": 20,
         "conduction/commongroundbundle": 20,
         "conduction/idvaultbundle": 20,
-        "conduction/landkitbundle": 20
+        "conduction/landkitbundle": 20,
+        "web-token/jwt-framework": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

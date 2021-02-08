@@ -36,6 +36,7 @@ COPY bin bin/
 COPY config config/
 COPY public public/
 COPY src src/
+COPY cert cert/
 COPY templates templates/
 COPY translations translations/
 
