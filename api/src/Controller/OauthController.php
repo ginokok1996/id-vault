@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Service\MailingService;
 use App\Service\OauthService;
 use App\Service\ScopeService;
+use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * The DefaultController test handles any calls that have not been picked up by another test, and wel try to handle the slug based against the wrc.
@@ -23,12 +26,16 @@ class OauthController extends AbstractController
     private $commonGroundService;
     private $scopeService;
     private $oauthService;
+    private $balanceService;
+    private $mailingService;
 
-    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService)
+    public function __construct(CommonGroundService $commonGroundService, ScopeService $scopeService, OauthService $oauthService, BalanceService $balanceService, MailingService $mailingService)
     {
         $this->commonGroundService = $commonGroundService;
         $this->scopeService = $scopeService;
         $this->oauthService = $oauthService;
+        $this->balanceService = $balanceService;
+        $this->mailingService =$mailingService;
     }
 
     /**
@@ -38,6 +45,20 @@ class OauthController extends AbstractController
     public function authorizeAction(Session $session, Request $request)
     {
         $variables = [];
+
+        if ($session->get('notAllowed')) {
+            $data = [];
+            $data['url'] = $this->generateUrl('app_dashboard_security', [],UrlGeneratorInterface::ABSOLUTE_URL).'?code='.$session->get('tokenId');
+            $this->mailingService->sendMail('mails/authenticators.html.twig', 'no-reply@id-vault.com', $session->get('username'), 'authenticator activation', $data);
+            $session->remove('notAllowed');
+            $session->remove('tokenId');
+            $session->remove('username');
+        }
+
+        if ($session->get('wrongPassword')) {
+            $session->remove('wrongPassword');
+            $variables['passwordError'] = true;
+        }
 
         /*
          *  First we NEED to determine an application by public client_id (unsafe)
@@ -73,6 +94,7 @@ class OauthController extends AbstractController
 
         $variables['wrcApplication'] = $this->commonGroundService->getResource($variables['application']['contact']);
 
+        //lets see if there are new scopes requested from the user
         if ($this->getUser()) {
             $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
             $userUrl = $this->commonGroundService->cleanUrl(['component' => 'uc', 'type' => 'users', 'id' => $user['id']]);
@@ -97,6 +119,14 @@ class OauthController extends AbstractController
 
         if ($request->isMethod('POST') && $request->get('grantAccess')) {
             $redirectUrl = $request->get('redirect_uri');
+
+            //lets see if we have enough balance to process this request
+            $account = $this->balanceService->getAcount($variables['application']['organization']);
+            $ableToProcess = $this->oauthService->checkBalance($account);
+
+            if (!$ableToProcess) {
+                return $this->redirect($redirectUrl.'?errorMessage=Cant+process+authorization');
+            }
 
             if ($request->get('grantAccess') == 'true' && $request->get('authorization')) {
                 $authorization = $this->oauthService->updateAuthorization($request->get('authorization'), $request->get('scopes'));

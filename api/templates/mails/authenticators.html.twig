@@ -1,0 +1,23 @@
+<table align="center"  style="background-color: #F5F5F5; width: 100%; padding: 5px; max-width: 1200px;">
+    <tr>
+        <td align="center" style="text-align: -webkit-center">
+            <table style="width: 80%; background-color: white;">
+                <tr>
+                    <td style="width: 100%; height: fit-content; background-color: #01689B">
+                        <h1 style=" margin: 15px 0 15px 30px; color: white; font-family: Verdana,serif; ">Id-vault</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="margin: 15px 30px 0 30px">Er is een poging gedaan om met een andere provider in te loggen op dit email adres</p>
+                        <p style="margin: 15px 30px 0 30px">Als dit klopt kunt u deze provider activeren door op de volgende link te drukken:</p>
+                        <p style="margin: 15px 30px 0 30px">{% if url is defined %}{{ url }}{% endif %}</p>
+                        <p style="margin: 15px 30px 0 30px">Met vriendelijke groet,</p>
+                        <p style="margin: 15px 30px 0 30px">Het id-vault team</p>
+                        <p></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

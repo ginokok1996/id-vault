@@ -54,13 +54,13 @@
                     </p>
 
                     <p class="mb-4 text-center">
-                        {{ "boss and owner of your own data"|trans|capitalize }}.
-                        {{ "Id-vault is a place to savely store your online data, where you stay the owner and decide who can or can't access and use your data."|trans }}
+                        {{ "stay in control of your own data"|trans|capitalize }}.
+                        {{ "id-vault is a place to safely store your online data, where you alone are the owner and decide who can or can't access and use your data. "|trans }}
                         <u><a style="color: white" target="_blank" href="{{ path('app_default_index') }}">{{ 'read more'|trans }}</a></u>
                     </p>
 
                     <p class="mb-2 text-center">
-                        {{ 'the application is requesting the following scopes from you'|trans|capitalize }}:
+                        {{ 'the application is requesting the following data from you'|trans|capitalize }}:
                     </p>
 
                     <ul class="text-center list-group list-group-flush mb-2">
@@ -168,6 +168,11 @@
                                     </label>
                                     <input required type="password" name="password" class="form-control form-control-xs" id="password"
                                            placeholder="{{ 'enter your password'|trans|capitalize }}">
+                                    {% if passwordError is defined %}
+                                    <p class="text-sm mt-0 pt-0 text-danger ml-1" style="font-weight: bold; font-size: 0.85rem">
+                                        {{ 'wrong password'|trans|capitalize }}
+                                    </p>
+                                    {% endif %}
                                     <p class="font-size-sm text-muted mt-2 float-right">
                                         <a class="cardColor" href="{{ path('app_default_reset') }}">{{ 'forgot your password?' }}</a>.
                                     </p>

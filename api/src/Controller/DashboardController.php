@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Service\ClaimService;
 use App\Service\DefaultService;
 use App\Service\MailingService;
-use App\Service\ScopeService;
 use Conduction\BalanceBundle\Service\BalanceService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Jose\Component\Core\Util\RSAKey;
@@ -46,15 +46,20 @@ class DashboardController extends AbstractController
 
     public function provideCounterData($variables)
     {
-        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+        if ($this->getUser()) {
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
-        //alerts
-        $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
-        $variables['alertCount'] = (string) count($alerts);
+            //alerts
+            $alerts = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'alerts'], ['link' => $userUrl])['hydra:member'];
+            $variables['alertCount'] = (string) count($alerts);
 
-        //tasks
-        $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
-        $variables['taskCount'] = (string) count($tasks);
+            //tasks
+            $tasks = $this->commonGroundService->getResourceList(['component' => 'arc', 'type' => 'todos'], ['calendar.resource' => $userUrl])['hydra:member'];
+            $variables['taskCount'] = (string) count($tasks);
+        } else {
+            $variables['alertCount'] = (string) 0;
+            $variables['taskCount'] = (string) 0;
+        }
 
         return $variables;
     }
@@ -63,59 +68,72 @@ class DashboardController extends AbstractController
      * @Route("/")
      * @Template
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        if ($this->session->get('notAllowed')) {
+            $data = [];
+            $data['url'] = $this->generateUrl('app_dashboard_security', [],UrlGeneratorInterface::ABSOLUTE_URL).'?code='.$this->session->get('tokenId');
+            $this->mailingService->sendMail('mails/authenticators.html.twig', 'no-reply@id-vault.com', $this->session->get('username'), 'authenticator activation', $data);
+            $this->session->remove('notAllowed');
+            $this->session->remove('tokenId');
+            $this->session->remove('username');
+        }
+
         $variables = [];
         $variables = $this->provideCounterData($variables);
-        $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
-        $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
-        $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
+        if ($this->getUser()) {
+            $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
+            $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
+            $variables['authorizations'] = $this->defaultService->singleSignOn($authorizations);
 
-        $application = $this->defaultService->getApplication();
-        $organizations = [];
-        $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-        foreach ($user['userGroups'] as $group) {
-            $organization = $this->commonGroundService->getResource($group['organization']);
-            if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
-                $organizations[] = $organization;
-            }
-        }
-        if (count($organizations) > 0) {
-            foreach ($organizations as &$organization) {
-                $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
-                $account = $this->balanceService->getAcount($organizationUrl);
-                if ($account !== false) {
-                    $account['calculate'] = $account['balance'];
-                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-                    $organization['account'] = $account;
-                } else {
-                    $this->balanceService->createAccount($organizationUrl, 1000);
-                    $account = $this->balanceService->getAcount($organizationUrl);
-                    $account['calculate'] = $account['balance'];
-                    $account['balance'] = $this->balanceService->getBalance($organizationUrl);
-                    $organization['account'] = $account;
+            $application = $this->defaultService->getApplication();
+            $organizations = [];
+            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
+            foreach ($user['userGroups'] as $group) {
+                $organization = $this->commonGroundService->getResource($group['organization']);
+                if (!in_array($organization, $organizations) && $organization['id'] !== $application['organization']['id']) {
+                    $organizations[] = $organization;
                 }
-                $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
-                $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
             }
-            $variables['organizations'] = $organizations;
-        }
+            if (count($organizations) > 0) {
+                foreach ($organizations as &$organization) {
+                    $organizationUrl = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
+                    $account = $this->balanceService->getAcount($organizationUrl);
+                    if ($account !== false) {
+                        $account['calculate'] = $account['balance'];
+                        $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                        $organization['account'] = $account;
+                    } else {
+                        $this->balanceService->createAccount($organizationUrl, 1000);
+                        $account = $this->balanceService->getAcount($organizationUrl);
+                        $account['calculate'] = $account['balance'];
+                        $account['balance'] = $this->balanceService->getBalance($organizationUrl);
+                        $organization['account'] = $account;
+                    }
+                    $organization['margin'] = $this->defaultService->calculateMargin((int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'], $account['calculate']);
+                    $organization['cost'] = (int) $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'points_organization', 'id' => $organization['id']])['points'] / 100;
+                }
+                $variables['organizations'] = $organizations;
+            }
 
-        // getting graph info
-        $date = new \DateTime('today');
-        $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl])['hydra:member'];
-        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            // getting graph info
+            $date = new \DateTime('today');
+            $queryDate = $date->modify('monday this week');
+            $queryDate->modify('-1 day');
+            $variables['logs'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorization_logs'], ['authorization.userUrl' => $userUrl, 'order[dateCreated]' => 'desc', 'limit' => 200, 'dateCreated[after]' => $queryDate->format('Y-m-d')])['hydra:member'];
+            $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
-        foreach ($days as $day) {
-            $variables['days'][$day] = [];
-        }
+            foreach ($days as $day) {
+                $variables['days'][$day] = [];
+            }
 
-        if (count($variables['logs']) > 0) {
-            foreach ($variables['logs'] as $log) {
-                foreach ($days as $day) {
-                    $date->modify(ucfirst($day).' this week');
-                    if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
-                        $variables['days'][$day][] = $log;
+            if (count($variables['logs']) > 0) {
+                foreach ($variables['logs'] as $log) {
+                    foreach ($days as $day) {
+                        $date->modify(ucfirst($day).' this week');
+                        if (strpos($log['dateCreated'], $date->format('Y-m-d')) !== false) {
+                            $variables['days'][$day][] = $log;
+                        }
                     }
                 }
             }
@@ -165,133 +183,60 @@ class DashboardController extends AbstractController
      * @Route("/claim-your-data/{type}")
      * @Template
      */
-    public function claimYourDataAction(Request $request, ScopeService $scopeService, $type = null)
+    public function claimYourDataAction(Request $request, ClaimService $claimService, $type = null)
     {
         $variables = [];
 
-        $variables = $this->provideCounterData($variables);
+        //google
+        $provider = $this->defaultService->getProvider('gmail');
+        $variables['googleUrl'] = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri=http://id-vault.com/dashboard/claim-your-data/google';
 
-        if ($request->query->get('authorization')) {
-            $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $request->query->get('authorization')]);
-            $scopes = $authorization['scopes'];
+        //facebook
+        $provider = $this->defaultService->getProvider('facebook');
+        $variables['facebookUrl'] = 'https://www.facebook.com/v8.0/dialog/oauth?client_id='.str_replace('"', '', $provider['configuration']['app_id']).'&scope=email&redirect_uri=https://id-vault.com/dashboard/claim-your-data/facebook&state={st=state123abc,ds=123456789}';
 
-            $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
-            if (count($users) > 0) {
-                $user = $users[0];
+        //github
+        $provider = $this->defaultService->getProvider('github claim');
+        $variables['githubUrl'] = 'https://github.com/login/oauth/authorize?redirect_uri=https://id-vault.com/dashboard/claim-your-data/github&client_id='.$provider['configuration']['app_id'];
+
+        //linkedIn
+        $provider = $this->defaultService->getProvider('linkedIn');
+        $variables['linkedInUrl'] = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$provider['configuration']['app_id']}&redirect_uri=http://id-vault.com/dashboard/claim-your-data/linkedIn&scope=r_emailaddress%20r_liteprofile";
+
+        if ($type == 'google' && $request->get('code')) {
+            $completed = $claimService->googleClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'Google claim is aangemaakt';
             }
-            $variables['deficiencies'] = $scopeService->checkScopes($scopes, $user);
-        }
-
-        if ($this->session->get('brp') && $type = 'brp') {
-            $bsn = $this->session->get('brp');
-            if ($this->session->get('backUrl')) {
-                $backUrl = $this->session->get('backUrl');
+        } elseif ($type == 'facebook' && $request->get('code')) {
+            $completed = $claimService->facebookClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'Facebook claim is aangemaakt';
             }
-            $this->session->remove('brp');
-            $variables['changedInfo'] = [];
-            $ingeschrevenPersonen = $this->commonGroundService->getResourceList(['component' => 'brp', 'type' => 'ingeschrevenpersonen'], ['burgerservicenummer' => $bsn])['hydra:member'];
-            $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-            $person = $this->commonGroundService->getResource(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-            if (count($ingeschrevenPersonen) > 0) {
-                $ingeschrevenPersoon = $ingeschrevenPersonen[0];
-                $person['taxID'] = $ingeschrevenPersoon['burgerservicenummer'];
-                $variables['changedInfo']['bsn'] = $ingeschrevenPersoon['burgerservicenummer'];
-
-                if (isset($ingeschrevenPersoon['geboorte']['plaats']['omschrijving'])) {
-                    $person['birthPlace'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
-                    $variables['changedInfo']['birth_place'] = $ingeschrevenPersoon['geboorte']['plaats']['omschrijving'];
-                }
-
-                if (isset($ingeschrevenPersoon['geboorte']['datum']['datum'])) {
-                    $person['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
-                    $variables['changedInfo']['birthday'] = $ingeschrevenPersoon['geboorte']['datum']['datum'];
-                }
-
-                if (isset($ingeschrevenPersoon['verblijfplaats'])) {
-                    $person['adresses'][0] = [];
-                    $person['adresses'][0]['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $person['adresses'][0]['houseNumber'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $person['adresses'][0]['houseNumberSuffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
-                    $person['adresses'][0]['postalCode'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
-
-                    $variables['changedInfo']['street'] = $ingeschrevenPersoon['verblijfplaats']['straatnaam'];
-                    $variables['changedInfo']['house_number'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummer'];
-                    $variables['changedInfo']['house_number_suffix'] = (string) $ingeschrevenPersoon['verblijfplaats']['huisnummertoevoeging'];
-                    $variables['changedInfo']['postal_code'] = $ingeschrevenPersoon['verblijfplaats']['postcode'];
-                }
-
-                $this->commonGroundService->saveResource($person, ['component' => 'cc', 'type' => 'people']);
+        } elseif ($type == 'github' && $request->get('code')) {
+            $completed = $claimService->githubClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'Github claim is aangemaakt';
             }
-        }
-
-        if ($this->session->get('duo') && $type = 'duo') {
-            $this->session->remove('duo');
-            $person = $this->commonGroundService->getResource($this->getUser()->getPerson());
-            $person = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-
-            $claim = [];
-            $claim['person'] = $person;
-            $claim['property'] = 'schema.person.educationalCredential';
-            $claim['data']['credentialCategory'] = 'diploma';
-            $claim['data']['name'] = 'Verpleegkundige';
-            $claim['data']['description'] = 'De Mbo-Verpleegkundige werkt met mensen die door ziekte, ouderdom of een beperking specialistische hulp of verzorging nodig hebben. De begeleiding varieert per zorgvrager. Je kan te maken krijgen met situaties waarbij de (psychische) gezondheidstoestand van de zorgvrager snel wisselt. Het gaat dan om situaties waarbij intensieve behandeling, therapie of medicatie wordt toegepast. Je werkt zelfstandig en je bent medeverantwoordelijk voor het opstellen van zorgplannen.';
-            $claim['data']['educationLevel'] = 'MBO 4';
-            $claim['data']['recognizedBy'] = 'https://www.nvao.net/';
-
-            $claim = $this->commonGroundService->saveResource($claim, ['component' => 'wac', 'type' => 'claims']);
-
-            $variables['newClaim'] = $claim;
-
-            if ($this->session->get('backUrl')) {
-                $variables['backUrl'] = $this->session->get('backUrl');
-                $variables['showModal'] = true;
-                $this->session->remove('backUrl');
+        } elseif ($type == 'linkedIn' && $request->get('code')) {
+            $completed = $claimService->linkedInClaim($request->get('code'), $this->getUser()->getPerson());
+            if ($completed) {
+                $variables['message'] = 'LinkedIn claim is aangemaakt';
             }
-        }
-
-        if ($request->isMethod('POST') && $type == 'brp') {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?brp='.$request->get('bsn'));
-        } elseif ($request->isMethod('POST') && $type == 'duo') {
-            return $this->redirect($this->generateUrl('app_dashboard_general').'?duo='.$request->get('bsn'));
-        } elseif ($request->isMethod('POST') && $request->get('emailValidate')) {
-            $data = [];
-            $data['sender'] = 'no-reply@conduction.nl';
-            $user = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'][0];
-
-            $data['resource'] = $this->generateUrl('app_dashboard_claimdata', ['type' => 'email', 'id' => $user['id']], UrlGeneratorInterface::ABSOLUTE_URL)."?email={$request->get('email')}";
-            $this->mailingService->sendMail('mails/claim_your_data_email.html.twig', 'no-reply@conduction.nl', $request->get('email'), 'Claim your data', $data);
-
-            return $this->redirectToRoute('app_dashboard_claimyourdata');
-        } elseif (isset($backUrl)) {
-            $this->session->remove('backUrl');
-
-            return $this->redirect($backUrl);
         }
 
         return $variables;
     }
 
     /**
-     * @Route("/general")
+     * @Route("/settings")
      * @Template
      */
-    public function generalAction(Request $request)
+    public function settingsAction(Request $request)
     {
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
-        if ($request->query->get('brp')) {
-            $this->session->set('brp', $request->query->get('brp'));
-
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'brp']));
-        }
-
-        if ($request->query->get('duo')) {
-            $this->session->set('duo', $request->query->get('duo'));
-
-            return $this->redirect($this->generateUrl('app_dashboard_claimyourdata', ['type' => 'duo']));
-        }
 
         if ($this->getUser()) {
             $variables['person'] = $this->commonGroundService->getResource($this->getUser()->getPerson());
@@ -333,7 +278,7 @@ class DashboardController extends AbstractController
                 }
             }
 
-            return $this->redirect($this->generateUrl('app_dashboard_general'));
+            return $this->redirect($this->generateUrl('app_dashboard_settings'));
         } elseif ($request->isMethod('POST') && $request->get('twoFactorSwitchSubmit')) {
             // Add current user to userGroup developer.view if switch is on, else remove it instead.
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $this->getUser()->getUsername()])['hydra:member'];
@@ -353,7 +298,7 @@ class DashboardController extends AbstractController
                 }
                 $this->commonGroundService->updateResource($user);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         } elseif ($request->isMethod('POST') && $request->get('becomeDeveloper')) {
             // Add current user to userGroup developer
@@ -377,7 +322,7 @@ class DashboardController extends AbstractController
 
                 $this->mailingService->sendMail('mails/developer.html.twig', 'no-reply@conduction.nl', $this->getUser()->getUsername(), 'Welcome developer', $data);
 
-                return $this->redirect($this->generateUrl('app_dashboard_general'));
+                return $this->redirect($this->generateUrl('app_dashboard_settings'));
             }
         }
 
@@ -385,14 +330,94 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/security")
+     * @Route("/security/{type}")
      * @Template
      */
-    public function securityAction()
+    public function securityAction(Request $request, $type = null)
     {
+        if (!$this->getUser()){
+            $this->session->set('backUrl', $request->getUri());
+        }
+
+        if ($type == 'google' && $request->get('code')) {
+            $status = $this->defaultService->authGoogle($request->get('code'), $this->getUser()->getUsername());
+            if ($status == true) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'facebook' && $request->get('code')) {
+            $status = $this->defaultService->authFacebook($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'github' && $request->get('code')) {
+            $status = $this->defaultService->authGithub($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        } elseif ($type == 'linkedIn' && $request->get('code')) {
+            $status = $this->defaultService->authLinkedIn($request->get('code'), $this->getUser()->getUsername());
+            if ($status) {
+                $this->defaultService->throwFlash('success', 'Google authenticator activated');
+            } else {
+                $this->defaultService->throwFlash('error', 'username Mismatch received from google');
+            }
+        }
+
+        if ($request->query->get('code') && $type == null) {
+            try {
+                $now = new \DateTime('now');
+                $id = $request->query->get('code');
+                $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $id]);
+                $this->defaultService->throwFlash('success', $token['provider']['type'].' authenticator activated');
+                $token['provider'] = '/providers/'.$token['provider']['id'];
+                $token['user'] = '/users/'.$token['user']['id'];
+                $token['dateAccepted'] = $now->format('Y-m-d');
+                $this->commonGroundService->updateResource($token);
+
+            }catch (\Throwable $e){
+                $this->defaultService->throwFlash('error', 'invalid code provided');
+            }
+        }
+
+        if ($request->isMethod('POST') && $request->get('activate')) {
+            $now = new \DateTime('now');
+            $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $request->get('token')]);
+            $this->defaultService->throwFlash('success', $token['provider']['type'].' authenticator activated');
+            $token['provider'] = '/providers/'.$token['provider']['id'];
+            $token['user'] = '/users/'.$token['user']['id'];
+            $token['dateAccepted'] = $now->format('Y-m-d');
+            $this->commonGroundService->updateResource($token);
+        } elseif ($request->isMethod('POST') && $request->get('delete')) {
+            $token = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'tokens', 'id' => $request->get('token')]);
+            $this->commonGroundService->deleteResource($token);
+        }
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
+        $variables['tokens'] = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'tokens'], ['user.username' => $this->getUser()->getUsername()])['hydra:member'];
+
+        //google
+        $provider = $this->defaultService->getProvider('gmail');
+        $variables['googleUrl'] = 'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id='.$provider['configuration']['app_id'].'&scope=openid%20email%20profile&redirect_uri=http://id-vault.com/dashboard/security/google';
+
+        //facebook
+        $provider = $this->defaultService->getProvider('facebook');
+        $variables['facebookUrl'] = 'https://www.facebook.com/v8.0/dialog/oauth?client_id='.str_replace('"', '', $provider['configuration']['app_id']).'&scope=email&redirect_uri=https://id-vault.com/dashboard/security/facebook&state={st=state123abc,ds=123456789}';
+
+        //github
+        $provider = $this->defaultService->getProvider('github auth');
+        $variables['githubUrl'] = 'https://github.com/login/oauth/authorize?redirect_uri=https://id-vault.com/dashboard/security/github&client_id='.$provider['configuration']['app_id'];
+
+        //linkedIn
+        $provider = $this->defaultService->getProvider('linkedIn');
+        $variables['linkedInUrl'] = "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={$provider['configuration']['app_id']}&redirect_uri=http://id-vault.com/dashboard/security/linkedIn&scope=r_emailaddress%20r_liteprofile";
+
 
         return $variables;
     }
@@ -406,50 +431,6 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
-        return $variables;
-    }
-
-    /**
-     * @Route("/claimdata/{type}/{id}")
-     * @Template
-     */
-    public function claimdataAction($id, $type, Request $request)
-    {
-        $variables = [];
-
-        $variables = $this->provideCounterData($variables);
-
-        if ($type == 'email') {
-            $user = $this->commonGroundService->getResource(['component' => 'uc', 'type' => 'users', 'id' => $id]);
-            $person = $this->commonGroundService->getResource($user['person']);
-            $personUrl = $this->commonGroundService->cleanUrl(['component' => 'cc', 'type' => 'people', 'id' => $person['id']]);
-            $variables['value'] = $request->query->get('email');
-            $variables['type'] = $type;
-
-            $claims = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'claims'], ['property' => 'schema.person.email', 'person' => $personUrl])['hydra:member'];
-            $variables['id'] = $id;
-
-            if (count($claims) > 0) {
-                $variables['claim'] = $claims[0];
-            }
-
-            if ($request->isMethod('POST') && $type == 'email') {
-                if ($request->get('claim')) {
-                    $claim = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'claims', 'id' => $request->get('claim')]);
-                    $claim['data']['email'] = $request->get('value');
-                } else {
-                    $claim = [];
-                    $claim['property'] = 'schema.person.email';
-                    $claim['person'] = $personUrl;
-                    $claim['data']['email'] = $request->get('value');
-                }
-
-                $this->commonGroundService->saveResource($claim, (['component' => 'wac', 'type' => 'claims']));
-
-                return $this->redirect($this->generateUrl('app_dashboard_claimyourdata'));
-            }
-        }
 
         return $variables;
     }
@@ -1436,10 +1417,22 @@ class DashboardController extends AbstractController
         $variables = [];
 
         $variables = $this->provideCounterData($variables);
-
         $userUrl = $this->defaultService->getUserUrl($this->getUser()->getUsername());
 
-        $variables['groups'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl])['hydra:member'];
+        if ($request->isMethod('POST') && $request->get('acceptInvite')) {
+            $membership = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'memberships', 'id' => $request->get('membership')]);
+            $now = new \DateTime('now', new \DateTimeZone('Europe/Amsterdam'));
+            $membership['userGroup'] = '/groups/'.$membership['userGroup']['id'];
+            $membership['dateAcceptedUser'] = $now->format('Y-m-d H:i:s');
+            $membership = $this->commonGroundService->updateResource($membership);
+            $this->defaultService->throwFlash('success', 'Invite accepted for group '.$membership['userGroup']['name']);
+        } elseif ($request->isMethod('POST') && $request->get('removeGroup')) {
+            $membership = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'memberships', 'id' => $request->get('membership')]);
+            $this->defaultService->throwFlash('success', 'you left the group '.$membership['userGroup']['name']);
+            $this->commonGroundService->deleteResource($membership);
+        }
+
+        $variables['memberships'] = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'memberships'], ['userUrl' => $userUrl, 'order[dateCreated]' => 'desc'])['hydra:member'];
 
         return $variables;
     }

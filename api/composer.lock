@@ -775,12 +775,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConductionNL/CommonGroundBundle.git",
-                "reference": "a1507eac8d2a523f55e263ceeb829c47d6c08d2e"
+                "reference": "801a7f0853b9a549be1dea3138e48f3d1ff48b7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/a1507eac8d2a523f55e263ceeb829c47d6c08d2e",
-                "reference": "a1507eac8d2a523f55e263ceeb829c47d6c08d2e",
+                "url": "https://api.github.com/repos/ConductionNL/CommonGroundBundle/zipball/801a7f0853b9a549be1dea3138e48f3d1ff48b7f",
+                "reference": "801a7f0853b9a549be1dea3138e48f3d1ff48b7f",
                 "shasum": ""
             },
             "require": {
@@ -858,7 +858,7 @@
                 "postcode",
                 "rsin"
             ],
-            "time": "2021-01-05T13:22:35+00:00"
+            "time": "2021-01-28T13:51:54+00:00"
         },
         {
             "name": "conduction/id-vault-php",
@@ -11087,12 +11087,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "c7aee71783b19803f5ceeb7b2e3bff6846d7f40f"
+                "reference": "04d348ab7fb1eacec054b251ae9b09de9536696e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/c7aee71783b19803f5ceeb7b2e3bff6846d7f40f",
-                "reference": "c7aee71783b19803f5ceeb7b2e3bff6846d7f40f",
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/04d348ab7fb1eacec054b251ae9b09de9536696e",
+                "reference": "04d348ab7fb1eacec054b251ae9b09de9536696e",
                 "shasum": ""
             },
             "require": {
@@ -11262,19 +11262,19 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-09T13:16:23+00:00"
+            "time": "2021-01-29T21:38:31+00:00"
         },
         {
             "name": "webmozart/assert",
             "version": "1.9.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
                 "shasum": ""
             },
