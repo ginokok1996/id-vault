@@ -43,7 +43,7 @@ class GroupSubscriber implements EventSubscriberInterface
             } else {
                 try {
                     $application = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'applications', 'id' => $group->getClientId()]);
-                    $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
+                    $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id'], 'organization' => $group->getOrganization()])['hydra:member'];
                     $group->setGroups($this->getGroupList($groups, $event, $group));
                 } catch (\Throwable $e) {
                     throw new  Exception('Invalid clientId');
