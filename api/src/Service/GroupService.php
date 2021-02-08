@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\CreateGroup;
+use App\Entity\DeleteGroup;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,6 +31,41 @@ class GroupService
         $newGroup = $this->commonGroundService->createResource($newGroup, ['component' => 'wac', 'type' => 'groups']);
 
         return $this->groupResponse($newGroup);
+    }
+
+    public function deleteGroup($groupId, DeleteGroup $deleteGroup = null, $application = null)
+    {
+        $group = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'groups', 'id' => $groupId], [], false);
+
+        if (isset($application) and $group['application']['id'] != $application['id']) {
+            throw new Exception('No group found with these properties');
+        }
+        if (isset($deleteGroup) and $deleteGroup->getOrganization() and $group['organization'] != $deleteGroup->getOrganization()) {
+            throw new Exception('No group found with these properties');
+        }
+
+        // TODO: Delete all memberships of this group (new function)
+
+        $this->commonGroundService->deleteResource($group);
+        return $group['@id'];
+    }
+
+    public function deleteGroups(DeleteGroup $deleteGroup, $application)
+    {
+        $groupList = [];
+        $groups = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'groups'], ['application.id' => $application['id']])['hydra:member'];
+        if (count($groups) > 0) {
+            foreach ($groups as $group) {
+                if ($group['organization'] == $deleteGroup->getOrganization()) {
+                    // TODO: Delete all memberships of this group (new function)
+                    $this->commonGroundService->deleteResource($group);
+                    array_push($groupList, $group['@id']);
+                }
+            }
+            return $groupList;
+        } else {
+            throw new Exception('No group found with these properties');
+        }
     }
 
     public function groupResponse($group)
