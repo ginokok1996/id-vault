@@ -38,7 +38,7 @@ class UserController extends AbstractController
     public function login(Session $session, Request $request)
     {
         if ($this->getUser()) {
-            $this->defaultService->throwFlash('succes', 'Welcome '.ucwords($this->getUser()->getName()));
+            $this->defaultService->throwFlash('success', 'Welcome '.ucwords($this->getUser()->getName()));
 
             return $this->redirect($this->generateUrl('app_dashboard_index'));
         }
@@ -59,7 +59,9 @@ class UserController extends AbstractController
      */
     public function FacebookAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('facebook');
         $redirect = $request->getUri();
 
@@ -80,7 +82,9 @@ class UserController extends AbstractController
      */
     public function githubAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('github');
         $redirect = $request->getUri();
 
@@ -101,7 +105,9 @@ class UserController extends AbstractController
      */
     public function gmailAction(Session $session, Request $request)
     {
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
         $provider = $this->defaultService->getProvider('gmail');
         $redirect = $request->getUri();
 
@@ -131,7 +137,10 @@ class UserController extends AbstractController
             }
         }
 
-        $session->set('backUrl', $request->query->get('backUrl'));
+        if ($request->query->get('backUrl')) {
+            $session->set('backUrl', $request->query->get('backUrl'));
+        }
+
         $provider = $this->defaultService->getProvider('linkedIn');
         $redirect = $request->getUri();
 
@@ -159,10 +168,16 @@ class UserController extends AbstractController
      * @Route("/register")
      * @Template
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request, Session $session)
     {
         if ($request->isMethod('POST')) {
-            $backUrl = $request->query->get('backUrl');
+            if ($session->get('backUrl')) {
+                $backUrl = $session->get('backUrl');
+            } elseif ($request->query->get('backUrl')) {
+                $backUrl = $request->query->get('backUrl');
+            } else {
+                $backUrl = $this->generateUrl('app_default_index');
+            }
 
             //lets check if there is already a user with this email
             $users = $this->commonGroundService->getResourceList(['component' => 'uc', 'type' => 'users'], ['username' => $request->get('username')])['hydra:member'];
@@ -187,7 +202,7 @@ class UserController extends AbstractController
                 $user['password'] = $request->get('newPassword');
                 $user['person'] = $personUrl;
 
-                $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users']);
+                $user = $this->commonGroundService->createResource($user, ['component' => 'uc', 'type' => 'users'], [], [], false, false);
 
                 // given name claim
                 $claimFirstName = [];
@@ -195,7 +210,7 @@ class UserController extends AbstractController
                 $claimFirstName['property'] = 'schema.person.given_name';
                 $claimFirstName['data']['given_name'] = $person['givenName'];
 
-                $this->commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimFirstName, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 // family name claim
                 $claimLastName = [];
@@ -203,7 +218,7 @@ class UserController extends AbstractController
                 $claimLastName['property'] = 'schema.person.family_name';
                 $claimLastName['data']['family_name'] = $person['familyName'];
 
-                $this->commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimLastName, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 // email claim
                 $claimEmail = [];
@@ -211,7 +226,7 @@ class UserController extends AbstractController
                 $claimEmail['property'] = 'schema.person.email';
                 $claimEmail['data']['email'] = $request->get('username');
 
-                $this->commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims']);
+                $this->commonGroundService->saveResource($claimEmail, ['component' => 'wac', 'type' => 'claims'], [], [], false, false);
 
                 //calendar for the user
                 $calendar = [];
@@ -219,7 +234,7 @@ class UserController extends AbstractController
                 $calendar['resource'] = $personUrl;
                 $calendar['timeZone'] = 'CET';
 
-                $this->commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars']);
+                $this->commonGroundService->saveResource($calendar, ['component' => 'arc', 'type' => 'calendars'], [], [], false, false);
 
                 $userObject = new CommongroundUser($user['username'], $request->get('newPassword'), $person['name'], null, $user['roles'], $user['person'], null, 'user');
 

@@ -36,8 +36,12 @@ COPY bin bin/
 COPY config config/
 COPY public public/
 COPY src src/
+COPY cert cert/
 COPY templates templates/
 COPY translations translations/
+
+RUN apk add --no-cache --virtual .build-deps gmp-dev; \
+   docker-php-ext-install gmp
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \

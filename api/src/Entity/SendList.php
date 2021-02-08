@@ -18,7 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
- *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true}
+ *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
+ *     collectionOperations={
+ *          "get",
+ *          "post"
+ *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\SendListRepository")
  *
@@ -44,7 +48,33 @@ class SendList
     private $id;
 
     /**
-     * @var string A BS/SendList resource. Used for Adding a user as BS/Subscriber to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
+     * @var string The action type
+     *
+     * @example getLists
+     *
+     * @Assert\Choice({"getLists", "saveList", "deleteList", "addSubscribersToList", "sendToList"})
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Assert\NotNull
+     *
+     * @Groups({"read","write"})
+     */
+    private $action = 'getLists';
+
+    /**
+     * @var string A BS/SendList resource. Used for Adding a email(s) as BS/Subscriber(s) to a BS/SendList. And used for sending an email to all BS/SendList->Subscribers.
+     *
+     * @Groups({"read", "write"})
+     * @Assert\Url
+     * @Assert\Length(
+     *     max=255
+     * )
+     */
+    private $sendList;
+
+    /**
+     * @var string The resource of a new SendList. Used for creating a BS/SendList.
      *
      * @Groups({"read", "write"})
      * @Assert\Url
@@ -144,7 +174,7 @@ class SendList
     /**
      * @var string The html for sending an email to all BS/SendList->Subscribers.
      *
-     * @example <p>HTML content of the mail</p><p>{% if title is defined and title is not empty %}Title: {{ title }}{% endif %}</p><p>{% if message is defined and message is not empty %}Message: {{ message }}{% endif %}</p><p>{% if text is defined and text is not empty %}Text: {{ text }}{% endif %}</p><p>{% if resource.name is defined and resource.name is not empty %}(resource/)Sendlist name: {{ resource.name }}{% endif %}</p><p>{% if receiver.givenName is defined and receiver.givenName is not empty %}Receiver: {{ receiver.givenName }}{% endif %}</p><p>{% if sender.name is defined and sender.name is not empty %}Sender: {{ sender.name }}{% endif %}</p>
+     * @example <p>HTML content of the mail</p>
      *
      * @Assert\Length(
      *      max = 2550
@@ -152,6 +182,32 @@ class SendList
      * @Groups({"read","write"})
      */
     private $html;
+
+    /**
+     * @var string the sender of the mail
+     *
+     * @example email adres
+     *
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     */
+    private $sender;
+
+    /**
+     * @var array The email adresses used to add subscribers to a BS/sendList
+     *
+     * @Groups({"read","write"})
+     */
+    private $emails = [];
+
+    /**
+     * @var array The groups used to add subscribers to a BS/sendList. WARNING: Leaving this empty when updating a sendList will remove all the groups from this sendList!!!
+     *
+     * @Groups({"read","write"})
+     */
+    private $groups = [];
 
     /**
      * @var array The result
@@ -181,6 +237,30 @@ class SendList
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): self
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    public function getSendList(): ?string
+    {
+        return $this->sendList;
+    }
+
+    public function setSendList(string $sendList): self
+    {
+        $this->sendList = $sendList;
+
+        return $this;
     }
 
     public function getResource(): ?string
@@ -299,6 +379,42 @@ class SendList
     public function setHtml(?string $html): self
     {
         $this->html = $html;
+
+        return $this;
+    }
+
+    public function getSender(): ?string
+    {
+        return $this->sender;
+    }
+
+    public function setSender(string $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getEmails(): ?array
+    {
+        return $this->emails;
+    }
+
+    public function setEmails(?array $emails): self
+    {
+        $this->emails = $emails;
+
+        return $this;
+    }
+
+    public function getGroups(): ?array
+    {
+        return $this->groups;
+    }
+
+    public function setGroups(?array $groups): self
+    {
+        $this->groups = $groups;
 
         return $this;
     }

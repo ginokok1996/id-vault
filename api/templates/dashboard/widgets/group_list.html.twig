@@ -1,0 +1,38 @@
+{% if memberships is defined and memberships is not empty %}
+    <div class="list-group list-group-flush">
+        {% for membership in memberships %}
+            <div class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col">
+
+                        <!-- Heading -->
+                        <p class="mb-0">
+                            {{ membership.userGroup.name }}
+                        </p>
+
+                        <!-- Text -->
+                        <small class="text-gray-700">
+                            {% if membership.userGroup.description is defined and membership.userGroup.description is not empty %}
+                                {{ membership.userGroup.description }}
+                            {% endif %}
+                        </small>
+
+                    </div>
+                    <form action="{{ path('app_dashboard_groups') }}" method="post">
+                        <div class="col-auto">
+                            {% if membership.dateAcceptedUser is empty %}
+                                <button name="acceptInvite" value="true" class="btn btn-xs btn-success mr-2">{{ 'accept'|trans|capitalize }}</button>
+                                <input type="hidden" name="membership" value="{{ membership.id }}">
+                                <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#leaveGroup-{{ membership.id }}">Decline</button>
+                            {% else %}
+                                <button name="removeGroup" value="true" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#leaveGroup-{{ membership.id }}">Leave</button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor%}
+    </div>
+{% else %}
+    <p class="small text-gray-700">{{ 'no groups available'|trans|capitalize }}</p>
+{% endif %}

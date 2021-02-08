@@ -3,6 +3,10 @@
 namespace App\Service;
 
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\KeyManagement\JWKFactory;
+use Jose\Component\Signature\Algorithm\RS512;
+use Jose\Component\Signature\Serializer\CompactSerializer;
 
 class AccessTokenGeneratorService
 {
@@ -51,31 +55,58 @@ class AccessTokenGeneratorService
             }
         }
 
-        $array['iss'] = $application['id'];
+        $array['groups'] = [];
+        $array['organizations'] = [];
+        if (count($application['userGroups']) > 0) {
+            foreach ($application['userGroups'] as $group) {
+                if (count($group['memberships']) > 0) {
+                    foreach ($group['memberships'] as $membership) {
+                        if ($membership['userUrl'] == $authorization['userUrl'] && !empty($membership['dateAcceptedUser']) || !empty($membership['dateAcceptedGroup'])) {
+                            $result = [];
+                            $result['id'] = $group['id'];
+                            $result['name'] = $group['name'];
+                            if (isset($membership['dateAcceptedGroup'])) {
+                                $result['dateJoined'] = $membership['dateAcceptedGroup'];
+                            } elseif (isset($membership['dateAcceptedUser'])) {
+                                $result['dateJoined'] = $membership['dateAcceptedUser'];
+                            }
+
+                            if (isset($group['organization'])) {
+                                $array['organizations'][] = $group['organization'];
+                                $result['organization'] = $group['organization'];
+                            }
+                            $array['groups'][] = $result;
+                        }
+                    }
+                }
+            }
+        }
+
+        $array['iss'] = $application['@id'];
         $array['aud'] = $application['authorizationUrl'];
         $array['exp'] = '3600';
         $array['jti'] = $authorization['id'];
         $array['alg'] = 'HS256';
         $array['iat'] = strtotime('now');
 
-        // Create token header as a JSON string
-        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $algorithmManager = new AlgorithmManager([
+            new RS512(),
+        ]);
 
-        // Create token payload as a JSON string
+        $jwk = JWKFactory::createFromKeyFile(
+            "../cert/cert.pem"
+        );
+
+        $jwsBuilder = new \Jose\Component\Signature\JWSBuilder($algorithmManager);
         $payload = json_encode($array);
 
-        // Encode Header to Base64Url String
-        $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+        $jws = $jwsBuilder
+            ->create()
+            ->withPayload($payload)
+            ->addSignature($jwk, ['alg' => 'RS512'])
+            ->build();
+        $serializer = new CompactSerializer();
 
-        // Encode Payload to Base64Url String
-        $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-
-        // Create Signature Hash
-        $signature = hash_hmac('sha256', $base64UrlHeader.'.'.$base64UrlPayload, 'abC123!', true);
-
-        // Encode Signature to Base64Url String
-        $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-
-        return $base64UrlHeader.'.'.$base64UrlPayload.'.'.$base64UrlSignature;
+        return $serializer->serialize($jws, 0);
     }
 }

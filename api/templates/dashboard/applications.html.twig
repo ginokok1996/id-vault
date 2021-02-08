@@ -46,22 +46,19 @@
                         <div class="list-group list-group-flush">
                             {% if applications is defined and applications is not empty %}
                                 {% for application in applications %}
-                                    {% if application.contact is defined and application.contact is not empty and application.contact %}
-                                        {% set applicationContact = commonground_resource(application.contact) %}
-                                    {% endif %}
                                     <div class="list-group-item">
                                         <div class="row align-items-center">
                                             <div class="col-auto">
-                                                {% if applicationContact.style.favicon.base64 is defined %}
+                                                {% if application.configuration.logo is defined %}
                                                     <!-- Avatar -->
                                                     <div class="avatar avatar-xl">
                                                         <img
                                                             class="avatar-img"
-                                                            src="{{ applicationContact.style.favicon.base64 }}"
+                                                            src="{{ application.configuration.logo }}"
                                                             alt="..."
-                                                            style="object-fit: fill;
-                                                            {% if application.backgroundColor is defined and application.backgroundColor|length > 0 %}
-                                                                background-color: {{ application.backgroundColor[1] }};
+                                                            style="object-fit: scale-down;
+                                                            {% if application.configuration.backgroundColor is defined %}
+                                                                background-color: {{ application.configuration.backgroundColor }};
                                                             {% endif %}"
                                                         >
                                                     </div>

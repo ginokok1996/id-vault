@@ -15,6 +15,84 @@
 
     </div>
     <div class="card-body">
-
+        <form action="{{ path('app_dashboard_application', {id: application.id}) }}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12">
+                    <div class="custom-file">
+                        <input onchange="showLogo()" type="file" name="logo" class="custom-file-input" id="logo">
+                        <label class="custom-file-label" for="customFile">{{ 'choose logo'|trans|capitalize }}</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div id="logoHolder" class="align-items-center mt-4 mb-4 text-center p-2"
+                    {% if application.configuration is defined and application.configuration is not empty %}
+                    style="background-color:{{ application.configuration.backgroundColor }};
+                        color: {{ application.configuration.fontColor }}"
+                    {% endif %}>
+                        {% if application.configuration.logo is defined %}
+                            <img style="height: 100px;" src="{{ application.configuration.logo }}" alt="...">
+                        {% endif %}
+                        <p class="pt-2 mb-0">{{ application.name }}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="backgroundColor">{{ 'background color' }}</label>
+                        <input id="backgroundColor" oninput="updateColors()" name="backgroundColor" type="color" class="form-control"
+                               {% if application.configuration.backgroundColor is defined %}value="{{ application.configuration.backgroundColor }}" {% else %}value="#ffffff"{% endif %}>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="fontColor">{{ 'font color' }}</label>
+                        <input id="fontColor" oninput="updateColors()" name="fontColor" type="color" class="form-control"
+                            {% if application.configuration.fontColor is defined %}value="{{ application.configuration.fontColor }}" {% else %}value="#000000"{% endif %}>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button name="updateStyle" value="true" class="btn btn-primary">{{ 'update'|trans|capitalize }}</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    function showLogo(){
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function Main() {
+            let file = document.querySelector('#logo').files[0];
+            let logoHolder = document.querySelector('#logoHolder');
+            logoHolder.innerHTML = '';
+
+            //logo
+            let logo = document.createElement('img');
+            let base64 = await toBase64(file);
+            logo.setAttribute('style', 'height: 100px;');
+            logo.setAttribute('src', base64);
+
+            //text
+            let applicationName = document.createElement('p');
+            applicationName.innerHTML = '{{ application.name }}';
+            applicationName.classList.add('pt-2');
+            applicationName.classList.add('mb-0');
+
+            logoHolder.appendChild(logo);
+            logoHolder.appendChild(applicationName);
+        }
+        Main();
+    }
+
+    function updateColors(){
+        let holder = document.querySelector('#logoHolder');
+        let background = document.querySelector('#backgroundColor').value;
+        let font = document.querySelector('#fontColor').value;
+        holder.setAttribute('style', 'background-color: ' + background + '; color: ' + font + ';');
+    }
+</script>

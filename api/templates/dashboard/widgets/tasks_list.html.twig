@@ -1,5 +1,26 @@
 {% if tasks is defined and tasks is not empty %}
+    <div class="list-group list-group-flush">
+        {% for task in tasks %}
+            <div class="list-group-item d-flex align-items-center">
 
+                <!-- Text -->
+                <div class="mr-auto">
+
+                    <!-- Heading -->
+                    <p class="font-weight-bold mb-1">
+                        {{ task.name }}
+                    </p>
+
+                    <!-- Text -->
+                    <p class="font-size-sm text-muted mb-0">
+                        {{ 'created'|trans|capitalize }}: {{ task.dateCreated|date('h:i d-m-Y', 'Europe/Paris') }}
+                    </p>
+
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% else %}
     <p class="hint__title">{{ 'no tasks available'|trans|capitalize }}</p>
 {% endif %}

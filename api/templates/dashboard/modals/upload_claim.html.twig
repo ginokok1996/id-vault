@@ -1,0 +1,31 @@
+<div class="modal fade" id="modalUploadClaim" tabindex="-1" role="dialog" aria-labelledby="modalUploadClaim" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body modal-lg">
+
+                <!-- Close -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+
+                <!-- Heading -->
+                <h2 class="font-weight-bold text-center mb-1" id="modalPaymentTitle">
+                    {{ 'upload claim'|trans|capitalize }}
+                </h2>
+
+                <form action="{{ path('app_dashboard_claims') }}" method="post" enctype="multipart/form-data">
+
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="projectCoverUploads">
+                        <label class="custom-file-label" for="projectCoverUploads">Choose file</label>
+                    </div>
+
+                    <button class="btn btn-success btn-xs mt-2">upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
