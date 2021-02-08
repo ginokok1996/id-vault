@@ -54,9 +54,9 @@ class GroupService
         $groupList = [];
 
         if ($deleteGroup->getGroupId()){
-            if ($this->commonGroundService->isResource(['component' => 'wac', 'type' => 'groups', 'id' => $deleteGroup->getGroupId()])) {
+            try {
                 return [$this->deleteGroup($deleteGroup->getGroupId(), $deleteGroup, $application)];
-            } else {
+            } catch(\Throwable $e) {
                 throw new  Exception('No group exists with this groupId');
             }
         } else {
