@@ -6,7 +6,10 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\AccessToken;
 use App\Service\AccessTokenGeneratorService;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -33,7 +36,6 @@ class AccessSubscriber implements EventSubscriberInterface
         $token = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         $route = $event->getRequest()->attributes->get('_route');
-
         if ($method != 'POST') {
             return;
         }
@@ -45,13 +47,21 @@ class AccessSubscriber implements EventSubscriberInterface
             } else {
                 $application = $applications[0];
 
-                $authorization = $this->commonGroundService->getResource(['component' => 'wac', 'type' => 'authorizations', 'id' => $token->getCode()]);
+                $authorizations = $this->commonGroundService->getResourceList(['component' => 'wac', 'type' => 'authorizations'], ['code' => $token->getCode()])['hydra:member'];
 
+                if (!count($authorizations) > 0) {
+                    throw new Exception('invalid code');
+                }
+                $authorization = $authorizations[0];
+
+                $authorization['code'] = Uuid::uuid4();
                 if ($authorization['newUser'] == null || empty($authorization['newUser'])) {
                     $authorization['newUser'] = false;
                 }
 
-                $token->setAccessToken($this->accessTokenGeneratorService->generateAccessToken($authorization, $application));
+
+                $token->setIdToken($this->accessTokenGeneratorService->generateIdToken($authorization, $application));
+                $token->setAccess_token($authorization['code']);
                 $token->setTokenType('bearer');
                 $token->setExpiresIn('3600');
                 $token->setNewUser($authorization['newUser']);
@@ -62,8 +72,6 @@ class AccessSubscriber implements EventSubscriberInterface
                     $authorizationLog['goal'] = $goal;
                 }
                 $authorizationLog['authorization'] = '/authorizations/'.$authorization['id'];
-
-                $authorization['code'] = null;
                 $authorization['application'] = '/applications/'.$authorization['application']['id'];
 
                 if ($authorization['newUser']) {

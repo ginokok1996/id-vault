@@ -14,6 +14,9 @@ security:
             anonymous: true
             pattern: ^/payments/mollie_webhook
             methods: [POST]
+        userinfo:
+            anonymous: true
+            pattern: ^/api/user_info
         main:
             anonymous: ~
             pattern: ^/
@@ -49,3 +52,4 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/user_infos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
