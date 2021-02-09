@@ -108,7 +108,7 @@ class OauthController extends AbstractController
                     $variables['authorization'] = $result['id'];
                     $variables['scopes'] = $result['newScopes'];
                 } else {
-                    return $this->redirect($redirectUrl."?code={$result['id']}&state={$variables['state']}");
+                    return $this->redirect($redirectUrl."?code={$result['code']}&state={$variables['state']}");
                 }
             }
         }
@@ -137,12 +137,12 @@ class OauthController extends AbstractController
             }
 
             if ($request->get('needScopes')) {
-                $session->set('backUrl', $redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+                $session->set('backUrl', $redirectUrl."?code={$authorization['code']}&state={$variables['state']}");
 
                 return $this->redirect($this->generateUrl('app_dashboard_claimyourdata').'?authorization='.$authorization['id']);
             }
 
-            return $this->redirect($redirectUrl."?code={$authorization['id']}&state={$variables['state']}");
+            return $this->redirect($redirectUrl."?code={$authorization['code']}&state={$variables['state']}");
         }
 
         if (!$request->query->get('response_type') || $request->query->get('response_type') !== 'code') {
