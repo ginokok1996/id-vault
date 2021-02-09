@@ -74,7 +74,7 @@ class AccessToken
      *
      * @Groups({"write"})
      */
-    private $grantType;
+    private $grant_type;
 
     /**
      * @var string The id of your application
@@ -83,7 +83,7 @@ class AccessToken
      *
      * @Groups({"write"})
      */
-    private $clientId;
+    private $client_id;
 
     /**
      * @var string The goal of the request
@@ -102,7 +102,7 @@ class AccessToken
      *
      * @Groups({"write"})
      */
-    private $clientSecret;
+    private $client_secret;
 
     /**
      * @var string The code given to your application on
@@ -120,7 +120,7 @@ class AccessToken
      *
      * @Groups({"read"})
      */
-    private $tokenType;
+    private $token_type;
 
     /**
      * @var int The time in wisch the acces token will expire
@@ -129,7 +129,7 @@ class AccessToken
      *
      * @Groups({"read"})
      */
-    private $expiresIn;
+    private $expires_in;
 
     /**
      * @var string The scopes profided by the acces token
@@ -141,13 +141,22 @@ class AccessToken
     private $scope;
 
     /**
+     * @var string code used for userinfo endpoint
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Groups({"read"})
+     */
+    private $access_token;
+
+    /**
      * @var string A JWT reprecentation of the acces token
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Groups({"read"})
      */
-    private $accessToken;
+    private $id_token;
 
     /**
      * @var string A unique validator provided by your application to check the validaty of the call
@@ -181,24 +190,38 @@ class AccessToken
 
     public function getGrantType(): ?string
     {
-        return $this->grantType;
+        return $this->grant_type;
     }
 
-    public function setGrantType(string $grantType): self
+    public function setGrantType(string $grant_type): self
     {
-        $this->grantType = $grantType;
+        $this->grant_type = $grant_type;
+
+        return $this;
+    }
+
+    public function setGrant_type(string $grant_type): self
+    {
+        $this->grant_type = $grant_type;
 
         return $this;
     }
 
     public function getClientId(): ?string
     {
-        return $this->clientId;
+        return $this->client_id;
     }
 
-    public function setClientId(string $clientId): self
+    public function setClientId(string $client_id): self
     {
-        $this->clientId = $clientId;
+        $this->client_id = $client_id;
+
+        return $this;
+    }
+
+    public function setClient_id(string $client_id): self
+    {
+        $this->client_id = $client_id;
 
         return $this;
     }
@@ -217,12 +240,19 @@ class AccessToken
 
     public function getClientSecret(): ?string
     {
-        return $this->clientSecret;
+        return $this->client_secret;
     }
 
-    public function setClientSecret(string $clientSecret): self
+    public function setClientSecret(string $client_secret): self
     {
-        $this->clientSecret = $clientSecret;
+        $this->client_secret = $client_secret;
+
+        return $this;
+    }
+
+    public function setClient_secret(string $client_secret): self
+    {
+        $this->client_secret = $client_secret;
 
         return $this;
     }
@@ -253,24 +283,38 @@ class AccessToken
 
     public function getTokenType(): ?string
     {
-        return $this->tokenType;
+        return $this->token_type;
     }
 
-    public function setTokenType(string $tokenType): self
+    public function setTokenType(string $token_type): self
     {
-        $this->tokenType = $tokenType;
+        $this->token_type = $token_type;
+
+        return $this;
+    }
+
+    public function setToken_type(string $token_type): self
+    {
+        $this->token_type = $token_type;
 
         return $this;
     }
 
     public function getExpiresIn(): ?string
     {
-        return $this->expiresIn;
+        return $this->expires_in;
     }
 
-    public function setExpiresIn(string $expiresIn): self
+    public function setExpiresIn(string $expires_in): self
     {
-        $this->expiresIn = $expiresIn;
+        $this->expires_in = $expires_in;
+
+        return $this;
+    }
+
+    public function setExpires_in(string $expires_in): self
+    {
+        $this->expires_in = $expires_in;
 
         return $this;
     }
@@ -289,12 +333,38 @@ class AccessToken
 
     public function getAccessToken(): ?string
     {
-        return $this->accessToken;
+        return $this->access_token;
     }
 
-    public function setAccessToken(string $accessToken): self
+    public function setAccessToken(string $access_token): self
     {
-        $this->accessToken = $accessToken;
+        $this->access_token = $access_token;
+
+        return $this;
+    }
+
+    public function setAccess_token(string $access_token): self
+    {
+        $this->access_token = $access_token;
+
+        return $this;
+    }
+
+    public function getIdToken(): ?string
+    {
+        return $this->id_token;
+    }
+
+    public function setIdToken(string $id_token): self
+    {
+        $this->id_token = $id_token;
+
+        return $this;
+    }
+
+    public function setId_token(string $id_token): self
+    {
+        $this->id_token = $id_token;
 
         return $this;
     }
