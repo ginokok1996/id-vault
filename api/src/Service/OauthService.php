@@ -101,6 +101,7 @@ class OauthService
             $object['authorizationNeeded'] = false;
             $object['newScopes'] = [];
             $object['id'] = $authorization['id'];
+            $object['code'] = $authorization['code'];
             foreach ($scopes as $scope) {
                 if (!in_array($scope, $authorization['scopes'])) {
                     $object['newScopes'][] = $scope;
