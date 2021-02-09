@@ -41,10 +41,11 @@ class UserInfoSubscriber implements EventSubscriberInterface
     {
         $token = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        if ($method != 'GET' || $event->getRequest()->headers->has('Authorization') == false && $event->getRequest()->get('_route') == 'api_user_infos_user_info_collection') {
-            Throw new AccessDeniedException('Authorization header not found');
-        }
+
         if ($event->getRequest()->get('_route') == 'api_user_infos_user_info_collection') {
+            if ($method != 'GET' || $event->getRequest()->headers->has('Authorization') == false && $event->getRequest()->get('_route') == 'api_user_infos_user_info_collection') {
+                Throw new AccessDeniedException('Authorization header not found');
+            }
             $contentType = $event->getRequest()->headers->get('accept');
             if (!$contentType) {
                 $contentType = $event->getRequest()->headers->get('Accept');
