@@ -16,7 +16,7 @@ security:
             methods: [POST]
         userinfo:
             anonymous: true
-            pattern: ^/api/user_info
+            pattern: ^/user_info
         main:
             anonymous: ~
             pattern: ^/
