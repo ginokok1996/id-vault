@@ -25,11 +25,11 @@ class GroupRemoveUserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['inviteUser', EventPriorities::PRE_VALIDATE],
+            KernelEvents::VIEW => ['removeUser', EventPriorities::PRE_VALIDATE],
         ];
     }
 
-    public function inviteUser(ViewEvent $event)
+    public function removeUser(ViewEvent $event)
     {
         $group = $event->getControllerResult();
 
