@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
+use function PHPUnit\Framework\isNull;
 
 class ConfigureClientSubscriber implements EventSubscriberInterface
 {
@@ -53,11 +54,15 @@ class ConfigureClientSubscriber implements EventSubscriberInterface
                 Throw new NotFoundHttpException('unable to find client');
             }
 
+            $array = json_decode($event->getRequest()->getContent(), true);
+
             $result = [];
             $result['client_id'] = $application['id'];
             $result['client_secret'] = $application['secret'];
             $result['client_secret_expires_at'] = 0;
-            $result = array_merge($result, json_decode($event->getRequest()->getContent(), true));
+            if (!isNull($array)) {
+                $result = array_merge($result, $array);
+            }
 
             $json = $this->serializer->serialize(
                 $result,
