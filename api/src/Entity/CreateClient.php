@@ -14,11 +14,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     collectionOperations={
- *          "post"
+ *          "post",
+ *          "client_configuration"={
+                "method"="GET",
+ *              "path"="/client_configuration/{application}"
+ *          }
  *     }
  * )
  *
- * @ORM\Entity(repositoryClass=CreateClientRepository::class)
  */
 class CreateClient
 {
