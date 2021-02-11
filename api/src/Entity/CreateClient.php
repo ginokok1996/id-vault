@@ -47,6 +47,12 @@ class CreateClient
 
     /**
      * @Groups({"read", "write"})
+     * @ORM\Column(name="initiate_login_uri", type="string", length=255)
+     */
+    private $initiate_login_uri;
+
+    /**
+     * @Groups({"read", "write"})
      * @ORM\Column(nullable=false, type="array")
      *
      */
@@ -85,6 +91,25 @@ class CreateClient
     public function setClient_name(?string $clientName): self
     {
         $this->client_name = $clientName;
+
+        return $this;
+    }
+
+    public function getInitiateLoginUri(): ?string
+    {
+        return $this->initiate_login_uri;
+    }
+
+    public function setInitiateLoginUri(?string $initiateLoginUri): self
+    {
+        $this->initiate_login_uri = $initiateLoginUri;
+
+        return $this;
+    }
+
+    public function setInitiate_login_uri(?string $initiateLoginUri): self
+    {
+        $this->initiate_login_uri = $initiateLoginUri;
 
         return $this;
     }

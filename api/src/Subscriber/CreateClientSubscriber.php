@@ -41,7 +41,11 @@ class CreateClientSubscriber implements EventSubscriberInterface
             $uris = $client->getRedirectUris();
             $organization = $this->clientService->createOrganization($client->getClientName());
             $wrc = $this->clientService->createWrcApplication($client->getClientName(), $uris[0], $organization);
-            $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc);
+            try {
+                $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc, $client->getInitiateLoginUri());
+            } catch (\Throwable $e) {
+                $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc);
+            }
 
             $result['client_id'] = $application['id'];
             $result['client_secret'] = $application['secret'];

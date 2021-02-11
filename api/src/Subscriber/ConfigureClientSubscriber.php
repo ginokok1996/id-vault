@@ -59,6 +59,9 @@ class ConfigureClientSubscriber implements EventSubscriberInterface
             $result = [];
             $result['client_id'] = $application['id'];
             $result['client_secret'] = $application['secret'];
+            if (isset($application['webhookUrl'])){
+                $result['initiate_login_uri'] = $application['webhookUrl'];
+            }
             $result['client_secret_expires_at'] = 0;
             if (!isNull($array)) {
                 $result = array_merge($result, $array);
@@ -71,7 +74,7 @@ class ConfigureClientSubscriber implements EventSubscriberInterface
 
             $response = new Response(
                 $json,
-                Response::HTTP_CREATED,
+                Response::HTTP_OK,
                 ['content-type' => 'application/json']
             );
 
