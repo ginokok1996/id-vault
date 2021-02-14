@@ -59,10 +59,13 @@ class ClientService
      * @param array $wrcApplication contact of the application
      * @return array the created application object
      */
-    public function createWacApplication(string $name, string $uri, array $organization, array $wrcApplication)
+    public function createWacApplication(string $name, string $uri, array $organization, array $wrcApplication, string $url = null)
     {
         $application = [];
         $application['name'] = $name;
+        if (!is_null($url)) {
+            $application['webhookUrl'] = $url;
+        }
         $application['contact'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'applications', 'id' => $wrcApplication['id']]);
         $application['organization'] = $this->commonGroundService->cleanUrl(['component' => 'wrc', 'type' => 'organizations', 'id' => $organization['id']]);
         $application['authorizationUrl'] = $uri;

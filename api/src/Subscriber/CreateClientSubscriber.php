@@ -36,17 +36,23 @@ class CreateClientSubscriber implements EventSubscriberInterface
     {
         $client = $event->getControllerResult();
         if ($client instanceof CreateClient && $event->getRequest()->getMethod() == 'POST') {
+            $result = [];
             $contacts = $client->getContacts();
             $uris = $client->getRedirectUris();
             $organization = $this->clientService->createOrganization($client->getClientName());
             $wrc = $this->clientService->createWrcApplication($client->getClientName(), $uris[0], $organization);
-            $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc);
+            try {
+                $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc, $client->getInitiateLoginUri());
+            } catch (\Throwable $e) {
+                $application = $this->clientService->createWacApplication($client->getClientName(), $uris[0], $organization, $wrc);
+            }
 
-            $result = array(
-                'client_id' => $application['id'],
-                'client_sercret' => $application['secret'],
-                'client_secret_expires_at' => 0
-            );
+            $result['client_id'] = $application['id'];
+            $result['client_secret'] = $application['secret'];
+            $result['client_secret_expires_at'] = 0;
+            $result['registration_access_token'] = $application['id'];
+            $result['registration_client_uri'] = $event->getRequest()->getSchemeAndHttpHost()."/api/client_configuration/".$application['id'];
+            $result = array_merge($result, json_decode($event->getRequest()->getContent(), true));
 
             $json = $this->serializer->serialize(
                 $result,

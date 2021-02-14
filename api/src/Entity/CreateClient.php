@@ -14,11 +14,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     collectionOperations={
- *          "post"
+ *          "post",
+ *          "client_configuration"={
+                "method"="GET",
+ *              "path"="/client_configuration/{application}"
+ *          }
  *     }
  * )
  *
- * @ORM\Entity(repositoryClass=CreateClientRepository::class)
  */
 class CreateClient
 {
@@ -41,6 +44,12 @@ class CreateClient
      * @ORM\Column(name="client_name", type="string", length=255)
      */
     private $client_name;
+
+    /**
+     * @Groups({"read", "write"})
+     * @ORM\Column(name="initiate_login_uri", type="string", length=255)
+     */
+    private $initiate_login_uri;
 
     /**
      * @Groups({"read", "write"})
@@ -82,6 +91,25 @@ class CreateClient
     public function setClient_name(?string $clientName): self
     {
         $this->client_name = $clientName;
+
+        return $this;
+    }
+
+    public function getInitiateLoginUri(): ?string
+    {
+        return $this->initiate_login_uri;
+    }
+
+    public function setInitiateLoginUri(?string $initiateLoginUri): self
+    {
+        $this->initiate_login_uri = $initiateLoginUri;
+
+        return $this;
+    }
+
+    public function setInitiate_login_uri(?string $initiateLoginUri): self
+    {
+        $this->initiate_login_uri = $initiateLoginUri;
 
         return $this;
     }
